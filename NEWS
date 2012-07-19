@@ -1,0 +1,163 @@
+Changes in Version 1.0.6
+  o Fixed outdated information in the qgraph help page on specification of layout argument.
+  o Included loopRotation and loopAngle arguments to qgraph() to allow self loops to be rotated.
+  o qgraph.gui() included which enables a gui for analyzing correlation matrices
+
+Changes in Version 1.0.5
+  o Fixed a compatibility issue with the most recent version of Lavaan (0.4-14)
+
+Changes in Version 1.0.4
+  o Added reference to JSS paper.
+  o The name of the author in several function Rd pages has been changed to reflect my new e-mail address.
+
+Changes in Version 1.0.3
+  o Added the 'aspect' argument to qgraph. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").
+  o Fixed a bug where an unweighted graph object would be plotted as a weighted graph in consecutive calls.
+  o Fixed issues with the "centrality" function in combination with bidirectional edges.
+
+Changes in Version 1.0.2
+  o Fixed a bug in with using a tuning parameter of 0 in centrality()
+  o Fixed a bug with the arrows not being plotted properly when using a layout and non-square plotting area
+  o Fixed a bug where qgraph() failed on graphs with 10 or more nodes when using a "pcalg" object as input
+
+Changes in Version 1.0.1
+  o Fixed a bug with using the 'directed' argument as a matrix.
+
+Changes in Version 1.0.0
+  o Because this was already the case for imported packages, qgraph is now Byte-Compiled and depends on R version 2.14.
+  o Added the centrality() function to compute node centrality statistics.
+  o It is now possible to manually set the edge width and color. See the added section on this in the qgraph help page.
+  o Added the arguments 'layoutScale' and 'layoutOffset' to qgraph(). These can be used to define the coordinates range of the graph.
+  o Changed the way qgraph.panel() works. Instead of partitioning the plot in 4 sections with layout() the function now makes only one plot containing 4 graphs. This should fix all issues with the partition persisting after using this function.
+  o If qgraph.efa() or qgraph.pca() is used on a dataset with 20 or less variables the variable names (abbreviated to 3 characters) is used as label for the nodes.
+
+Changes in Version 0.5.3
+   o The labels argument now attempts to extract label names from the adjacency matrix for small graphs (<= 20 nodes)
+   o With legend=TRUE a check is now made to see if the groups list is not NULL. Else legend=FALSE is forced
+   o Legends are now plotted in the same window of the graph instead of a separate plot window. This should fix many issues with plots remaining partitioned after running qgraph as well as allow users to incorporate legends in partitioned plots.
+   o Fixed issues with the legend of the scores argument. This should now work as expected.
+   o Fixed issues with the qgraph.svg() function. This should now work again.
+   o Significantly changed the qgraph() help page. It should now be much clearer.
+   o Fixed an issue where lavaan objects with a mean structure would result in an error when using qgraph.lavaan(). Mean structure is now ignored in qgraph.lavaan().
+   o Changed the first argument of qgraph from 'adj' to 'input'. The help files no properly mention Weights matrices instead of Adjacency matrices.
+
+Changes in Version 0.5.2
+   o This version was aimed at fixing compatibility issues with sem 2.0.0
+
+Changes in Version 0.5.1
+   o Fixed some minor bugs
+   o Fixed issues with the qgraph.lavaan() function
+   o Added the qgraph.animate() function for animating network growth and change! Check out its help page for more details.
+   o Fixed bugs with arbitrary small networks. Such as single node networks, networks with no edges, and layouts with no variance in x or y coordinates.
+
+Changes in Version 0.5.0
+   o Graphs containing only one node can now be plotted
+   o Fixed a bug that caused weird arrows and wrong graph shapes if one of the opened windows contained a graph with a legend
+	o Added "x11" and "X11" as options for the filetype argument, useful for use with Rstudio
+	o qgraph() now exits with previous par() settings restored.
+	o Removed 'pcalg' from the suggests list because it is not actually used in qgraph and gave errors in R CMD CHECK
+
+Changes in Version 0.4.9
+   o Fixed a critical bug in making svg images
+   o The legend now takes less space by default.
+   o Added the argument 'GLratio' to qgraph() which specifies the relative size of the graph compared to the layout.
+   o 'legend.cex' now defaults to 0.6
+   o qgraph.panel() now omits the legend by default as it could not handle legends anyway.
+   o qgraph.panel() now uses better options for the layout of the factorial graph
+   o Fixed a bug in qgraph.sem() causing the spring layout to malfunction.
+   o Added proper references for the big 5 data
+	
+Changes in Version 0.4.8
+   o The 'groups' argument can now be assigned a factor as well as a list.
+   o qgraph.cfa should now correctly call only the sem package version of sem().
+   o In qgraph.sem(), connections between variables at the same level (e.g. regression among factors) can now be curved in the circular layout.
+   o Similar to 'directed', the qgraph() arguments 'curve', 'lty' and 'bidirectional' can now also be supplied in matrix form.
+   o qgraph.cfa() can now also use the lavaan package
+   o qgraph.cfa() now has a 'pkg' argument indicating which package should be used for estimation. Defaults to "sem" and can also be "lavaan"
+   o Added the qgraph.lavaan() function which creates an output document to the results of a lavaan fit simulair to what qgraph.sem() does for the sem package
+   o Arguments in the qgraph() help file are now divided into multiple sections
+   o Added the argument 'overlay' to qgraph(). Set this to true to plot a venn-diagram like overlay over the graph.
+   o Several packages are now imported rather than suggested/depended
+   o New feature: Significance graphs:
+     o qgraph() can now be used to plot significance levels (p-values). To do this set mode="sig". This will result in a graph in which two nodes are connected if p<0.05. Different shades of blue indicate different levels of significance. A Bonferonni correction can also be applied. Also works with gray=TRUE.     
+	 o Added the argument 'mode' to qgraph() which specifies what the edge weights mean. Currently this can be "strength" (default) or "sig" (see below)
+     o The 'graph' argument in qgraph() can now be set to "sig" or "significance". If so, the p-value for each correlation is calculated (using the fdrtool package), and a significance mode graph is made.
+	 o The `bonf' argument in qgraph() can be set to TRUE to apply a Bonferonni correction by multiplying all p-values by the number of p-values
+     o The `alpha' argument in qgraph() can be used to set significance levels of interest
+   o The `OmitInsig'  argument can be used to omit all correlations/p-values with a p-value above the lowest value in `alpha'.
+   o Using `OmitInsig = TRUE' and `gray = TRUE' with a correlation matrix will create an unweighted graph in which only significant correlations are connected.
+   o Using edgelists as input for qgraph() can now also be done with a dataframe and contain characters. These characters will be used as edge labels	 
+   o qgraph() now also moderately supports "graphNEL" objects (Rgraphviz) and "pcAlgo" objects (pcalg). See examples.
+	 
+	 
+Changes in Version 0.4.7
+   o Added the qgraph.cfa() function, which performs a confirmatory factor analysis using the sem package
+   o Fixed a bug in qgraph.sem() causing faulty path diagrams if nodes were labeled numerically
+   o Fixed a bug in qgraph() causing misplaced edge labels if some edges are bidirectional
+   o The 'rotation' argument is removed from qgraph.sem() because it should no longer be necessary
+   o The "circle" layout is now default in qgraph.sem()
+   o Added the 'gray' argument to qgraph(). If this is TRUE the graph will be plotted in gray-scale colors.
+   
+Changes in Version 0.4.6
+  o New features:
+	o Added more options for the 'directed' argument. When using an edgelist this can be a vector indicating per edge if it is directed or not. If an adjacency matrix is used then this can be a matrix indicating if the element indicates a directed edge.
+	o the output of qgraph() now also contains the edgelist. Running qgraph() on the output of another qgraph() run should now give exactly the same graph.
+	o Added three functions for S3 methods: print.qgraph(), summary.qgraph() and plot.qgraph().
+	o qgraph() now calls qgraph.loadings(), qgraph.efa(), qgraph.pca(), qgraph.sem() and qgraph.semModel() if the first argument is respectively of class "loadings", "factanal", "principal", "sem" and "mod".
+	o Added the 'DoNotPlot' argument to qgraph(). If this is TRUE then nothing will be plotted, but the graph will still be returned as usual.
+	o qgraph.layout() has been removed since the 'DoNotPlot' argument makes it redundant.
+	o Updated examples with big 5 data. Examples are now also executable using example(qgraph).
+  o qgraph.loadings() and its wrappers qgraph.efa() and qgraph.pca() have been revamped:
+	o Residuals can now be plotted in qgraph.loadings() using the 'resid' argument. qgraph.efa() includes residuals by default.
+	o Inter-factor correlations can now be plotted using the 'factorCors' argument.
+	o qgraph.loadings() now runs faster and results in smaller PDF file sizes.
+	o qgraph.loadings() now uses "circle" layout by default.
+	o A "loadings" object can now be passed to qgraph.loadings(), a "factanal" object to qgraph.efa() and a "principal" object to qgraph.pca().
+  o Minor changes to qgraph.sem():
+	o New function added: 'qgraph.semModel()'. This function makes a path diagram based on a sem model.
+	o New argument added to qgraph.sem(), 'panels', which can be assigned a vector indicating which panels should be plotted.
+	o 'filetype' can now be anything but "pdf" to use qgraph.sem() to plot in R.
+  o Bug fixes:
+	o Fixed a bug that caused edges to be plotted several times in directed graphs.
+	o The qgraph() function should now be significantly quicker.
+    o Fixed an issue causing placement of edges to assume a square node as origin.
+
+ 
+Changes in Version 0.4.5
+  o Added the Big 5 dataset.
+  o layout.orig is now returned as well as layout. This is the original layout (not rescaled) which can be used for constraints
+  o in 'qgraph.loadings' nodes are now reordered if the factors can be identified
+  o Added the 'vTrans' argument, which can be used to make nodes transparent.
+  o Fixed a critical bug resulting in oversized edges if the largest absolute edge weight is negative
+  
+Changes in Version 0.4.4
+  o Weights are now divided by the 'maximum' when computing the fruchterman-reingold layout.
+  o Fixed an issue causing loops to become too large
+  o Fixed an issue causing diag="col" assignment to also create loops
+  o 'directed' now defaults to TRUE if an edgelist is used as input in 'qgraph'
+  o Fixed a bug with the spring layout and groups list
+  o The nfact argument now defaults to the amount of eigenvalues greater than 1 or the length of the groups list.
+  o Using layout="circle" in qgraph.loadings should now generate a better looking layout.
+  o 'width' and 'height' are now automatically adjusted to the size of the opened device.
+ 
+Changes in Version 0.4.3
+  o Fixed a bug in the 'tooltips' argument in qgraph.
+  o Fixed a bug with numeric assignment for the 'arrows' argument on curved lines
+  o By default lines are now only curved if there is no other edge with a weight over the minimum between the two nodes instead of if there is any other edge between the two nodes.
+  o Greek labels are now identified by using sapply rather than a for-loop.
+  o Added 'tex' as filetype. Graphs can now be output in a .tex format using the 'tikzDevice'. The .tex file can then be build in LaTeX compilers. 
+  o The 'tooltips' argument can now also be used for filetype='tex'
+  o Replaced the use of 'windows' function with the 'dev.new' function. This should fix problems with the default output on platforms other than Windows.
+  o By default, a new R window is now only opened if the active device is the NULL-device.
+  o Added the 'qgraph.panel' function. Which creates a 4-panel plot with useful default graphs for correlation matrices.
+  
+Changes in Version 0.4.2
+  o Changed the standard output in R to fixed width windows (windows(rescale="fixed"...).
+  o Fixed a spelling error in the authors.
+  o Minimum and maximum details moved slightly to the center.
+  o Fixed a bug in identifying the factors in 'qgraph.loadings'
+  o Extended and improved the examples of the qgraph.efa, qgraph.pca and qgraph.loadings functions.
+  o Changed qgraph from depending to suggesting the psych, sem and RSVGTipsDevice packages. This enables 64bit users to install the complete package
+  o Similar to 'qgraph', 'qgraph.loadings' 'qgraph.efa' and 'qgraph.pca' now also return (invisible) a list of class "qgraph" containing the arguments.
+  o Removed scaling of the sizes of arrow heads, and added the argument 'asize' to control arrow head size.
+  o Added a new function, 'qgraph.arrow' which will be used to draw the arrowheads instead of 'arrows'. This enables closed arrowheads (by default) as well as better optimization for pdf output.
