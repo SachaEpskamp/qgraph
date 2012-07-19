@@ -1,0 +1,23 @@
+citHeader("To cite qgraph in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{qgraph}: Network Visualizations of Relationships in Psychometric Data",
+  author       = personList(as.person("Sacha Epskamp"),
+                   as.person("Ang\\'elique O. J. Cramer"),
+                   as.person("Lourens J. Waldorp"),
+                   as.person("Verena D. Schmittmann"),
+                   as.person("Denny Borsboom")),
+  journal      = "Journal of Statistical Software",
+  year         = "2012",
+  volume       = "48",
+  number       = "4",
+  pages        = "1--18",
+  url          = "http://www.jstatsoft.org/v48/i04/",
+
+  textVersion  =
+  paste("Sacha Epskamp, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann, Denny Borsboom (2012).",
+        "qgraph: Network Visualizations of Relationships in Psychometric Data.",
+        "Journal of Statistical Software, 48(4), 1-18.",
+        "URL http://www.jstatsoft.org/v48/i04/.")
+)
+
