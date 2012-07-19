@@ -3,6 +3,9 @@ Changes in Version 1.0.6
   o Included loopRotation and loopAngle arguments to qgraph() to allow self loops to be rotated.
   o qgraph.gui() included which enables a gui for analyzing correlation matrices
 
+Changes in Version 1.0.5-2
+  o Removed tikzdevice option due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for details.
+
 Changes in Version 1.0.5
   o Fixed a compatibility issue with the most recent version of Lavaan (0.4-14)
 

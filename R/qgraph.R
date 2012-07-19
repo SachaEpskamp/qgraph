@@ -306,34 +306,36 @@ if (filetype=="svg")
 }
 if (filetype=="tex")
 {
-	# Special thanks to Charlie Sharpsteen for supplying these tikz codes on stackoverflow.com !!!
-	
-	if (!suppressPackageStartupMessages(require(tikzDevice,quietly=TRUE))) stop("tikzDevice must be installed to use filetype='tex'")
-	opt= c( 
-	getOption('tikzLatexPackages'),  
-    "\\def\\tooltiptarget{\\phantom{\\rule{1mm}{1mm}}}",
-    "\\newbox\\tempboxa\\setbox\\tempboxa=\\hbox{}\\immediate\\pdfxform\\tempboxa \\edef\\emptyicon{\\the\\pdflastxform}",
-    "\\newcommand\\tooltip[1]{\\pdfstartlink user{/Subtype /Text/Contents  (#1)/AP <</N \\emptyicon\\space 0 R >>}\\tooltiptarget\\pdfendlink}"
-	)
-	
-	place_PDF_tooltip <- function(x, y, text)
-	{
-
-		# Calculate coordinates
-		tikzX <- round(grconvertX(x, to = "device"), 2)
-		tikzY <- round(grconvertY(y, to = "device"), 2)
-		# Insert node
-		tikzAnnotate(paste(
-		"\\node at (", tikzX, ",", tikzY, ") ",
-		"{\\tooltip{", text, "}};",
-		sep = ''
-		))
-	  invisible()
-	}
-	
-	print("NOTE: Using 'tex' as filetype will take longer to run than other filetypes")
-	
-	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
+# 	# Special thanks to Charlie Sharpsteen for supplying these tikz codes on stackoverflow.com !!!
+# 	
+# 	if (!suppressPackageStartupMessages(require(tikzDevice,quietly=TRUE))) stop("tikzDevice must be installed to use filetype='tex'")
+# 	opt= c( 
+# 	getOption('tikzLatexPackages'),  
+#     "\\def\\tooltiptarget{\\phantom{\\rule{1mm}{1mm}}}",
+#     "\\newbox\\tempboxa\\setbox\\tempboxa=\\hbox{}\\immediate\\pdfxform\\tempboxa \\edef\\emptyicon{\\the\\pdflastxform}",
+#     "\\newcommand\\tooltip[1]{\\pdfstartlink user{/Subtype /Text/Contents  (#1)/AP <</N \\emptyicon\\space 0 R >>}\\tooltiptarget\\pdfendlink}"
+# 	)
+# 	
+# 	place_PDF_tooltip <- function(x, y, text)
+# 	{
+# 
+# 		# Calculate coordinates
+# 		tikzX <- round(grconvertX(x, to = "device"), 2)
+# 		tikzY <- round(grconvertY(y, to = "device"), 2)
+# 		# Insert node
+# 		tikzAnnotate(paste(
+# 		"\\node at (", tikzX, ",", tikzY, ") ",
+# 		"{\\tooltip{", text, "}};",
+# 		sep = ''
+# 		))
+# 	  invisible()
+# 	}
+# 	
+# 	print("NOTE: Using 'tex' as filetype will take longer to run than other filetypes")
+# 	
+# 	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
+  
+  stop("Tikz device no longer supported due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for a fix")
 }
 }	
 	#if (!filetype%in%c('pdf','png','jpg','jpeg','svg','R','eps','tiff')) warning(paste("File type",filetype,"is not supported")) 
@@ -1394,7 +1396,7 @@ if (!is.logical(labels))
 			setSVGShapeToolTip(desc=SVGtooltips[i])
 		}
 		text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i]/4,col=lcolor,font=V.font[i])
-		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
+# 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
 	}
 }
 
