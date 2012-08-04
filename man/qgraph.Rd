@@ -25,6 +25,7 @@ qgraph( input, ... )
 
 \section{Output arguments}{
 \describe{
+\item{mar}{A vector of the form c(bottom, left, top, right) which gives the margines. Works similar to the argument in par(). Defauts to c(3,3,3,3)}
 	\item{filetype}{A character containing the file type to save the output in. "R" and "x11" outputs in a new R window ("x11" is prefered for Rstudio), "pdf" creates a pdf file. "svg" creates a svg file (requires RSVGTipsDevice). "tex" creates LaTeX code for the graph (requires tikzDevice). 'jpg', 'tiff' and 'png' can also be used. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device.}
 	\item{filename}{Name of the file without extension}
 	\item{width}{Width of the plot, in inches}
@@ -39,7 +40,7 @@ qgraph( input, ... )
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
 	\item{vsize}{A value indicating the size of the nodes. Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
-	\item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1)}
+	\item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
 	\item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults for graphs with less than 20 nodes to a 3 character abbreviation of the columnames and rownames if these are identical or else to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters)}
 	\item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters)}
 	\item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}

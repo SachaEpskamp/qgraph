@@ -1,7 +1,8 @@
-Changes in Version 1.0.6
+Changes in Version 1.1.0
+  o Improved default arguments for 'esize'. Now sets to 2 if the graph is unweighted and halfs the default value if graph is directed.
   o Method for moving beginning and end of edge to the edge of nodes has been reworked through the internal function Cent2Edge(). This should now be much more stable, and no longer be bugged if a graph is plotted with margins.
   o Fixed outdated information in the qgraph help page on specification of layout argument.
-  o Included loopRotation and loopAngle arguments to qgraph() to allow self loops to be rotated.
+  o Selfloops have been reworked through the internal function SelfLoop(). Can now be rotated using the loopRotation argument. The loop argument for controlling the size is currently defunct.
   o qgraph.gui() included which enables a gui for analyzing correlation matrices
 
 Changes in Version 1.0.5-2
