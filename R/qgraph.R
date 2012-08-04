@@ -247,7 +247,7 @@ qgraph =function( input, ... )
       DefLoopRot <- FALSE
     }
     
-    if(is.null(arguments[['loopAngle']])) loopAngle=pi/2 else loopAngle=arguments[['loopAngle']]
+    if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
     if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
     if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
     if(is.null(arguments$border.colors)) border.colors=NULL else border.colors=arguments$border.colors
@@ -269,8 +269,8 @@ qgraph =function( input, ... )
     # Arguments for directed graphs:
     if(is.null(arguments$curve)) curve=NULL else curve=arguments$curve
     if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
-    if(is.null(arguments$asize)) asize=0.15 else asize=arguments$asize
-    asize=asize*2.4/height
+    if(is.null(arguments[["arrowAngle"]])) arrowAngle <- pi/8 else arrowAngle <- arguments[["arrowAngle"]]
+#     asize=asize*2.4/height
     if(is.null(arguments$open)) open=FALSE else open=arguments$open
     if(is.null(arguments$bidirectional)) bidirectional=FALSE else bidirectional=arguments$bidirectional
     
@@ -392,6 +392,12 @@ qgraph =function( input, ... )
       }
       if (any(directed)) esize <- max(esize/2,1)
     } else esize <- arguments$esize
+    
+    # asize default:
+    if(is.null(arguments[["asize"]]))
+    {
+      asize <- max((-1/10)*(nNodes)+4,1)
+    } else asize <- arguments[["asize"]]
     
     ## diag default:
     if(is.null(arguments[['diag']])) 
@@ -1243,18 +1249,22 @@ qgraph =function( input, ... )
                 Ay=seq(y1,y2,length=arrows+2)
                 for (a in 1:arrows+1)
                 {
-                  qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                               col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                   qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  DrawArrow(Ax[a],Ay[a],atan2(Ax[a]-x1,Ay[a]-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
-                qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                             col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                 qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                DrawArrow(x2,y2,atan2(x2-x1,y2-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
-                  qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                               col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                   qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  DrawArrow(x1,y1,atan2(x1-x2,y1-y2),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
             }
@@ -1279,6 +1289,10 @@ qgraph =function( input, ... )
                   }
                 }
                 rot <- atan2(x1-centX,y1-centY)
+                if (shape[E$from[i]]=="square")
+                {
+                  rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
+                }
               } else rot <- loopRotation[i]
               spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]])
               
@@ -1363,7 +1377,7 @@ qgraph =function( input, ... )
                 midy <- (y1 + y2)/2
                 spx <- midx - curve[i] * 1/2 * (y2 - y1)
                 spy <- midy + curve[i] * 1/2 * (x2 - x1)
-                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=F)
+                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
                 #               }
               }
 #               } else if (E$from[i]==E$to[i])
@@ -1387,19 +1401,22 @@ qgraph =function( input, ... )
                 Ay=seq(1,length(spl$y),length=arrows+2)
                 for (a in 2:(arrows+1))
                 {
-                  qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                               col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
-                qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                             col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
-                  qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                               col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+#                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  DrawArrow(spl$x[1],spl$y[1],atan2(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               

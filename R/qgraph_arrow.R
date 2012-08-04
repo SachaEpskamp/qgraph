@@ -1,6 +1,7 @@
 qgraph.arrow=function(x,y,x.orig,y.orig,length,angle=30*pi/180,lwd,col="black",
-	open=T,Xasp=1,lty=1)
+	open=TRUE,Xasp=1,lty=1)
 {
+  warning("This function is no longer supported. Use qgraph:::DrawArrow")
 x1=x+(x.orig-x)*Xasp
 x2=x
 y1=y.orig
