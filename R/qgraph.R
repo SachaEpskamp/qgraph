@@ -1167,34 +1167,43 @@ for (i in edgesort)
 		{
 			if (is.logical(arrows) | vTrans < 255) if ((arrows & directed[i]) | vTrans < 255)
 			{
-				xd=x2-x1
-				yd=y2-y1
-				d2=sqrt(sum(xd^2+yd^2))
-				if (shape[E$to[i]]!="square")
-				{
-					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
-					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
-				}
-				if (shape[E$to[i]]=="square")
-				{
-					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-				}
+# 				xd=x2-x1
+# 				yd=y2-y1
+# 				d2=sqrt(sum(xd^2+yd^2))
+# 				if (shape[E$to[i]]!="square")
+# 				{
+# 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
+# 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
+# 				}
+# 				if (shape[E$to[i]]=="square")
+# 				{
+# 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
+# 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
+# 				}
+        NewPoints <- Cent2Edge(x2,y2,atan2(x1-x2,y1-y2),vsize[E$to[i]],shape[E$to[i]])
+        x2 <- NewPoints[1]
+        y2 <- NewPoints[2]
+        
 				if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vTrans < 255)
 				{
-					xd=x2-x1
-					yd=y2-y1
-					d2=sqrt(sum(xd^2+yd^2))
-					if (shape[E$from[i]]!="square")
-					{
-						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
-						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
-					}
-					if (shape[E$from[i]]=="square")
-					{
-						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-					}
+# 					xd=x2-x1
+# 					yd=y2-y1
+# 					d2=sqrt(sum(xd^2+yd^2))
+# 					if (shape[E$from[i]]!="square")
+# 					{
+# 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
+# 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
+# 					}
+# 					if (shape[E$from[i]]=="square")
+# 					{
+# 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
+# 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
+# 					}
+          
+				  NewPoints <- Cent2Edge(x1,y1,atan2(x2-x1,y2-y1),vsize[E$from[i]],shape[E$from[i]])
+				  x1 <- NewPoints[1]
+				  y1 <- NewPoints[2]  
+          
 				}
 			}
 			lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
@@ -1239,20 +1248,25 @@ for (i in edgesort)
 			}	
 			if (is.logical(arrows)| vTrans < 255) if (arrows & directed[i]| vTrans < 255)
 			{
-				xd=x2-spl$x[length(spl$x)-1]
-				yd=y2-spl$y[length(spl$y)-1]
-				d2=sqrt(sum(xd^2+yd^2))
-				if (shape[E$to[i]]!="square")
-				{
-					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
-					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
-				}
-				if (shape[E$to[i]]=="square")
-				{
-					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-				}
-				if (E$from[i]==E$to[i])
+# 				xd=x2-spl$x[length(spl$x)-1]
+# 				yd=y2-spl$y[length(spl$y)-1]
+# 				d2=sqrt(sum(xd^2+yd^2))
+# 				if (shape[E$to[i]]!="square")
+# 				{
+# 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
+# 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
+# 				}
+# 				if (shape[E$to[i]]=="square")
+# 				{
+# 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
+# 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
+# 				}
+        
+			  NewPoints <- Cent2Edge(x2,y2,atan2(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2),vsize[E$to[i]],shape[E$to[i]])
+			  x2 <- NewPoints[1]
+			  y2 <- NewPoints[2]
+        
+        if (E$from[i]==E$to[i])
 				{
 					spx=c(x1+loopX,x1,x1-loopX)
 					spy=c(y1,y1+loopY,y1)
@@ -1267,19 +1281,24 @@ for (i in edgesort)
 				}
 				if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vTrans < 255)
 				{
-					xd= spl$x[2] - x1
-					yd= spl$y[2] - y1
-					d2=sqrt(sum(xd^2+yd^2))
-					if (shape[E$from[i]]!="square")
-					{
-						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
-						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
-					}
-					if (shape[E$from[i]]=="square")
-					{
-						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-					}
+# 					xd= spl$x[2] - x1
+# 					yd= spl$y[2] - y1
+# 					d2=sqrt(sum(xd^2+yd^2))
+# 					if (shape[E$from[i]]!="square")
+# 					{
+# 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
+# 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
+# 					}
+# 					if (shape[E$from[i]]=="square")
+# 					{
+# 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
+# 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
+# 					}
+          
+				  NewPoints <- Cent2Edge(x1,y1,atan2(spl$x[2]-x1,spl$y[2]-y1),vsize[E$from[i]],shape[E$from[i]])
+				  x1 <- NewPoints[1]
+				  y1 <- NewPoints[2]
+          
 				}
 				if (E$from[i]==E$to[i])
 				{

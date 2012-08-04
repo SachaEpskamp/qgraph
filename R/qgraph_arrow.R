@@ -22,6 +22,11 @@ Ry = sin(r) * (px-x2) + cos(r) * (py-y2) + y2
 Lx = cos(-r) * (px-x2) - sin(-r) * (py-y2) + x2
 Ly = sin(-r) * (px-x2) + cos(-r) * (py-y2) + y2
 
-if (open) lines((c(Rx,x,Lx)-x)/Xasp+x,c(Ry,y,Ly),lwd=lwd,col=col,lty=lty) else polygon((c(Lx,x2,Rx)-x)/Xasp+x,c(Ly,y2,Ry),lwd=lwd,col=col,border=NA)
+if (open) 
+{
+  lines((c(Rx,x,Lx)-x)/Xasp+x,c(Ry,y,Ly),lwd=lwd,col=col,lty=lty)
+} else {
+  polygon((c(Lx,x2,Rx)-x)/Xasp+x,c(Ly,y2,Ry),lwd=lwd,col=col,border=NA)
+}
 }
 
