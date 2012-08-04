@@ -1268,7 +1268,17 @@ qgraph =function( input, ... )
               #               spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
               if (DefLoopRot)
               {
-                rot <- atan2(x1-mean(layout[,1]),y1-mean(layout[,2]))
+                centX <- mean(layout[,1])
+                centY <- mean(layout[,2])
+                for (g in 1:length(groups))
+                {
+                  if (E$from[i]%in%groups[[g]])
+                  {
+                    centX <- mean(layout[groups[[g]],1])
+                    centY <- mean(layout[groups[[g]],2])
+                  }
+                }
+                rot <- atan2(x1-centX,y1-centY)
               } else rot <- loopRotation[i]
               spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]])
               
