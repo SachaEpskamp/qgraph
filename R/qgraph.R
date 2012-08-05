@@ -1135,10 +1135,10 @@ qgraph =function( input, ... )
       
       # PLOT:
       marOrig <- par("mar")
-      par(mar=c(0,0,0,0), bg=background)
       if (plot)
       {
         plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
+        par(mar=c(0,0,0,0), bg=background)
       }
       
       # if (PlotOpen) 
@@ -1214,7 +1214,7 @@ qgraph =function( input, ... )
               # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
               # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
               # 				}
-              NewPoints <- Cent2Edge(x2,y2,atan2(x1-x2,y1-y2),vsize[E$to[i]],shape[E$to[i]])
+              NewPoints <- Cent2Edge(x2,y2,atan2usr2in(x1-x2,y1-y2),vsize[E$to[i]],shape[E$to[i]])
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               
@@ -1234,7 +1234,7 @@ qgraph =function( input, ... )
                 # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 					}
                 
-                NewPoints <- Cent2Edge(x1,y1,atan2(x2-x1,y2-y1),vsize[E$from[i]],shape[E$from[i]])
+                NewPoints <- Cent2Edge(x1,y1,atan2usr2in(x2-x1,y2-y1),vsize[E$from[i]],shape[E$from[i]])
                 x1 <- NewPoints[1]
                 y1 <- NewPoints[2]  
                 
@@ -1251,20 +1251,20 @@ qgraph =function( input, ... )
                 {
 #                   qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(Ax[a],Ay[a],atan2(Ax[a]-x1,Ay[a]-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                  DrawArrow(Ax[a],Ay[a],atan2usr2in(Ax[a]-x1,Ay[a]-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
 #                 qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                DrawArrow(x2,y2,atan2(x2-x1,y2-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                DrawArrow(x2,y2,atan2usr2in(x2-x1,y2-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
 #                   qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(x1,y1,atan2(x1-x2,y1-y2),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                  DrawArrow(x1,y1,atan2usr2in(x1-x2,y1-y2),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
             }
@@ -1288,7 +1288,7 @@ qgraph =function( input, ... )
                     centY <- mean(layout[groups[[g]],2])
                   }
                 }
-                rot <- atan2(x1-centX,y1-centY)
+                rot <- atan2usr2in(x1-centX,y1-centY)
                 if (shape[E$from[i]]=="square")
                 {
                   rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
@@ -1322,7 +1322,7 @@ qgraph =function( input, ... )
                 # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 				}
                 
-                NewPoints <- Cent2Edge(x2,y2,atan2(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2),vsize[E$to[i]],shape[E$to[i]])
+                NewPoints <- Cent2Edge(x2,y2,atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2),vsize[E$to[i]],shape[E$to[i]])
                 x2 <- NewPoints[1]
                 y2 <- NewPoints[2]
                 
@@ -1355,7 +1355,7 @@ qgraph =function( input, ... )
                   # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                   # 					}
                   
-                  NewPoints <- Cent2Edge(x1,y1,atan2(spl$x[2]-x1,spl$y[2]-y1),vsize[E$from[i]],shape[E$from[i]])
+                  NewPoints <- Cent2Edge(x1,y1,atan2usr2in(spl$x[2]-x1,spl$y[2]-y1),vsize[E$from[i]],shape[E$from[i]])
                   x1 <- NewPoints[1]
                   y1 <- NewPoints[2]
                   
@@ -1403,20 +1403,20 @@ qgraph =function( input, ... )
                 {
 #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                  DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
 #                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2usr2in(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
 #                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(spl$x[1],spl$y[1],atan2(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                  DrawArrow(spl$x[1],spl$y[1],atan2usr2in(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               

@@ -1,4 +1,6 @@
 Changes in Version 1.1.0
+  o Fixed issues with margins when plot=FALSE
+  o Fixed dimensionality issues of arrowheads.
   o Improved default arguments for 'esize'. Now sets to 2 if the graph is unweighted and halfs the default value if graph is directed.
   o Method for moving beginning and end of edge to the edge of nodes has been reworked through the internal function Cent2Edge(). This should now be much more stable, and no longer be bugged if a graph is plotted with margins.
   o Fixed outdated information in the qgraph help page on specification of layout argument.
