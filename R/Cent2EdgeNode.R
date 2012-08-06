@@ -1,5 +1,3 @@
-
-
 ### CONVERTS CENTER COORDINATES TO EDGE OF NODE ###:
 
 Cent2Edge <- function(x,y,r,cex,shape)
