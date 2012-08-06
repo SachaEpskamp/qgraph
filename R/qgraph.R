@@ -580,11 +580,6 @@ qgraph =function( input, ... )
         curve <- curve[c(incl)]
         curve <- curve[E$weight!=0]
       }
-      if (is.matrix(loopRotation))
-      {
-        loopRotation <- loopRotation[c(incl)]
-        loopRotation <- loopRotation[E$weight!=0]
-      }
       if (is.matrix(bidirectional))
       {
         bidirectional <- bidirectional[c(incl)]
@@ -609,7 +604,7 @@ qgraph =function( input, ... )
     if (mode=="sig") Pvals <- Pvals[E$weight != 0]
     E$weight=E$weight[E$weight!=0]
     
-    if (length(loopRotation)==1) loopRotation <- rep(loopRotation,length(E$from))
+    if (length(loopRotation)==1) loopRotation <- rep(loopRotation,nNodes)
     
     if (length(directed)==1) 
     {
@@ -1300,7 +1295,7 @@ qgraph =function( input, ... )
                 {
                   rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
                 }
-              } else rot <- loopRotation[i]
+              } else rot <- loopRotation[E$from[i]]
               spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]])
               
             } else 
