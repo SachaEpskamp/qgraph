@@ -1,4 +1,20 @@
 useDynLib(qgraph)
+
+export(pathDiagram,pathDiagram.S4,qgraphSEM,qgraphSEM.S4)
+# export Classes
+exportClasses(
+              "qgraph.semModel"
+             )
+
+# export Methods
+exportMethods(
+             "qgraphSEM.S4",
+			"pathDiagram.S4"
+             )
+S3method(pathDiagram,sem)
+S3method(qgraphSEM,sem)
+# importClassesFrom(OpenMx,"MxModel","MxRAMModel")
+
 export(qgraph)
 export(qgraph.layout.fruchtermanreingold)
 export(qgraph.loadings)
@@ -6,7 +22,6 @@ export(qgraph.efa)
 export(qgraph.svg)
 export(qgraph.pca)
 export(qgraph.sem)
-export(qgraph.arrow)
 export(qgraph.panel)
 export(qgraph.semModel)
 export(qgraph.cfa)
