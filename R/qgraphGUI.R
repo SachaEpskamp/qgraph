@@ -39,7 +39,7 @@ qgraph.gui <- function(input,...)
 
    rp.slider(qgraph.panel, esize, 0, 20 , qgraph.setup, "Edge width", initval = 10, showvalue = TRUE,  pos = list(column=1,row=0))
   rp.slider(qgraph.panel, vsize, 0, 10, qgraph.setup, "Node size", initval = 2, showvalue = TRUE, pos = list(column=1,row=1))
-  rp.slider(qgraph.panel, asize, 0, 1 , qgraph.setup, "Arrow size", initval = 0.1, showvalue = TRUE, pos = list(column=1,row=2))
+  rp.slider(qgraph.panel, asize, 1, 10 , qgraph.setup, "Arrow size", initval = 2, showvalue = TRUE, pos = list(column=1,row=2))
   
   rp.radiogroup(qgraph.panel, graph, c("association", "concentration", "factorial"), title = "Graph", action = qgraph.setup, pos = list(column=0,row=3))
 	rp.radiogroup(qgraph.panel, layout, c("circular", "spring"), title = "Layout", action = qgraph.setup, pos = list(column=0,row=4))

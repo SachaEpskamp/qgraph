@@ -269,7 +269,6 @@ qgraph =function( input, ... )
     # Arguments for directed graphs:
     if(is.null(arguments$curve)) curve=NULL else curve=arguments$curve
     if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
-    if(is.null(arguments[["arrowAngle"]])) arrowAngle <- pi/8 else arrowAngle <- arguments[["arrowAngle"]]
 #     asize=asize*2.4/height
     if(is.null(arguments$open)) open=FALSE else open=arguments$open
     if(is.null(arguments$bidirectional)) bidirectional=FALSE else bidirectional=arguments$bidirectional
@@ -398,6 +397,14 @@ qgraph =function( input, ... )
     {
       asize <- max((-1/10)*(nNodes)+4,1)
     } else asize <- arguments[["asize"]]
+
+    ## arrowAngle default:
+    if(is.null(arguments[["arrowAngle"]])) 
+    {
+      if (weighted) arrowAngle <- pi/4 else arrowAngle <- pi/8
+    } else {
+      arrowAngle <- arguments[["arrowAngle"]]
+    }
     
     ## diag default:
     if(is.null(arguments[['diag']])) 
@@ -1587,7 +1594,7 @@ qgraph =function( input, ... )
       
       if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff','tex')) 
       {
-        print(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
+        message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
         dev.off()
       }
       par(mar=marOrig)

@@ -72,7 +72,7 @@ qgraph( input, ... )
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 	\item{curve}{A value indicating how strongly edges should be curved. Defaults to 0 (no curve) for each edge except for edges in directional graphs between nodes that have two edges in between them. CURVING LINES DRASTICALLY INCREASES FILE SIZE!}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
-  \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8}
+  \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
 	\item{asize}{Size of the arrowhead.}
 	\item{open}{Logical indicating if open (TRUE) or closed (FALSE) arrowheads should be drawn.}
 	\item{bidirectional}{If this is TRUE, Then directional edges between nodes that have two edges between them are not curved. Defaults to FALSE. Can also be a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
@@ -270,13 +270,13 @@ title("Test scores of random subject",line=2.5)
 
 # EFA:
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,asize=0.07,esize=4,vTrans=200,filetype="R",width=7,height=7)
+qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200,filetype="R",width=7,height=7)
 title("Big 5 EFA",line=2.5)
 
 # PCA:
 library("psych")
 big5pca <- principal(cor(big5),5,rotate="promax")
-qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,asize=0.07,esize=4,vTrans=200)
+qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200)
 title("Big 5 PCA",line=2.5)
 
 #### UNWEIGHTED DIRECTED GRAPHS ###

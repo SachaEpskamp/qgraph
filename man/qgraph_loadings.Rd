@@ -50,10 +50,10 @@ data(big5groups)
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
 big5loadings <- loadings(big5efa)
 qgraph.loadings(big5loadings,groups=big5groups,rotation="promax",minimum=0.2,
-				cut=0.4,vsize=c(1,15),borders=FALSE,asize=0.07,esize=4,vTrans=200)
+				cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200)
 
 # Tree layout:
 qgraph.loadings(big5loadings,groups=big5groups,rotation="promax",minimum=0.2,
-				cut=0.4,vsize=c(1,15),borders=FALSE,asize=0.07,esize=4,vTrans=200,
+				cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200,
 				layout="tree",width=20,filetype="R")
 }

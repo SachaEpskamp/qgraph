@@ -43,8 +43,8 @@ data(big5)
 data(big5groups)
 
 qgraph.pca(cor(big5),5,groups=big5groups,rotation="promax",minimum=0.2,
-			cut=0.4,vsize=c(1,15),borders=FALSE,asize=0.07,esize=4,vTrans=200)
+			cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200)
 
 # Tree layout:
-qgraph.pca(cor(big5), 5,groups=big5groups, rotation="promax", minimum=0.2, cut=0.4, vsize=c(1,15), borders=FALSE, asize=0.07, esize=4, layout="tree", width=20, filetype="R")
+qgraph.pca(cor(big5), 5,groups=big5groups, rotation="promax", minimum=0.2, cut=0.4, vsize=c(1,15), borders=FALSE, layout="tree", width=20, filetype="R")
 }
