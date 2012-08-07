@@ -15,6 +15,9 @@ S3method(pathDiagram,sem)
 S3method(qgraphSEM,sem)
 S3method(qgraphSEM,msem)
 S3method(pathDiagram,msem)
+S3method(qgraphSEM,msemObjectiveML)
+S3method(pathDiagram,msemObjectiveML)
+
 # importClassesFrom(OpenMx,"MxModel","MxRAMModel")
 
 export(qgraph)

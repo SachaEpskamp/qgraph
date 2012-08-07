@@ -8,59 +8,64 @@ pathDiagram.msem <- function(object,...)
   invisible(pathDiagram(qgraphSEM(object),...))
 }
 
+pathDiagram.msemObjectiveML <- function(object,...) 
+{
+  invisible(pathDiagram(qgraphSEM(object),...))
+}
+
 
 
 ### SINGLE GROUP MODEL ###
-qgraphSEM.sem <- function(res)
+qgraphSEM.sem <- function(object)
 {
   
   # Check if object is of class "sem":
-  if (!any(class(res)%in%c("sem","semmod"))) stop("Input must be a 'sem' object")
+  if (!any(class(object)%in%c("sem","semmod"))) stop("Input must be a 'sem' object")
   
   # Define RAM:
   RAM <- data.frame(
-    label = rownames(res$ram), 
-    lhs = res$ram[,3],
+    label = rownames(object$ram), 
+    lhs = object$ram[,3],
     edge = "",
-    rhs = res$ram[,2],
-    est = res$ram[,5],
-    std = standardizedCoefficients(res)[,2],
+    rhs = object$ram[,2],
+    est = object$ram[,5],
+    std = standardizedCoefficients(object)[,2],
     group = 1,
-    fixed = res$ram[,4]==0,
+    fixed = object$ram[,4]==0,
     stringsAsFactors=FALSE)
   
   # Extract parameter estimates:
-  RAM$est[res$ram[,4]!=0] <- res$coef[res$ram[,4]]
+  RAM$est[object$ram[,4]!=0] <- object$coef[object$ram[,4]]
   
   # Fix labels:
-  for (i in unique(res$ram[,4][res$ram[,4]!=0]))
+  for (i in unique(object$ram[,4][object$ram[,4]!=0]))
   {
-    if (any(RAM$label[res$ram[,4]==i]=="") & any(RAM$label[res$ram[,4]==i]!="")) 
+    if (any(RAM$label[object$ram[,4]==i]=="") & any(RAM$label[object$ram[,4]==i]!="")) 
     {
-      RAM$label[res$ram[,4]==i & RAM$label==""] <- RAM$label[res$ram[,4]==i & RAM$label!=""] 
+      RAM$label[object$ram[,4]==i & RAM$label==""] <- RAM$label[object$ram[,4]==i & RAM$label!=""] 
     }
   }
   
   # Name variables:
-  RAM$lhs <- res$var.names[RAM$lhs]
-  RAM$rhs <- res$var.names[RAM$rhs]
+  RAM$lhs <- object$var.names[RAM$lhs]
+  RAM$rhs <- object$var.names[RAM$rhs]
   
   # Variable dataframe: 
   Vars <- data.frame(
-    name = res$var.names,
-    manifest = res$var.names %in% colnames(res$S),
+    name = object$var.names,
+    manifest = object$var.names %in% colnames(object$S),
     stringsAsFactors=FALSE)
   
   # Define operators:
-  RAM$edge[res$ram[,1]==2] <- "<->"
-  RAM$edge[res$ram[,1]==1] <- "->"
-#   RAM$op[res$ram[,1]==1 & !Vars$manifest[match(RAM$lhs,Vars$name)] & Vars$manifest[match(RAM$rhs,Vars$name)]] <- "->"
+  RAM$edge[object$ram[,1]==2] <- "<->"
+  RAM$edge[object$ram[,1]==1] <- "->"
+#   RAM$op[object$ram[,1]==1 & !Vars$manifest[match(RAM$lhs,Vars$name)] & Vars$manifest[match(RAM$rhs,Vars$name)]] <- "->"
   
   semModel <- new("qgraph.semModel")
   semModel@RAM <- RAM
   semModel@Vars <- Vars
   semModel@Computed <- TRUE
-  semModel@Original <- list(res)
+  semModel@Original <- list(object)
   
   return(semModel)
 }
@@ -69,14 +74,14 @@ qgraphSEM.sem <- function(res)
 
 
 ### MUTLI GROUP MODEL ###
-qgraphSEM.msem <- function(object)
+qgraphSEM.msem <- qgraphSEM.msemObjectiveML <- function(object)
 {
   
   nGroup <- length(object$ram)
   GroupNames <- object$groups
   
   RAMS <- list()
-  stdRes <- standcoefmsem(object)
+  stdobject <- standcoefmsem(object)
   
   for (g in 1:nGroup)
   {
@@ -87,13 +92,13 @@ qgraphSEM.msem <- function(object)
       edge = "",
       rhs = object$ram[[g]][,2],
       est = object$ram[[g]][,5],
-      std = stdRes[[g]][,2],
+      std = stdobject[[g]][,2],
       group = GroupNames[g],
       fixed = object$ram[[g]][,4]==0,
       stringsAsFactors=FALSE)
     
     # Extract parameter estimates:
-    RAM$est[object$ram[[g]][,4]!=0] <- res$coef[object$ram[[g]][,4]]
+    RAM$est[object$ram[[g]][,4]!=0] <- object$coef[object$ram[[g]][,4]]
     
     # Fix labels:
     for (i in unique(object$ram[[g]][,4][object$ram[[g]][,4]!=0]))
@@ -105,8 +110,8 @@ qgraphSEM.msem <- function(object)
     }
     
     # Name variables:
-    RAM$lhs <- res$var.names[[g]][RAM$lhs]
-    RAM$rhs <- res$var.names[[g]][RAM$rhs]
+    RAM$lhs <- object$var.names[[g]][RAM$lhs]
+    RAM$rhs <- object$var.names[[g]][RAM$rhs]
     
     
     RAMS[[g]] <- RAM
@@ -117,17 +122,17 @@ qgraphSEM.msem <- function(object)
   # Variable dataframe: 
   Vars <- data.frame(
     name = unique(unlist(object$var.names)),
-    manifest = unique(unlist(object$var.names)) %in% unique(c(sapply(res$S,colnames))),
+    manifest = unique(unlist(object$var.names)) %in% unique(c(sapply(object$S,colnames))),
     stringsAsFactors=FALSE)
   
   
-  #   RAM$op[res$ram[,1]==1 & !Vars$manifest[match(RAM$lhs,Vars$name)] & Vars$manifest[match(RAM$rhs,Vars$name)]] <- "->"
+  #   RAM$op[object$ram[,1]==1 & !Vars$manifest[match(RAM$lhs,Vars$name)] & Vars$manifest[match(RAM$rhs,Vars$name)]] <- "->"
   
   semModel <- new("qgraph.semModel")
   semModel@RAM <- RAM
   semModel@Vars <- Vars
   semModel@Computed <- TRUE
-  semModel@Original <- list(res)
+  semModel@Original <- list(object)
   
   return(semModel)
 }
