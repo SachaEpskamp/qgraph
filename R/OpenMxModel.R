@@ -126,6 +126,7 @@ qgraphSEM_MxModel <- function(object){
   semModel@Vars <- S4objects[[1]]@Vars
   semModel@Computed <- !length(object@output)==0
   semModel@Original <- list(object)
+
   
   return(semModel)
 }
