@@ -3,6 +3,12 @@ pathDiagram.sem <- function(object,...)
   invisible(pathDiagram(qgraphSEM(object),...))
 }
 
+pathDiagram.msem <- function(object,...) 
+{
+  invisible(pathDiagram(qgraphSEM(object),...))
+}
+
+
 
 ### SINGLE GROUP MODEL ###
 qgraphSEM.sem <- function(res)
