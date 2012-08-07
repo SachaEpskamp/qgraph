@@ -103,7 +103,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 
 
 ### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
   if (any(object@RAM$edge=="int")) 
   {
@@ -188,8 +188,10 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,la
   }
   askOrig <- par("ask")
   
+  if (missing(include)) include <- 1:length(Groups)
+  
   par(ask=ask)
-  for (gr in Groups)
+  for (gr in Groups[(1:length(Groups))%in%include])
   {
     GroupRAM <- object@RAM[object@RAM$group==gr,]
     
