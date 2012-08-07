@@ -447,6 +447,9 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       } else if (grepl("est|par",whatLabels,ignore.case=TRUE))
       {
         eLabels <- as.character(round(GroupRAM$est,2))
+      } else if (grepl("no|omit|hide|invisible",whatLabels,ignore.case=TRUE))
+      {
+        eLabels <- rep("",nrow(Edgelist))
       } else stop("Could not detect use of 'whatLabels' argument")
     }
     
