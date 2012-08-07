@@ -119,7 +119,7 @@ qgraphSEM_MxModel <- function(object){
 
   if (any(!"MxRAMModel"%in%sapply(object@submodels,class))) stop("Model or all submodels must be of class 'MxRAMModel'")
   for (i in 1:length(object@submodels)) object@submodels[[i]]@output <- list(TRUE)
-  S4objects <- lapply(object@submodels,qgraphSEM.S4)
+  S4objects <- lapply(object@submodels,qgraphSEM)
   
   semModel <- new("qgraph.semModel")
   semModel@RAM <- do.call("rbind",lapply(S4objects,slot,"RAM"))
