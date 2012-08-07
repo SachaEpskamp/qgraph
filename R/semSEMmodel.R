@@ -114,6 +114,10 @@ qgraphSEM.msem <- qgraphSEM.msemObjectiveML <- function(object)
     RAM$rhs <- object$var.names[[g]][RAM$rhs]
     
     
+    # Define operators:
+    RAM$edge[object$ram[[g]][,1]==2] <- "<->"
+    RAM$edge[object$ram[[g]][,1]==1] <- "->"
+    
     RAMS[[g]] <- RAM
   }
   
