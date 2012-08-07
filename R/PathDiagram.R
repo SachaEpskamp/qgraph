@@ -103,7 +103,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 
 
 ### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 9,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
   if (any(object@RAM$edge=="int")) 
   {
