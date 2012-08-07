@@ -13,6 +13,8 @@ exportMethods(
              )
 S3method(pathDiagram,sem)
 S3method(qgraphSEM,sem)
+S3method(qgraphSEM,msem)
+S3method(pathDiagram,msem)
 # importClassesFrom(OpenMx,"MxModel","MxRAMModel")
 
 export(qgraph)
