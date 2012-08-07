@@ -397,6 +397,13 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,la
       eLabels <- GroupRAM$label
     } else eLabels <- rep("",nrow(Edgelist))
     
+    # vsize:
+    vSize <- numeric(nN)
+    vSize[Labels%in%manNames] <- sizeMan
+    vSize[Labels%in%latNames] <- sizeLat
+    vSize[Labels=="1"] <- sizeInt
+    
+    
     # Abbreviate:
     if (nCharEdges>0)
     {
@@ -406,12 +413,6 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,la
     {
       Labels <- abbreviate(Labels,nCharNodes)
     }
-    
-    # vsize:
-    vSize <- numeric(nN)
-    vSize[Labels%in%manNames] <- sizeMan
-    vSize[Labels%in%latNames] <- sizeLat
-    vSize[Labels=="1"] <- sizeInt
     
     qgraphRes[[which(Groups==gr)]] <- qgraph(Edgelist,
            labels=Labels,
