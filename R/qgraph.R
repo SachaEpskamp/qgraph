@@ -395,7 +395,8 @@ qgraph =function( input, ... )
     # asize default:
     if(is.null(arguments[["asize"]]))
     {
-      asize <- max((-1/10)*(nNodes)+4,1)
+#       asize <- max((-1/10)*(nNodes)+4,1)
+      asize <- ifelse(nNodes>10,2,3)
     } else asize <- arguments[["asize"]]
 
     ## arrowAngle default:

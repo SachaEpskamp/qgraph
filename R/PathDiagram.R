@@ -29,9 +29,13 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
   {
     if (!trim)
     {
+      if (n+nrow(intMap)==1)
+      {
+        sq <- 0
+      }
       if (n+nrow(intMap) == 2)
       {
-        sq <- c(0,1) 
+        sq <- c(0,0.5) 
       } else {
       sq <- seq(-1,1,length=n+nrow(intMap))
       }
@@ -69,16 +73,24 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
   } else {
     if (!trim)
     {
+      if (n==1)
+      {
+        sq <- 0
+      }
       if (n == 2)
       {
-        sq <- c(0,1) 
+        sq <- c(-1,1) 
       } else {
         sq <- seq(-1,1,length=n)
       }
     } else {
+      if (n == 1)
+      {
+        sq <- 0
+      }
       if (n == 2)
       {
-        sq <- c(0,0.5) 
+        sq <- c(-0.5,0.5) 
       } else {
         sq <- seq(-1,1,length=n+2)[-c(1,n+2)]
       }
@@ -103,7 +115,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 
 
 ### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 9,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=TRUE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
   if (any(object@RAM$edge=="int")) 
   {
