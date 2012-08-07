@@ -360,21 +360,23 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,la
       loopRotation <- rep(0,nN)
       loopRotation[endoMan] <- pi
       loopRotation[exoMan] <- 0
-      loopRotation[endoLat] <- pi
-      loopRotation[exoLat] <- 0
+      loopRotation[endoLat] <- 0
+      loopRotation[exoLat] <- pi
       if (horizontal) loopRotation <- loopRotation - 0.5*pi
       
-      ### For latents, find opposite of mean angle
-      for (i in which(Labels%in%latNames))
+      if (any(object@Vars$exogenous))
       {
-        # Layout subset of all connected:
-        subEdgelist <- Edgelist[(Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2]),]
-        conNodes <- c(subEdgelist[subEdgelist[,1]==i,2],subEdgelist[subEdgelist[,2]==i,1])
-        subLayout <- Layout[conNodes,]
-        Degrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
-        loopRotation[i] <- optimize(loopOptim,c(0,2*pi),Degrees=Degrees,maximum=TRUE)$maximum
-        }
-      
+        ### For latents, find opposite of mean angle
+        for (i in which(Labels%in%latNames))
+        {
+          # Layout subset of all connected:
+          subEdgelist <- Edgelist[(Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2]),]
+          conNodes <- c(subEdgelist[subEdgelist[,1]==i,2],subEdgelist[subEdgelist[,2]==i,1])
+          subLayout <- Layout[conNodes,]
+          Degrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
+          loopRotation[i] <- optimize(loopOptim,c(0,2*pi),Degrees=Degrees,maximum=TRUE)$maximum
+          }
+      }
     } else loopRotation <- NULL
     
     # Edge labels:
