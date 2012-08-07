@@ -115,7 +115,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 
 
 ### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=FALSE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=FALSE,curve,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
   if (any(object@RAM$edge=="int")) 
   {
@@ -136,6 +136,14 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     } else {
       curve <- 0
     }
+  }
+  
+  if (missing(whatLabels))
+  {
+    edge.labels <- TRUE
+  } else
+  {
+    edge.labels <- FALSE    
   }
   
   # Set and check style: 
@@ -418,14 +426,28 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     if (grepl("path|diagram|model",what,ignore.case=TRUE))
     {
       
-    } else if (grepl("stand",what,ignore.case=TRUE))
+    } else if (grepl("stand|std",what,ignore.case=TRUE))
     {
       Edgelist <- cbind(Edgelist,GroupRAM$std)
-      if (edge.labels) eLabels <- round(GroupRAM$std,2)
-    } else if (grepl("est",what,ignore.case=TRUE))
+      if (edge.labels) eLabels <- as.character(round(GroupRAM$std,2))
+    } else if (grepl("est|par",what,ignore.case=TRUE))
     {
       Edgelist <- cbind(Edgelist,GroupRAM$est)
-      if (edge.labels) eLabels <- round(GroupRAM$est,2)
+      if (edge.labels) eLabels <- as.character(round(GroupRAM$est,2))
+    } else stop("Could not detect use of 'what' argument")
+    
+    if (!missing(whatLabels))
+    {
+      if (grepl("path|diagram|model|name|label",whatLabels,ignore.case=TRUE))
+      {
+        eLabels <- GroupRAM$label
+      } else if (grepl("stand|std",whatLabels,ignore.case=TRUE))
+      {
+        eLabels <- as.character(round(GroupRAM$std,2))
+      } else if (grepl("est|par",whatLabels,ignore.case=TRUE))
+      {
+        eLabels <- as.character(round(GroupRAM$est,2))
+      } else stop("Could not detect use of 'whatLabels' argument")
     }
     
     qgraphRes[[which(Groups==gr)]] <- qgraph(Edgelist,

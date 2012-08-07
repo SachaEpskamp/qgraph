@@ -613,6 +613,20 @@ qgraph =function( input, ... )
     }
     directed <- directed[keep]
     
+    if (length(bidirectional)==1) 
+    {
+      bidirectional <- rep(bidirectional,length(E$from))
+    }
+    bidirectional <- bidirectional[keep]
+    
+    if (!is.logical(edge.labels))
+    {
+      if (length(edge.labels)==length(keep))
+      {
+        edge.labels <- edge.labels[keep]
+      }
+    }
+    
     if (length(E$from) > 0)
     {
       maximum=max(abs(c(maximum,max(abs(E$weight)),cut,abs(diagWeights))))
