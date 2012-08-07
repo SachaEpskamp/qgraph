@@ -39,6 +39,8 @@ setMethod("qgraphSEM.S4",signature("lavaan"),function(object){
   
   semModel <- new("qgraph.semModel")
   
+  if (is.null(pars$group)) pars$group <- ""
+  
   # Create edges dataframe
   semModel@RAM <- data.frame(
     label = pars$label,

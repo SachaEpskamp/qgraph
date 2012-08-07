@@ -1,3 +1,6 @@
+Changes in Version 1.1.0 - SEM functionality:
+  o NEEDED
+
 Changes in Version 1.1.0
   o Fixed issues with margins when plot=FALSE
   o Fixed dimensionality issues of arrowheads.
