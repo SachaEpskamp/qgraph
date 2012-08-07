@@ -115,7 +115,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 
 
 ### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=FALSE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=FALSE,curve,edge.labels=TRUE,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
   if (any(object@RAM$edge=="int")) 
   {
@@ -412,6 +412,20 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,style,la
     if (nCharNodes>0)
     {
       Labels <- abbreviate(Labels,nCharNodes)
+    }
+    
+    ### WHAT TO PLOT? ###
+    if (grepl("path|diagram|model",what,ignore.case=TRUE))
+    {
+      
+    } else if (grepl("stand",what,ignore.case=TRUE))
+    {
+      Edgelist <- cbind(Edgelist,GroupRAM$std)
+      if (edge.labels) eLabels <- round(GroupRAM$std,2)
+    } else if (grepl("est",what,ignore.case=TRUE))
+    {
+      Edgelist <- cbind(Edgelist,GroupRAM$est)
+      if (edge.labels) eLabels <- round(GroupRAM$est,2)
     }
     
     qgraphRes[[which(Groups==gr)]] <- qgraph(Edgelist,
