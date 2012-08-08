@@ -32,6 +32,7 @@ qgraphSEM.sem <- function(object)
     std = standardizedCoefficients(object)[,2],
     group = 1,
     fixed = object$ram[,4]==0,
+    par = res$ram[,4],
     stringsAsFactors=FALSE)
   
   # Extract parameter estimates:
@@ -66,6 +67,8 @@ qgraphSEM.sem <- function(object)
   semModel@Vars <- Vars
   semModel@Computed <- TRUE
   semModel@Original <- list(object)
+  semModel@ObsCovs <- list(object$S)
+  semModel@ImpCovs <- list(object$C)
   
   return(semModel)
 }
@@ -95,6 +98,7 @@ qgraphSEM.msem <- qgraphSEM.msemObjectiveML <- function(object)
       std = stdobject[[g]][,2],
       group = GroupNames[g],
       fixed = object$ram[[g]][,4]==0,
+      par = object$ram[[g]][,4],
       stringsAsFactors=FALSE)
     
     # Extract parameter estimates:
@@ -137,6 +141,8 @@ qgraphSEM.msem <- qgraphSEM.msemObjectiveML <- function(object)
   semModel@Vars <- Vars
   semModel@Computed <- TRUE
   semModel@Original <- list(object)
+  semModel@ObsCovs <- object$S
+  semModel@ImpCovs <- object$S
   
   return(semModel)
 }

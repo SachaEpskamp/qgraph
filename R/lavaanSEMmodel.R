@@ -15,6 +15,7 @@ setMethod("qgraphSEM.S4",signature("lavaan"),function(object){
   
   # Extract parameter estimates:
   pars <- parameterEstimates(object,standardized=TRUE)
+  list <- inspect(x,"list")
   
   # Remove mean structure (TEMP SOLUTION)
   # meanstructure <- pars$op=="~1"
@@ -50,7 +51,8 @@ setMethod("qgraphSEM.S4",signature("lavaan"),function(object){
     est = pars$est,
     std = pars$std.all,
     group = pars$group,
-    fixed = is.na(pars$z),
+    fixed = list$free==0,
+    par = list$free,
     stringsAsFactors=FALSE)
 
   semModel@RAM$edge[semModel@RAM$edge=="~~"] <- "<->"  
@@ -63,6 +65,19 @@ setMethod("qgraphSEM.S4",signature("lavaan"),function(object){
     manifest = c(varNames,factNames)%in%varNames,
     stringsAsFactors=FALSE)
   
+  semModel@ObsCovs <- object@SampleStats@cov
+  names(semModel@ObsCovs) <- object@Data@group.label
+  for (i in 1:length(semModel@ObsCovs))
+  {
+    rownames(semModel@ObsCovs[[i]]) <- colnames(semModel@ObsCovs[[i]]) <- object@Data@ov.names[[i]]
+  }
+  
+  semModel@ImpCovs <- object@Fit@Sigma.hat
+  names(semModel@ImpCovs) <- object@Data@group.label
+  for (i in 1:length(semModel@ImpCovs))
+  {
+    rownames(semModel@ImpCovs[[i]]) <- colnames(semModel@ImpCovs[[i]]) <- object@Data@ov.names[[i]]
+  }
   
   semModel@Computed <- TRUE
   

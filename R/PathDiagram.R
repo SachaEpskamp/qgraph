@@ -434,6 +434,16 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     {
       Edgelist <- cbind(Edgelist,GroupRAM$est)
       if (edge.labels) eLabels <- as.character(round(GroupRAM$est,2))
+    } else if (grepl("eq|cons",what,ignore.case=TRUE))
+    {
+      eColor <- rep("black",nrow(Edgelist))
+      unPar <- unique(GroupRAM$par[GroupRAM$par>0 & duplicated(GroupRAM$par)])
+      cols <- rainbow(length(unPar))
+      for (i in length(unPar))
+      {
+        eColor[GroupRAM$par==unPar[i]] <- cols[i]
+      }
+      if (edge.labels) eLabels <- GroupRAM$par
     } else stop("Could not detect use of 'what' argument")
     
     if (!missing(whatLabels))
@@ -447,6 +457,9 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       } else if (grepl("est|par",whatLabels,ignore.case=TRUE))
       {
         eLabels <- as.character(round(GroupRAM$est,2))
+      } else if (grepl("eq|cons",whatLabels,ignore.case=TRUE))
+      {
+        if (edge.labels) eLabels <- GroupRAM$par
       } else if (grepl("no|omit|hide|invisible",whatLabels,ignore.case=TRUE))
       {
         eLabels <- rep("",nrow(Edgelist))

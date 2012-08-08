@@ -3,6 +3,8 @@ setClass( "qgraph.semModel", representation(
     RAM = "data.frame",
     Vars = "data.frame",
     Computed = "logical",
+    ObsCovs = "list",
+    ImpCovs = "list",
     Original = "list"))
 
 setGeneric("qgraphSEM.S4", function(object) {

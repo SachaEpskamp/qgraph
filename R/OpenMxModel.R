@@ -88,7 +88,14 @@ qgraphSEM_MxRAMModel <- function(object){
     std = c(DirpathsValuesStd,SympathsValuesStd,MeansValuesStd),
     group = object@name,
     fixed = c(DirpathsFixed,SympathsFixed,MeansFixed),
+    par = 0,
     stringsAsFactors=FALSE)
+  
+  RAM$par[is.na(RAM$label)] <- seq_len(sum(is.na(RAM$label)))
+  for (lbl in unique(RAM$label[!is.na(RAM$label)]))
+  {
+    RAM$par[RAM$label==lbl] <- max(RAM$par)+1
+  }
 #   
 #   # Add standardized:
 #   for (i in 1:nrow(standRAM))
@@ -111,6 +118,9 @@ qgraphSEM_MxRAMModel <- function(object){
   semModel@Computed <- !length(object@output)==0
   semModel@Original <- list(object)
   
+  semModel@ObsCovs <- list(cov(object@data@observed))
+  semModel@ImpCovs <- list(object@objective@info$expCov)
+  
   return(semModel)
 }
 
@@ -123,10 +133,25 @@ qgraphSEM_MxModel <- function(object){
   
   semModel <- new("qgraph.semModel")
   semModel@RAM <- do.call("rbind",lapply(S4objects,slot,"RAM"))
+  
+  semModel@RAM$par <- 0
+  semModel@RAM$par[is.na(semModel@RAM$label)] <- seq_len(sum(is.na(semModel@RAM$label)))
+  for (lbl in unique(semModel@RAM$label[!is.na(semModel@RAM$label)]))
+  {
+    semModel@RAM$par[RAM$label==lbl] <- max(semModel@RAM$par)+1
+  }
+  
   semModel@Vars <- S4objects[[1]]@Vars
   semModel@Computed <- !length(object@output)==0
   semModel@Original <- list(object)
-
+  
+  semModel@ObsCovs <- lapply(S4objects,function(x)x@ObsCovs[[1]])
+  names(semModel@ObsCovs) <- sapply(object@submodels,slot,"name")
+  
+  
+  semModel@ImpCovs <- lapply(S4objects,function(x)x@ImpCovs[[1]])
+  names(semModel@ImpCovs) <- sapply(object@submodels,slot,"name")
+  
   
   return(semModel)
 }
