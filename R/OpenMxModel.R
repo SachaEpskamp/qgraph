@@ -135,10 +135,10 @@ qgraphSEM_MxModel <- function(object){
   semModel@RAM <- do.call("rbind",lapply(S4objects,slot,"RAM"))
   
   semModel@RAM$par <- 0
-  semModel@RAM$par[is.na(semModel@RAM$label)] <- seq_len(sum(is.na(semModel@RAM$label)))
-  for (lbl in unique(semModel@RAM$label[!is.na(semModel@RAM$label)]))
+  semModel@RAM$par[semModel@RAM$label==""] <- seq_len(sum(semModel@RAM$label==""))
+  for (lbl in unique(semModel@RAM$label[semModel@RAM$label!=""]))
   {
-    semModel@RAM$par[RAM$label==lbl] <- max(semModel@RAM$par)+1
+    semModel@RAM$par[semModel@RAM$label==lbl] <- max(semModel@RAM$par)+1
   }
   
   semModel@Vars <- S4objects[[1]]@Vars

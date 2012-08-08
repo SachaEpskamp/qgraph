@@ -15,7 +15,7 @@ setMethod("qgraphSEM.S4",signature("lavaan"),function(object){
   
   # Extract parameter estimates:
   pars <- parameterEstimates(object,standardized=TRUE)
-  list <- inspect(x,"list")
+  list <- inspect(object,"list")
   
   # Remove mean structure (TEMP SOLUTION)
   # meanstructure <- pars$op=="~1"

@@ -422,6 +422,8 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       Labels <- abbreviate(Labels,nCharNodes)
     }
     
+    eColor <- NULL
+    
     ### WHAT TO PLOT? ###
     if (grepl("path|diagram|model",what,ignore.case=TRUE))
     {
@@ -436,14 +438,13 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       if (edge.labels) eLabels <- as.character(round(GroupRAM$est,2))
     } else if (grepl("eq|cons",what,ignore.case=TRUE))
     {
-      eColor <- rep("black",nrow(Edgelist))
+      eColor <- rep(rgb(0.5,0.5,0.5),nrow(Edgelist))
       unPar <- unique(GroupRAM$par[GroupRAM$par>0 & duplicated(GroupRAM$par)])
       cols <- rainbow(length(unPar))
       for (i in length(unPar))
       {
         eColor[GroupRAM$par==unPar[i]] <- cols[i]
       }
-      if (edge.labels) eLabels <- GroupRAM$par
     } else stop("Could not detect use of 'what' argument")
     
     if (!missing(whatLabels))
@@ -477,6 +478,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
            edge.labels=eLabels,
            mar=mar,
             vsize = vSize,
+           edge.color=eColor,
             ...)
     
     if (title)
