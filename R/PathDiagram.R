@@ -439,9 +439,9 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     } else if (grepl("eq|cons",what,ignore.case=TRUE))
     {
       eColor <- rep(rgb(0.5,0.5,0.5),nrow(Edgelist))
-      unPar <- unique(GroupRAM$par[GroupRAM$par>0 & duplicated(GroupRAM$par)])
+      unPar <- unique(object@RAM$par[object@RAM$par>0 & duplicated(object@RAM$par)])
       cols <- rainbow(length(unPar))
-      for (i in length(unPar))
+      for (i in 1:length(unPar))
       {
         eColor[GroupRAM$par==unPar[i]] <- cols[i]
       }
@@ -483,7 +483,8 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     
     if (title)
     {
-      if (length(Groups)==1) title("Path Diagram",line=3) else title(paste0("Path Diagram for group '",gr,"'"),line=3)
+#       if (length(Groups)==1) title("Path Diagram",line=3) else title(paste0("Path Diagram for group '",gr,"'"),line=3)
+        title(gr,line=3)
     }
   }
   par(ask=askOrig)
