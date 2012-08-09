@@ -1,18 +1,8 @@
-# 
-# layout="tree"
-# means=TRUE
-# meanStyle="multi"
-# horizontal=TRUE
-# curve = 0.2
-# edge.labels=TRUE
-# nCharNodes=3
-# nCharEdges=3
-# sizeMan = 3
-# sizeLat = 5
-# sizeInt = 2
-# ask = FALSE
-# mar = c(3,3,3,3)
-# title=TRUE
+# Arguments:
+# rotation: 1 = normal (endo manifests under), 2 3 and 4 flip counterclockwise.
+# 2 = endo manifests righy
+# 3 = endo man up
+# 4 = endo man left
 
 loopOptim <- function(x,Degrees)
 {
@@ -20,6 +10,8 @@ loopOptim <- function(x,Degrees)
   Dist2Edges <- sapply(Degrees,function(d)min(abs(x - c(d,d-2*pi,d+2*pi))))
   NotinRange * 2 * pi * 2 + sum(sort(Dist2Edges)[1:2])
 }
+
+RotMat <- function(d) matrix(c(cos(-d),sin(-d),-sin(-d),cos(-d)),2,2)
 
 mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 {
@@ -114,9 +106,13 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 }
 
 
-### SINGLE GROUP ###
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",horizontal=FALSE,curve,nCharNodes=3,nCharEdges=3,sizeMan = 3,sizeLat = 5,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,...){
 
+  # Check:
+  if (!rotation%in%1:4)
+  {
+    stop("Rotation must be 1, 2 3 or 4.")
+  }
   if (any(object@RAM$edge=="int")) 
   {
     object@Vars$name[object@Vars$name=="1"] <- "_1"
@@ -271,7 +267,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     Curve <- curve
       
     # Layout:
-    if (layout=="tree")
+    if (layout=="tree" | layout=="circle" | layout=="circular")
     {
 #       if (all(!object@Vars$exogenous))
 #       {
@@ -366,13 +362,23 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
 #         {
 #           Layout[Layout[,2]==i,1] <- (as.numeric(as.factor(Layout[Layout[,2]==i,1])) - 1) / (sum(Layout[,2]==i) - 1)
 #         }
-        # HORIZONTALIZE LAYOUT ###
-        if (horizontal) 
+        # FLIP LAYOUT ###
+        if (rotation==2) 
         {
           Layout <- Layout[,2:1]
           Layout[,1] <- -1 * Layout[,1]
         }
-        
+        if (rotation==3) 
+        {
+          Layout[,1] <- -1 * Layout[,1]
+          Layout[,2] <- -1 * Layout[,2]
+        }
+        if (rotation==4) 
+        {
+          Layout <- Layout[,2:1]
+          Layout[,2] <- -1 * Layout[,2]
+        }
+        Layout[,2] <- Layout[,2]-max(Layout[,2]) + 0.5
     } else Layout <- layout
     
     # loopRotation:
@@ -383,7 +389,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       loopRotation[exoMan] <- 0
       loopRotation[endoLat] <- 0
       loopRotation[exoLat] <- pi
-      if (horizontal) loopRotation <- loopRotation - 0.5*pi
+      loopRotation <- loopRotation - 0.5 * (rotation-1) *pi
       
       if (any(object@Vars$exogenous))
       {
@@ -399,6 +405,28 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
           }
       }
     } else loopRotation <- NULL
+    
+    ### ROTATE IF CIRCLE:
+    if (layout=="circle")
+    {
+      if (rotation%in%c(2,4)) stop("Circle layout only supported if rotation is 1 or 3")
+      Layout[,2] <- -1*Layout[,2] + max(Layout[,2]) + 0.5
+      Ltemp <- Layout
+      unVert <- sort(unique(Layout[,2]))
+      for (i in unVert)
+      {
+        l <- sum(Layout[,2]==i)
+        sq <- seq(0,2*pi,length=l+1)[-1]
+        c <- 1
+        for (j in order(Layout[Layout[,2]==i,1]))
+        {
+          Ltemp[Layout[,2]==i,][j,] <- RotMat(sq[c])%*%c(0,i)
+          c <- c + 1
+        }
+      }
+      Layout <- Ltemp
+    }
+    
     
     # Edge labels:
     if (edge.labels)
