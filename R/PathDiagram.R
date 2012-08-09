@@ -165,6 +165,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   {
     bidirs <- object@RAM[object@RAM$edge=="<->" & object@RAM$lhs != object@RAM$rhs,]
     bidirs[c("lhs","rhs")] <- bidirs[c("rhs","lhs")]
+    bidirs$par <- -1
     object@RAM <- rbind(object@RAM,bidirs)
   }
   object@RAM <- object@RAM[!duplicated(object@RAM),]

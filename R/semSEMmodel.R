@@ -32,7 +32,7 @@ qgraphSEM.sem <- function(object)
     std = standardizedCoefficients(object)[,2],
     group = 1,
     fixed = object$ram[,4]==0,
-    par = res$ram[,4],
+    par = object$ram[,4],
     stringsAsFactors=FALSE)
   
   # Extract parameter estimates:

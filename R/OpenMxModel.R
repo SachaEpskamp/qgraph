@@ -118,7 +118,22 @@ qgraphSEM_MxRAMModel <- function(object){
   semModel@Computed <- !length(object@output)==0
   semModel@Original <- list(object)
   
-  semModel@ObsCovs <- list(cov(object@data@observed))
+  if (!is.null(object@data))
+  {
+    if (object@data@type=="cov")
+    {
+      semModel@ObsCovs <- list(object@data@observed)
+    } else if (object@data@type=="raw")
+    {
+      semModel@ObsCovs <- list(cov(object@data@observed))
+    } else
+    {
+      semModel@ObsCovs <- list(NULL)
+    }
+  } else
+  {
+    semModel@ObsCovs <- list(NULL)
+  }
   semModel@ImpCovs <- list(object@objective@info$expCov)
   
   return(semModel)
