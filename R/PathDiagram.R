@@ -4,6 +4,9 @@
 # 3 = endo man up
 # 4 = endo man left
 
+# manifests: vector of manifest labels ordered
+# latents: vector of latents ordered
+
 loopOptim <- function(x,Degrees)
 {
   NotinRange <- sum(sapply(Degrees,function(d)!any(c(d,d-2*pi,d+2*pi)>(x-pi/4) & c(d,d-2*pi,d+2*pi)<(x+pi/4))))
@@ -106,7 +109,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 }
 
 
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,...){
 
   # Check:
   if (!rotation%in%1:4)
@@ -168,7 +171,23 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   
   # Extract names:
   manNames <- object@Vars$name[object@Vars$manifest]
+  if (!missing(manifests))
+  {
+    if (!(all(manNames%in%manifests) & length(manifests) == length(manNames)))
+    {
+      stop(paste("Argument 'manifests' should be a vector containing reordered elements of the vector",dput(manNames)))
+    }
+    manNames <- manifests
+  }
   latNames <- object@Vars$name[!object@Vars$manifest]
+  if (!missing(latents))
+  {
+    if (!(all(latNames%in%latents) & length(latents) == length(latNames)))
+    {
+      stop(paste("Argument 'latents' should be a vector containing reordered elements of the vector",dput(latNames)))
+    }
+    latNames <- latents
+  }
   Labels <- c(manNames,latNames)
   nM <- length(manNames)
   nL <- length(latNames)
@@ -225,7 +244,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       } else if (meanStyle == "multi")
       {
         Labels <- c(Labels,rep("1",Ni))
-      }
+      } 
     }
     nN <- length(Labels)
     
