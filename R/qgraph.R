@@ -600,10 +600,6 @@ qgraph =function( input, ... )
       }
     }	
     keep <- E$weight!=0
-    E$from=E$from[E$weight!=0]
-    E$to=E$to[E$weight!=0]
-    if (mode=="sig") Pvals <- Pvals[E$weight != 0]
-    E$weight=E$weight[E$weight!=0]
     
     if (length(loopRotation)==1) loopRotation <- rep(loopRotation,nNodes)
     
@@ -626,6 +622,11 @@ qgraph =function( input, ... )
         edge.labels <- edge.labels[keep]
       }
     }
+    
+    E$from=E$from[keep]
+    E$to=E$to[keep]
+    if (mode=="sig") Pvals <- Pvals[keep]
+    E$weight=E$weight[keep]
     
     if (length(E$from) > 0)
     {
@@ -663,6 +664,7 @@ qgraph =function( input, ... )
       curve <- ifelse(dub&!bidirectional,0.2,0)
       rm(dub)
     }
+    browser()
     if (any(bidirectional))
     {
       dub <- duplicated(srt)
