@@ -664,7 +664,6 @@ qgraph =function( input, ... )
       curve <- ifelse(dub&!bidirectional,0.2,0)
       rm(dub)
     }
-    browser()
     if (any(bidirectional))
     {
       dub <- duplicated(srt)
