@@ -7,6 +7,17 @@
 # manifests: vector of manifest labels ordered
 # latents: vector of latents ordered
 
+mixCols <- function(x,w)
+{
+  # x = vector of colors
+  # w = weights
+  if (missing(w)) w <- rep(1,length(x))
+  
+  RGB <- col2rgb(x)
+  wMeans <- apply(RGB,1,weighted.mean,w=w)
+  return(rgb(wMeans[1],wMeans[2],wMeans[3],maxColorValue=255))
+}
+
 loopOptim <- function(x,Degrees)
 {
   NotinRange <- sum(sapply(Degrees,function(d)!any(c(d,d-2*pi,d+2*pi)>(x-pi/4) & c(d,d-2*pi,d+2*pi)<(x+pi/4))))
@@ -109,7 +120,9 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 }
 
 
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,groups,color,...){
+
+  
 
   # Check:
   if (!rotation%in%1:4)
@@ -191,6 +204,37 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   Labels <- c(manNames,latNames)
   nM <- length(manNames)
   nL <- length(latNames)
+  
+  # Define groups and colors setup:
+  if (!missing(groups))
+  {
+    if (is.character(groups))
+    {
+      if (any(grepl("man",groups,ignore.case=TRUE)) & any(grepl("lat",groups,ignore.case=TRUE)))
+      {
+        groups <- as.list(c(manNames,latNames))
+      } else if (any(grepl("man",groups,ignore.case=TRUE)) & !any(grepl("lat",groups,ignore.case=TRUE)))
+      {
+        groups <- as.list(manNames)
+      } else if (!any(grepl("man",groups,ignore.case=TRUE)) & any(grepl("lat",groups,ignore.case=TRUE)))
+      {
+        groups <- as.list(latNames)
+      } else stop("Character specification of 'groups' must contain 'man','lat' or both")
+    }
+    if (is.factor(groups) | is.character(groups)) groups <- tapply(1:length(groups),groups,identity)
+    
+    if (!is.list(groups)) stop("'groups' argument is not a factor or list")
+    
+    if (missing(color)) 
+    {
+      color <- rainbow(length(groups))
+    }
+  } else {
+    if (missing(color)) 
+    {
+      color <- "white"
+    } 
+  }
   
   # Define exogenous variables:
   object@Vars$exogenous <- FALSE
@@ -458,20 +502,9 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     vSize[Labels%in%manNames] <- sizeMan
     vSize[Labels%in%latNames] <- sizeLat
     vSize[Labels=="1"] <- sizeInt
-    
-    
-    # Abbreviate:
-    if (nCharEdges>0)
-    {
-      eLabels <- abbreviate(eLabels,nCharEdges)
-    }
-    if (nCharNodes>0)
-    {
-      Labels <- abbreviate(Labels,nCharNodes)
-    }
-    
+
     eColor <- NULL
-    
+
     ### WHAT TO PLOT? ###
     if (grepl("path|diagram|model",what,ignore.case=TRUE))
     {
@@ -493,7 +526,89 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       {
         eColor[GroupRAM$par==unPar[i]] <- cols[i]
       }
-    } else stop("Could not detect use of 'what' argument")
+    } else if (!grepl("col",what,ignore.case=TRUE)) stop("Could not detect use of 'what' argument")
+
+    ### VERTEX COLOR ###
+    if (!missing(groups))
+    {
+      NodeGroups <- groups
+      
+      Ng <- length(NodeGroups)
+      
+      if (length(color)==1)
+      {
+        Vcolors <- rep(color,nN)
+      } else if (length(color)==nM)
+      {
+        Vcolors <- c(color,rep("",nN-nM))
+      } else if (length(color)==nN)
+      {
+        Vcolors <- color  
+      } else if (length(color)!=Ng)
+      {
+        stop("'color' vector not of appropriate length")
+      }
+      
+      if (missing(manifests) & any(sapply(NodeGroups,mode)!="character")) warning("Groups specified numerically and 'manifests' not supplied. Results might be unexpected.")
+      
+      if (length(color)==Ng)
+      {
+        Vcolors <- rep("",nN)
+        for (g in 1:Ng)
+        {
+          if (mode(NodeGroups[[g]])=="character") NodeGroups[[g]] <- match(NodeGroups[[g]],Labels)
+          Vcolors[NodeGroups[[g]]] <- color[g]
+        }
+        
+#         Vcolors[Vcolors=="" & Labels%in%manNames] <- "white"
+      }
+      
+      # If missing color, obtain weighted mix of connected colors:
+      VcolorsBU <- Vcolors
+      if (ncol(Edgelist) ==3) W <- Edgelist[,3] else W <- rep(1,nrow(Edgelist))
+      for (i in 1:(nM+nL))
+      {
+        if (Vcolors[i]=="")
+        {
+          cons <- c(Edgelist[Edgelist[,1]==i,2],Edgelist[Edgelist[,2]==i,1])
+          cons <- cons[VcolorsBU[cons]!=""]
+          if (length(cons)>0)
+          {
+            Vcolors[i] <- mixCols(VcolorsBU[cons],W[cons])
+          } else Vcolors[i] <- "white"
+        }
+      }
+      Vcolors[Vcolors==""] <- "white"
+    } else 
+    {
+      NodeGroups <- NULL
+      
+      if (length(color)==1)
+      {
+        Vcolors <- rep(color,nN)
+      } else if (length(color)==nM)
+      {
+        Vcolors <- c(color,rep("white",nN-nM))
+      } else if (length(color)==nN)
+      {
+        Vcolors <- color  
+      } else stop("'color' vector not of appropriate length")
+    }
+    
+    if (grepl("col",what,ignore.case=TRUE))
+    {
+      eColor <- character(nrow(Edgelist))
+      for (i in 1:nrow(Edgelist))
+      {
+        cols <- Vcolors[Edgelist[i,]]
+        if (all(cols=="white"))
+        {
+          eColor[i] <- rgb(0.5,0.5,0.5)
+        } else {
+          eColor[i] <- mixCols(cols[cols!="white"])
+        }
+      }
+    }
     
     if (!missing(whatLabels))
     {
@@ -514,7 +629,17 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
         eLabels <- rep("",nrow(Edgelist))
       } else stop("Could not detect use of 'whatLabels' argument")
     }
-    
+
+      # Abbreviate:
+      if (nCharEdges>0)
+      {
+        eLabels <- abbreviate(eLabels,nCharEdges)
+      }
+      if (nCharNodes>0)
+      {
+        Labels <- abbreviate(Labels,nCharNodes)
+      }
+
     qgraphRes[[which(Groups==gr)]] <- qgraph(Edgelist,
            labels=Labels,
            bidirectional=Bidir,
@@ -527,6 +652,8 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
            mar=mar,
             vsize = vSize,
            edge.color=eColor,
+            groups=NodeGroups,
+            color=Vcolors,
             ...)
     
     if (title)

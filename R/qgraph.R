@@ -609,6 +609,13 @@ qgraph =function( input, ... )
     }
     directed <- directed[keep]
     
+    if (!is.null(edge.color)) 
+    {
+      if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
+      if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
+      edge.color <- edge.color[keep]
+    }
+    
     if (length(bidirectional)==1) 
     {
       bidirectional <- rep(bidirectional,length(E$from))
