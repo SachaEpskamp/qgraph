@@ -1,6 +1,6 @@
 ### CONVERTS CENTER COORDINATES TO EDGE OF NODE ###:
 
-Cent2Edge <- function(x,y,r,cex,shape)
+Cent2Edge <- function(x,y,r,cex,shape,offset=1)
 {
   r <- r%%(2*pi)
   
@@ -15,8 +15,8 @@ Cent2Edge <- function(x,y,r,cex,shape)
 
 #   if (shape == "circle")
 #   {
-    xNew <- x + ((xin+xmarrange)/xin)*(7/(xin+xmarrange))*(xrange/2.16)*cex*par("csi")*sin(r)/17.5
-    yNew <- y + ((yin+ymarrange)/yin)*(7/(yin+ymarrange))*(yrange/2.16)*cex*par("csi")*cos(r)/17.5
+    xNew <- x + offset*((xin+xmarrange)/xin)*(7/(xin+xmarrange))*(xrange/2.16)*cex*par("csi")*sin(r)/17.5
+    yNew <- y + offset*((yin+ymarrange)/yin)*(7/(yin+ymarrange))*(yrange/2.16)*cex*par("csi")*cos(r)/17.5
   
 #   }
 
@@ -30,8 +30,11 @@ Cent2Edge <- function(x,y,r,cex,shape)
     
     xNew <- x + min(abs(widthX/dx),abs(widthY/dy)) * dx
     yNew <- y + min(abs(widthX/dx),abs(widthY/dy)) * dy    
+    return(c(x+offset*(xNew-x),y+offset*(yNew-y)))
+  } else 
+  {
+    return(c(xNew,yNew)) 
   }
-  return(c(xNew,yNew))
 }
 
     

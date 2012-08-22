@@ -120,7 +120,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 }
 
 
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,groups,color,resScale,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,groups,color,residScale,...){
 
   
 
@@ -132,12 +132,6 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   if (any(object@RAM$edge=="int")) 
   {
     object@Vars$name[object@Vars$name=="1"] <- "_1"
-  }
-  
-  # Defaults:
-  if (missing(mar))
-  {
-    if (title) mar <- c(3,3,6,3) else mar <- c(3,3,3,3)
   }
   
   if (missing(curve))
@@ -161,9 +155,17 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   # Set and check style: 
   if (missing(style)) style <- "OpenMx"
   if (!grepl("mx|lisrel",style,ignore.case=TRUE)) stop("Only OpenMx  or LISREL style is currently supported.")
-  if (grepl("mx",style,ignore.case=TRUE) & !missing(resScale)) warning("'resScale' ingored in OpenMx style")
-  if (missing(resScale)) resScale <- 1
+  if (grepl("mx",style,ignore.case=TRUE) & !missing(residScale)) warning("'residScale' ingored in OpenMx style")
+  if (missing(residScale)) residScale <- 1
   
+  # Defaults:
+  if (missing(mar))
+  {
+    if (title) mar <- c(3,3,6,3) else mar <- c(3,3,3,3)
+    if (grepl("lisrel",style,ignore.case=TRUE)) mar <- mar + 2
+  }
+  
+  residScale <- residScale * 1.75
   # Remove means if means==FALSE
   if (means==FALSE)
   {
@@ -630,9 +632,12 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       }
     
 #     ### CONVERT TO LISREL STYLE ###
-#     if (grepl("lisrel",style,ignore.case=TRUE))
-#     {
-#       whichResid <- which(GroupRAM$lhs == GroupRAM$rhs & GroupRAM$edge == "<->")
+    if (grepl("lisrel",style,ignore.case=TRUE))
+    {
+      isResid <- GroupRAM$edge == "<->" & GroupRAM$lhs != GroupRAM$rhs
+    } else isResid <- FALSE
+    
+    
 #       nResid <- length(whichResid)
 #       Edgelist[whichResid,1] <- (nN+1):(nN+nResid)
 #       rots <- loopRotation[Edgelist[whichResid,2]]
@@ -641,8 +646,8 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
 #       vLength <- diff(range(Layout[,2]))
 #       for (i in 1:nResid)
 #       {
-#         Lresid[i,1] <- Layout[Edgelist[whichResid[i],2],1] + sin(rots[i]) * resScale * 0.25 * hLength/vLength
-#         Lresid[i,2] <- Layout[Edgelist[whichResid[i],2],2] + cos(rots[i]) * resScale * 0.25
+#         Lresid[i,1] <- Layout[Edgelist[whichResid[i],2],1] + sin(rots[i]) * residScale * 0.25 * hLength/vLength
+#         Lresid[i,2] <- Layout[Edgelist[whichResid[i],2],2] + cos(rots[i]) * residScale * 0.25
 #       }
 #       
 #       # Add nodes:
@@ -694,6 +699,8 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
             groups=NodeGroups,
             color=Vcolors,
             residuals=LoopAsResid,
+            residScale = residScale,
+            residEdge = isResid,
             ...)
     
     if (title)

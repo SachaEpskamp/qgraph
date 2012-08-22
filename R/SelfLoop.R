@@ -1,4 +1,4 @@
-SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE)
+SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE,resScale=2)
 {
   loopAngle <- pi/8
   
@@ -21,10 +21,11 @@ SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE)
     spl <- xspline(CircX,CircY,1,draw=FALSE)
     return(spl)
   } else {
-    End <- Cent2Edge(x,y,rotation,cex,shape)
-    Start <- c(0,0)
-    Start[1] <- x + 2*(End[1]-x)
-    Start[2] <- y + 2*(End[2]-y)
+    Start <- Cent2Edge(x,y,rotation,cex,shape,offset=resScale)
+    End <- Cent2Edge(x,y,rotation,cex,shape,offset=1)
+#     Start <- c(0,0)
+#     Start[1] <- x + 2*(End[1]-x)
+#     Start[2] <- y + 2*(End[2]-y)
     
     spl <- xspline(c(Start[1],End[1]),c(Start[2],End[2]),1,draw=FALSE)
     return(spl)
