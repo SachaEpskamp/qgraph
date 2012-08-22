@@ -2,6 +2,7 @@ Changes in Version 1.1.0 - SEM functionality:
   o NEEDED
 
 Changes in Version 1.1.0
+  o added 'residuals' argument to qgraph(). If TRUE, selfloops are plotted as residuals with no origin.
   o Fixed issues with margins when plot=FALSE
   o Fixed dimensionality issues of arrowheads.
   o Improved default arguments for 'esize'. Now sets to 2 if the graph is unweighted and halfs the default value if graph is directed.

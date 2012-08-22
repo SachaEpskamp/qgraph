@@ -247,6 +247,7 @@ qgraph =function( input, ... )
       DefLoopRot <- FALSE
     }
     
+    if(is.null(arguments[['residuals']])) residuals=FALSE else residuals=arguments[['residuals']]
     if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
     if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
     if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
@@ -1319,7 +1320,7 @@ qgraph =function( input, ... )
                   rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
                 }
               } else rot <- loopRotation[E$from[i]]
-              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]])
+              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]],residuals)
               
             } else 
             {

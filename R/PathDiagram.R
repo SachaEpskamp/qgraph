@@ -120,7 +120,7 @@ mixInts <- function(vars,intMap,Layout,trim=FALSE,residuals=TRUE)
 }
 
 
-setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,groups,color,...){
+setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="paths",whatLabels,style,layout="tree",means=TRUE,residuals=TRUE,meanStyle="multi",rotation=1,curve,nCharNodes=3,nCharEdges=3,sizeMan = 5,sizeLat = 8,sizeInt = 2,ask,mar,title=TRUE,include,manifests,latents,groups,color,resScale,...){
 
   
 
@@ -160,7 +160,9 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   
   # Set and check style: 
   if (missing(style)) style <- "OpenMx"
-  if (style!="OpenMx") stop("Only OpenMx style is currently supported.")
+  if (!grepl("mx|lisrel",style,ignore.case=TRUE)) stop("Only OpenMx  or LISREL style is currently supported.")
+  if (grepl("mx",style,ignore.case=TRUE) & !missing(resScale)) warning("'resScale' ingored in OpenMx style")
+  if (missing(resScale)) resScale <- 1
   
   # Remove means if means==FALSE
   if (means==FALSE)
@@ -172,6 +174,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   {
     object@RAM <- object@RAM[!(object@RAM$edge=="<->"&object@RAM$lhs==object@RAM$rhs),]
   }  
+  
   # Add rows for bidirectional edges:
   if (any(object@RAM$edge=="<->" & object@RAM$lhs != object@RAM$rhs))
   {
@@ -259,6 +262,11 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   {
     object@Vars$exogenous <- FALSE
   }
+  # If al endo, treat formative manifest as exo (MIMIC mode)
+  if (!all(object@Vars$exogenous))
+  {
+    object@Vars$exogenous[object@Vars$manifest & !(object@Vars$name%in%object@RAM$rhs[object@RAM$edge=="->"])] <- TRUE
+  }
   
   Groups <- unique(object@RAM$group)
   qgraphRes <- list()
@@ -319,7 +327,10 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     
     # Bidirectional:
     Bidir <- GroupRAM$edge == "<->"
-    
+    if (!grepl("mx",style,ignore.case=TRUE))
+    {
+      Bidir[GroupRAM$lhs==GroupRAM$rhs] <- FALSE
+    }
     # lty:
     lty <- ifelse(GroupRAM$fixed,2,1)
     
@@ -445,7 +456,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     } else Layout <- layout
     
     # loopRotation:
-    if (layout=="tree")
+    if (layout=="tree" | layout=="circle")
     {
       loopRotation <- rep(0,nN)
       loopRotation[endoMan] <- pi
@@ -468,28 +479,6 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
           }
       }
     } else loopRotation <- NULL
-    
-    ### ROTATE IF CIRCLE:
-    if (layout=="circle")
-    {
-      if (rotation%in%c(2,4)) stop("Circle layout only supported if rotation is 1 or 3")
-      Layout[,2] <- -1*Layout[,2] + max(Layout[,2]) + 0.5
-      Ltemp <- Layout
-      unVert <- sort(unique(Layout[,2]))
-      for (i in unVert)
-      {
-        l <- sum(Layout[,2]==i)
-        sq <- seq(0,2*pi,length=l+1)[-1]
-        c <- 1
-        for (j in order(Layout[Layout[,2]==i,1]))
-        {
-          Ltemp[Layout[,2]==i,][j,] <- RotMat(sq[c])%*%c(0,i)
-          c <- c + 1
-        }
-      }
-      Layout <- Ltemp
-    }
-    
     
     # Edge labels:
     if (edge.labels)
@@ -639,7 +628,57 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       {
         Labels <- abbreviate(Labels,nCharNodes)
       }
-
+    
+#     ### CONVERT TO LISREL STYLE ###
+#     if (grepl("lisrel",style,ignore.case=TRUE))
+#     {
+#       whichResid <- which(GroupRAM$lhs == GroupRAM$rhs & GroupRAM$edge == "<->")
+#       nResid <- length(whichResid)
+#       Edgelist[whichResid,1] <- (nN+1):(nN+nResid)
+#       rots <- loopRotation[Edgelist[whichResid,2]]
+#       Lresid <- matrix(,nResid,2)
+#       hLength <- diff(range(Layout[,1]))
+#       vLength <- diff(range(Layout[,2]))
+#       for (i in 1:nResid)
+#       {
+#         Lresid[i,1] <- Layout[Edgelist[whichResid[i],2],1] + sin(rots[i]) * resScale * 0.25 * hLength/vLength
+#         Lresid[i,2] <- Layout[Edgelist[whichResid[i],2],2] + cos(rots[i]) * resScale * 0.25
+#       }
+#       
+#       # Add nodes:
+#       Layout <- rbind(Layout,Lresid)
+#       Labels <- c(Labels,rep("",nResid))
+#       Shape <- c(Shape,rep("circle",nResid))
+#       loopRotation <- NULL
+#       vSize <- c(vSize,rep(0,nResid))
+#       Vcolors <- c(Vcolors,rep(rgb(0,0,0,0),nResid))
+#     }
+    
+    if (grepl("mx",style,ignore.case=TRUE)) LoopAsResid <- FALSE else LoopAsResid <- TRUE
+    
+    ### ROTATE IF CIRCLE:
+    if (layout=="circle")
+    {
+      if (rotation%in%c(2,4)) stop("Circle layout only supported if rotation is 1 or 3")
+      Layout[,2] <- -1*Layout[,2] + max(Layout[,2]) + 0.5
+      Ltemp <- Layout
+      unVert <- sort(unique(Layout[,2]))
+      for (i in unVert)
+      {
+        l <- sum(Layout[,2]==i)
+        sq <- seq(0,2*pi,length=l+1)[-1]
+        c <- 1
+        for (j in order(Layout[Layout[,2]==i,1]))
+        {
+          Ltemp[Layout[,2]==i,][j,] <- RotMat(sq[c])%*%c(0,i)
+          c <- c + 1
+        }
+      }
+      Layout <- Ltemp
+    }
+    
+    if (layout=="spring") loopRotation <- NULL
+    
     qgraphRes[[which(Groups==gr)]] <- qgraph(Edgelist,
            labels=Labels,
            bidirectional=Bidir,
@@ -654,6 +693,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
            edge.color=eColor,
             groups=NodeGroups,
             color=Vcolors,
+            residuals=LoopAsResid,
             ...)
     
     if (title)
