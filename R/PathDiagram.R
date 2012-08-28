@@ -22,7 +22,7 @@ loopOptim <- function(x,Degrees)
 {
   NotinRange <- sum(sapply(Degrees,function(d)!any(c(d,d-2*pi,d+2*pi)>(x-pi/4) & c(d,d-2*pi,d+2*pi)<(x+pi/4))))
   Dist2Edges <- sapply(Degrees,function(d)min(abs(x - c(d,d-2*pi,d+2*pi))))
-  NotinRange * 2 * pi * 2 + sum(sort(Dist2Edges)[1:2])
+  return(NotinRange * 2 * pi * 2 + sum(sort(Dist2Edges)[1:2]))
 }
 
 RotMat <- function(d) matrix(c(cos(-d),sin(-d),-sin(-d),cos(-d)),2,2)
@@ -426,7 +426,12 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
           }
           
           # Curves:
-          Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int",curve,0)
+          if (!grepl("lisrel",style,ignore.case=TRUE) | all(!object@Vars$exogenous) | !residuals)
+          {
+            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int",curve,0)
+          } else {
+            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int" & Labels[Edgelist[,1]]%in%manNames & Labels[Edgelist[,2]]%in%manNames,curve,0)
+          }
           
         } else stop("MeanStyle not supported")
         
@@ -472,21 +477,21 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
         ### For latents, find opposite of mean angle
         for (i in which(Labels%in%latNames))
         {
-          if (!grepl("lisrel",style) | !any((Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2])&GroupRAM$edge=="<->"))
+          # Layout subset of all connected:
+          subEdgelist <- Edgelist[(Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2]),]
+          conNodes <- c(subEdgelist[subEdgelist[,1]==i,2],subEdgelist[subEdgelist[,2]==i,1])
+          subLayout <- Layout[conNodes,]
+          Degrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
+          if (!grepl("lisrel",style,ignore.case=TRUE) | !any((Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2])&GroupRAM$edge=="<->"))
           {
-            # Layout subset of all connected:
-            subEdgelist <- Edgelist[(Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2]),]
-            conNodes <- c(subEdgelist[subEdgelist[,1]==i,2],subEdgelist[subEdgelist[,2]==i,1])
-            subLayout <- Layout[conNodes,]
-            Degrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
             loopRotation[i] <- optimize(loopOptim,c(0,2*pi),Degrees=Degrees,maximum=TRUE)$maximum
           } else {
             # Layout subset of all connected:
             subEdgelist <- Edgelist[(Edgelist[,1]==i|Edgelist[,2]==i)&(Edgelist[,1]!=Edgelist[,2])&GroupRAM$edge=="<->",]
             conNodes <- c(subEdgelist[subEdgelist[,1]==i,2],subEdgelist[subEdgelist[,2]==i,1])
             subLayout <- Layout[conNodes,]
-            Degrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
-            loopRotation[i] <- optimize(loopOptim,c(0,2*pi),Degrees=Degrees,maximum=FALSE)$minimum
+            goodDegrees <- apply(subLayout,1,function(x)atan2(x[1]-Layout[i,1],x[2]-Layout[i,2]))
+            loopRotation[i] <- optimize(loopOptim,c(min(goodDegrees-pi/4),max(goodDegrees+pi/4)),Degrees=Degrees,maximum=TRUE)$maximum
           }
         }
       }
@@ -642,7 +647,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
       }
     
 #     ### CONVERT TO LISREL STYLE ###
-    if (grepl("lisrel",style,ignore.case=TRUE))
+    if (grepl("lisrel",style,ignore.case=TRUE) & residuals)
     {
       isResid <- GroupRAM$edge == "<->" & GroupRAM$lhs != GroupRAM$rhs
     } else isResid <- FALSE
