@@ -138,7 +138,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   {
     if (layout == "tree")
     {
-      curve <- 0.2
+      curve <- 0.4
     } else {
       curve <- 0
     }
@@ -425,12 +425,17 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
             Layout[exoLat,1] <- seq(-1,1,length=length(exoLat)+2)[-c(1,length(exoLat)+2)]
           }
           
+          inBetween <- function(x)
+          {
+            if (Layout[x[1],2]!=Layout[x[2],2]) return(0) else return(sum(Layout[Layout[,2]==Layout[x[1],2],1] > min(Layout[x,1]) & Layout[Layout[,2]==Layout[x[1],2],1] < max(Layout[x,1])))
+          }
           # Curves:
+
           if (!grepl("lisrel",style,ignore.case=TRUE) | all(!object@Vars$exogenous) | !residuals)
           {
-            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int",curve,0)
+            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int",apply(Edgelist,1,inBetween)*curve,0)
           } else {
-            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int" & Labels[Edgelist[,1]]%in%manNames & Labels[Edgelist[,2]]%in%manNames,curve,0)
+            Curve <- ifelse(Layout[Edgelist[,1],2]==Layout[Edgelist[,2],2]&Edgelist[,1]!=Edgelist[,2]&GroupRAM$edge!="int" & Labels[Edgelist[,1]]%in%manNames & Labels[Edgelist[,2]]%in%manNames,apply(Edgelist,1,inBetween)*curve,0)
           }
           
         } else stop("MeanStyle not supported")
