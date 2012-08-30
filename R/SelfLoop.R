@@ -1,4 +1,4 @@
-SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE,resScale=2)
+SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE,resScale=1)
 {
   loopAngle <- pi/8
   
@@ -22,7 +22,7 @@ SelfLoop <- function(x,y,rotation=0,cex,shape,residual=FALSE,resScale=2)
     return(spl)
   } else {
     Start <- Cent2Edge(x,y,rotation,cex,shape,offset=resScale)
-    End <- Cent2Edge(x,y,rotation,cex,shape,offset=1)
+    End <- Cent2Edge(x,y,rotation,cex,shape,offset=0)
 #     Start <- c(0,0)
 #     Start[1] <- x + 2*(End[1]-x)
 #     Start[2] <- y + 2*(End[2]-y)

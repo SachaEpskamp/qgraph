@@ -248,7 +248,7 @@ qgraph =function( input, ... )
     }
     
     if(is.null(arguments[['residuals']])) residuals=FALSE else residuals=arguments[['residuals']]
-    if(is.null(arguments[['residScale']])) residScale=2 else residScale=arguments[['residScale']]
+    if(is.null(arguments[['residScale']])) residScale=1 else residScale=arguments[['residScale']]
     if(is.null(arguments[['residEdge']])) residEdge=FALSE else residEdge=arguments[['residEdge']]
     if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
     if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
@@ -1251,7 +1251,7 @@ qgraph =function( input, ... )
               # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
               # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
               # 				}
-              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,1))
+              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               
@@ -1271,7 +1271,7 @@ qgraph =function( input, ... )
                 # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 					}
                 
-                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,1))
+                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
                 x1 <- NewPoints[1]
                 y1 <- NewPoints[2]  
                 
@@ -1359,7 +1359,7 @@ qgraph =function( input, ... )
                 # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 				}
                 
-                NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,1))
+                NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
                 x2 <- NewPoints[1]
                 y2 <- NewPoints[2]
                 
@@ -1392,7 +1392,7 @@ qgraph =function( input, ... )
                   # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                   # 					}
                   
-                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,1))
+                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
                   x1 <- NewPoints[1]
                   y1 <- NewPoints[2]
                   

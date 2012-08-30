@@ -156,7 +156,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   if (missing(style)) style <- "OpenMx"
   if (!grepl("mx|lisrel",style,ignore.case=TRUE)) stop("Only OpenMx  or LISREL style is currently supported.")
   if (grepl("mx",style,ignore.case=TRUE) & !missing(residScale)) warning("'residScale' ingored in OpenMx style")
-  if (missing(residScale)) residScale <- 1
+  if (missing(residScale)) residScale <- 2*sizeMan
   
   # Defaults:
   if (missing(mar))
@@ -165,7 +165,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     if (grepl("lisrel",style,ignore.case=TRUE)) mar <- mar + 2
   }
   
-  residScale <- residScale * 1.75
+#   residScale <- residScale * 1.75
   # Remove means if means==FALSE
   if (means==FALSE)
   {
@@ -463,7 +463,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     } else Layout <- layout
     
     # loopRotation:
-    if (layout=="tree" | layout=="circle")
+    if (layout=="tree")
     {
       loopRotation <- rep(0,nN)
       loopRotation[endoMan] <- pi
@@ -680,13 +680,14 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
     if (layout=="circle")
     {
       if (rotation%in%c(2,4)) stop("Circle layout only supported if rotation is 1 or 3")
+      underMean <- Layout[,2] < mean(Layout[,2])
       Layout[,2] <- -1*Layout[,2] + max(Layout[,2]) + 0.5
       Ltemp <- Layout
       unVert <- sort(unique(Layout[,2]))
       for (i in unVert)
       {
         l <- sum(Layout[,2]==i)
-        sq <- seq(0,2*pi,length=l+1)[-1]
+        sq <- seq(0,2*pi,length=l+1)[-(l+1)] + pi/l
         c <- 1
         for (j in order(Layout[Layout[,2]==i,1]))
         {
@@ -695,6 +696,10 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
         }
       }
       Layout <- Ltemp
+      
+      # loopRotation:
+      loopRotation <- apply(Layout,1,function(x)atan2(x[1],x[2]))
+      loopRotation <- ifelse(underMean,loopRotation,(loopRotation+pi)%%(2*pi))
     }
     
     if (layout=="spring") loopRotation <- NULL
