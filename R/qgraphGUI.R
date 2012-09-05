@@ -1,7 +1,7 @@
 
 qgraph.gui <- function(input,...)
 {
-	if (!require("rpanel")) stop("Package 'rpanel' is required")
+	if (!require("rpanel")) stop("Package 'rpanel' is required to use GUI functionality")
 
   qgraph.setup <- function(panel) panel
   qgraph.draw <- function(panel) {
@@ -44,7 +44,7 @@ qgraph.gui <- function(input,...)
   rp.radiogroup(qgraph.panel, graph, c("association", "concentration", "factorial"), title = "Graph", action = qgraph.setup, pos = list(column=0,row=3))
 	rp.radiogroup(qgraph.panel, layout, c("circular", "spring"), title = "Layout", action = qgraph.setup, pos = list(column=0,row=4))
 
-	rp.checkbox(qgraph.panel, cbox,qgraph.setup, labels = c("Details","Background", "Overlay","Borders","Legend"), title="Options", pos = list(column=1,row=3))
+	rp.checkbox(qgraph.panel, cbox,qgraph.setup, labels = c("Details","Background", "Overlay","Borders","Legend"), title="Options", pos = list(column=1,row=3), initval=c(FALSE,FALSE,FALSE,TRUE,TRUE))
 
 	rp.textentry(qgraph.panel, filename, qgraph.setup, initval = "qgraph",  pos = list(column=0,row=5),title="Filename (enter to confirm)")
 	
@@ -55,4 +55,5 @@ qgraph.gui <- function(input,...)
 	rp.button(qgraph.panel, action = qgraph.newplot, title = "New" ,pos = list(column=1,row=6))	
 
 	rp.button(qgraph.panel, action = qgraph.save, title = "Write pdf", pos = list(column=1,row=5))
+  
 }

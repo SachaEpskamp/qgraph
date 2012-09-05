@@ -1,6 +1,6 @@
 useDynLib(qgraph)
 
-export(pathDiagram,pathDiagram.S4,qgraphSEM,qgraphSEM.S4)
+export(pathDiagram,pathDiagram.S4,qgraphSEM,qgraphSEM.S4,pathDiagramGUI)
 # export Classes
 exportClasses(
               "qgraph.semModel"
