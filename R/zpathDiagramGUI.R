@@ -22,7 +22,8 @@ pathDiagramGUI <- function(object,...)
   }
   qgraph.newplot <- function(panel)
   {
-    qgraph.draw(c(panel,filetype="R"))
+    x11()
+    qgraph.draw(panel)
     panel
   }
   qgraph.save <- function(panel) {
@@ -85,14 +86,36 @@ pathDiagramGUI <- function(object,...)
 #   
 #   rp.button(qgraph.panel, action = qgraph.printcall, title = "Print call" ,pos = list(column=0,row=5))
 #   
+  
+  
+  
+  ### GRAPHICAL
+  rp.slider(qgraph.panel, sizeMan, 0, 20 , qgraph.setup, "Size manifests",   initval = 5,
+            showvalue = TRUE, pos = list(column=0,row=6))
+
+  rp.slider(qgraph.panel, sizeLat, 0, 20 , qgraph.setup, "Size latents",   initval = 8,
+            showvalue = TRUE, pos = list(column=0,row=7))
+  
+  rp.slider(qgraph.panel, sizeInt, 0, 20 , qgraph.setup, "Size intercepts",   initval = 2,
+            showvalue = TRUE, pos = list(column=0,row=8))
+
+  rp.slider(qgraph.panel, esize, 0, 10 , qgraph.setup, "Edges width",   initval = 1,
+            showvalue = TRUE, pos = list(column=1,row=6))
+  
+  rp.slider(qgraph.panel, curve, 0, 1 , qgraph.setup, "Curvature",   initval = 0.4,
+            showvalue = TRUE, pos = list(column=1,row=7))
+  
+  rp.slider(qgraph.panel, residScale, 0, 20 , qgraph.setup, "Size residuals (LISREL)",   initval = 10,
+            showvalue = TRUE, pos = list(column=1,row=8))
+  
+  
   if (Ng>1)
   {
-    rp.radiogroup(qgraph.panel, GroupOr, c("Horizontal", "Vertical"), title = "Orientation", action = qgraph.setup, pos = list(column=0,row=6), initval="Vertical")
+    rp.radiogroup(qgraph.panel, GroupOr, c("Horizontal", "Vertical"), title = "Orientation", action = qgraph.setup, pos = list(column=0,row=9), initval="Vertical")
     
-    rp.checkbox(qgraph.panel, inclGroups, qgraph.setup, labels = Groups, title="Include", pos = list(column=1,row=6), initval=rep(TRUE,Ng))
+    rp.checkbox(qgraph.panel, inclGroups, qgraph.setup, labels = Groups, title="Include", pos = list(column=1,row=9), initval=rep(TRUE,Ng))
   }
   
-
   
 }
 

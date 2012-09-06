@@ -155,7 +155,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   # Set and check style: 
   if (missing(style)) style <- "OpenMx"
   if (!grepl("mx|lisrel",style,ignore.case=TRUE)) stop("Only OpenMx  or LISREL style is currently supported.")
-  if (grepl("mx",style,ignore.case=TRUE) & !missing(residScale)) warning("'residScale' ingored in OpenMx style")
+#   if (grepl("mx",style,ignore.case=TRUE) & !missing(residScale)) warning("'residScale' ingored in OpenMx style")
   if (missing(residScale)) residScale <- 2*sizeMan
   
   # Defaults:

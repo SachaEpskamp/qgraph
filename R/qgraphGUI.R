@@ -48,7 +48,7 @@ qgraph.gui <- function(input,...)
 
 	rp.textentry(qgraph.panel, filename, qgraph.setup, initval = "qgraph",  pos = list(column=0,row=5),title="Filename (enter to confirm)")
 	
-	rp.textentry(qgraph.panel, dimensions, qgraph.setup, initval = c(7,7),  pos = list(column=1,row=4),label=c("Width","Height"),title="Dimensions (enter to confirm)")
+	rp.textentry(qgraph.panel, dimensions, qgraph.setup, initval = c(7,7),  pos = list(column=1,row=4),labels = c("Width","Height"),title="Dimensions (enter to confirm)")
 	
 	rp.button(qgraph.panel, action = qgraph.draw, title = "Plot", ,pos = list(column=0,row=6))	
 	
