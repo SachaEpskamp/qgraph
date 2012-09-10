@@ -55,7 +55,7 @@ qgraphSEM.mplus.model <- function(object)
   semModel@RAM <- RAM
   semModel@Vars <- Vars
   semModel@Computed <- TRUE
-  semModel@Original <- list()
+  semModel@Original <- list(object)
   semModel@ObsCovs <- list()
   semModel@ImpCovs <- list()
   

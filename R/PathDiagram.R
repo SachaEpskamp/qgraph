@@ -209,6 +209,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
   Labels <- c(manNames,latNames)
   nM <- length(manNames)
   nL <- length(latNames)
+  object@Vars <- object@Vars[match(Labels,object@Vars$name),]
   
   # Define groups and colors setup:
   if (!missing(groups))
@@ -374,6 +375,7 @@ setMethod("pathDiagram.S4",signature("qgraph.semModel"),function(object,what="pa
           
         } else if (meanStyle=="multi")
         {          
+                
           # Empty layout:
           Layout <- matrix(,length(Labels),2)
           
