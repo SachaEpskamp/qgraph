@@ -65,15 +65,7 @@ pathDiagramGUI <- function(object,...)
 #   rp.textentry(qgraph.panel, dimensions, qgraph.setup, initval = c(7,7),  pos = list(column=1,row=2),label=c("Width","Height"),title="Dimensions")
 #   
 #   
-  rp.textentry(qgraph.panel, filename, qgraph.setup, initval = "qgraph",  pos = list(column=1,row=3),title="Filename")
-  
-  rp.button(qgraph.panel, action = qgraph.save, title = "Write pdf", pos = list(column=0,row=3))
-  
-  
-  rp.button(qgraph.panel, action = qgraph.draw, title = "Plot", ,pos = list(column=0,row=4))	
-  
-  rp.button(qgraph.panel, action = qgraph.newplot, title = "New" ,pos = list(column=1,row=4))
-  
+
   rp.slider(qgraph.panel, rotation, 1, 4 , qgraph.setup, "Rotation",   initval = 1,
             resolution = 1, showvalue = TRUE, pos = list(column=1,row=2))
 # 
@@ -91,29 +83,39 @@ pathDiagramGUI <- function(object,...)
   
   ### GRAPHICAL
   rp.slider(qgraph.panel, sizeMan, 0, 20 , qgraph.setup, "Size manifests",   initval = 5,
-            showvalue = TRUE, pos = list(column=0,row=6))
+            showvalue = TRUE, pos = list(column=0,row=3))
 
   rp.slider(qgraph.panel, sizeLat, 0, 20 , qgraph.setup, "Size latents",   initval = 8,
-            showvalue = TRUE, pos = list(column=0,row=7))
+            showvalue = TRUE, pos = list(column=0,row=4))
   
   rp.slider(qgraph.panel, sizeInt, 0, 20 , qgraph.setup, "Size intercepts",   initval = 2,
-            showvalue = TRUE, pos = list(column=0,row=8))
+            showvalue = TRUE, pos = list(column=0,row=5))
 
   rp.slider(qgraph.panel, esize, 0, 10 , qgraph.setup, "Edges width",   initval = 1,
-            showvalue = TRUE, pos = list(column=1,row=6))
+            showvalue = TRUE, pos = list(column=1,row=3))
   
   rp.slider(qgraph.panel, curve, 0, 1 , qgraph.setup, "Curvature",   initval = 0.4,
-            showvalue = TRUE, pos = list(column=1,row=7))
+            showvalue = TRUE, pos = list(column=1,row=4))
   
   rp.slider(qgraph.panel, residScale, 0, 20 , qgraph.setup, "Size residuals (LISREL)",   initval = 10,
-            showvalue = TRUE, pos = list(column=1,row=8))
+            showvalue = TRUE, pos = list(column=1,row=5))
+  
+  
+  rp.textentry(qgraph.panel, filename, qgraph.setup, initval = "qgraph",  pos = list(column=1,row=6),title="Filename")
+  
+  rp.button(qgraph.panel, action = qgraph.save, title = "Write pdf", pos = list(column=0,row=6))
+  
+  
+  rp.button(qgraph.panel, action = qgraph.draw, title = "Plot", ,pos = list(column=0,row=7))  
+  
+  rp.button(qgraph.panel, action = qgraph.newplot, title = "New" ,pos = list(column=1,row=7))
   
   
   if (Ng>1)
   {
-    rp.radiogroup(qgraph.panel, GroupOr, c("Horizontal", "Vertical"), title = "Orientation", action = qgraph.setup, pos = list(column=0,row=9), initval="Vertical")
+    rp.radiogroup(qgraph.panel, GroupOr, c("Horizontal", "Vertical"), title = "Orientation", action = qgraph.setup, pos = list(column=0,row=8), initval="Vertical")
     
-    rp.checkbox(qgraph.panel, inclGroups, qgraph.setup, labels = Groups, title="Include", pos = list(column=1,row=9), initval=rep(TRUE,Ng))
+    rp.checkbox(qgraph.panel, inclGroups, qgraph.setup, labels = Groups, title="Include", pos = list(column=1,row=8), initval=rep(TRUE,Ng))
   }
   
   

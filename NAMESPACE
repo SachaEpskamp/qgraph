@@ -12,6 +12,8 @@ exportMethods(
 			"pathDiagram.S4"
              )
 S3method(pathDiagram,sem)
+S3method(pathDiagram,mplus.model)
+S3method(qgraphSEM,mplus.model)
 S3method(qgraphSEM,sem)
 S3method(qgraphSEM,msem)
 S3method(pathDiagram,msem)
