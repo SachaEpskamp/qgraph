@@ -1,14 +1,14 @@
-
 Changes in Version 1.1.0
-  o Added 'residScale' and 'residEdge' arguments to qgraph()
-  o Added 'residuals' argument to qgraph(). If TRUE, selfloops are plotted as residuals with no origin.
+  o Some internal changes to facilitate the upcomming drawSEM package (https://github.com/SachaEpskamp/drawSEM)
+    o Added 'residScale' and 'residEdge' arguments to qgraph()
+    o Added 'residuals' argument to qgraph(). If TRUE, selfloops are plotted as residuals with no origin.
   o Fixed issues with margins when plot=FALSE
   o Fixed dimensionality issues of arrowheads.
   o Improved default arguments for 'esize'. Now sets to 2 if the graph is unweighted and halfs the default value if graph is directed.
   o Method for moving beginning and end of edge to the edge of nodes has been reworked through the internal function Cent2Edge(). This should now be much more stable, and no longer be bugged if a graph is plotted with margins.
   o Fixed outdated information in the qgraph help page on specification of layout argument.
   o Selfloops have been reworked through the internal function SelfLoop(). Can now be rotated using the loopRotation argument. The loop argument for controlling the size is currently defunct.
-  o qgraph.gui() included which enables a gui for analyzing correlation matrices
+  o qgraph.gui() included which enables a gui for analyzing correlation matrices. Can also be called with qgraph(input,...,gui=TRUE)
 
 Changes in Version 1.0.5-2
   o Removed tikzdevice option due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for details.

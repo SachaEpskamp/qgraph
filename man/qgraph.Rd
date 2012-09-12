@@ -14,6 +14,7 @@ qgraph( input, ... )
 }	
 \section{Important additional arguments}{	
 \describe{
+\item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open gui window.}
 \item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in seperate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs.}
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
 \item{minimum}{Edges with absolute weights under this value are omitted. Defaults to 0 for graphs with less than 50 nodes or 0.1 for larger graphs.}
@@ -217,6 +218,7 @@ Sacha Epskamp (qgraph@sachaepskamp.com)
 
 \seealso{
 \code{\link{qgraph}}
+\code{\link{qgraph.gui}}
 \code{\link{qgraph.animate}}
 \code{\link{qgraph.efa}}
 \code{\link{qgraph.pca}}
