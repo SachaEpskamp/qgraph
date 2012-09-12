@@ -5,7 +5,11 @@ qgraph =function( input, ... )
   
   if ("qgraph"%in%class(input)) arguments <- list(...,input) else arguments=list(...)
   
-  if (isTRUE(arguments[['gui']]) | isTRUE(arguments[['GUI']])) invisible(qgraph.gui(input,...))
+  if (isTRUE(arguments[['gui']]) | isTRUE(arguments[['GUI']])) 
+  {
+    arguments$gui <- arguments$GUI <- FALSE
+    invisible(do.call(qgraph.gui,c(list(input=input),arguments)))
+  }
   
   if(!is.null(arguments$adj))
   {

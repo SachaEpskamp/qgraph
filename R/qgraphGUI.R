@@ -3,6 +3,9 @@ qgraph.gui <- function(input,...)
 {
 	if (!require("rpanel")) stop("Package 'rpanel' is required to use GUI functionality")
 
+  # Dummies to fool R CMD check:
+  graph <- minimum <- maximum <- esize <- vsize <- asize < graph <- cbox <- filename <- dimensions <- NULL
+	
   qgraph.setup <- function(panel) panel
   qgraph.draw <- function(panel) {
     panel$details <- panel$cbox[1]

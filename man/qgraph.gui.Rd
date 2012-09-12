@@ -29,7 +29,7 @@ Does not work with integrated plotting area in RStudio. Instead, call a new wind
   URL http://www.jstatsoft.org/v17/i09/.
 }
 \author{
-Sacha Epskamp
+Sacha Epskamp <qgraph@sachaepskamp.com>
 }
 
 \seealso{

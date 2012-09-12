@@ -213,7 +213,7 @@ Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement
 
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp <qgraph@sachaepskamp.com>
 }
 
 \seealso{
