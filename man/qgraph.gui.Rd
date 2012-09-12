@@ -20,7 +20,7 @@ Arguments passed to \code{\link{qgraph}}
 }
 }
 \details{
-Does not work in RStudio
+Does not work with integrated plotting area in RStudio. Instead, call a new window with x11() or X11() first (or use the 'new' button).
 }
 \references{
  Adrian Bowman, Ewan Crawford, Gavin Alexander, Richard W. Bowman

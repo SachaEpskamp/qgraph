@@ -5,6 +5,8 @@ qgraph =function( input, ... )
   
   if ("qgraph"%in%class(input)) arguments <- list(...,input) else arguments=list(...)
   
+  if (isTRUE(arguments[['gui']]) | isTRUE(arguments[['GUI']])) invisible(qgraph.gui(input,...))
+  
   if(!is.null(arguments$adj))
   {
     stop("'adj' argument is no longer supported. Please use 'input'")
