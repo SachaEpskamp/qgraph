@@ -10,7 +10,7 @@ This function works the same as \code{\link{qgraph}} except that a graphical use
 \usage{
 qgraph.gui(input, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{input}{
 Input, see \code{\link{qgraph}}
