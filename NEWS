@@ -2,6 +2,7 @@ Changes in Version 1.1.0
   o Some internal changes to facilitate the upcomming drawSEM package (https://github.com/SachaEpskamp/drawSEM)
     o Added 'residScale' and 'residEdge' arguments to qgraph()
     o Added 'residuals' argument to qgraph(). If TRUE, selfloops are plotted as residuals with no origin.
+  o Several small bugfixes
   o Fixed issues with margins when plot=FALSE
   o Fixed dimensionality issues of arrowheads.
   o Improved default arguments for 'esize'. Now sets to 2 if the graph is unweighted and halfs the default value if graph is directed.

@@ -25,7 +25,7 @@ qgraph.gui <- function(input,corMat,...)
 	  dev.new()
 	}
   # Dummies to fool R CMD check:
-  graph <- minimum <- maximum <- esize <- vsize <- asize <- graph <- cbox <- filename <- dimensions <- NULL
+  graph <- minimum <- maximum <- esize <- vsize <- asize <- graph <- cbox <- filename <- dimensions <- OnTheFly <- LatSize <- GraphType <- FAopts <- File <- Control <- NULL
 	
   ### Correlation matrix GUI:
   if (corMat)
