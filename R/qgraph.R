@@ -8,7 +8,7 @@ qgraph =function( input, ... )
   if (isTRUE(arguments[['gui']]) | isTRUE(arguments[['GUI']])) 
   {
     arguments$gui <- arguments$GUI <- FALSE
-    invisible(do.call(qgraph.gui,c(list(input=input),arguments)))
+    return(invisible(do.call(qgraph.gui,c(list(input=input),arguments))))
   }
   
   if(!is.null(arguments$adj))
@@ -295,11 +295,11 @@ qgraph =function( input, ... )
     {
       if (is.null(groups)) legend=FALSE else legend=TRUE
     }
-    #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
-    if (legend | filetype=="svg")
-    {
-      width=width*(1+(1/GLratio))
-    }
+#     #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
+#     if (legend | (filetype=="svg" & !is.null(tooltips)))
+#     {
+#       width=width*(1+(1/GLratio))
+#     }
     
     if (!DoNotPlot)
     {

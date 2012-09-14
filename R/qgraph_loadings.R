@@ -51,6 +51,7 @@ if(is.null(arguments$labels))
 } else labels <- arguments$labels
 if(is.null(arguments$Fname)) Fname=NULL else Fname=arguments$Fname
 if(is.null(arguments$layout)) layout="circle" else layout=arguments$layout
+if (layout=="circular") layout <- "circle"
 if(is.null(arguments$legend))
 {
 	if (!is.null(groups) & !is.null(names(groups)) & filetype=="pdf") legend=TRUE else legend=FALSE
@@ -111,7 +112,7 @@ if (k>1)
 	sort2=sort(apply(fact,2,which.max),index.return=T)$ix
 
 	#IDENTIFY GROUPS:
-	if (!is.null(groups)) 
+	if (!is.null(groups) ) 
 	{
 		identity=vector("numeric",length(groups))
 
@@ -157,7 +158,7 @@ shape=character()
 shape[1:n]="square"
 shape[(n+1):(n+k)]="circle"
 
-if (!is.null(groups)) identitysort=sort(identity,index=T)$ix
+if (!is.null(groups) && k>1 ) identitysort=sort(identity,index=T)$ix
 
 # Set labels:
 Glabels=rep("",n+k)

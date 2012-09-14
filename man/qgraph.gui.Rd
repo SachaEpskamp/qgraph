@@ -8,19 +8,22 @@ Graphical user interface for qgraph
 This function works the same as \code{\link{qgraph}} except that a graphical user interface is opened allowing the user to change parameters.
 }
 \usage{
-qgraph.gui(input, ...)
+qgraph.gui(input, corMat, ...)
 }
 
 \arguments{
   \item{input}{
 Input, see \code{\link{qgraph}}
 }
+  \item{corMat}{
+Logical, is 'input' a correlation or covariance matrix. If this is TRUE a different GUI window is opened with more options. By default this is TRUE only if 'input' is a symmetrical matrix with all absolute values less or equal than 1 and all diagonal elements equal to 1. If a covariance matrix is used for 'input' and this argument is set to TRUE the plots are made using a `cov2cor` call, but the covariance matrix is used in computing EFA and PCA results.
+}
   \item{\dots}{
 Arguments passed to \code{\link{qgraph}}
 }
 }
 \details{
-Does not work with integrated plotting area in RStudio. Instead, call a new window with x11() or X11() first (or use the 'new' button).
+Press enter after entering values to save them for the next plot.
 }
 \references{
  Adrian Bowman, Ewan Crawford, Gavin Alexander, Richard W. Bowman
