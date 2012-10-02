@@ -1,3 +1,6 @@
+Changes in Version 1.1.1
+  o added XKCD easter egg
+
 Changes in Version 1.1.0
   o Some internal changes to facilitate the upcomming drawSEM package (https://github.com/SachaEpskamp/drawSEM)
     o Added 'residScale' and 'residEdge' arguments to qgraph()

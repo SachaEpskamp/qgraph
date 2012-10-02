@@ -290,6 +290,9 @@ qgraph =function( input, ... )
     # Arguments for TEX:
     if(is.null(arguments$standAlone)) standAlone=TRUE else standAlone=arguments$standAlone
     
+    ### EASTER EGGS ###
+    if(is.null(arguments[['XKCD']])) XKCD <- FALSE else XKCD <- TRUE
+    
     # Legend setting 1
     if (is.null(legend))
     {
@@ -1225,8 +1228,11 @@ qgraph =function( input, ... )
       if (length(curve)==1) curve=rep(curve,length(edgesort))
       curve[E$from==E$to]=1
       
+      # For each (sorted from weak to strong) edge:
       for (i in edgesort)
       {
+        
+        # Only plot if over minimum:
         if (abs(E$weight[i])>minimum)
         {
           x1=layout[E$from[i],1]
@@ -1240,7 +1246,8 @@ qgraph =function( input, ... )
             midY[i]=mean(c(y1,y2))
           }
           
-          if (curve[i]==0)
+          # If not curved or XKCD plot straigth line instead of spline:
+          if (curve[i]==0 & !XKCD)
           {
             if (is.logical(arrows) | vTrans < 255) if ((arrows & directed[i]) | vTrans < 255)
             {
@@ -1430,7 +1437,24 @@ qgraph =function( input, ... )
 #                 spl$y <- layout[E$from[i],2] + (spl2$x - layout[E$from[i],1]) * sin(loopRotation[i]) + (spl2$y - layout[E$from[i],2]) * cos(loopRotation[i])        
 #               }
             }
-            lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])
+            
+            
+            # If XKCD jitter edge:
+            if (XKCD)
+            {
+              jitt <- xkcd_jitter(spl$x,spl$y)
+              spl$x <- jitt$x
+              spl$y <- jitt$y
+            }
+                        
+            # If XKCD extra white edge:
+            if (XKCD)
+            {
+              lines(spl,lwd=edge.width[i]*2,col="white")
+            }
+            
+            lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
+          
             if (!is.logical(edge.labels))
             {
               midX[i]=spl$x[length(spl$x)/2]
@@ -1446,6 +1470,7 @@ qgraph =function( input, ... )
                 {
 #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
 #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+
                   DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
@@ -1477,14 +1502,30 @@ qgraph =function( input, ... )
       
       #if (nNodes==1) layout=matrix(0,1,2)
       # Plot nodes:
-      points(layout,cex=vsize,col=vertex.colors,pch=pch1)
-      
       if(length(borders) == 1) borders <- rep(borders,nNodes)
-      
-      if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
-      
-      if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
-      
+      if (!XKCD)
+      {
+        points(layout,cex=vsize,col=vertex.colors,pch=pch1)
+                
+        if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
+        
+        if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
+      } else {
+        circ <- seq(0,2*pi,length=100)
+        for (i in 1:nNodes)
+        {
+          pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],shape[i]))
+          mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2))
+          
+          if (borders[i]) {
+            polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
+            polygon(mod$x,mod$y,border="black",col=vertex.colors[i],lwd=5)
+          } else {
+            polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
+            polygon(mod$x,mod$y,border=NULL,col=vertex.colors[i],lwd=5)            
+          }
+        }
+      }
       
       # Make labels:
       if (is.logical(labels))
