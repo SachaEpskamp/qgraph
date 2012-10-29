@@ -1,6 +1,6 @@
 # Main qgraph function
 
-qgraph =function( input, ... )
+qgraph <- function( input, ... )
 {
   
   if ("qgraph"%in%class(input)) arguments <- list(...,input) else arguments=list(...)
@@ -192,6 +192,8 @@ qgraph =function( input, ... )
     if(is.null(arguments$weighted)) weighted=NULL else weighted=arguments$weighted
     if(is.null(arguments$rescale)) rescale=TRUE else rescale=arguments$rescale
     if(is.null(arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=arguments[['edge.labels']]
+    if(is.null(arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=arguments[['edge.label.bg']]
+    if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
     if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
     if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
     if(is.null(arguments$directed))
@@ -607,6 +609,11 @@ qgraph =function( input, ... )
       {
         edge.color <- edge.color[c(incl)]
       }
+      if (is.matrix(edge.label.bg))
+      {
+        edge.label.bg <- edge.label.bg[c(incl)]
+        edge.label.bg <- edge.label.bg[E$weight!=0]
+      }
       
       if (!is.null(edge.color)) if (length(edge.color) == length(E$weight)) edge.color <- edge.color[E$weight!=0]
       
@@ -632,6 +639,22 @@ qgraph =function( input, ... )
       if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
       edge.color <- edge.color[keep]
     }
+    
+    if (is.logical(edge.label.bg))
+    {
+      edge.label.bg <- "white"
+    }
+    if (length(edge.label.bg) == 1) edge.label.bg <- rep(edge.label.bg,length(E$from))
+    if (length(edge.label.bg) != length(keep)) stop("'edge.label.bg' is wrong length")
+    edge.label.bg <- edge.label.bg[keep]
+    
+    if (!is.null(edge.color)) 
+    {
+      if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
+      if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
+      edge.color <- edge.color[keep]
+    }    
+    
     
     if (length(bidirectional)==1) 
     {
@@ -1497,6 +1520,20 @@ qgraph =function( input, ... )
       if (!is.logical(edge.labels))
       {
         if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
+        
+        if (plotELBG)
+        {
+          for (i in seq_along(edge.labels))
+          {
+            labwd <- strwidth(edge.labels[i])
+            labht <- strheight(edge.labels[i])
+            polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
+                    c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
+                    border=NA,
+                    col=edge.label.bg[i])
+          }
+        }
+        
         text(midX,midY,edge.labels[!(duplicated(srt)&bidirectional)],font=edge.font[!(duplicated(srt)&bidirectional)],cex=edge.label.cex[!(duplicated(srt)&bidirectional)])
       }			
       
@@ -1515,7 +1552,7 @@ qgraph =function( input, ... )
         for (i in 1:nNodes)
         {
           pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],shape[i]))
-          mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2))
+          mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
           
           if (borders[i]) {
             polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
