@@ -1,3 +1,13 @@
+Changes in Version 1.1.1-4
+	o curve now proportional to node size of 5
+
+Changes in Version 1.1.1-3
+	o Curve now proportional to node of size 10
+
+Changes in Version 1.1.1-2
+	o Fixed a bug where the midpoint of curved lines where not perpendicular to the midpoint between two nodes in non-square plotting areas
+	o 'curve' argument is now interpreted as a scalar of two times the default node size. defaults to 1
+
 Changes in Version 1.1.1
   o added XKCD easter egg
 

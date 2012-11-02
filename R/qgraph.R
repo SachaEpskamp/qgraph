@@ -237,6 +237,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments$res)) res=320 else res=arguments$res
     
     # Graphical arguments
+#     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
     if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
     if(is.null(arguments$vsize)) vsize=max((-1/72)*(nNodes)+5.35,1) else vsize=arguments$vsize
     if(is.null(arguments$color)) color=NULL else color=arguments$color
@@ -712,7 +713,7 @@ qgraph <- function( input, ... )
     if (is.null(curve))
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
-      curve <- ifelse(dub&!bidirectional,0.2,0)
+      curve <- ifelse(dub&!bidirectional,1,0)
       rm(dub)
     }
     if (any(bidirectional))
@@ -1373,8 +1374,11 @@ qgraph <- function( input, ... )
             {
               midx <- (x1 + x2)/2
               midy <- (y1 + y2)/2
-              spx <- midx - curve[i] * 1/2 * (y2 - y1)
-              spy <- midy + curve[i] * 1/2 * (x2 - x1)
+              #spx <- midx - curve[i] * (y2 - y1)/2
+              #spy <- midy + curve[i] * (x2 - x1)/2
+              curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+              spx <- curvemid[1]
+              spy <- curvemid[2]
               spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
             }	
             if (E$from[i]!=E$to[i])
@@ -1408,8 +1412,11 @@ qgraph <- function( input, ... )
                 #               {
                 midx <- (x1 + x2)/2
                 midy <- (y1 + y2)/2
-                spx <- midx - curve[i] * 1/2 * (y2 - y1)
-                spy <- midy + curve[i] * 1/2 * (x2 - x1)
+                #spx <- midx - curve[i] * (y2 - y1)/2
+                #spy <- midy + curve[i] * (x2 - x1)/2
+                curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                spx <- curvemid[1]
+                spy <- curvemid[2]
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=F)
                 #               }
                 if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vTrans < 255)
@@ -1448,8 +1455,11 @@ qgraph <- function( input, ... )
                 #               {
                 midx <- (x1 + x2)/2
                 midy <- (y1 + y2)/2
-                spx <- midx - curve[i] * 1/2 * (y2 - y1)
-                spy <- midy + curve[i] * 1/2 * (x2 - x1)
+                #spx <- midx - curve[i] * (y2 - y1)/2
+                #spy <- midy + curve[i] * (x2 - x1)/2
+                curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                spx <- curvemid[1]
+                spy <- curvemid[2]
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
                 #               }
               }
