@@ -2,6 +2,10 @@
 
 Cent2Edge <- function(x,y,r,cex,shape,offset=0)
 {
+  # Set mar:
+  marOrig <- par("mar")
+  par(mar=c(0,0,0,0))
+  
   r <- r%%(2*pi)
   
   xrange <- abs(diff(par("usr")[1:2]))
@@ -30,9 +34,14 @@ Cent2Edge <- function(x,y,r,cex,shape,offset=0)
     
     xNew <- x + min(abs(widthX/dx),abs(widthY/dy)) * dx
     yNew <- y + min(abs(widthX/dx),abs(widthY/dy)) * dy    
+    
+    # Restore mar:
+    par(mar=marOrig)
     return(c(x+(cex+offset)/cex*(xNew-x),y+(cex+offset)/cex*(yNew-y)))
   } else 
   {
+    # Restore mar:
+    par(mar=marOrig)
     return(c(xNew,yNew)) 
   }
 }
