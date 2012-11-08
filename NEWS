@@ -1,3 +1,10 @@
+Changes in Version 1.1.1-7
+	o Edge labels are now plotted only for visible edges
+	o 'transparency' now defaults to FALSE if 'bg' is a color other than 'white'
+	o 'transparancy' is now matched by trans argument as well
+	o The background of edge labels is now the same as the background color by default
+	o Edge labels are now colored the same as the edge by default
+
 Changes in Version 1.1.1-6
 	o Fixed a bug where border colors weren't repeated for all nodes.
 	o For more consistency in argument names 'border.colors' has been renamed to 'border.color' and 'lcolor' has been renamed to 'label.color'

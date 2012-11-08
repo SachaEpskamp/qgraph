@@ -196,6 +196,7 @@ qgraph <- function( input, ... )
     if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
     if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
     if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
+    if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
     if(is.null(arguments$directed))
     {
       if (edgelist) directed=TRUE else directed=NULL 
@@ -213,9 +214,11 @@ qgraph <- function( input, ... )
     
     
     # Output arguments:
-    if(is.null(arguments$bg)) bg=FALSE else bg=arguments$bg
+    if(is.null(arguments$bg)) bg <- FALSE else bg <- arguments$bg
     background="white"
-    if (is.character(bg)) background=bg
+    if (isColor(bg)) background <- bg
+    
+    if (isTRUE(edge.label.bg)) edge.label.bg <- background
     
     #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
     #{
@@ -244,7 +247,11 @@ qgraph <- function( input, ... )
     if(is.null(arguments$gray)) gray=FALSE else gray=arguments$gray
     if(is.null(arguments$bgcontrol)) bgcontrol=6 else bgcontrol=arguments$bgcontrol
     if(is.null(arguments$bgres)) bgres=100 else bgres=arguments$bgres
-    if(is.null(arguments$transparency)) transparency=F else transparency=arguments$transparency
+    if(is.null(arguments[['trans',exact=FALSE]])) transparency <- NULL else transparency <- arguments[['trans',exact=FALSE]]
+    if (is.null(transparency))
+    {
+      if (isColor(bg) && identical(col2rgb(bg),col2rgb("white"))) transparency <- FALSE else transparency <- TRUE
+    }
     if(is.null(arguments[['label.color']])) {
           if(is.null(arguments$lcolor)) lcolor <- "black" else lcolor <- arguments$lcolor
     } else lcolor <- arguments[['label.color']]
@@ -619,6 +626,14 @@ qgraph <- function( input, ... )
         edge.label.bg <- edge.label.bg[c(incl)]
         edge.label.bg <- edge.label.bg[E$weight!=0]
       }
+      if (!is.null(ELcolor))
+      {
+          if (is.matrix(ELcolor))
+          {
+            ELcolor <- ELcolor[c(incl)]
+            ELcolor <- ELcolor[E$weight!=0]
+          }      
+      }
       
       if (!is.null(edge.color)) if (length(edge.color) == length(E$weight)) edge.color <- edge.color[E$weight!=0]
       
@@ -645,13 +660,20 @@ qgraph <- function( input, ... )
       edge.color <- edge.color[keep]
     }
     
-    if (is.logical(edge.label.bg))
-    {
-      edge.label.bg <- "white"
-    }
+#     if (is.logical(edge.label.bg))
+#     {
+#       edge.label.bg <- "white"
+#     }
     if (length(edge.label.bg) == 1) edge.label.bg <- rep(edge.label.bg,length(E$from))
     if (length(edge.label.bg) != length(keep)) stop("'edge.label.bg' is wrong length")
     edge.label.bg <- edge.label.bg[keep]
+    
+    if (!is.null(ELcolor))
+    {
+      ELcolor <- rep(ELcolor,length = length(E$from))
+      ELcolor <- ELcolor[keep]    
+    }
+    
     
     if (!is.null(edge.color)) 
     {
@@ -1533,13 +1555,19 @@ qgraph <- function( input, ... )
       }
       
       # Edge labels
+      if (is.null(ELcolor))
+      {
+        ELcolor <- edge.color
+      }
+      
       if (!is.logical(edge.labels))
       {
+        edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
         if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
         
         if (plotELBG)
         {
-          for (i in seq_along(edge.labels))
+          for (i in edgesort2)
           {
             labwd <- strwidth(edge.labels[i])
             labht <- strheight(edge.labels[i])
@@ -1550,7 +1578,7 @@ qgraph <- function( input, ... )
           }
         }
         
-        text(midX,midY,edge.labels[!(duplicated(srt)&bidirectional)],font=edge.font[!(duplicated(srt)&bidirectional)],cex=edge.label.cex[!(duplicated(srt)&bidirectional)])
+        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],font=edge.font[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],cex=edge.label.cex[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],col=ELcolor[edgesort2])
       }			
       
       #if (nNodes==1) layout=matrix(0,1,2)
