@@ -1,3 +1,7 @@
+Changes in Version 1.1.1-6
+	o Fixed a bug where border colors weren't repeated for all nodes.
+	o For more consistency in argument names 'border.colors' has been renamed to 'border.color' and 'lcolor' has been renamed to 'label.color'
+
 Changes in Version 1.1.1-5
 	o Fixed a bug in Cent2EdgeNode not restoring mar, it can now be called outside of qgraph
 

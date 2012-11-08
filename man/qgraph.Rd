@@ -50,12 +50,13 @@ qgraph( input, ... )
 	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
 	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
 	\item{transparency}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparancy.}
-	\item{lcolor}{Character containing the color of the labels, defaults to "black"}
+	\item{label.color}{Character containing the color of the labels, defaults to "black"}
 	\item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 	\item{loop}{If diag=T, this can be used to scale the size of the loop. defaults to 1.}
 	\item{lty}{Line type, see 'par'}
 	\item{pty}{See 'par'}
 	\item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
+  \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
 	\item{shape}{A character containing the shape of the nodes. "circle", "square", "triangle" and "diamond" are supported. Can also be a vector with a shape for each node. Defaults to "circle".}
 	\item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}

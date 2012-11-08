@@ -245,7 +245,9 @@ qgraph <- function( input, ... )
     if(is.null(arguments$bgcontrol)) bgcontrol=6 else bgcontrol=arguments$bgcontrol
     if(is.null(arguments$bgres)) bgres=100 else bgres=arguments$bgres
     if(is.null(arguments$transparency)) transparency=F else transparency=arguments$transparency
-    if(is.null(arguments$lcolor)) lcolor="black" else lcolor=arguments$lcolor
+    if(is.null(arguments[['label.color']])) {
+          if(is.null(arguments$lcolor)) lcolor <- "black" else lcolor <- arguments$lcolor
+    } else lcolor <- arguments[['label.color']]
     if(is.null(arguments[['loop']])) loop=1 else loop=arguments[['loop']]
     if(is.null(arguments[['loopRotation']]))
     {
@@ -262,7 +264,9 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
     if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
     if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
-    if(is.null(arguments$border.colors)) border.colors=NULL else border.colors=arguments$border.colors
+    if(is.null(arguments[['border.color']])) {
+      if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
+    } else bcolor <- arguments[['border.color']]
     if(is.null(arguments$shape)) shape="circle" else shape=arguments$shape
     if(is.null(arguments$label.scale)) label.scale=TRUE else label.scale=arguments$label.scale
     if(is.null(arguments$scores)) scores=NULL else scores=arguments$scores
@@ -1019,7 +1023,7 @@ qgraph <- function( input, ... )
         warning ("Length of scores is not equal to nuber of items")
       } else
       {
-        border.colors=vertex.colors
+        bcolor <- vertex.colors
         if (is.null(scores.range)) scores.range=c(min(scores),max(scores))
         scores[is.na(scores)]=scores.range[1]
         rgbmatrix=1-t(col2rgb(vertex.colors)/255)
@@ -1033,7 +1037,7 @@ qgraph <- function( input, ... )
       if (diagCols & !is.null(scores)) stop("Multiple modes specified for vertex colors (diag and scores)")
       if (diagCols & weighted)
       {
-        if (is.null(border.colors) & !all(vertex.colors=="white")) border.colors=vertex.colors
+        if (is.null(bcolor) & !all(vertex.colors=="white")) bcolor=vertex.colors
         if (cut==0) 
         {
           colV=(abs(diagWeights)-minimum)/(maximum-minimum)
@@ -1068,9 +1072,11 @@ qgraph <- function( input, ... )
         }
       }
     }
-    if (is.null(border.colors))
+    if (is.null(bcolor))
     {
-      border.colors=rep("black",length(vertex.colors))
+      bcolor <- rep("black",nNodes)
+    } else {
+      bcolor <- rep(bcolor,length=nNodes)
     }
     
     if (vTrans<255)
@@ -1554,9 +1560,9 @@ qgraph <- function( input, ... )
       {
         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
                 
-        if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
+        if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=2,pch=pch2[borders],col=bcolor[borders])
         
-        if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=2,pch=pch2[borders],col=border.colors[borders])
+        if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=2,pch=pch2[borders],col=bcolor[borders])
       } else {
         circ <- seq(0,2*pi,length=100)
         for (i in 1:nNodes)
@@ -1695,7 +1701,7 @@ qgraph <- function( input, ... )
             
             for (j in scores.range[1]:scores.range[2]-scores.range[1]) {
               
-              polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=border.colors[i],lwd=2)
+              polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=bcolor[i],lwd=2)
               
             } 
             text(j+1.5,i+0.5,names(groups)[i],pos=4)
