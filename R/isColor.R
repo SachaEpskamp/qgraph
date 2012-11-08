@@ -1,4 +1,6 @@
-isColor <- function(x)
-{
-  return(x%in%colors() | grepl("^#(\\d|[a-f]){6,8}$",x,ignore.case=TRUE))
+isColor <- function(x) {
+  sapply(x, function(X) {
+    tryCatch(is.matrix(col2rgb(X)), 
+             error = function(e) FALSE)
+  })
 }
