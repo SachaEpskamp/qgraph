@@ -617,9 +617,15 @@ qgraph <- function( input, ... )
         residEdge <- residEdge[c(incl)]
         residEdge <- residEdge[E$weight!=0]
       }
+      if (is.matrix(edge.labels))
+      {
+        edge.labels <- edge.labels[c(incl)]
+        edge.labels <- edge.labels[E$weight!=0]
+      }
       if (is.matrix(edge.color))
       {
         edge.color <- edge.color[c(incl)]
+        edge.color <- edge.color[E$weight!=0]
       }
       if (is.matrix(edge.label.bg))
       {
@@ -658,6 +664,10 @@ qgraph <- function( input, ... )
       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
       if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
       edge.color <- edge.color[keep]
+    }
+    if (!is.logical(edge.labels))
+    {
+      edge.labels <- rep(edge.labels,length=length(E$from))
     }
     
 #     if (is.logical(edge.label.bg))
@@ -1211,7 +1221,7 @@ qgraph <- function( input, ... )
       if (length(edge.labels)!=length(E$from))
       {
         warning("Number of edge labels did not correspond to number of edges, edge labes have been ommited")
-        edge.labels=NULL
+        edge.labels <- FALSE
       }
       midX=numeric(0)
       midY=numeric(0)

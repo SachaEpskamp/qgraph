@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-8
+	o Fixed a bug where specifying the wrong number of edge labels resulted in an error
+
 Changes in Version 1.1.1-7
 	o Edge labels are now plotted only for visible edges
 	o 'transparency' now defaults to FALSE if 'bg' is a color other than 'white'
