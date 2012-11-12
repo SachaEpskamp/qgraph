@@ -665,6 +665,7 @@ qgraph <- function( input, ... )
       if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
       edge.color <- edge.color[keep]
     }
+    
     if (!is.logical(edge.labels))
     {
       edge.labels <- rep(edge.labels,length=length(E$from))
@@ -703,6 +704,7 @@ qgraph <- function( input, ... )
       residEdge <- rep(residEdge,length(E$from))
     }
     residEdge <- residEdge[keep]    
+    
     if (!is.logical(edge.labels))
     {
       if (length(edge.labels)==length(keep))
@@ -1572,6 +1574,7 @@ qgraph <- function( input, ... )
       if (!is.logical(edge.labels))
       {
         edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
+        edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2])]
         if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
         
         if (plotELBG)
@@ -1587,7 +1590,7 @@ qgraph <- function( input, ... )
           }
         }
         
-        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],font=edge.font[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],cex=edge.label.cex[edgesort2][!(duplicated(srt[edgesort2])&bidirectional[edgesort2])],col=ELcolor[edgesort2])
+        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
       }			
       
       #if (nNodes==1) layout=matrix(0,1,2)
