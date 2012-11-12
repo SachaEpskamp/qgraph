@@ -658,10 +658,10 @@ qgraph <- function( input, ... )
       directed <- rep(directed,length(E$from))
     }
     directed <- directed[keep]
-    
+   
     if (!is.null(edge.color)) 
     {
-      if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
+      edge.color <- rep(edge.color,length=length(E$from))
       if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
       edge.color <- edge.color[keep]
     }
@@ -684,15 +684,7 @@ qgraph <- function( input, ... )
       ELcolor <- rep(ELcolor,length = length(E$from))
       ELcolor <- ELcolor[keep]    
     }
-    
-    
-    if (!is.null(edge.color)) 
-    {
-      if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
-      if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
-      edge.color <- edge.color[keep]
-    }    
-    
+      
     
     if (length(bidirectional)==1) 
     {

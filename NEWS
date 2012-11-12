@@ -1,4 +1,5 @@
 Changes in Version 1.1.1-9
+	o Fixed a bug where edge colors incorecctly returned an error stating the length was wrong
 	o Fixed a bug where incorrect edge labels where placed on edges.
 	o Midpoint of straigth edges for placing edge labels is now based on the center of the edge, not on the center between the two connected nodes.
 
