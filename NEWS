@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-9
+	o Midpoint of straigth edges for placing edge labels is now based on the center of the edge, not on the center between the two connected nodes.
+
 Changes in Version 1.1.1-8
 	o Fixed a bug where specifying the wrong number of edge labels resulted in an error
 

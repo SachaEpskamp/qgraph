@@ -1301,13 +1301,7 @@ qgraph <- function( input, ... )
           x2=layout[E$to[i],1]
           y1=layout[E$from[i],2]
           y2=layout[E$to[i],2]
-          
-          if (!is.logical(edge.labels))
-          {
-            midX[i]=mean(c(x1,x2))
-            midY[i]=mean(c(y1,y2))
-          }
-          
+                
           # If not curved or XKCD plot straigth line instead of spline:
           if (curve[i]==0 & !XKCD)
           {
@@ -1351,6 +1345,11 @@ qgraph <- function( input, ... )
                 y1 <- NewPoints[2]  
                 
               }
+            }
+            if (!is.logical(edge.labels))
+            {
+              midX[i]=mean(c(x1,x2))
+              midY[i]=mean(c(y1,y2))
             }
             lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
             if (directed[i])
@@ -1523,14 +1522,14 @@ qgraph <- function( input, ... )
             {
               lines(spl,lwd=edge.width[i]*2,col="white")
             }
-            
-            lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
-          
+ 
             if (!is.logical(edge.labels))
             {
               midX[i]=spl$x[length(spl$x)/2]
               midY[i]=spl$y[length(spl$y)/2]
             }
+            lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
+          
             if (directed[i])
             {
               if (!is.logical(arrows))
