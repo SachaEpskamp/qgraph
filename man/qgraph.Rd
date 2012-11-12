@@ -50,6 +50,7 @@ qgraph( input, ... )
 	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
 	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
 	\item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparancy. (also used as 'transparancy')}
+    \item{addTrans}{if TRUE (default) and if 'edge.color' is assigned, transparancy will be added to edges that are not transparant (or for which no transparancy has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
 	\item{label.color}{Character containing the color of the labels, defaults to "black"}
 	\item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 	\item{loop}{If diag=T, this can be used to scale the size of the loop. defaults to 1.}
@@ -247,6 +248,10 @@ title("Big 5 correlations",line=2.5)
 
 # Same graph with Venn diagram overlay:
 qgraph(Q,overlay=TRUE)
+title("Big 5 correlations",line=2.5)
+
+# Same graph with different color scheme:
+qgraph(Q,edge.color=ifelse(cor(big5)>0,"blue","purple"))
 title("Big 5 correlations",line=2.5)
 
 # Significance graph (circular):

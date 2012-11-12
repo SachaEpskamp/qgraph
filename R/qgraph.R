@@ -252,6 +252,7 @@ qgraph <- function( input, ... )
     {
       if (isColor(bg) && identical(col2rgb(bg),col2rgb("white"))) transparency <- FALSE else transparency <- TRUE
     }
+    if(is.null(arguments[['addTrans']])) addTrans <- TRUE else addTrans <- FALSE
     if(is.null(arguments[['label.color']])) {
           if(is.null(arguments$lcolor)) lcolor <- "black" else lcolor <- arguments$lcolor
     } else lcolor <- arguments[['label.color']]
@@ -906,13 +907,15 @@ qgraph <- function( input, ... )
     }
     
     # Set edge colors:
-    if (is.null(edge.color) || any(is.na(edge.color)))
+    if (is.null(edge.color) || (any(is.na(edge.color)) || addTrans))
     {
-      if (!is.null(edge.color) && any(is.na(edge.color)))
+      if (!is.null(edge.color))
       {
         repECs <- TRUE
         ectemp <- edge.color
       } else  repECs <- FALSE
+      
+      col <- rep(1,length(E$from))
       
       if (weighted) 
       {
@@ -1026,7 +1029,14 @@ qgraph <- function( input, ... )
       }
       if (repECs)
       {
-        edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+        ## Add trans:
+        if (addTrans & any(!is.na(ectemp)))
+        {
+          if (!is.logical(transparency)) col <- rep(transparency,length(col))
+          edge.color[!is.na(ectemp)] <- addTransFun(ectemp[!is.na(ectemp)],round(255*col))
+        } else {
+          edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+        }
         rm(ectemp)
       }
     } else {

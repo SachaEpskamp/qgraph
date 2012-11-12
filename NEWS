@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-2
+	o More support for different edge colors added. Through the new 'addTrans' function, transparancy is automatically added to the edge color comparable with the edge strength
+
 Changes in Version 1.1.1-1
 	o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
 
