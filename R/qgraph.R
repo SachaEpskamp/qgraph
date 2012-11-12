@@ -906,8 +906,14 @@ qgraph <- function( input, ... )
     }
     
     # Set edge colors:
-    if (is.null(edge.color))
+    if (is.null(edge.color) || any(is.na(edge.color)))
     {
+      if (!is.null(edge.color) && any(is.na(edge.color)))
+      {
+        repECs <- TRUE
+        ectemp <- edge.color
+      } else  repECs <- FALSE
+      
       if (weighted) 
       {
         #Edge color:
@@ -1017,6 +1023,11 @@ qgraph <- function( input, ... )
       {
         if (!is.logical(transparency)) Trans=transparency else Trans=1
         edge.color=rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
+      }
+      if (repECs)
+      {
+        edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+        rm(ectemp)
       }
     } else {
       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))

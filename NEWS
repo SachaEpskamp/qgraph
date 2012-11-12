@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-1
+	o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
+
 Changes in Version 1.1.1-9
 	o Fixed a bug where edge colors incorecctly returned an error stating the length was wrong
 	o Fixed a bug where incorrect edge labels where placed on edges.
