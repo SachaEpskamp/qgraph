@@ -37,25 +37,35 @@ qgraph <- function( input, ... )
     qgraph.semModel(input,...)
   } else {
     
-    if (length(arguments)>0)
+#     if (length(arguments)>0)
+#     {
+#       for (i in 1:length(arguments))
+#       {
+#         if ("qgraph"%in%class(arguments[[i]])) 
+#         {
+#           if (!is.null(names(arguments[[i]])))
+#           {
+#             for (j in 1:length(arguments[[i]]))
+#             {
+#               if (!(names(arguments[[i]])[j]%in%names(arguments)))
+#               {
+#                 arguments[length(arguments)+1]=arguments[[i]][j]
+#                 names(arguments)[length(arguments)]=names(arguments[[i]])[j]
+#               }
+#             }
+#           }
+#         }
+#       }
+#     }
+    # Import arguments:
+    arguments <- getArgs(arguments)
+    
+    # Import default arguments:
+    def <- options("qgraph","qgraphDefaults")
+    class(def[[1]]) <- class(def[[2]]) <- "qgraph"
+    if (any(sapply(def,function(x)!is.null(x))))
     {
-      for (i in 1:length(arguments))
-      {
-        if ("qgraph"%in%class(arguments[[i]])) 
-        {
-          if (!is.null(names(arguments[[i]])))
-          {
-            for (j in 1:length(arguments[[i]]))
-            {
-              if (!(names(arguments[[i]])[j]%in%names(arguments)))
-              {
-                arguments[length(arguments)+1]=arguments[[i]][j]
-                names(arguments)[length(arguments)]=names(arguments[[i]])[j]
-              }
-            }
-          }
-        }
-      }
+      arguments <- getArgs(c(arguments,def))
     }
     
     if (!is.null(arguments$qgraphEdgelist)&"qgraph"%in%class(input)) 
