@@ -1033,7 +1033,7 @@ qgraph <- function( input, ... )
         if (addTrans & any(!is.na(ectemp)))
         {
           if (!is.logical(transparency)) col <- rep(transparency,length(col))
-          edge.color[!is.na(ectemp)] <- addTransFun(ectemp[!is.na(ectemp)],round(255*col))
+          edge.color[!is.na(ectemp)] <- addTransFun(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
         } else {
           edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
         }
