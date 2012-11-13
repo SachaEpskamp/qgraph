@@ -58,11 +58,12 @@ qgraph <- function( input, ... )
 #       }
 #     }
     # Import arguments:
-    arguments <- getArgs(arguments)
+    if (length(arguments) > 0) arguments <- getArgs(arguments)
     
     # Import default arguments:
     def <- options("qgraph","qgraphDefaults")
-    class(def[[1]]) <- class(def[[2]]) <- "qgraph"
+    if (!is.null(def[[1]])) class(def[[1]]) <- "qgraph"
+    if (!is.null(def[[2]])) class(def[[2]]) <- "qgraph"
     if (any(sapply(def,function(x)!is.null(x))))
     {
       arguments <- getArgs(c(arguments,def))
@@ -1268,6 +1269,7 @@ qgraph <- function( input, ... )
       
       # PLOT:
       marOrig <- par("mar")
+      bgOrig <- par("bg")
       if (plot)
       {
         par(mar=c(0,0,0,0), bg=background)
@@ -1790,7 +1792,7 @@ qgraph <- function( input, ... )
         message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
         dev.off()
       }
-      par(mar=marOrig)
+      par(mar=marOrig, bg=bgOrig)
     }
     # Make output list:
     #returnval=list(input=input, layout=layout, cut=cut, maximum=maximum, minimum=minimum, groups=groups, weighted=weighted, rescale=rescale, labels=labels, directed=directed, legend=legend, plot=plot, rotation=rotation, layout.control=layout.control, layout.par=layout.par, filetype=filetype, filename=filename, width=width, height=height, pty=pty, res=res, vsize=vsize, esize=esize, color=color, bg=bg, bgcontrol=bgcontrol, bgres=bgres, transparency=transparency, lcolor=lcolor, loop=loop, legend.cex=legend.cex, borders=borders, curve=curve, arrows=arrows, diag=diag, tooltips=tooltips, hyperlinks=hyperlinks)
