@@ -1,5 +1,7 @@
 Changes in Version 1.1.1-2
 	o More support for different edge colors added. Through the new 'addTrans' function, transparancy is automatically added to the edge color comparable with the edge strength
+ o Argument lists can now be nested. Lower level arguments take precedence over higher nested arguments.
+ o Defaults added. The options "qgraph" or "qgraphDefaults" can be assigned a list with default arguments for qgraph()
 
 Changes in Version 1.1.1-1
 	o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
