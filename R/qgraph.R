@@ -61,9 +61,8 @@ qgraph <- function( input, ... )
     if (length(arguments) > 0) arguments <- getArgs(arguments)
     
     # Import default arguments:
-    def <- options("qgraph","qgraphDefaults")
-    if (!is.null(def[[1]])) class(def[[1]]) <- "qgraph"
-    if (!is.null(def[[2]])) class(def[[2]]) <- "qgraph"
+    def <- options("qgraph")
+    if (!is.null(def$qgraph)) class(def$qgraph) <- "qgraph"
     if (any(sapply(def,function(x)!is.null(x))))
     {
       arguments <- getArgs(c(arguments,def))
@@ -205,6 +204,17 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=arguments[['edge.labels']]
     if(is.null(arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=arguments[['edge.label.bg']]
     if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
+    
+    if(is.null(arguments[['posCol']])) posCol <- c("#009900","darkgreen") else posCol <- arguments[['posCol']]
+    if (length(posCol)==1) posCol <- rep(posCol,2)
+    if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
+    
+    if(is.null(arguments[['negCol']])) negCol <- c("#BF0000","red") else negCol <- arguments[['negCol']]
+    if (length(negCol)==1) negCol <- rep(negCol,2)
+    if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
+    
+    if(is.null(arguments[['colFactor']])) colFactor <- 1 else colFactor <- arguments[['colFactor']]
+    
     if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
     if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
     if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
@@ -255,15 +265,19 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
     if(is.null(arguments$vsize)) vsize=max((-1/72)*(nNodes)+5.35,1) else vsize=arguments$vsize
     if(is.null(arguments$color)) color=NULL else color=arguments$color
-    if(is.null(arguments$gray)) gray=FALSE else gray=arguments$gray
+    
+    if(is.null(arguments[['gray']])) gray <- FALSE else gray <- arguments[['gray']]
+    
+    if (gray) posCol <- negCol <- c("gray10","black")
+    
     if(is.null(arguments$bgcontrol)) bgcontrol=6 else bgcontrol=arguments$bgcontrol
     if(is.null(arguments$bgres)) bgres=100 else bgres=arguments$bgres
     if(is.null(arguments[['trans',exact=FALSE]])) transparency <- NULL else transparency <- arguments[['trans',exact=FALSE]]
     if (is.null(transparency))
     {
-      if (isColor(bg) && identical(col2rgb(bg),col2rgb("white"))) transparency <- FALSE else transparency <- TRUE
+      if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
     }
-    if(is.null(arguments[['addTrans']])) addTrans <- TRUE else addTrans <- FALSE
+    if(is.null(arguments[['fade']])) fade <- TRUE else fade <- FALSE
     if(is.null(arguments[['label.color']])) {
           if(is.null(arguments$lcolor)) lcolor <- "black" else lcolor <- arguments$lcolor
     } else lcolor <- arguments[['label.color']]
@@ -917,8 +931,147 @@ qgraph <- function( input, ... )
       }
     }
     
+#     # Set edge colors:
+#     if (is.null(edge.color) || (any(is.na(edge.color)) || fade))
+#     {
+#       if (!is.null(edge.color))
+#       {
+#         repECs <- TRUE
+#         ectemp <- edge.color
+#       } else  repECs <- FALSE
+#       
+#       col <- rep(1,length(E$from))
+#       
+#       if (weighted) 
+#       {
+#         #Edge color:
+#         edge.color=rep("#00000000",length(E$from))
+#         
+#         
+#         if (mode=="strength"|mode=="direct")
+#         {
+#           if (cut==0) 
+#           {
+#             col=(abs(E$weight)-minimum)/(maximum-minimum)
+#           } else 
+#           {
+#             col=(abs(E$weight)-minimum)/(cut-minimum)
+#           }
+#           col[col>1]=1
+#           col[col<0]=0
+#           if (!gray)
+#           {
+#             if (transparency) 
+#             {
+#               col=col^(2)
+#               neg=col2rgb(rgb(0.75,0,0))/255
+#               pos=col2rgb(rgb(0,0.6,0))/255
+#               
+#               # Set colors for edges over cutoff:
+#               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
+#               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
+#             } else 
+#             {
+#               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]*0.25),1-col[E$weight > minimum])
+#               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]*0.25),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
+#             }	
+#           } else
+#           {
+#             if (transparency) 
+#             {
+#               col=col^(2)
+#               neg="gray10"
+#               pos="gray10"
+#               
+#               # Set colors for edges over cutoff:
+#               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
+#               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
+#             } else 
+#             {
+#               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]),1-col[E$weight > minimum])
+#               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
+#             }
+#           }
+#         }
+#         if (mode == "sig")
+#         {	
+#           
+#           if (!gray)
+#           {
+#             
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- "cadetblue1"	
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- "#6495ED"
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- "blue"				
+#             # Set colors for edges over sig < 0.01 :
+#             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "darkblue"
+#             
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 3) edge.color[Pvals < 0 & Pvals > (-1 * alpha[4])  & E$weight < -1 * minimum] <- rgb(1,0.8,0.4) 	
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 2) edge.color[Pvals < 0 & Pvals > (-1 * alpha[3])  & E$weight < -1 * minimum] <- "orange"
+#             # Set colors for edges over sig > 0.01 :
+#             if (length(alpha) > 1) edge.color[Pvals < 0 & Pvals > (-1 * alpha[2])  & E$weight < -1 * minimum] <- "darkorange"				
+#             # Set colors for edges over sig < 0.01 :
+#             edge.color[Pvals < 0 & Pvals > (-1 * alpha[1])  & E$weight < -1 * minimum] <- "darkorange2"
+#             
+#             
+#             
+#             
+#           } else
+#           {
+#             Pvals <- abs(Pvals)
+#             # Set colors for edges over sig < 0.01 :
+#             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- rgb(0.7,0.7,0.7)
+#             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- rgb(0.5,0.5,0.5)
+#             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- rgb(0.3,0.3,0.3)
+#             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "black"
+#             
+#           }
+#         }
+#         if (cut!=0)
+#         {
+#           if (!gray & (mode=="strength"|mode=="direct"))
+#           {
+#             # Set colors for edges over cutoff:
+#             edge.color[E$weight<= -1*cut] <- "red"
+#             edge.color[E$weight>= cut] <- "darkgreen"
+#           } else if (gray)
+#           {
+#             # Set colors for edges over cutoff:
+#             edge.color[E$weight<= -1*cut] <- "black"
+#             edge.color[E$weight>= cut] <- "black"
+#             
+#           }
+#         }
+#         
+#       } else
+#       {
+#         if (!is.logical(transparency)) Trans=transparency else Trans=1
+#         edge.color=rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
+#       }
+#       if (repECs)
+#       {
+#         ## Add trans:
+#         if (fade & any(!is.na(ectemp)))
+#         {
+#           if (!is.logical(transparency)) col <- rep(transparency,length(col))
+#           edge.color[!is.na(ectemp)] <- addTrans(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
+#         } else {
+#           edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+#         }
+#         rm(ectemp)
+#       }
+#     } else {
+#       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
+#       if (length(edge.color) != length(E$from)) stop("Number of edge colors not equal to number of edges")
+#     }
+    
+    
     # Set edge colors:
-    if (is.null(edge.color) || (any(is.na(edge.color)) || addTrans))
+    if (is.null(edge.color) || (any(is.na(edge.color)) || fade))
     {
       if (!is.null(edge.color))
       {
@@ -926,62 +1079,55 @@ qgraph <- function( input, ... )
         ectemp <- edge.color
       } else  repECs <- FALSE
       
+      # col vector will contain relative strength:
       col <- rep(1,length(E$from))
       
       if (weighted) 
       {
-        #Edge color:
-        edge.color=rep("#00000000",length(E$from))
+        # Dummmy vector containing invisible edges:
+        edge.color <- rep("#00000000",length(E$from))
         
-        
+        # Normal color scheme (0 is invisible, stronger is more visible)
         if (mode=="strength"|mode=="direct")
         {
+          # Set relative strength:
           if (cut==0) 
           {
-            col=(abs(E$weight)-minimum)/(maximum-minimum)
+            col <- (abs(E$weight)-minimum)/(maximum-minimum)
           } else 
           {
-            col=(abs(E$weight)-minimum)/(cut-minimum)
+            col <- (abs(E$weight)-minimum)/(cut-minimum)
           }
-          col[col>1]=1
-          col[col<0]=0
-          if (!gray)
+          col[col>1] <- 1
+          col[col<0] <- 0
+          col <- col^colFactor      
+      
+          # Set edges between minimum and cut:
+          if (fade)
           {
-            if (transparency) 
+            if (isTRUE(transparency))
             {
-              col=col^(2)
-              neg=col2rgb(rgb(0.75,0,0))/255
-              pos=col2rgb(rgb(0,0.6,0))/255
-              
-              # Set colors for edges over cutoff:
-              edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
-              edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
-            } else 
-            {
-              edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]*0.25),1-col[E$weight > minimum])
-              edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]*0.25),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
-            }	
-          } else
-          {
-            if (transparency) 
-            {
-              col=col^(2)
-              neg="gray10"
-              pos="gray10"
-              
-              # Set colors for edges over cutoff:
-              edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
-              edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
-            } else 
-            {
-              edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]),1-col[E$weight > minimum])
-              edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
+              edge.color[E$weight > minimum] <- addTrans(posCol[1],round(col[E$weight > minimum]*255))
+              edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(col[E$weight < -1*minimum]*255))
+            } else {
+              edge.color[E$weight > minimum] <- Fade(posCol[1],col[E$weight > minimum], background)
+              edge.color[E$weight < -1*minimum] <- Fade(negCol[1],col[E$weight < -1*minimum], background)
             }
+          } else {
+            edge.color[E$weight > minimum] <- posCol[1]
+            edge.color[E$weight < -1*minimum] <- negCol[1]
           }
-        }
+          
+          # Set colors over cutoff if cut != 0:
+          if (cut!=0)
+          {
+            if (posCol[1]!=posCol[2]) edge.color[E$weight >= cut] <- posCol[2]
+            if (negCol[1]!=negCol[2]) edge.color[E$weight <= -1*cut] <- negCol[2]
+          }
+        } 
+        
         if (mode == "sig")
         {	
-          
           if (!gray)
           {
             
@@ -1017,34 +1163,23 @@ qgraph <- function( input, ... )
             
           }
         }
-        if (cut!=0)
-        {
-          if (!gray & (mode=="strength"|mode=="direct"))
-          {
-            # Set colors for edges over cutoff:
-            edge.color[E$weight<= -1*cut] <- "red"
-            edge.color[E$weight>= cut] <- "darkgreen"
-          } else if (gray)
-          {
-            # Set colors for edges over cutoff:
-            edge.color[E$weight<= -1*cut] <- "black"
-            edge.color[E$weight>= cut] <- "black"
-            
-          }
-        }
-        
       } else
       {
-        if (!is.logical(transparency)) Trans=transparency else Trans=1
-        edge.color=rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
+        if (!is.logical(transparency)) Trans <- transparency else Trans <- 1
+        edge.color <- rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
       }
       if (repECs)
       {
         ## Add trans:
-        if (addTrans & any(!is.na(ectemp)))
+        if (fade & any(!is.na(ectemp)))
         {
           if (!is.logical(transparency)) col <- rep(transparency,length(col))
-          edge.color[!is.na(ectemp)] <- addTransFun(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
+          if (isTRUE(transparency))
+          {
+            edge.color[!is.na(ectemp)] <- addTrans(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
+          } else {
+            edge.color[!is.na(ectemp)] <- Fade(ectemp[!is.na(ectemp)],col[!is.na(ectemp)], background)
+          }
         } else {
           edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
         }
@@ -1054,7 +1189,6 @@ qgraph <- function( input, ... )
       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
       if (length(edge.color) != length(E$from)) stop("Number of edge colors not equal to number of edges")
     }
-    
     
     
     # Vertex color:
@@ -1378,6 +1512,7 @@ qgraph <- function( input, ... )
               midX[i]=mean(c(x1,x2))
               midY[i]=mean(c(y1,y2))
             }
+
             lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
             if (directed[i])
             {

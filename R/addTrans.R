@@ -1,4 +1,4 @@
-addTransFun <- function(color,trans)
+addTrans <- function(color,trans)
 {
   # This function adds transparancy to a color.
   # Define transparancy with an integer between 0 and 255

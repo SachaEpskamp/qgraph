@@ -50,7 +50,10 @@ qgraph( input, ... )
 	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
 	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
 	\item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparancy. (also used as 'transparancy')}
-    \item{addTrans}{if TRUE (default) and if 'edge.color' is assigned, transparancy will be added to edges that are not transparant (or for which no transparancy has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+    \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparancy will be added to edges that are not transparant (or for which no transparancy has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+    \item{posCol}{Color of posive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will als be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
+\item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will als be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
+\item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for lineair behavior.}
 	\item{label.color}{Character containing the color of the labels, defaults to "black"}
 	\item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 	\item{loop}{If diag=T, this can be used to scale the size of the loop. defaults to 1.}
