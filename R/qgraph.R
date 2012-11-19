@@ -57,6 +57,7 @@ qgraph <- function( input, ... )
 #         }
 #       }
 #     }
+    
     # Import arguments:
     if (length(arguments) > 0) arguments <- getArgs(arguments)
     
@@ -72,6 +73,7 @@ qgraph <- function( input, ... )
     {
       input <- cbind(arguments$qgraphEdgelist$from,arguments$qgraphEdgelist$to,arguments$qgraphEdgelist$weight)
       if (is.null(arguments$directed)) arguments$directed <- arguments$qgraphEdgelist$directed
+      if (is.null(arguments$bidirectional)) arguments$bidirectional <- arguments$qgraphEdgelist$bidir
     }
     
     if (class(input) %in% c("graphNEL","pcAlgo"))
@@ -772,12 +774,6 @@ qgraph <- function( input, ... )
       curve <- ifelse(dub&!bidirectional,1,0)
       rm(dub)
     }
-    if (any(bidirectional))
-    {
-      dub <- duplicated(srt)
-      E$weight[dub&bidirectional] <- 0
-      rm(dub)
-    }	
     
     # Layout settings:
     if (nNodes == 1)
@@ -1199,9 +1195,9 @@ qgraph <- function( input, ... )
     }
     
     if (is.null(groups)) groups=list(1:nNodes)
-    if (is.null(color))	color="white"
+    if (is.null(color))	color <- background
     
-    vertex.colors=rep("white",nNodes)
+    vertex.colors <- rep(color,nNodes)
     
     if (!is.null(groups)) {
       for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] }
@@ -1446,6 +1442,11 @@ qgraph <- function( input, ... )
         
       }    			
       
+      # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
+      if (any(bidirectional))
+      {
+        omitEdge <- duplicated(srt)&bidirectional
+      } else omitEdge <- NULL 
       
       # Plot edges: 
       if (length(curve)==1) curve=rep(curve,length(edgesort))
@@ -1456,7 +1457,7 @@ qgraph <- function( input, ... )
       {
         
         # Only plot if over minimum:
-        if (abs(E$weight[i])>minimum)
+        if (abs(E$weight[i])>minimum & !isTRUE(omitEdge))
         {
           x1=layout[E$from[i],1]
           x2=layout[E$to[i],1]
@@ -1937,6 +1938,8 @@ qgraph <- function( input, ... )
     returnval$weighted <- weighted
     returnval$layout.orig=original.layout
     returnval$nNodes <- nNodes
+    returnval$directed <- NULL
+    returnval$bidirectional <- NULL
     E$directed <- directed
     E$bidir <- bidirectional
     E <- as.data.frame(E)

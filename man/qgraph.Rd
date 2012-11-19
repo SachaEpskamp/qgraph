@@ -36,7 +36,7 @@ qgraph( input, ... )
 
 \section{Graphical arguments}{	
 \describe{
-\item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to "white" without groups list and rainbow(length(groups)) with a groups list.}
+\item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
 	\item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
