@@ -247,7 +247,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
     
     if(is.null(arguments[['label.color']])) {
-      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background))<0.5,"black","white") else lcolor <- arguments$lcolor
+      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- arguments$lcolor
     } else lcolor <- arguments[['label.color']]
     if(is.null(arguments[['border.color']])) {
       if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
@@ -1166,7 +1166,7 @@ qgraph <- function( input, ... )
       } else
       {
         if (!is.logical(transparency)) Trans <- transparency else Trans <- 1
-        edge.color <- rep(addTrans(unCol,Trans),length(edgesort))
+        edge.color <- rep(addTrans(unCol,round(255*Trans)),length(edgesort))
       }
       if (repECs)
       {
@@ -1266,7 +1266,7 @@ qgraph <- function( input, ... )
     }
     if (is.null(bcolor))
     {
-      bcolor <- rep(ifelse(mean(col2rgb(background))<0.5,"black","white"),nNodes)
+      bcolor <- rep(ifelse(mean(col2rgb(background)/255)>0.5,"black","white"),nNodes)
     } else {
       bcolor <- rep(bcolor,length=nNodes)
     }
