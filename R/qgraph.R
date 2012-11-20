@@ -1944,6 +1944,7 @@ qgraph <- function( input, ... )
     returnval$nNodes <- nNodes
     returnval$directed <- NULL
     returnval$bidirectional <- NULL
+    returnval$background <- background
     E$directed <- directed
     E$bidir <- bidirectional
     E <- as.data.frame(E)
