@@ -215,11 +215,12 @@ qgraph <- function( input, ... )
     if (length(negCol)==1) negCol <- rep(negCol,2)
     if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
     
+    if(is.null(arguments[['unCol']])) unCol <- "#808080" else unCol <- arguments[['unCol']] 
+    
     if(is.null(arguments[['colFactor']])) colFactor <- 1 else colFactor <- arguments[['colFactor']]
     
     if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
     if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
-    if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
     if(is.null(arguments$directed))
     {
       if (edgelist) directed=TRUE else directed=NULL 
@@ -238,10 +239,19 @@ qgraph <- function( input, ... )
     
     # Output arguments:
     if(is.null(arguments$bg)) bg <- FALSE else bg <- arguments$bg
-    background="white"
+    background <- par("bg")
     if (isColor(bg)) background <- bg
     
     if (isTRUE(edge.label.bg)) edge.label.bg <- background
+    
+    if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
+    
+    if(is.null(arguments[['label.color']])) {
+      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background))<0.5,"black","white") else lcolor <- arguments$lcolor
+    } else lcolor <- arguments[['label.color']]
+    if(is.null(arguments[['border.color']])) {
+      if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
+    } else bcolor <- arguments[['border.color']]
     
     #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
     #{
@@ -280,9 +290,6 @@ qgraph <- function( input, ... )
       if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
     }
     if(is.null(arguments[['fade']])) fade <- TRUE else fade <- FALSE
-    if(is.null(arguments[['label.color']])) {
-          if(is.null(arguments$lcolor)) lcolor <- "black" else lcolor <- arguments$lcolor
-    } else lcolor <- arguments[['label.color']]
     if(is.null(arguments[['loop']])) loop=1 else loop=arguments[['loop']]
     if(is.null(arguments[['loopRotation']]))
     {
@@ -299,9 +306,6 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
     if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
     if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
-    if(is.null(arguments[['border.color']])) {
-      if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
-    } else bcolor <- arguments[['border.color']]
     if(is.null(arguments$shape)) shape="circle" else shape=arguments$shape
     if(is.null(arguments$label.scale)) label.scale=TRUE else label.scale=arguments$label.scale
     if(is.null(arguments$scores)) scores=NULL else scores=arguments$scores
@@ -1162,7 +1166,7 @@ qgraph <- function( input, ... )
       } else
       {
         if (!is.logical(transparency)) Trans <- transparency else Trans <- 1
-        edge.color <- rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
+        edge.color <- rep(addTrans(unCol,Trans),length(edgesort))
       }
       if (repECs)
       {
@@ -1262,7 +1266,7 @@ qgraph <- function( input, ... )
     }
     if (is.null(bcolor))
     {
-      bcolor <- rep("black",nNodes)
+      bcolor <- rep(ifelse(mean(col2rgb(background))<0.5,"black","white"),nNodes)
     } else {
       bcolor <- rep(bcolor,length=nNodes)
     }

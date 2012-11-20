@@ -1,3 +1,7 @@
+Changes in Version 1.1.1-5
+	o 'label.color' and 'border.color' now default to 'white' if the mean color (rgb) is higher than 0.5
+	o Added 'unCol' argument to control the default color for unweighted edges.
+
 Changes in Version 1.1.1-4
 	o 'color' now defaults to the background color, which defaults to 'white'
 	o Fixed a bug where bidirectional edges were not stored properly
