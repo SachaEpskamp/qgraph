@@ -1,3 +1,7 @@
+Changes in Version 1.1.1-6
+	o 'color' can now be assigned 'background', which will transfer the background color to the node. This is now the default
+	o Edge ends are now replaced if the node is partly transparant, which is no longer based on vTrans
+
 Changes in Version 1.1.1-5
 	o 'label.color' and 'border.color' now default to 'white' if the mean color (rgb) is higher than 0.5
 	o Added 'unCol' argument to control the default color for unweighted edges.

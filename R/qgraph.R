@@ -239,17 +239,10 @@ qgraph <- function( input, ... )
     
     # Output arguments:
     if(is.null(arguments$bg)) bg <- FALSE else bg <- arguments$bg
-    background <- par("bg")
-    if (isColor(bg)) background <- bg
-    
-    if (isTRUE(edge.label.bg)) edge.label.bg <- background
-    
+      
     if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
     
-    if(is.null(arguments[['label.color']])) {
-      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- arguments$lcolor
-    } else lcolor <- arguments[['label.color']]
-    if(is.null(arguments[['border.color']])) {
+      if(is.null(arguments[['border.color']])) {
       if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
     } else bcolor <- arguments[['border.color']]
     
@@ -404,6 +397,14 @@ qgraph <- function( input, ... )
     }	
     #if (!filetype%in%c('pdf','png','jpg','jpeg','svg','R','eps','tiff')) warning(paste("File type",filetype,"is not supported")) 
     
+    
+    # Specify background:
+    background <- par("bg")
+    if (isColor(bg)) background <- bg
+    if (isTRUE(edge.label.bg)) edge.label.bg <- background
+    if(is.null(arguments[['label.color']])) {
+      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- arguments$lcolor
+    } else lcolor <- arguments[['label.color']]
     
     # Legend setting 2
     if (legend & !is.null(scores))
@@ -1194,12 +1195,14 @@ qgraph <- function( input, ... )
     # Vertex color:
     if (is.null(color) & !is.null(groups))
     {
-      if (!gray) color=rainbow(length(groups))
+      if (!gray) color <- rainbow(length(groups))
       if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
     }
     
-    if (is.null(groups)) groups=list(1:nNodes)
-    if (is.null(color))	color <- background
+    if (is.null(groups)) groups <- list(1:nNodes)
+    if (is.null(color))	color <- "background"
+    
+    color[color=="background"] <- background
     
     vertex.colors <- rep(color,nNodes)
     
@@ -1398,6 +1401,9 @@ qgraph <- function( input, ... )
       edge.labels[edge.labels=="NA"]=""
     }
     
+    # Compute alpha of each node:
+    vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
+    
     if (!DoNotPlot)
     {
       
@@ -1471,7 +1477,8 @@ qgraph <- function( input, ... )
           # If not curved or XKCD plot straigth line instead of spline:
           if (curve[i]==0 & !XKCD)
           {
-            if (is.logical(arrows) | vTrans < 255) if ((arrows & directed[i]) | vTrans < 255)
+            # Replace destination of edge to edge of node if needed:
+            if (is.logical(arrows) | vAlpha[E$to[i]] < 255) if ((arrows & directed[i]) | vAlpha[E$to[i]] < 255)
             {
               # 				xd=x2-x1
               # 				yd=y2-y1
@@ -1490,7 +1497,8 @@ qgraph <- function( input, ... )
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               
-              if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vTrans < 255)
+              # Replace source of edge to edge of node if needed:
+              if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
               {
                 # 					xd=x2-x1
                 # 					yd=y2-y1
@@ -1587,7 +1595,8 @@ qgraph <- function( input, ... )
             }	
             if (E$from[i]!=E$to[i])
             {
-              if (is.logical(arrows)| vTrans < 255) if (arrows & directed[i]| vTrans < 255)
+              # Replace destination of edge to edge of node if needed:
+              if (is.logical(arrows)| vAlpha[E$to[i]] < 255) if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
               {
                 # 				xd=x2-spl$x[length(spl$x)-1]
                 # 				yd=y2-spl$y[length(spl$y)-1]
@@ -1623,7 +1632,8 @@ qgraph <- function( input, ... )
                 spy <- curvemid[2]
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=F)
                 #               }
-                if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vTrans < 255)
+                # Replace source of edge to edge of node if needed:
+                if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vAlpha[E$from[i]] < 255)
                 {
                   # 					xd= spl$x[2] - x1
                   # 					yd= spl$y[2] - y1
