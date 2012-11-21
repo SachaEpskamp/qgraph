@@ -1,3 +1,8 @@
+Changes in Version 1.1.1-7
+	o larger nodes are now plotted on top of larger nodes.
+	o Borders are now plotted at the same level als node colors. This means borders will no longer overlap overlapping nodes. Labels will still overlap overlapping nodes to increase readability
+	o Added 'border.width' argument to control the border width.
+
 Changes in Version 1.1.1-6
 	o 'color' can now be assigned 'background', which will transfer the background color to the node. This is now the default
 	o Edge ends are now replaced if the node is partly transparant, which is no longer based on vTrans

@@ -246,6 +246,7 @@ qgraph <- function( input, ... )
       if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
     } else bcolor <- arguments[['border.color']]
     
+    if(is.null(arguments[['border.width']])) border.width <- 2 else border.width <- arguments[['border.width']]
     #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
     #{
     #	par(mar=c(0,0,0,0), bg=background)
@@ -1198,19 +1199,17 @@ qgraph <- function( input, ... )
       if (!gray) color <- rainbow(length(groups))
       if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
     }
-    
-    if (is.null(groups)) groups <- list(1:nNodes)
-    if (is.null(color))	color <- "background"
-    
-    color[color=="background"] <- background
-    
-    vertex.colors <- rep(color,nNodes)
-    
+    if (is.null(color))	color <- "background"  
+    vertex.colors <- rep("background", length=nNodes)
     if (!is.null(groups)) {
       for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] }
+    if (length(color)==nNodes) vertex.colors <- color
+    vertex.colors[vertex.colors=="background"] <- background
+
+    # Dummy groups list:
+    if (is.null(groups)) groups <- list(1:nNodes)
     
-    if (length(color)==nNodes) vertex.colors=color
-    
+    # Scores:
     if (!is.null(scores)) 
     {
       if (length(scores)!=nNodes)
@@ -1773,11 +1772,16 @@ qgraph <- function( input, ... )
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)
       {
-        points(layout,cex=vsize,col=vertex.colors,pch=pch1)
-                
-        if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=2,pch=pch2[borders],col=bcolor[borders])
+        bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+        points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))
         
-        if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=2,pch=pch2[borders],col=bcolor[borders])
+              
+#         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
+#                 
+#         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+#         
+#         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+        
       } else {
         circ <- seq(0,2*pi,length=100)
         for (i in 1:nNodes)

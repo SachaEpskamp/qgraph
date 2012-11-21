@@ -62,6 +62,7 @@ qgraph( input, ... )
 	\item{pty}{See 'par'}
 	\item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
   \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
+    \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
 	\item{shape}{A character containing the shape of the nodes. "circle", "square", "triangle" and "diamond" are supported. Can also be a vector with a shape for each node. Defaults to "circle".}
 	\item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
