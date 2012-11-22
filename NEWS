@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-8
+	o Fixed a bug where edhe labels caused an error if all edge weights are zero
+
 Changes in Version 1.1.1-7
 	o larger nodes are now plotted on top of larger nodes.
 	o Borders are now plotted at the same level als node colors. This means borders will no longer overlap overlapping nodes. Labels will still overlap overlapping nodes to increase readability

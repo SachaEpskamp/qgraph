@@ -1388,16 +1388,19 @@ qgraph <- function( input, ... )
       midX=numeric(0)
       midY=numeric(0)
       
-      ## Set fonts (symbol):
-      strsplE=strsplit(edge.labels,"")
-      
-      greekE=sapply(strsplE,function(x)any(x=="*"))
-      edge.labels=sapply(strsplE,function(x)paste(x[x!="*"],collapse=""))
-      
-      edge.font=rep(1,length(E$from))
-      edge.font[greekE]=5
-      
-      edge.labels[edge.labels=="NA"]=""
+      if (length(edge.labels) > 0)
+      {
+        ## Set fonts (symbol):
+        strsplE=strsplit(edge.labels,"")
+        
+        greekE=sapply(strsplE,function(x)any(x=="*"))
+        edge.labels=sapply(strsplE,function(x)paste(x[x!="*"],collapse=""))
+        
+        edge.font=rep(1,length(E$from))
+        edge.font[greekE]=5
+        
+        edge.labels[edge.labels=="NA"]=""
+      } else edge.font <- 1
     }
     
     # Compute alpha of each node:
@@ -1745,7 +1748,7 @@ qgraph <- function( input, ... )
         ELcolor <- edge.color
       }
       
-      if (!is.logical(edge.labels))
+      if (!is.logical(edge.labels) & length(edge.labels)>0)
       {
         edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
         edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2])]
