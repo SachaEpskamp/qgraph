@@ -127,7 +127,8 @@ qgraph <- function( input, ... )
         }
       }
     } else labels <- arguments$labels
-    
+    if(is.null(arguments[['label.prop']])) label.prop <- 0.5 else label.prop <- arguments[['label.prop']]
+    if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
     
     if (edgelist)
     {
@@ -1376,10 +1377,9 @@ qgraph <- function( input, ... )
     }
     
     
-    
     if (!is.logical(edge.labels))
     {
-      edge.labels=as.character(edge.labels)
+#       edge.labels=as.character(edge.labels)
       if (length(edge.labels)!=length(E$from))
       {
         warning("Number of edge labels did not correspond to number of edges, edge labes have been ommited")
@@ -1388,7 +1388,7 @@ qgraph <- function( input, ... )
       midX=numeric(0)
       midY=numeric(0)
       
-      if (length(edge.labels) > 0)
+      if (length(edge.labels) > 0 & is.character(edge.labels))
       {
         ## Set fonts (symbol):
         strsplE=strsplit(edge.labels,"")
@@ -1813,20 +1813,37 @@ qgraph <- function( input, ... )
       
       if (!is.logical(labels))
       {
-        labels=as.character(labels)
+#         labels=as.character(labels)
         # Vertex label symbols:
-        strsplV=strsplit(labels,"")
-        greekV=logical(0)
-        for (i in 1:length(strsplV)) 
+        # Set symbol font:
+        if (is.character(labels))
         {
-          greekV[i]=any(strsplV[[i]]=="*")
-          labels[i]=paste(strsplV[[i]][which(strsplV[[i]]!="*")],collapse="") 
-        }
-        V.font=rep(1,length(E$from))
-        V.font[greekV]=5
+          strsplV=strsplit(labels,"")
+          greekV=logical(0)
+          for (i in 1:length(strsplV)) 
+          {
+            greekV[i]=any(strsplV[[i]]=="*")
+            labels[i]=paste(strsplV[[i]][which(strsplV[[i]]!="*")],collapse="") 
+          }
+          V.font=rep(1,length(E$from))
+          V.font[greekV]=5
+        } else V.font <- 1
         
-        label.cex=vsize
-        if (label.scale) label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
+        if (is.null(label.cex)) label.cex <- vsize
+        # Rescale labels:
+        if (label.scale)
+        {
+          VWidths <- sapply(mapply(Cent2Edge,cex=vsize,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
+          LWidths <- mapply(strwidth, s=labels, cex=label.cex)
+          
+          label.cex <- label.cex * label.prop * VWidths/LWidths
+#           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
+        }
+        
+        # Plot labels:
+        text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
+        
+        # Set Tooltips:
         for (i in 1:nNodes) 
         {
           if (!is.null(tooltips)) if (!is.na(tooltips[i]))
@@ -1837,7 +1854,7 @@ qgraph <- function( input, ... )
           {
             setSVGShapeToolTip(desc=SVGtooltips[i])
           }
-          text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i]/4,col=lcolor,font=V.font[i])
+#           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
           # 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
         }
       }

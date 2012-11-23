@@ -43,6 +43,9 @@ qgraph( input, ... )
 	\item{vsize}{A value indicating the size of the nodes. Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
 	\item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
 	\item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults for graphs with less than 20 nodes to a 3 character abbreviation of the columnames and rownames if these are identical or else to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters)}
+  \item{label.cex}{Scalar on the label size.}
+  \item{label.prop}{Controls the proportion of the width of the node that the label rescales to. Defaults to 0.5.}
+    \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
 	\item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters)}
 	\item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}
     \item{edge.label.bg}{Either a logical or character vector/matrix. Indicates the background behind edge labels. If TRUE (default) a white background is plotted behind each edge label. If FALSE no background is plotted behind edge labels. Can also be a single color character, a vector or matrix of color vectors for each edge.}
@@ -64,7 +67,6 @@ qgraph( input, ... )
   \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
     \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
 	\item{shape}{A character containing the shape of the nodes. "circle", "square", "triangle" and "diamond" are supported. Can also be a vector with a shape for each node. Defaults to "circle".}
-	\item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
 	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
 	\item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparancy. Defaults to 255}

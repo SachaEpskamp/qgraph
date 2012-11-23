@@ -1,3 +1,9 @@
+Changes in Version 1.1.1-9
+	o Added 'label.prop' argument to control the relative width of labels to the width of nodes
+	o Improved the scaling algorithm of the labels. Labels now scale properly to 75% of the width of a node.
+	o Labels are no longer coerced to characters, this means that expressions can now also be used for labels
+	o Added 'label.cex' argument to scale the node labels
+
 Changes in Version 1.1.1-8
 	o Fixed a bug where edhe labels caused an error if all edge weights are zero
 
