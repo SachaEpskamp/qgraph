@@ -127,7 +127,8 @@ qgraph <- function( input, ... )
         }
       }
     } else labels <- arguments$labels
-    if(is.null(arguments[['label.prop']])) label.prop <- 0.5 else label.prop <- arguments[['label.prop']]
+    if(is.null(arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- arguments[['label.prop']]
+    if(is.null(arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- arguments[['label.norm']]
     if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
     
     if (edgelist)
@@ -1205,7 +1206,7 @@ qgraph <- function( input, ... )
       if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
     }
     if (is.null(color))	color <- "background"  
-    vertex.colors <- rep("background", length=nNodes)
+    vertex.colors <- rep(color, length=nNodes)
     if (!is.null(groups)) {
       for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] }
     if (length(color)==nNodes) vertex.colors <- color
@@ -1838,7 +1839,7 @@ qgraph <- function( input, ... )
         if (label.scale)
         {
           VWidths <- sapply(mapply(Cent2Edge,cex=vsize,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
-          LWidths <- mapply(strwidth, s=labels, cex=label.cex)
+          LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
           
           label.cex <- label.cex * label.prop * VWidths/LWidths
 #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
