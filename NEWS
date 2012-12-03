@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-1
+	o Fixed a bug where bidirectional edges where plotted twice
+
 Changes in Version 1.1.1-9
 	o Added 'label.prop' argument to control the relative width of labels to the width of nodes
 	o Improved the scaling algorithm of the labels. Labels now scale properly to 75% of the width of a node.

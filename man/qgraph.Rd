@@ -82,7 +82,8 @@ qgraph( input, ... )
 \section{Additional arguments for directed graphs}{
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
-	\item{curve}{A value indicating how strongly edges should be curved. Defaults to 0 (no curve) for each edge except for edges in directional graphs between nodes that have two edges in between them. CURVING LINES DRASTICALLY INCREASES FILE SIZE!}
+	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). If this is a single value, the 'curveAll' argument controls if only edges between nodes with multiple edges are curved (default) or all edges. Defaults to 1. CURVING LINES DRASTICALLY INCREASES FILE SIZE!}
+    \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
   \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
 	\item{asize}{Size of the arrowhead.}
