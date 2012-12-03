@@ -1,5 +1,6 @@
-Changes in Version 1.1.1-1
+Changes in Version 1.1.1-10
 	o Fixed a bug where bidirectional edges where plotted twice
+  o 'curveAll' argument added.
 
 Changes in Version 1.1.1-9
 	o Added 'label.prop' argument to control the relative width of labels to the width of nodes
