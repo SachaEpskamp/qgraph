@@ -318,8 +318,9 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['aspect']])) aspect=FALSE else aspect=arguments[['aspect']]
     
     # Arguments for directed graphs:
-    if(is.null(arguments$curve)) curve <- 1 else curve=arguments$curve
-    if(is.null(arguments$curveAll)) curveAll <- FALSE else curveAll <- arguments$curveAll
+    if(is.null(arguments[['curve']])) curve <- 1 else curve <- arguments[['curve']]
+    if (length(curve)==1) setCurve <- TRUE else setCurve <- FALSE
+    if(is.null(arguments[['curveAll']])) curveAll <- FALSE else curveAll <- arguments[['curveAll']]
     if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
 #     asize=asize*2.4/height
     if(is.null(arguments$open)) open=FALSE else open=arguments$open
@@ -781,7 +782,7 @@ qgraph <- function( input, ... )
     
     
     srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) )
-    if (curveAll && length(curve) == 1)
+    if (!curveAll && setCurve)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
       curve <- ifelse(dub&!bidirectional,curve,0)
