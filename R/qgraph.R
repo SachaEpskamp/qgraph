@@ -524,6 +524,13 @@ qgraph <- function( input, ... )
     
     E <- list()
     
+    # Remove nonfinite weights:
+    if (any(!is.finite(input)))
+    {
+      input[!is.finite(input)] <- 0
+      warning("Non-finite weights are omitted")
+    }
+    
     if (edgelist)
     {
       E$from=input[,1]

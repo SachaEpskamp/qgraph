@@ -1,3 +1,6 @@
+Changes in Version 1.1.1-11
+	o non-finite weights are now set to zero and omitted
+
 Changes in Version 1.1.1-10
 	o Fixed a bug where bidirectional edges where plotted twice
   o 'curveAll' argument added.
