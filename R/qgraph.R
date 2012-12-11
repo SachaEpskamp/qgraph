@@ -248,7 +248,7 @@ qgraph <- function( input, ... )
       if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
     } else bcolor <- arguments[['border.color']]
     
-    if(is.null(arguments[['border.width']])) border.width <- 2 else border.width <- arguments[['border.width']]
+    if(is.null(arguments[['border.width']])) border.width <- 1 else border.width <- arguments[['border.width']]
     #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
     #{
     #	par(mar=c(0,0,0,0), bg=background)
@@ -1604,7 +1604,10 @@ qgraph <- function( input, ... )
               midy <- (y1 + y2)/2
               #spx <- midx - curve[i] * (y2 - y1)/2
               #spy <- midy + curve[i] * (x2 - x1)/2
-              curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+#               curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+              curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
+                
+#                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
               spx <- curvemid[1]
               spy <- curvemid[2]
               spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
@@ -1643,7 +1646,8 @@ qgraph <- function( input, ... )
                 midy <- (y1 + y2)/2
                 #spx <- midx - curve[i] * (y2 - y1)/2
                 #spy <- midy + curve[i] * (x2 - x1)/2
-                curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+#                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
                 spx <- curvemid[1]
                 spy <- curvemid[2]
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=F)
@@ -1687,7 +1691,8 @@ qgraph <- function( input, ... )
                 midy <- (y1 + y2)/2
                 #spx <- midx - curve[i] * (y2 - y1)/2
                 #spy <- midy + curve[i] * (x2 - x1)/2
-                curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+#                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
                 spx <- curvemid[1]
                 spy <- curvemid[2]
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
@@ -1786,6 +1791,10 @@ qgraph <- function( input, ... )
       
       #if (nNodes==1) layout=matrix(0,1,2)
       # Plot nodes:
+      
+      # scale border width:
+      border.width <- border.width * sum(sqrt(par("pin")^2)) / sum(sqrt(7^2 + 7^2))
+      
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)
       {
