@@ -267,6 +267,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments$height)) height <- 7 else height <- arguments[['height']]
     if(is.null(arguments$pty)) pty='m' else pty=arguments$pty
     if(is.null(arguments$res)) res=320 else res=arguments$res
+    if(is.null(arguments[['normalize']])) normalize <- TRUE else normalize <- arguments[['normalize']]
     
     # Graphical arguments
 #     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
@@ -1468,6 +1469,17 @@ qgraph <- function( input, ... )
         
       }    			
       
+      # Compute normalizing constant:
+      if (isTRUE(normalize))
+      {
+        normC <- sum(sqrt(par("pin")^2)) / sum(sqrt(7^2 + 7^2))
+        vsize <- vsize * normC
+        edge.width <- edge.width * normC
+        border.width <- border.width * normC
+        asize <- asize * normC
+        edge.label.cex <- edge.label.cex * normC
+      }
+      
       # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
       if (any(bidirectional))
       {
@@ -1723,8 +1735,8 @@ qgraph <- function( input, ... )
  
             if (!is.logical(edge.labels))
             {
-              midX[i]=spl$x[length(spl$x)/2]
-              midY[i]=spl$y[length(spl$y)/2]
+              midX[i]=spl$x[floor(length(spl$x)/2)]
+              midY[i]=spl$y[floor(length(spl$y)/2)]
             }
             lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
           
@@ -1777,8 +1789,8 @@ qgraph <- function( input, ... )
         {
           for (i in edgesort2)
           {
-            labwd <- strwidth(edge.labels[i])
-            labht <- strheight(edge.labels[i])
+            labwd <- strwidth(edge.labels[i],cex=edge.label.cex[i])
+            labht <- strheight(edge.labels[i],cex=edge.label.cex[i])
             polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
                     c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
                     border=NA,
@@ -1793,7 +1805,7 @@ qgraph <- function( input, ... )
       # Plot nodes:
       
       # scale border width:
-      border.width <- border.width * sum(sqrt(par("pin")^2)) / sum(sqrt(7^2 + 7^2))
+#       border.width <- border.width * normC
       
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)

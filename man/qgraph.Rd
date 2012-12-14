@@ -31,6 +31,7 @@ qgraph( input, ... )
 	\item{filename}{Name of the file without extension}
 	\item{width}{Width of the plot, in inches}
 	\item{height}{Height of the plot, in inches}
+  \item{normalize}{Logical, should the plot be normalized to the plot size. If TRUE (default) border width, vertex size, edge width and arrow sizes are adjusted to look the same for all sizes of the plot, corresponding to what they would look in a 7 by 7 inches plot if normalize is FALSE.}
   \item{standAlone}{Logical. If filetype="tex" this argument can be used to choose between making the output a standalone LaTeX file or only the codes to include the graph.}
 }}
 
