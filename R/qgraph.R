@@ -131,6 +131,8 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- arguments[['label.norm']]
     if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
     
+    if(is.null(arguments[['subplots']])) subplots <- NULL else subplots <- arguments[['subplots']]
+    
     if (edgelist)
     {
       if (is.character(input))
@@ -1810,8 +1812,32 @@ qgraph <- function( input, ... )
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)
       {
-        bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-        points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))
+        if (!is.null(subplots))
+        {
+          # Get which nodes become a subplot:
+          whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+          
+          # Plot normal nodes:
+          bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+          bordVec <- bordVec[!bordVec%in%whichsub]
+          points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
+          
+          # Subplots:
+          for (i in whichsub[order(vsize[whichsub],decreasing=TRUE)])
+          {
+            x <- layout[i,1]
+            y <- layout[i,2]
+            xOff <- Cent2Edge(x,y,pi/2,vsize[i],shape[i])[1] - x
+            yOff <- Cent2Edge(x,y,0,vsize[i],shape[i])[2] - y
+            
+            subplot(eval(subplots[[i]]),x + c(-xOff,xOff), y + c(-yOff,yOff), pars = list(bg = background))
+          }
+          
+        } else {
+          bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+          points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
+        }
+        
         
               
 #         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
