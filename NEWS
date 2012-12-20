@@ -1,3 +1,8 @@
+Changes in Version 1.1.1-12
+  o Support added to include R plots as nodes. This can be done with the 'subplots' argument, which takes a list of R expressions that create a plot when evaluated. The 'subplot' function in the R package Hmisc is used to create the subplots.
+ o 'shape' can now be set to 'rectangle'
+ o Added 'vsize2' argument to control the vertical size of nodes if shape is 'rectangle'.
+
 Changes in Version 1.1.1-11
 	o non-finite weights are now set to zero and omitted
   o the midpoint of curved edges is now set using the inner function PerpMid. This function now consistintly finds a midpoint perpandicular to the edge regardless of shape of the plot in inches.

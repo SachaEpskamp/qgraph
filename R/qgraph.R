@@ -274,7 +274,14 @@ qgraph <- function( input, ... )
     # Graphical arguments
 #     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
     if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
-    if(is.null(arguments$vsize)) vsize=max((-1/72)*(nNodes)+5.35,1) else vsize=arguments$vsize
+    if(is.null(arguments[['vsize']])) 
+    {
+      vsize <- max((-1/72)*(nNodes)+5.35,1) 
+      if(is.null(arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * arguments[['vsize2']]
+    } else {
+      vsize <- arguments[['vsize']]
+      if(is.null(arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- arguments[['vsize2']]
+    }
     if(is.null(arguments$color)) color=NULL else color=arguments$color
     
     if(is.null(arguments[['gray']])) gray <- FALSE else gray <- arguments[['gray']]
@@ -1308,6 +1315,7 @@ qgraph <- function( input, ... )
     
     # Vertex size:
     if (length(vsize)==1) vsize=rep(vsize,nNodes)
+    if (length(vsize2)==1) vsize2=rep(vsize2,nNodes)
     if (!edgelist) Vsums=rowSums(abs(input))+colSums(abs(input))
     if (edgelist)
     {
@@ -1317,6 +1325,8 @@ qgraph <- function( input, ... )
     if (length(vsize)==2 & nNodes>2 & length(unique(Vsums))>1) vsize=vsize[1] + (vsize[2]-vsize[1]) * (Vsums-min(Vsums))/(max(Vsums)-min(Vsums))
     if (length(vsize)==2 & nNodes>2 & length(unique(Vsums))==1) vsize=rep(mean(vsize),nNodes)
     
+    if (length(vsize2)==2 & nNodes>2 & length(unique(Vsums))>1) vsize2=vsize2[1] + (vsize2[2]-vsize2[1]) * (Vsums-min(Vsums))/(max(Vsums)-min(Vsums))
+    if (length(vsize2)==2 & nNodes>2 & length(unique(Vsums))==1) vsize2=rep(mean(vsize2),nNodes)
     
     # Vertex shapes:
     if (length(shape)==1) shape=rep(shape,nNodes)
@@ -1346,7 +1356,7 @@ qgraph <- function( input, ... )
         pch1[i]=18
         pch2[i]=5
       }
-      if (!shape[i]%in%c("circle","square","triangle","diamond")) stop(paste("Shape",shape[i],"is not supported"))
+      if (!shape[i]%in%c("circle","square","triangle","diamond","rectangle")) stop(paste("Shape",shape[i],"is not supported"))
     }
     
     
@@ -1476,6 +1486,7 @@ qgraph <- function( input, ... )
       {
         normC <- sum(sqrt(par("pin")^2)) / sum(sqrt(7^2 + 7^2))
         vsize <- vsize * normC
+        vsize2 <- vsize2 * normC
         edge.width <- edge.width * normC
         border.width <- border.width * normC
         asize <- asize * normC
@@ -1488,6 +1499,15 @@ qgraph <- function( input, ... )
         omitEdge <- duplicated(srt)&bidirectional
       } else omitEdge <- NULL 
       
+      # Set non-rectangular/square dge shapes with subplots to square:
+      if (!is.null(subplots))
+      {
+        # Get which nodes become a subplot:
+        whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+        
+        shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
+      }
+        
       # Plot edges: 
       if (length(curve)==1) curve=rep(curve,length(edgesort))
       curve[E$from==E$to]=1
@@ -1523,7 +1543,7 @@ qgraph <- function( input, ... )
               # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
               # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
               # 				}
-              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
+              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               
@@ -1544,7 +1564,7 @@ qgraph <- function( input, ... )
                 # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 					}
                 
-                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
+                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
                 x1 <- NewPoints[1]
                 y1 <- NewPoints[2]  
                 
@@ -1610,7 +1630,7 @@ qgraph <- function( input, ... )
                   rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
                 }
               } else rot <- loopRotation[E$from[i]]
-              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],shape[E$from[i]],residuals,residScale)
+              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale)
               
             } else 
             {
@@ -1645,7 +1665,7 @@ qgraph <- function( input, ... )
                 # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 				}
                 
-                NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
+                NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
                 x2 <- NewPoints[1]
                 y2 <- NewPoints[2]
                 
@@ -1683,7 +1703,7 @@ qgraph <- function( input, ... )
                   # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                   # 					}
                   
-                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
+                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
                   x1 <- NewPoints[1]
                   y1 <- NewPoints[2]
                   
@@ -1812,27 +1832,50 @@ qgraph <- function( input, ... )
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)
       {
-        if (!is.null(subplots))
+        # Check if nodes need to be plotted in for loop:
+        if (!is.null(subplots) || any(shape=="rectangle"))
         {
           # Get which nodes become a subplot:
-          whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+#           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
           
-          # Plot normal nodes:
-          bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-          bordVec <- bordVec[!bordVec%in%whichsub]
-          points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
+#           # Plot normal nodes:
+#           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+#           bordVec <- bordVec[!bordVec%in%whichsub]
+#           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
           
-          # Subplots:
-          for (i in whichsub[order(vsize[whichsub],decreasing=TRUE)])
+          for (i in order(vsize*vsize2,decreasing=TRUE))
           {
             x <- layout[i,1]
             y <- layout[i,2]
-            xOff <- Cent2Edge(x,y,pi/2,vsize[i],shape[i])[1] - x
-            yOff <- Cent2Edge(x,y,0,vsize[i],shape[i])[2] - y
             
-            subplot(eval(subplots[[i]]),x + c(-xOff,xOff), y + c(-yOff,yOff), pars = list(bg = background))
-          }
-          
+            if (isTRUE(is.expression(subplots[[i]])))
+            {
+              xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
+              yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
+              
+              # Plot background:
+              if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,col=background,bcolor[i],lwd=border.width) else rect(x-xOff,y-yOff,x+xOff,y+yOff,col=background,border=NA)
+              # Plot subplot:
+              subplot(eval(subplots[[i]]),x + c(-xOff,xOff), y + c(-yOff,yOff))              
+            } else if (shape[i]!="rectangle")
+            {
+              points(layout[i,,drop=FALSE],cex=vsize[i],col=vertex.colors[i],lwd=border.width,pch=pch1[i])
+              if (borders[i])
+              {
+                points(layout[i,,drop=FALSE],cex=vsize[i],col=bcolor[i],lwd=border.width,pch=pch2[i])
+              }
+            } else {
+              xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
+              yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
+              
+              # Plot background:
+              rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vertex.colors[i],border=NA)
+              if (borders[i])
+              {
+                rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
+              }              
+            }
+          }      
         } else {
           bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
@@ -1894,10 +1937,12 @@ qgraph <- function( input, ... )
         # Rescale labels:
         if (label.scale)
         {
-          VWidths <- sapply(mapply(Cent2Edge,cex=vsize,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
+          VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
+          VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0),SIMPLIFY=FALSE),'[',2) * 2          
           LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
+          LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
           
-          label.cex <- label.cex * label.prop * VWidths/LWidths
+          label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
 #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
         }
         
