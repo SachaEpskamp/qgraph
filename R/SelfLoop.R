@@ -1,5 +1,51 @@
 SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
 {
+  # If rectangle, compute square on largext cex and move to border:
+  if (shape == "rectangle")
+  {
+    loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale)
+    
+    xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape)[1] - x)/2
+    yOff <- (Cent2Edge(x,y,0,cex,cex2,shape)[2] - y)/2
+    
+    SmallX <- Cent2Edge(x,y,pi/2,min(cex,cex2),min(cex,cex2),"square")[1] - x
+    SmallY <- Cent2Edge(x,y,0,min(cex,cex2),min(cex,cex2),"square")[2] - y
+    
+    # Move up or down:
+    if (cex2 > cex)
+    {
+      if (any(loop$x[c(1,length(loop$x))] > x-xOff & loop$x[c(1,length(loop$x))] < x+xOff))
+      {
+        if (cos(rotation) > 0)  
+        {
+          # Move up:
+          loop$y <- loop$y + yOff + SmallY
+        } else {
+          # Move down:
+          loop$y <- loop$y - yOff - SmallY
+        }
+      }
+    } else 
+    {
+      if (any(loop$y[c(1,length(loop$y))] > y-yOff & loop$y[c(1,length(loop$y))] < y+yOff))
+      {
+        if (sin(rotation) > 0)  
+        {
+          # Move right:
+          loop$x <- loop$x + xOff + SmallX
+        } else {
+          # Move left:
+          loop$x <- loop$x - xOff - SmallX
+        }
+      }
+      
+    }
+    
+    
+    return(loop)
+  }
+  
+  
   loopAngle <- pi/8
   
   if (!residual)
@@ -10,10 +56,10 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
     
     LoopPointsRight <- Cent2Edge(x,y,loopAngle + rotation,cex,cex2,shape)
     LoopPointsLeft <- Cent2Edge(x,y,(-1*loopAngle + rotation),cex,cex2,shape)
-
-    Circ <- lapply(seq(1.5*pi+ rotation,2.5*pi + rotation,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*mean(cex,cex2),cex2=0.8*mean(cex,cex2),shape="circle")
-#     deg <- atan2usr2in(LoopPointsRight[1] - LoopPointsLeft[1], LoopPointsRight[2] - LoopPointsLeft[2])
-#     Circ <- lapply(seq(deg-pi,deg,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*mean(cex,cex2),cex2=0.8*mean(cex,cex2),shape="circle")
+    
+    Circ <- lapply(seq(1.5*pi+ rotation,2.5*pi + rotation,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*min(cex,cex2),cex2=0.8*min(cex,cex2),shape="circle")
+    #     deg <- atan2usr2in(LoopPointsRight[1] - LoopPointsLeft[1], LoopPointsRight[2] - LoopPointsLeft[2])
+    #     Circ <- lapply(seq(deg-pi,deg,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*mean(cex,cex2),cex2=0.8*mean(cex,cex2),shape="circle")
     CircX <- sapply(Circ,'[',1)
     CircY <- sapply(Circ,'[',2)
     
@@ -25,9 +71,9 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
   } else {
     Start <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=resScale)
     End <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=0)
-#     Start <- c(0,0)
-#     Start[1] <- x + 2*(End[1]-x)
-#     Start[2] <- y + 2*(End[2]-y)
+    #     Start <- c(0,0)
+    #     Start[1] <- x + 2*(End[1]-x)
+    #     Start[2] <- y + 2*(End[2]-y)
     
     spl <- xspline(c(Start[1],End[1]),c(Start[2],End[2]),1,draw=FALSE)
     return(spl)

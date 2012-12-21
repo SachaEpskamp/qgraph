@@ -1853,10 +1853,13 @@ qgraph <- function( input, ... )
               xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
               yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
               
+              usr <- par("usr")
               # Plot background:
-              if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,col=background,bcolor[i],lwd=border.width) else rect(x-xOff,y-yOff,x+xOff,y+yOff,col=background,border=NA)
+              rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=background,border=NA)
               # Plot subplot:
-              subplot(eval(subplots[[i]]),x + c(-xOff,xOff), y + c(-yOff,yOff))              
+              subplot(eval(subplots[[i]]),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)))  
+              # Plot border:
+              if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
             } else if (shape[i]!="rectangle")
             {
               points(layout[i,,drop=FALSE],cex=vsize[i],col=vertex.colors[i],lwd=border.width,pch=pch1[i])
