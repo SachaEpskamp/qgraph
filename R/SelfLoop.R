@@ -5,11 +5,11 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
   {
     loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale)
     
-    xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape)[1] - x)/2
-    yOff <- (Cent2Edge(x,y,0,cex,cex2,shape)[2] - y)/2
+    xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape)[1] - x)
+    yOff <- (Cent2Edge(x,y,0,cex,cex2,shape)[2] - y)
     
-    SmallX <- Cent2Edge(x,y,pi/2,min(cex,cex2),min(cex,cex2),"square")[1] - x
-    SmallY <- Cent2Edge(x,y,0,min(cex,cex2),min(cex,cex2),"square")[2] - y
+    SmallX <- (Cent2Edge(x,y,pi/2,min(cex,cex2),min(cex,cex2),"square")[1] - x)
+    SmallY <- (Cent2Edge(x,y,0,min(cex,cex2),min(cex,cex2),"square")[2] - y)
     
     # Move up or down:
     if (cex2 > cex)
@@ -19,10 +19,10 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
         if (cos(rotation) > 0)  
         {
           # Move up:
-          loop$y <- loop$y + yOff + SmallY
+          loop$y <- loop$y + yOff - SmallY
         } else {
           # Move down:
-          loop$y <- loop$y - yOff - SmallY
+          loop$y <- loop$y - yOff + SmallY
         }
       }
     } else 
@@ -32,10 +32,10 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
         if (sin(rotation) > 0)  
         {
           # Move right:
-          loop$x <- loop$x + xOff + SmallX
+          loop$x <- loop$x + xOff - SmallX
         } else {
           # Move left:
-          loop$x <- loop$x - xOff - SmallX
+          loop$x <- loop$x - xOff + SmallX
         }
       }
       
