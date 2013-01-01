@@ -802,7 +802,8 @@ qgraph <- function( input, ... )
     if (!curveAll && setCurve)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
-      curve <- ifelse(dub&!bidirectional,curve,0)
+#       curve <- ifelse(dub&!bidirectional,curve,0)
+      curve <- ifelse(dub&!bidirectional,ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curve,-curve,length=length(x))),0)
       rm(dub)
     }
     
