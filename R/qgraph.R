@@ -328,9 +328,23 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['aspect']])) aspect=FALSE else aspect=arguments[['aspect']]
     
     # Arguments for directed graphs:
-    if(is.null(arguments[['curve']])) curve <- 1 else curve <- arguments[['curve']]
-    if (length(curve)==1) setCurve <- TRUE else setCurve <- FALSE
+    if(is.null(arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- arguments[['curveDefault']]
+    if(is.null(arguments[['curve']]))
+    {
+      curve <- NA 
+    } else {
+      curve <- arguments[['curve']]
+      if (length(curve)==1) 
+      {
+        curveDefault <- curve
+        curve <- NA
+      }
+    }
     if(is.null(arguments[['curveAll']])) curveAll <- FALSE else curveAll <- arguments[['curveAll']]
+    if (curveAll)
+    {
+      curve[is.na(curve)] <- curveDefault
+    }
     if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
 #     asize=asize*2.4/height
     if(is.null(arguments$open)) open=FALSE else open=arguments$open
@@ -799,11 +813,11 @@ qgraph <- function( input, ... )
     
     
     srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) )
-    if (!curveAll && setCurve)
+    if (!curveAll)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
 #       curve <- ifelse(dub&!bidirectional,curve,0)
-      curve <- ifelse(dub&!bidirectional,ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curve,-curve,length=length(x))),0)
+      curve <- ifelse(dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0)
       rm(dub)
     }
     
