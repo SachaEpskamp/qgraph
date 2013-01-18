@@ -15,7 +15,7 @@ qgraph( input, ... )
 \section{Important additional arguments}{	
 \describe{
 \item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open gui window.}
-\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in seperate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs.}
+\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in seperate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
 \item{minimum}{Edges with absolute weights under this value are omitted. Defaults to 0 for graphs with less than 50 nodes or 0.1 for larger graphs.}
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
@@ -77,7 +77,7 @@ qgraph( input, ... )
 	\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
 	\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
 	\item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
-	\item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring"}
+	\item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
   \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring"). Currently this only works correctly if the plotting area is square. This can be forced withh exporting the graph using 'height', 'width' and 'filetype' arguments.}
     \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
@@ -122,6 +122,17 @@ qgraph( input, ... )
 	\item{edge.color}{This argument can be used to overwrite the colors. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist)}
 }}
 
+
+\section{Arguments for knots (tying together edges)}{
+\describe{
+  \item{knots}{This argument can be used to tie edges together in their center, which can be useful to, for example, indicate interaction effects. This argument can be assigned a list where each element is a vector containing the edge numbers that should be knotted together. Another option is to assign the argument a integer vector (for edgelists) or a matrix (for weight matrices) with 0 indicating edges that should not be tied together, and increasing numbers indicating each knot.}
+   \item{knot.size}{The size of the knots. Can be of length one or a vector with the size of each knot. Similar to 'vsize'. Defaults to 0.5.}
+   \item{knot.color}{The color of the knots. Can be of length one or a vector with the size of each knot. Defaults to "black"}
+  \item{knot.borders}{Logical indicating if a border should be plotted around the knot. Can be of length one or a vector with the size of each knot. Works similar to 'borders'. Defaults to TRUE}
+  \item{knot.border.color}{Color of the knot borders. Can be of length one or a vector with the size of each knot. Works similar to 'border.color'. Defaults to "black"}
+    \item{knot.border.width}{Width of the knot borders. Can be of length one or a vector with the size of each knot. Works similar to 'border.width'. Defaults to 1}
+}}
+
 \section{Additional arguments}{	
 \describe{
   \item{edgelist}{Logical, if TRUE 'input' is assumed to be an edgelist, else if FALSE input is assumed to be a weights matrix. By default this is chosen automatically based on the dimensions of 'input' and this argument is only needed if the dimensions are ambiguous (square matrix with 2 or 3 rows/columns)}
@@ -130,7 +141,7 @@ qgraph( input, ... )
 	\item{DoNotPlot}{Runs qgraph but does not plot. Useful for saving the output (i.e. layout) without plotting}
 	\item{plot}{Logical. Should a new plot be made? Defaults to TRUE. Set to FALSE to add the graph to the existing plot.}
 	\item{rescale}{Logical. Defines if the layout should be rescaled to fit the -1 to 1 x and y area. Defaults to TRUE. Can best be used in combination with plot=FALSE.}
-    \item{layoutScale}{A vector with a scalar for respectivally the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
+    \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
     \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
 }}
 

@@ -37,26 +37,26 @@ qgraph <- function( input, ... )
     qgraph.semModel(input,...)
   } else {
     
-#     if (length(arguments)>0)
-#     {
-#       for (i in 1:length(arguments))
-#       {
-#         if ("qgraph"%in%class(arguments[[i]])) 
-#         {
-#           if (!is.null(names(arguments[[i]])))
-#           {
-#             for (j in 1:length(arguments[[i]]))
-#             {
-#               if (!(names(arguments[[i]])[j]%in%names(arguments)))
-#               {
-#                 arguments[length(arguments)+1]=arguments[[i]][j]
-#                 names(arguments)[length(arguments)]=names(arguments[[i]])[j]
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
+    #     if (length(arguments)>0)
+    #     {
+    #       for (i in 1:length(arguments))
+    #       {
+    #         if ("qgraph"%in%class(arguments[[i]])) 
+    #         {
+    #           if (!is.null(names(arguments[[i]])))
+    #           {
+    #             for (j in 1:length(arguments[[i]]))
+    #             {
+    #               if (!(names(arguments[[i]])[j]%in%names(arguments)))
+    #               {
+    #                 arguments[length(arguments)+1]=arguments[[i]][j]
+    #                 names(arguments)[length(arguments)]=names(arguments[[i]])[j]
+    #               }
+    #             }
+    #           }
+    #         }
+    #       }
+    #     }
     
     # Import arguments:
     if (length(arguments) > 0) arguments <- getArgs(arguments)
@@ -133,6 +133,14 @@ qgraph <- function( input, ... )
     
     if(is.null(arguments[['subplots']])) subplots <- NULL else subplots <- arguments[['subplots']]
     
+    # Knots:
+    if(is.null(arguments[['knots']])) knots <- list() else knots <- arguments[['knots']]
+    if(is.null(arguments[['knot.size']])) knot.size <- 0.5 else knot.size <- arguments[['knot.size']]
+    if(is.null(arguments[['knot.color']])) knot.color <- "black" else knot.color <- arguments[['knot.color']]
+    if(is.null(arguments[['knot.borders']])) knot.borders <- TRUE else knot.borders <- arguments[['knot.borders']]
+    if(is.null(arguments[['knot.border.color']])) knot.border.color <- "black" else knot.border.color <- arguments[['knot.border.color']]
+    if(is.null(arguments[['knot.border.width']])) knot.border.width <- 1 else knot.border.width <- arguments[['knot.border.width']]
+    
     if (edgelist)
     {
       if (is.character(input))
@@ -143,7 +151,6 @@ qgraph <- function( input, ... )
         if (is.logical(labels) && labels) labels <- allNodes
       }
     }
-    
     
     if(is.null(arguments$nNodes)) 
     {
@@ -243,10 +250,10 @@ qgraph <- function( input, ... )
     
     # Output arguments:
     if(is.null(arguments$bg)) bg <- FALSE else bg <- arguments$bg
-      
+    
     if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
     
-      if(is.null(arguments[['border.color']])) {
+    if(is.null(arguments[['border.color']])) {
       if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
     } else bcolor <- arguments[['border.color']]
     
@@ -272,7 +279,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['normalize']])) normalize <- TRUE else normalize <- arguments[['normalize']]
     
     # Graphical arguments
-#     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
+    #     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
     if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
     if(is.null(arguments[['vsize']])) 
     {
@@ -346,7 +353,7 @@ qgraph <- function( input, ... )
       curve[is.na(curve)] <- curveDefault
     }
     if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
-#     asize=asize*2.4/height
+    #     asize=asize*2.4/height
     if(is.null(arguments$open)) open=FALSE else open=arguments$open
     if(is.null(arguments$bidirectional)) bidirectional=FALSE else bidirectional=arguments$bidirectional
     
@@ -366,11 +373,11 @@ qgraph <- function( input, ... )
     {
       if (is.null(groups)) legend=FALSE else legend=TRUE
     }
-#     #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
-#     if (legend | (filetype=="svg" & !is.null(tooltips)))
-#     {
-#       width=width*(1+(1/GLratio))
-#     }
+    #     #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
+    #     if (legend | (filetype=="svg" & !is.null(tooltips)))
+    #     {
+    #       width=width*(1+(1/GLratio))
+    #     }
     
     if (!DoNotPlot)
     {
@@ -487,10 +494,10 @@ qgraph <- function( input, ... )
     # asize default:
     if(is.null(arguments[["asize"]]))
     {
-#       asize <- max((-1/10)*(nNodes)+4,1)
+      #       asize <- max((-1/10)*(nNodes)+4,1)
       asize <- ifelse(nNodes>10,2,3)
     } else asize <- arguments[["asize"]]
-
+    
     ## arrowAngle default:
     if(is.null(arguments[["arrowAngle"]])) 
     {
@@ -674,7 +681,25 @@ qgraph <- function( input, ... )
         if (mode != "sig") Pvals <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
         E$weight[abs(Pvals) > alpha[length(alpha)]] <- 0
       }	
-      
+      if (is.list(knots))
+      {
+        knotList <- knots
+        knots <- matrix(0,nNodes,nNodes)
+        for (k in seq_along(knotList))
+        {
+          knots[knotList[[k]]] <- k
+        }
+        # If undirected, symmetrize:
+        if (all(incl[upper.tri(incl,diag=TRUE)]) & !any(incl[lower.tri(incl)]))
+        {
+          knots <- pmax(knots,t(knots))
+        }
+      }
+      if (is.matrix(knots))
+      {
+        knots <- knots[c(incl)]
+        knots <- knots[E$weight!=0]
+      }
       if (is.matrix(curve))
       {
         curve <- curve[c(incl)]
@@ -707,11 +732,11 @@ qgraph <- function( input, ... )
       }
       if (!is.null(ELcolor))
       {
-          if (is.matrix(ELcolor))
-          {
-            ELcolor <- ELcolor[c(incl)]
-            ELcolor <- ELcolor[E$weight!=0]
-          }      
+        if (is.matrix(ELcolor))
+        {
+          ELcolor <- ELcolor[c(incl)]
+          ELcolor <- ELcolor[E$weight!=0]
+        }      
       }
       
       if (!is.null(edge.color)) if (length(edge.color) == length(E$weight)) edge.color <- edge.color[E$weight!=0]
@@ -731,7 +756,7 @@ qgraph <- function( input, ... )
       directed <- rep(directed,length(E$from))
     }
     directed <- directed[keep]
-   
+    
     if (!is.null(edge.color)) 
     {
       edge.color <- rep(edge.color,length=length(E$from))
@@ -744,31 +769,42 @@ qgraph <- function( input, ... )
       edge.labels <- rep(edge.labels,length=length(E$from))
     }
     
-#     if (is.logical(edge.label.bg))
-#     {
-#       edge.label.bg <- "white"
-#     }
+    #     if (is.logical(edge.label.bg))
+    #     {
+    #       edge.label.bg <- "white"
+    #     }
     if (length(edge.label.bg) == 1) edge.label.bg <- rep(edge.label.bg,length(E$from))
     if (length(edge.label.bg) != length(keep)) stop("'edge.label.bg' is wrong length")
-    edge.label.bg <- edge.label.bg[keep]
+    if (length(edge.label.bg)==length(keep)) edge.label.bg <- edge.label.bg[keep]
     
     if (!is.null(ELcolor))
     {
       ELcolor <- rep(ELcolor,length = length(E$from))
       ELcolor <- ELcolor[keep]    
     }
-      
+    
+    
+    if (is.list(knots))
+    {
+      knotList <- knots
+      knots <- rep(0,length(E$from))
+      for (k in seq_along(knotList))
+      {
+        knots[knotList[[k]]] <- k
+      }
+    }
+    if (length(knots)==length(keep)) knots <- knots[keep]
     
     if (length(bidirectional)==1) 
     {
       bidirectional <- rep(bidirectional,length(E$from))
     }
-    bidirectional <- bidirectional[keep]
+    if (length(bidirectional)==length(keep)) bidirectional <- bidirectional[keep]
     if (length(residEdge)==1) 
     {
       residEdge <- rep(residEdge,length(E$from))
     }
-    residEdge <- residEdge[keep]    
+    if (length(residEdge)==length(keep)) residEdge <- residEdge[keep]    
     
     if (!is.logical(edge.labels))
     {
@@ -816,7 +852,7 @@ qgraph <- function( input, ... )
     if (!curveAll)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
-#       curve <- ifelse(dub&!bidirectional,curve,0)
+      #       curve <- ifelse(dub&!bidirectional,curve,0)
       curve <- ifelse(dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0)
       rm(dub)
     }
@@ -829,64 +865,72 @@ qgraph <- function( input, ... )
       if (is.null(layout)) layout="default"
       if (!is.numeric(layout))
       {
-        if (length(layout) > 1) stop("Incorrect specification of layout.")
-        if (layout=="default" & (any(directed) | !weighted)) layout="spring"
-        if (layout=="default" | layout=="circular" | layout=="circle" | layout=="groups") 
+        # If function, assume igraph function (todo: check this)
+        if (is.function(layout))
         {
-          if (is.null(groups) | layout == "circle")
-          {
-            layout=matrix(0,nrow=nNodes,ncol=2)
-            tl=nNodes+1
-            layout[,1]=sin(seq(0,2*pi, length=tl))[-tl]
-            layout[,2]=cos(seq(0,2*pi, length=tl))[-tl] 
-          } else
-          {
-            if (is.null(rotation)) rotation=rep(0,length=length(groups))
-            
-            l1=matrix(0,nrow=length(groups),ncol=2)
-            tl=nrow(l1)+1
-            l1[,1]=sin(seq(0,2*pi, length=tl))[-tl]
-            l1[,2]=cos(seq(0,2*pi, length=tl))[-tl]
-            l1=l1*length(groups)*layout.control
-            
-            layout=matrix(0,nrow=nNodes,ncol=2)
-            for (i in 1:length(groups)) 
-            {
-              tl=length(groups[[i]])+1
-              layout[groups[[i]],1]=sin(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,1]
-              layout[groups[[i]],2]=cos(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,2] 
-            }
-          }
-        } else if (layout=="spring")
-        {
-          if (length(E$weight) > 0)
-          {
-            if (mode != "sig")
-            {
-              layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight/max(abs(E$weight)))^2,nNodes,rotation=rotation,layout.control=layout.control,
-                                                       niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
-            } else
-            {
-              layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight),nNodes,rotation=rotation,layout.control=layout.control,
-                                                       niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
-            }
-          } else
-          {
-            if (mode != "sig")
-            {
-              layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
-                                                       niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
-            } else
-            {
-              layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
-                                                       niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
-            }
-          }
+          Graph <- graph.edgelist(as.matrix(cbind(E$from,E$to)), any(directed))
+          E(Graph)$weight <- E$weight
+          layout <- do.call(layout,c(list(graph = Graph),layout.par))
+        } else {
           
+          if (length(layout) > 1) stop("Incorrect specification of layout.")
+          if (layout=="default" & (any(directed) | !weighted)) layout="spring"
+          if (layout=="default" | layout=="circular" | layout=="circle" | layout=="groups") 
+          {
+            if (is.null(groups) | layout == "circle")
+            {
+              layout=matrix(0,nrow=nNodes,ncol=2)
+              tl=nNodes+1
+              layout[,1]=sin(seq(0,2*pi, length=tl))[-tl]
+              layout[,2]=cos(seq(0,2*pi, length=tl))[-tl] 
+            } else
+            {
+              if (is.null(rotation)) rotation=rep(0,length=length(groups))
+              
+              l1=matrix(0,nrow=length(groups),ncol=2)
+              tl=nrow(l1)+1
+              l1[,1]=sin(seq(0,2*pi, length=tl))[-tl]
+              l1[,2]=cos(seq(0,2*pi, length=tl))[-tl]
+              l1=l1*length(groups)*layout.control
+              
+              layout=matrix(0,nrow=nNodes,ncol=2)
+              for (i in 1:length(groups)) 
+              {
+                tl=length(groups[[i]])+1
+                layout[groups[[i]],1]=sin(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,1]
+                layout[groups[[i]],2]=cos(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,2] 
+              }
+            }
+          } else if (layout=="spring")
+          {
+            if (length(E$weight) > 0)
+            {
+              if (mode != "sig")
+              {
+                layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight/max(abs(E$weight)))^2,nNodes,rotation=rotation,layout.control=layout.control,
+                                                         niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
+                                                         constraints=layout.par$constraints)
+              } else
+              {
+                layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight),nNodes,rotation=rotation,layout.control=layout.control,
+                                                         niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
+                                                         constraints=layout.par$constraints)
+              }
+            } else
+            {
+              if (mode != "sig")
+              {
+                layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
+                                                         niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
+                                                         constraints=layout.par$constraints)
+              } else
+              {
+                layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
+                                                         niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
+                                                         constraints=layout.par$constraints)
+              }
+            }
+          } 
         }
       }
       # Layout matrix:
@@ -973,143 +1017,143 @@ qgraph <- function( input, ... )
       }
     }
     
-#     # Set edge colors:
-#     if (is.null(edge.color) || (any(is.na(edge.color)) || fade))
-#     {
-#       if (!is.null(edge.color))
-#       {
-#         repECs <- TRUE
-#         ectemp <- edge.color
-#       } else  repECs <- FALSE
-#       
-#       col <- rep(1,length(E$from))
-#       
-#       if (weighted) 
-#       {
-#         #Edge color:
-#         edge.color=rep("#00000000",length(E$from))
-#         
-#         
-#         if (mode=="strength"|mode=="direct")
-#         {
-#           if (cut==0) 
-#           {
-#             col=(abs(E$weight)-minimum)/(maximum-minimum)
-#           } else 
-#           {
-#             col=(abs(E$weight)-minimum)/(cut-minimum)
-#           }
-#           col[col>1]=1
-#           col[col<0]=0
-#           if (!gray)
-#           {
-#             if (transparency) 
-#             {
-#               col=col^(2)
-#               neg=col2rgb(rgb(0.75,0,0))/255
-#               pos=col2rgb(rgb(0,0.6,0))/255
-#               
-#               # Set colors for edges over cutoff:
-#               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
-#               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
-#             } else 
-#             {
-#               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]*0.25),1-col[E$weight > minimum])
-#               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]*0.25),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
-#             }	
-#           } else
-#           {
-#             if (transparency) 
-#             {
-#               col=col^(2)
-#               neg="gray10"
-#               pos="gray10"
-#               
-#               # Set colors for edges over cutoff:
-#               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
-#               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
-#             } else 
-#             {
-#               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]),1-col[E$weight > minimum])
-#               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
-#             }
-#           }
-#         }
-#         if (mode == "sig")
-#         {	
-#           
-#           if (!gray)
-#           {
-#             
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- "cadetblue1"	
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- "#6495ED"
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- "blue"				
-#             # Set colors for edges over sig < 0.01 :
-#             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "darkblue"
-#             
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 3) edge.color[Pvals < 0 & Pvals > (-1 * alpha[4])  & E$weight < -1 * minimum] <- rgb(1,0.8,0.4) 	
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 2) edge.color[Pvals < 0 & Pvals > (-1 * alpha[3])  & E$weight < -1 * minimum] <- "orange"
-#             # Set colors for edges over sig > 0.01 :
-#             if (length(alpha) > 1) edge.color[Pvals < 0 & Pvals > (-1 * alpha[2])  & E$weight < -1 * minimum] <- "darkorange"				
-#             # Set colors for edges over sig < 0.01 :
-#             edge.color[Pvals < 0 & Pvals > (-1 * alpha[1])  & E$weight < -1 * minimum] <- "darkorange2"
-#             
-#             
-#             
-#             
-#           } else
-#           {
-#             Pvals <- abs(Pvals)
-#             # Set colors for edges over sig < 0.01 :
-#             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- rgb(0.7,0.7,0.7)
-#             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- rgb(0.5,0.5,0.5)
-#             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- rgb(0.3,0.3,0.3)
-#             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "black"
-#             
-#           }
-#         }
-#         if (cut!=0)
-#         {
-#           if (!gray & (mode=="strength"|mode=="direct"))
-#           {
-#             # Set colors for edges over cutoff:
-#             edge.color[E$weight<= -1*cut] <- "red"
-#             edge.color[E$weight>= cut] <- "darkgreen"
-#           } else if (gray)
-#           {
-#             # Set colors for edges over cutoff:
-#             edge.color[E$weight<= -1*cut] <- "black"
-#             edge.color[E$weight>= cut] <- "black"
-#             
-#           }
-#         }
-#         
-#       } else
-#       {
-#         if (!is.logical(transparency)) Trans=transparency else Trans=1
-#         edge.color=rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
-#       }
-#       if (repECs)
-#       {
-#         ## Add trans:
-#         if (fade & any(!is.na(ectemp)))
-#         {
-#           if (!is.logical(transparency)) col <- rep(transparency,length(col))
-#           edge.color[!is.na(ectemp)] <- addTrans(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
-#         } else {
-#           edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
-#         }
-#         rm(ectemp)
-#       }
-#     } else {
-#       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
-#       if (length(edge.color) != length(E$from)) stop("Number of edge colors not equal to number of edges")
-#     }
+    #     # Set edge colors:
+    #     if (is.null(edge.color) || (any(is.na(edge.color)) || fade))
+    #     {
+    #       if (!is.null(edge.color))
+    #       {
+    #         repECs <- TRUE
+    #         ectemp <- edge.color
+    #       } else  repECs <- FALSE
+    #       
+    #       col <- rep(1,length(E$from))
+    #       
+    #       if (weighted) 
+    #       {
+    #         #Edge color:
+    #         edge.color=rep("#00000000",length(E$from))
+    #         
+    #         
+    #         if (mode=="strength"|mode=="direct")
+    #         {
+    #           if (cut==0) 
+    #           {
+    #             col=(abs(E$weight)-minimum)/(maximum-minimum)
+    #           } else 
+    #           {
+    #             col=(abs(E$weight)-minimum)/(cut-minimum)
+    #           }
+    #           col[col>1]=1
+    #           col[col<0]=0
+    #           if (!gray)
+    #           {
+    #             if (transparency) 
+    #             {
+    #               col=col^(2)
+    #               neg=col2rgb(rgb(0.75,0,0))/255
+    #               pos=col2rgb(rgb(0,0.6,0))/255
+    #               
+    #               # Set colors for edges over cutoff:
+    #               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
+    #               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
+    #             } else 
+    #             {
+    #               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]*0.25),1-col[E$weight > minimum])
+    #               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]*0.25),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
+    #             }	
+    #           } else
+    #           {
+    #             if (transparency) 
+    #             {
+    #               col=col^(2)
+    #               neg="gray10"
+    #               pos="gray10"
+    #               
+    #               # Set colors for edges over cutoff:
+    #               edge.color[E$weight< -1* minimum] <- rgb(neg[1],neg[2],neg[3],col[E$weight< -1*minimum])
+    #               edge.color[E$weight> minimum] <- rgb(pos[1],pos[2],pos[3],col[E$weight> minimum])
+    #             } else 
+    #             {
+    #               edge.color[E$weight>minimum]=rgb(1-col[E$weight > minimum],1-(col[E$weight > minimum]),1-col[E$weight > minimum])
+    #               edge.color[E$weight< -1*minimum]=rgb(1-(col[E$weight < (-1)*minimum]),1-col[E$weight < (-1)*minimum],1-col[E$weight < (-1)*minimum])
+    #             }
+    #           }
+    #         }
+    #         if (mode == "sig")
+    #         {	
+    #           
+    #           if (!gray)
+    #           {
+    #             
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- "cadetblue1"	
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- "#6495ED"
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- "blue"				
+    #             # Set colors for edges over sig < 0.01 :
+    #             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "darkblue"
+    #             
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 3) edge.color[Pvals < 0 & Pvals > (-1 * alpha[4])  & E$weight < -1 * minimum] <- rgb(1,0.8,0.4) 	
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 2) edge.color[Pvals < 0 & Pvals > (-1 * alpha[3])  & E$weight < -1 * minimum] <- "orange"
+    #             # Set colors for edges over sig > 0.01 :
+    #             if (length(alpha) > 1) edge.color[Pvals < 0 & Pvals > (-1 * alpha[2])  & E$weight < -1 * minimum] <- "darkorange"				
+    #             # Set colors for edges over sig < 0.01 :
+    #             edge.color[Pvals < 0 & Pvals > (-1 * alpha[1])  & E$weight < -1 * minimum] <- "darkorange2"
+    #             
+    #             
+    #             
+    #             
+    #           } else
+    #           {
+    #             Pvals <- abs(Pvals)
+    #             # Set colors for edges over sig < 0.01 :
+    #             if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- rgb(0.7,0.7,0.7)
+    #             if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- rgb(0.5,0.5,0.5)
+    #             if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- rgb(0.3,0.3,0.3)
+    #             edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "black"
+    #             
+    #           }
+    #         }
+    #         if (cut!=0)
+    #         {
+    #           if (!gray & (mode=="strength"|mode=="direct"))
+    #           {
+    #             # Set colors for edges over cutoff:
+    #             edge.color[E$weight<= -1*cut] <- "red"
+    #             edge.color[E$weight>= cut] <- "darkgreen"
+    #           } else if (gray)
+    #           {
+    #             # Set colors for edges over cutoff:
+    #             edge.color[E$weight<= -1*cut] <- "black"
+    #             edge.color[E$weight>= cut] <- "black"
+    #             
+    #           }
+    #         }
+    #         
+    #       } else
+    #       {
+    #         if (!is.logical(transparency)) Trans=transparency else Trans=1
+    #         edge.color=rep(rgb(0.5,0.5,0.5,Trans),length(edgesort))
+    #       }
+    #       if (repECs)
+    #       {
+    #         ## Add trans:
+    #         if (fade & any(!is.na(ectemp)))
+    #         {
+    #           if (!is.logical(transparency)) col <- rep(transparency,length(col))
+    #           edge.color[!is.na(ectemp)] <- addTrans(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
+    #         } else {
+    #           edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+    #         }
+    #         rm(ectemp)
+    #       }
+    #     } else {
+    #       if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
+    #       if (length(edge.color) != length(E$from)) stop("Number of edge colors not equal to number of edges")
+    #     }
     
     
     # Set edge colors:
@@ -1143,7 +1187,7 @@ qgraph <- function( input, ... )
           col[col>1] <- 1
           col[col<0] <- 0
           col <- col^colFactor      
-      
+          
           # Set edges between minimum and cut:
           if (fade)
           {
@@ -1245,7 +1289,7 @@ qgraph <- function( input, ... )
       for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] }
     if (length(color)==nNodes) vertex.colors <- color
     vertex.colors[vertex.colors=="background"] <- background
-
+    
     # Dummy groups list:
     if (is.null(groups)) groups <- list(1:nNodes)
     
@@ -1421,7 +1465,7 @@ qgraph <- function( input, ... )
     
     if (!is.logical(edge.labels))
     {
-#       edge.labels=as.character(edge.labels)
+      #       edge.labels=as.character(edge.labels)
       if (length(edge.labels)!=length(E$from))
       {
         warning("Number of edge labels did not correspond to number of edges, edge labes have been ommited")
@@ -1506,6 +1550,9 @@ qgraph <- function( input, ... )
         border.width <- border.width * normC
         asize <- asize * normC
         edge.label.cex <- edge.label.cex * normC
+       
+        knot.size <- knot.size * normC
+        knot.border.width <- knot.border.width * normC
       }
       
       # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
@@ -1522,10 +1569,21 @@ qgraph <- function( input, ... )
         
         shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
       }
-        
+      
       # Plot edges: 
       if (length(curve)==1) curve=rep(curve,length(edgesort))
       curve[E$from==E$to]=1
+      
+      # Compute knot placement:
+      knotLayout <- matrix(,max(knots),2)
+      for (i in seq_len(max(knots)))
+      {
+        knotNodes <- c(E$from[knots==i],E$to[knots==i])
+        
+        # mid X:
+        knotLayout[i,1] <- in2usrX(mean(usr2inX(layout[knotNodes,1])))
+        knotLayout[i,2] <- in2usrY(mean(usr2inY(layout[knotNodes,2])))
+      }
       
       # For each (sorted from weak to strong) edge:
       for (i in edgesort)
@@ -1538,9 +1596,9 @@ qgraph <- function( input, ... )
           x2=layout[E$to[i],1]
           y1=layout[E$from[i],2]
           y2=layout[E$to[i],2]
-                
-          # If not curved or XKCD plot straigth line instead of spline:
-          if (curve[i]==0 & !XKCD)
+          
+          # If not curved, knotted or XKCD plot straigth line instead of spline:
+          if (curve[i]==0 & !XKCD & knots[i] == 0)
           {
             # Replace destination of edge to edge of node if needed:
             if (is.logical(arrows) | vAlpha[E$to[i]] < 255) if ((arrows & directed[i]) | vAlpha[E$to[i]] < 255)
@@ -1590,7 +1648,7 @@ qgraph <- function( input, ... )
               midX[i]=mean(c(x1,x2))
               midY[i]=mean(c(y1,y2))
             }
-
+            
             lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
             if (directed[i])
             {
@@ -1600,21 +1658,21 @@ qgraph <- function( input, ... )
                 Ay=seq(y1,y2,length=arrows+2)
                 for (a in 1:arrows+1)
                 {
-#                   qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  #                   qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                   DrawArrow(Ax[a],Ay[a],atan2usr2in(Ax[a]-x1,Ay[a]-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
-#                 qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                #                 qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                 DrawArrow(x2,y2,atan2usr2in(x2-x1,y2-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
-#                   qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  #                   qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                   DrawArrow(x1,y1,atan2usr2in(x1-x2,y1-y2),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
@@ -1653,13 +1711,19 @@ qgraph <- function( input, ... )
               midy <- (y1 + y2)/2
               #spx <- midx - curve[i] * (y2 - y1)/2
               #spy <- midy + curve[i] * (x2 - x1)/2
-#               curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-              curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
-                
-#                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-              spx <- curvemid[1]
-              spy <- curvemid[2]
-              spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
+              #               curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+             if (knots[i]!=0)
+             {
+               spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
+             } else {               
+               curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
+               
+               #                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+               spx <- curvemid[1]
+               spy <- curvemid[2]
+               spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
+             }
+              
             }	
             if (E$from[i]!=E$to[i])
             {
@@ -1695,11 +1759,17 @@ qgraph <- function( input, ... )
                 midy <- (y1 + y2)/2
                 #spx <- midx - curve[i] * (y2 - y1)/2
                 #spy <- midy + curve[i] * (x2 - x1)/2
-#                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-                curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
-                spx <- curvemid[1]
-                spy <- curvemid[2]
-                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=F)
+                #                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                if (knots[i]!=0)
+                {
+                  spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
+                } else {               
+                  curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
+                  
+                  spx <- curvemid[1]
+                  spy <- curvemid[2]
+                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
+                }
                 #               }
                 # Replace source of edge to edge of node if needed:
                 if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vAlpha[E$from[i]] < 255)
@@ -1740,19 +1810,26 @@ qgraph <- function( input, ... )
                 midy <- (y1 + y2)/2
                 #spx <- midx - curve[i] * (y2 - y1)/2
                 #spy <- midy + curve[i] * (x2 - x1)/2
-#                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-                curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
-                spx <- curvemid[1]
-                spy <- curvemid[2]
-                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE)
+                #                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                if (knots[i]!=0)
+                {
+                  spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
+                } else {               
+                  curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
+                  
+                  #                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+                  spx <- curvemid[1]
+                  spy <- curvemid[2]
+                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
+                }
                 #               }
               }
-#               } else if (E$from[i]==E$to[i])
-#               {
-#                 # Rotate spline:
-#                 spl$x <- layout[E$from[i],1] + (spl2$x - layout[E$from[i],1]) * cos(loopRotation[i]) - (spl2$y - layout[E$from[i],2]) * sin(loopRotation[i])
-#                 spl$y <- layout[E$from[i],2] + (spl2$x - layout[E$from[i],1]) * sin(loopRotation[i]) + (spl2$y - layout[E$from[i],2]) * cos(loopRotation[i])        
-#               }
+              #               } else if (E$from[i]==E$to[i])
+              #               {
+              #                 # Rotate spline:
+              #                 spl$x <- layout[E$from[i],1] + (spl2$x - layout[E$from[i],1]) * cos(loopRotation[i]) - (spl2$y - layout[E$from[i],2]) * sin(loopRotation[i])
+              #                 spl$y <- layout[E$from[i],2] + (spl2$x - layout[E$from[i],1]) * sin(loopRotation[i]) + (spl2$y - layout[E$from[i],2]) * cos(loopRotation[i])        
+              #               }
             }
             
             
@@ -1763,20 +1840,20 @@ qgraph <- function( input, ... )
               spl$x <- jitt$x
               spl$y <- jitt$y
             }
-                        
+            
             # If XKCD extra white edge:
             if (XKCD)
             {
               lines(spl,lwd=edge.width[i]*2,col="white")
             }
- 
+            
             if (!is.logical(edge.labels))
             {
               midX[i]=spl$x[floor(length(spl$x)/2)]
               midY[i]=spl$y[floor(length(spl$y)/2)]
             }
             lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
-          
+            
             if (directed[i])
             {
               if (!is.logical(arrows))
@@ -1785,22 +1862,22 @@ qgraph <- function( input, ... )
                 Ay=seq(1,length(spl$y),length=arrows+2)
                 for (a in 2:(arrows+1))
                 {
-#                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-
+                  #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  
                   DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
               else if (arrows)
               {
-#                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                #                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                 DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2usr2in(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 
                 if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
                 {
-#                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-#                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  #                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                   DrawArrow(spl$x[1],spl$y[1],atan2usr2in(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
                 }
               }
@@ -1838,11 +1915,31 @@ qgraph <- function( input, ... )
         text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
       }			
       
+      # Plot knots:
+      if (any(knots>0))
+      {
+        if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
+        if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
+        if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
+        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
+        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
+        
+        if (any(knot.borders))
+        {
+          for (i in 1:max(knots))
+          {
+            points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
+            if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
+          }
+        } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
+      }
+      
+      
       #if (nNodes==1) layout=matrix(0,1,2)
       # Plot nodes:
       
       # scale border width:
-#       border.width <- border.width * normC
+      #       border.width <- border.width * normC
       
       if(length(borders) == 1) borders <- rep(borders,nNodes)
       if (!XKCD)
@@ -1851,12 +1948,12 @@ qgraph <- function( input, ... )
         if (!is.null(subplots) || any(shape=="rectangle"))
         {
           # Get which nodes become a subplot:
-#           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+          #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
           
-#           # Plot normal nodes:
-#           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-#           bordVec <- bordVec[!bordVec%in%whichsub]
-#           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
+          #           # Plot normal nodes:
+          #           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+          #           bordVec <- bordVec[!bordVec%in%whichsub]
+          #           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
           
           for (i in order(vsize*vsize2,decreasing=TRUE))
           {
@@ -1900,12 +1997,12 @@ qgraph <- function( input, ... )
         }
         
         
-              
-#         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
-#                 
-#         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
-#         
-#         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+        
+        #         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
+        #                 
+        #         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+        #         
+        #         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
         
       } else {
         circ <- seq(0,2*pi,length=100)
@@ -1935,7 +2032,7 @@ qgraph <- function( input, ... )
       
       if (!is.logical(labels))
       {
-#         labels=as.character(labels)
+        #         labels=as.character(labels)
         # Vertex label symbols:
         # Set symbol font:
         if (is.character(labels))
@@ -1961,7 +2058,7 @@ qgraph <- function( input, ... )
           LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
           
           label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
-#           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
+          #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
         }
         
         # Plot labels:
@@ -1978,7 +2075,7 @@ qgraph <- function( input, ... )
           {
             setSVGShapeToolTip(desc=SVGtooltips[i])
           }
-#           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
+          #           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
           # 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
         }
       }
@@ -2095,6 +2192,7 @@ qgraph <- function( input, ... )
     # Make output list:
     #returnval=list(input=input, layout=layout, cut=cut, maximum=maximum, minimum=minimum, groups=groups, weighted=weighted, rescale=rescale, labels=labels, directed=directed, legend=legend, plot=plot, rotation=rotation, layout.control=layout.control, layout.par=layout.par, filetype=filetype, filename=filename, width=width, height=height, pty=pty, res=res, vsize=vsize, esize=esize, color=color, bg=bg, bgcontrol=bgcontrol, bgres=bgres, transparency=transparency, lcolor=lcolor, loop=loop, legend.cex=legend.cex, borders=borders, curve=curve, arrows=arrows, diag=diag, tooltips=tooltips, hyperlinks=hyperlinks)
     
+    # Arguments, some changed due to removal edges (included in edgelist)
     returnval=arguments
     returnval$layout=layout
     returnval$weighted <- weighted
@@ -2103,15 +2201,45 @@ qgraph <- function( input, ... )
     returnval$directed <- NULL
     returnval$bidirectional <- NULL
     returnval$background <- background
+    
+    # Graph attributes (only used for igraph exportation):
+    graphAttributes <- list(
+      Nodes = data.frame(
+        border.color = bcolor,
+        borders = borders,
+        label.cex = label.cex,
+        label.color = lcolor,
+        labels = labels,
+        loopRotation = loopRotation,
+        shape = shape,
+        color = vertex.colors,
+        width = vsize,
+        height = vsize2,
+        stringsAsFactors=FALSE
+      ),
+      Edges = data.frame(
+        curve = curve,
+        color = edge.color,
+        labels = edge.labels,
+        label.cex = edge.label.cex,
+        label.color = ELcolor,
+        width = edge.width,
+        lty = lty,
+        stringsAsFactors=FALSE
+      ),
+      edgesort = edgesort
+    )
+    
+    # Edgelist:
     E$directed <- directed
     E$bidir <- bidirectional
     E <- as.data.frame(E)
     class(E) <- "qgraphEdgelist"
     
     returnval$qgraphEdgelist <- E
+    returnval$graphAttributes <- graphAttributes
     
     class(returnval)="qgraph"
-    
     #par(parOrig)
     
     invisible(returnval)

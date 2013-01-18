@@ -4,6 +4,10 @@ Changes in Version 1.1.1-12
  o Added 'vsize2' argument to control the vertical size of nodes if shape is 'rectangle'.
  o Multiple edges between nodes are now curved uniquely for each edge by default.
  o Added 'curveDefault' argument and some changes to 'curve' argument. 'curveDefault' now controls the default curvature (1 by default). If 'curve' is NA the defautl curvature is used (curved edges if there are multiple edges between two nodes). If 'curve' is of length 1 it overwrites 'curveDefault' for backward compatibility.
+o igraph support added:
+  o the as.igraph function converts a qgraph object to a igraph object
+  o igraph layout functions can now be assigned to the layout argument in qgraph(). The layout.par functon can be used to specify arguments to the function.
+  o Added knots, knot.size, knot.color, knot.borders, knot.border.color and knot.border.width arguments that allow tying edges together at their center.
 
 Changes in Version 1.1.1-11
 	o non-finite weights are now set to zero and omitted
