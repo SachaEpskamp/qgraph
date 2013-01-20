@@ -86,8 +86,9 @@ qgraph( input, ... )
 \section{Additional arguments for directed graphs}{
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
-	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). If this is a single value, the 'curveAll' argument controls if only edges between nodes with multiple edges are curved (default) or all edges. Defaults to 1. CURVING LINES DRASTICALLY INCREASES FILE SIZE!}
+	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behaviour should be used, which only curves edges if there are multiple edges between two nodes.}
     \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
+    \item{curveDefault}{The default curvature. Defaults to 1.}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
   \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
 	\item{asize}{Size of the arrowhead.}
@@ -126,9 +127,9 @@ qgraph( input, ... )
 \section{Arguments for knots (tying together edges)}{
 \describe{
   \item{knots}{This argument can be used to tie edges together in their center, which can be useful to, for example, indicate interaction effects. This argument can be assigned a list where each element is a vector containing the edge numbers that should be knotted together. Another option is to assign the argument a integer vector (for edgelists) or a matrix (for weight matrices) with 0 indicating edges that should not be tied together, and increasing numbers indicating each knot.}
-   \item{knot.size}{The size of the knots. Can be of length one or a vector with the size of each knot. Similar to 'vsize'. Defaults to 0.5.}
-   \item{knot.color}{The color of the knots. Can be of length one or a vector with the size of each knot. Defaults to "black"}
-  \item{knot.borders}{Logical indicating if a border should be plotted around the knot. Can be of length one or a vector with the size of each knot. Works similar to 'borders'. Defaults to TRUE}
+   \item{knot.size}{The size of the knots. Can be of length one or a vector with the size of each knot. Similar to 'vsize'. Defaults to 1.}
+   \item{knot.color}{The color of the knots. Can be of length one or a vector with the size of each knot. Defaults to NA, which will result in a mix of the knotted edge colors.}
+  \item{knot.borders}{Logical indicating if a border should be plotted around the knot. Can be of length one or a vector with the size of each knot. Works similar to 'borders'. Defaults to FALSE}
   \item{knot.border.color}{Color of the knot borders. Can be of length one or a vector with the size of each knot. Works similar to 'border.color'. Defaults to "black"}
     \item{knot.border.width}{Width of the knot borders. Can be of length one or a vector with the size of each knot. Works similar to 'border.width'. Defaults to 1}
 }}

@@ -92,7 +92,7 @@ qgraph <- function( input, ... )
     
     # Set mode:
     sigSign <- FALSE
-    if(is.null(arguments$graph)) graph="association" else graph=arguments$graph
+    if(is.null(arguments[['graph']])) graph="association" else graph=arguments[['graph']]
     if (graph %in% c("sig2","significance2"))
     {
       graph <- "sig"
@@ -135,9 +135,9 @@ qgraph <- function( input, ... )
     
     # Knots:
     if(is.null(arguments[['knots']])) knots <- list() else knots <- arguments[['knots']]
-    if(is.null(arguments[['knot.size']])) knot.size <- 0.5 else knot.size <- arguments[['knot.size']]
-    if(is.null(arguments[['knot.color']])) knot.color <- "black" else knot.color <- arguments[['knot.color']]
-    if(is.null(arguments[['knot.borders']])) knot.borders <- TRUE else knot.borders <- arguments[['knot.borders']]
+    if(is.null(arguments[['knot.size']])) knot.size <- 1 else knot.size <- arguments[['knot.size']]
+    if(is.null(arguments[['knot.color']])) knot.color <- NA else knot.color <- arguments[['knot.color']]
+    if(is.null(arguments[['knot.borders']])) knot.borders <- FALSE else knot.borders <- arguments[['knot.borders']]
     if(is.null(arguments[['knot.border.color']])) knot.border.color <- "black" else knot.border.color <- arguments[['knot.border.color']]
     if(is.null(arguments[['knot.border.width']])) knot.border.width <- 1 else knot.border.width <- arguments[['knot.border.width']]
     
@@ -847,13 +847,12 @@ qgraph <- function( input, ... )
     if (length(bidirectional)==1) bidirectional=rep(bidirectional,length(E$from))
     if (length(bidirectional)!=length(E$from)) stop("Bidirectional vector must be of legth 1 or equal to the number of edges")
     
-    
-    srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) )
+    srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) , knots)
     if (!curveAll)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
       #       curve <- ifelse(dub&!bidirectional,curve,0)
-      curve <- ifelse(dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0)
+      curve <- ifelse(is.na(curve),ifelse(knots==0&dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0),curve)
       rm(dub)
     }
     
@@ -1887,16 +1886,48 @@ qgraph <- function( input, ... )
         } 
       }
       
+      
+      
+      # Plot knots:
+      if (any(knots>0))
+      {
+        if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
+        if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
+        if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
+        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
+        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
+        
+        for (i in 1:max(knots)) if (is.na(knot.color[i])) knot.color[i] <- mixCols(edge.color[knots==i])
+        
+        if (any(knot.borders))
+        {
+          for (i in 1:max(knots))
+          {            
+            points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
+            if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
+          }
+        } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
+      }
+      
+      
       # Edge labels
       if (is.null(ELcolor))
       {
         ELcolor <- edge.color
       }
       
+        
       if (!is.logical(edge.labels) & length(edge.labels)>0)
       {
+        # Fix midpoints for knots:
+        for (i in seq_len(max(knots)))
+        {
+          midX[knots==i] <- knotLayout[i,1]
+          midY[knots==i] <- knotLayout[i,2]
+        }
+    
         edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
-        edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2])]
+        edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
         if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
         
         if (plotELBG)
@@ -1914,25 +1945,6 @@ qgraph <- function( input, ... )
         
         text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
       }			
-      
-      # Plot knots:
-      if (any(knots>0))
-      {
-        if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
-        if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
-        if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
-        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
-        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
-        
-        if (any(knot.borders))
-        {
-          for (i in 1:max(knots))
-          {
-            points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
-            if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
-          }
-        } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
-      }
       
       
       #if (nNodes==1) layout=matrix(0,1,2)
@@ -2204,7 +2216,7 @@ qgraph <- function( input, ... )
     
     # Graph attributes (only used for igraph exportation):
     graphAttributes <- list(
-      Nodes = data.frame(
+      Nodes = list(
         border.color = bcolor,
         borders = borders,
         label.cex = label.cex,
@@ -2217,7 +2229,7 @@ qgraph <- function( input, ... )
         height = vsize2,
         stringsAsFactors=FALSE
       ),
-      Edges = data.frame(
+      Edges = list(
         curve = curve,
         color = edge.color,
         labels = edge.labels,
