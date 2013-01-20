@@ -14,8 +14,8 @@ qgraph( input, ... )
 }	
 \section{Important additional arguments}{	
 \describe{
-\item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open gui window.}
-\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in seperate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
+\item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open GUI window.}
+\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in separate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
 \item{minimum}{Edges with absolute weights under this value are omitted. Defaults to 0 for graphs with less than 50 nodes or 0.1 for larger graphs.}
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
@@ -26,8 +26,8 @@ qgraph( input, ... )
 
 \section{Output arguments}{
 \describe{
-\item{mar}{A vector of the form c(bottom, left, top, right) which gives the margines. Works similar to the argument in par(). Defauts to c(3,3,3,3)}
-	\item{filetype}{A character containing the file type to save the output in. "R" and "x11" outputs in a new R window ("x11" is prefered for Rstudio), "pdf" creates a pdf file. "svg" creates a svg file (requires RSVGTipsDevice). "tex" creates LaTeX code for the graph (requires tikzDevice). 'jpg', 'tiff' and 'png' can also be used. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device.}
+\item{mar}{A vector of the form c(bottom, left, top, right) which gives the margins. Works similar to the argument in par(). Defaults to c(3,3,3,3)}
+	\item{filetype}{A character containing the file type to save the output in. "R" and "x11" outputs in a new R window ("x11" is preferred for Rstudio), "pdf" creates a pdf file. "svg" creates a svg file (requires RSVGTipsDevice). "tex" creates LaTeX code for the graph (requires tikzDevice). 'jpg', 'tiff' and 'png' can also be used. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device.}
 	\item{filename}{Name of the file without extension}
 	\item{width}{Width of the plot, in inches}
 	\item{height}{Height of the plot, in inches}
@@ -48,7 +48,7 @@ qgraph( input, ... )
   \item{label.cex}{Scalar on the label size.}
   \item{label.prop}{Controls the proportion of the width of the node that the label rescales to. Defaults to 0.
   9.}
-    \item{label.norm}{A sigle string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
+    \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
     \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
 	\item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters)}
 	\item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}
@@ -56,12 +56,12 @@ qgraph( input, ... )
 	\item{bg}{If this is TRUE, a background is plotted in which node colors cast a light of that color on a black background. Can also be a character containing the color of the background Defaults to FALSE}
 	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
 	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
-	\item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparancy. (also used as 'transparancy')}
-    \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparancy will be added to edges that are not transparant (or for which no transparancy has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
-    \item{posCol}{Color of posive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will als be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
-\item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will als be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
+	\item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}
+    \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparency will be added to edges that are not transparent (or for which no transparency has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+    \item{posCol}{Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
+\item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
 \item{unCol}{Color to indicate the default edge color of unweighted graphs. Defaults to "#808080".}
-\item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for lineair behavior.}
+\item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
 	\item{label.color}{Character containing the color of the labels, defaults to "black"}
 	\item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 	\item{loop}{If diag=T, this can be used to scale the size of the loop. defaults to 1.}
@@ -73,20 +73,20 @@ qgraph( input, ... )
 	\item{shape}{A character containing the shape of the nodes. "circle", "square", "triangle" and "diamond" are supported. Can also be a vector with a shape for each node. Defaults to "circle".}
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
 	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
-	\item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparancy. Defaults to 255}
+	\item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
 	\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
 	\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
 	\item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
 	\item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
-  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring"). Currently this only works correctly if the plotting area is square. This can be forced withh exporting the graph using 'height', 'width' and 'filetype' arguments.}
+  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring"). Currently this only works correctly if the plotting area is square. This can be forced with exporting the graph using 'height', 'width' and 'filetype' arguments.}
     \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
 }}
 
 \section{Additional arguments for directed graphs}{
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
-	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behaviour should be used, which only curves edges if there are multiple edges between two nodes.}
+	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behavior should be used, which only curves edges if there are multiple edges between two nodes.}
     \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
     \item{curveDefault}{The default curvature. Defaults to 1.}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
@@ -98,7 +98,7 @@ qgraph( input, ... )
 
 \section{Arguments for graphs based on significance values}{
 \describe{
-	\item{mode}{This argument defines the mode used for coloring the edges. The default, "strength" assumes each edge weight indicates the strength of connection centered around  and makes positive edges green and negative edges red. If this is set to "sig" then the edge weights are assumed to be significance values and colored accordingly. This can also include negative values, which will be interpreted as p-values based on negative statitstics.}
+	\item{mode}{This argument defines the mode used for coloring the edges. The default, "strength" assumes each edge weight indicates the strength of connection centered around  and makes positive edges green and negative edges red. If this is set to "sig" then the edge weights are assumed to be significance values and colored accordingly. This can also include negative values, which will be interpreted as p-values based on negative statistics.}
 	\item{alpha}{A vector of max 4 elements indicating the alpha level cutoffs. Defaults to c(0.0001,0.001,0.01,0.05)}
 	\item{OmitInsig}{Logical indicating if edge weights with a p-value over the highest alpha level should be omitted. Defaults to FALSE, can be used with any mode}
 	\item{sigScale}{The function used to scale the edges if mode="sig". Defaults to $function(x)0.8*(1-x)^(log(0.4/0.8,1-0.05))$}
@@ -201,7 +201,7 @@ In qgraph the widths and colors of each edge can also be manually controlled. To
 }
 
 \section{Additional information}{
-By default, edges will be straight between two nodes unless there are two edges between two nodes. To overwrite this the 'bidirectional' argument can be set to TRUE, which will turn two edges between two nodes into one bidirectional edge. 'bidirectional' can alsobe a vector with TRUE or FALSE for each edge.
+By default, edges will be straight between two nodes unless there are two edges between two nodes. To overwrite this the 'bidirectional' argument can be set to TRUE, which will turn two edges between two nodes into one bidirectional edge. 'bidirectional' can also be a vector with TRUE or FALSE for each edge.
 
 To specify the strength of the curve the argument 'curve' can be used (but only in directional graphs). 'curve' must be given a numerical value that represent an offset from the middle of the straight edge through where the curved edge must be drawn. 0 indicates no curve, and any other value  indicates a curve of that strength. A value of 0.3 is recommended for nice curves. This can be either one number or a vector with the curve of each edge.
 
@@ -217,7 +217,7 @@ dev.off()
 To shut down the output device!} 
  
 \value{
-qgraph returns (invisibly) a 'qgraph' object that contains all the arguments used, with the exeption of the 'layout' argument which is set to the final layout used in the graph. This can then be sent to a new qgraph function to use the same arguments in the new plot.
+qgraph returns (invisibly) a 'qgraph' object that contains all the arguments used, with the exception of the 'layout' argument which is set to the final layout used in the graph. This can then be sent to a new qgraph function to use the same arguments in the new plot.
 
 One of the values returned is 'layout.orig', the original (not rescaled) layout, which needs to be used when using constraint layouts.}
 
@@ -265,7 +265,7 @@ data(big5)
 data(big5groups)
 
 # Correlations:
-Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=2,groups=big5groups,legend=TRUE,borders=FALSE)
+Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1,groups=big5groups,legend=TRUE,borders=FALSE)
 title("Big 5 correlations",line=2.5)
 
 # Same graph with spring layout:
@@ -300,18 +300,18 @@ qgraph(Q,graph="sig",gray=TRUE)
 title("Big 5 correlations (p-values)",line=2.5)
 
 # Correlations graph with scores of random subject:
-qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=2,groups=big5groups,legend=TRUE,borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
+qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1,groups=big5groups,legend=TRUE,borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
 title("Test scores of random subject",line=2.5)
 
 # EFA:
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200,filetype="R",width=7,height=7)
+qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,7),borders=FALSE,vTrans=200,filetype="R",width=7,height=7)
 title("Big 5 EFA",line=2.5)
 
 # PCA:
 library("psych")
 big5pca <- principal(cor(big5),5,rotate="promax")
-qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200)
+qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,7),borders=FALSE,vTrans=200)
 title("Big 5 PCA",line=2.5)
 
 #### UNWEIGHTED DIRECTED GRAPHS ###

@@ -1,96 +1,66 @@
-Changes in Version 1.1.1-12
-  o Support added to include R plots as nodes. This can be done with the 'subplots' argument, which takes a list of R expressions that create a plot when evaluated. The 'subplot' function in the R package Hmisc is used to create the subplots.
- o 'shape' can now be set to 'rectangle'
- o Added 'vsize2' argument to control the vertical size of nodes if shape is 'rectangle'.
- o Multiple edges between nodes are now curved uniquely for each edge by default.
- o Added 'curveDefault' argument and some changes to 'curve' argument. 'curveDefault' now controls the default curvature (1 by default). If 'curve' is NA the default curvature is used (curved edges if there are multiple edges between two nodes). If 'curve' is of length 1 it overwrites 'curveDefault' for backward compatibility.
-o igraph support added:
-  o the as.igraph function converts a qgraph object to a igraph object
-  o igraph layout functions can now be assigned to the layout argument in qgraph(). The layout.par functon can be used to specify arguments to the function.
-  o Added knots, knot.size, knot.color, knot.borders, knot.border.color and knot.border.width arguments that allow tying edges together at their center.
-
-Changes in Version 1.1.1-11
-	o non-finite weights are now set to zero and omitted
-  o the midpoint of curved edges is now set using the inner function PerpMid. This function now consistintly finds a midpoint perpandicular to the edge regardless of shape of the plot in inches.
-  o The 'curve' argument now scales the distance between the midpoint of an edge and the midpoint of the curved edge proportional 2.5% of the diagonal size of the plot in inche
-
-Changes in Version 1.1.1-10
-	o Fixed a bug where bidirectional edges where plotted twice
-  o 'curveAll' argument added.
-
-Changes in Version 1.1.1-9
+Changes in Version 1.2
+  o NEW MAJOR FEATURES:
+    o Support added to include R plots as nodes. This can be done with the 'subplots' argument, which takes a list of R expressions that create a plot when evaluated. The 'subplot' function in the R package Hmisc is used to create the subplots.
+    o Added knots, knot.size, knot.color, knot.borders, knot.border.color and knot.border.width arguments that allow tying edges together at their center.
+	o igraph support added:
+	  o the as.igraph function converts a qgraph object to an igraph object	
+	  o igraph layout functions can now be assigned to the layout argument in qgraph(). The layout.par functon can be used to specify arguments to the function.
+	o Edge color specification
+	  o Added argument for controlling default positive edge color: posCol
+      o Added argument for controlling default negative edge color: negCol
+	  o Added argument for controlling default unweigted edge color: unCol
+   	  o Custom colors now fade to the background color if fade=TRUE.
+      o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
+    o Defaults added. The options "qgraph" can be assigned a list with default arguments for qgraph()	
+	
+  o NEW MINOR FEATURES:
+	o 'shape' can now be set to 'rectangle'
+	  o Added 'vsize2' argument to control the vertical size of nodes if shape is 'rectangle'.
 	o Added 'label.prop' argument to control the relative width of labels to the width of nodes
-	o Improved the scaling algorithm of the labels. Labels now scale properly to 75% of the width of a node.
 	o Labels are no longer coerced to characters, this means that expressions can now also be used for labels
 	o Added 'label.cex' argument to scale the node labels
-
-Changes in Version 1.1.1-8
-	o Fixed a bug where edhe labels caused an error if all edge weights are zero
-
-Changes in Version 1.1.1-7
-	o larger nodes are now plotted on top of larger nodes.
-	o Borders are now plotted at the same level als node colors. This means borders will no longer overlap overlapping nodes. Labels will still overlap overlapping nodes to increase readability
-	o Added 'border.width' argument to control the border width.
-
-Changes in Version 1.1.1-6
-	o 'color' can now be assigned 'background', which will transfer the background color to the node. This is now the default
-	o Edge ends are now replaced if the node is partly transparant, which is no longer based on vTrans
-
-Changes in Version 1.1.1-5
-	o 'label.color' and 'border.color' now default to 'white' if the mean color (rgb) is higher than 0.5
-	o Added 'unCol' argument to control the default color for unweighted edges.
-
-Changes in Version 1.1.1-4
-	o 'color' now defaults to the background color, which defaults to 'white'
-	o Fixed a bug where bidirectional edges were not stored properly
-
-Changes in Version 1.1.1-2
-	o More support for different edge colors added. Through the new 'addTrans' function, transparancy is automatically added to the edge color comparable with the edge strength
- o Argument lists can now be nested. Lower level arguments take precedence over higher nested arguments.
- o Defaults added. The options "qgraph" can be assigned a list with default arguments for qgraph()
- o 'addTrans' has been renamed to 'fade' 
- o Added argument for controlling default positive edge color: posCol
- o Added argument for controlling default negative edge color: negCol
- o trans now once again only defaults to TRUE if bg=TRUE.
- o Custom colors now fade to the background color if fade=TRUE.
-
-Changes in Version 1.1.1-1
-	o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
-
-Changes in Version 1.1.1-9
-	o Fixed a bug where edge colors incorecctly returned an error stating the length was wrong
-	o Fixed a bug where incorrect edge labels where placed on edges.
-	o Midpoint of straigth edges for placing edge labels is now based on the center of the edge, not on the center between the two connected nodes.
-
-Changes in Version 1.1.1-8
-	o Fixed a bug where specifying the wrong number of edge labels resulted in an error
-
-Changes in Version 1.1.1-7
-	o Edge labels are now plotted only for visible edges
-	o 'transparency' now defaults to FALSE if 'bg' is a color other than 'white'
-	o 'transparancy' is now matched by trans argument as well
-	o The background of edge labels is now the same as the background color by default
-	o Edge labels are now colored the same as the edge by default
-
-Changes in Version 1.1.1-6
-	o Fixed a bug where border colors weren't repeated for all nodes.
+    o Added 'border.width' argument to control the border width.	
+    o 'color' can now be assigned 'background', which will transfer the background color to the node. This is now the default
+    o added XKCD easter egg, use XKCD = TRUE!
+  
+  o CHANGES:
+    o Many internal changes to facilitate the new 'semPlot' package.
+      o The functions qgraph.loadings, qgraph.sem and qgraph.lavaan will soon become deprecated.
+	o Several change to how curves work in qgraph:
+	  o the midpoint of curved edges is now set using the inner function PerpMid. This function now consistently finds a midpoint perpendicular to the edge regardless of shape of the plot in inches.
+	  o Added 'curveDefault' argument and some changes to 'curve' argument. 'curveDefault' now controls the default curvature (1 by default). If 'curve' is NA the default curvature is used (curved edges if there are multiple edges between two nodes). If 'curve' is of length 1 it overwrites 'curveDefault' for backward compatibility.
+	  o 'curveAll' argument added. This argument controls if all edges should be curved or only edges of nodes with multiple edges between tem.
+      o Multiple edges between nodes are now curved uniquely for each edge by default.  
+	  o The 'curve' argument now scales the distance between the midpoint of an edge and the midpoint of the curved edge proportional 2.5% of the diagonal size of the plot in inches.
 	o For more consistency in argument names 'border.colors' has been renamed to 'border.color' and 'lcolor' has been renamed to 'label.color'
-
-Changes in Version 1.1.1-5
-	o Fixed a bug in Cent2EdgeNode not restoring mar, it can now be called outside of qgraph
-
-Changes in Version 1.1.1-4
-	o curve now proportional to node size of 5
-
-Changes in Version 1.1.1-3
-	o Curve now proportional to node of size 10
-
-Changes in Version 1.1.1-2
-	o Fixed a bug where the midpoint of curved lines where not perpendicular to the midpoint between two nodes in non-square plotting areas
-	o 'curve' argument is now interpreted as a scalar of two times the default node size. defaults to 1
-
-Changes in Version 1.1.1
-  o added XKCD easter egg
+    o non-finite weights are now set to zero and omitted
+    o Improved the scaling algorithm of the labels. Labels now scale properly to 75% of the width of a node.
+    o larger nodes are now plotted on top of smaller nodes.
+	o Borders are now plotted at the same level as node colors. This means borders will no longer overlap overlapping nodes. Labels will still overlap overlapping nodes to increase readability
+	o Edge ends are now replaced if the node is partly transparent, which is no longer based on vTrans
+	o 'label.color' and 'border.color' now default to 'white' if the mean color (rgb) is higher than 0.5
+	o 'color' now defaults to the background color.
+	o trans now once again only defaults to TRUE if bg=TRUE.
+	o Argument lists can now be nested. Lower level arguments take precedence over higher nested arguments.
+	o Midpoint of straight edges for placing edge labels is now based on the center of the edge, not on the center between the two connected nodes.
+    o Edge labels are now plotted only for visible edges
+    o Edge labels are now plotted only for visible edges
+    o 'transparency' now defaults to FALSE if 'bg' is a color other than 'white'
+    o 'transparancy' is now matched by trans argument as well 
+    o The background of edge labels is now the same as the background color by default
+    o Edge labels are now colored the same as the edge by default
+  
+  o BUG FIXES:
+    o Fixed a bug where bidirectional edges where plotted twice
+    o Fixed a bug where edge labels caused an error if all edge weights are zero
+    o Fixed a bug where bidirectional edges were not stored properly
+    o Fixed a bug where edge colors incorrectly returned an error stating the length was wrong
+    o Fixed a bug where incorrect edge labels where placed on edges. 
+    o Fixed a bug where specifying the wrong number of edge labels resulted in an error
+    o Fixed a bug where border colors weren't repeated for all nodes.
+    o Fixed a bug in Cent2EdgeNode not restoring mar, it can now be called outside of qgraph
+    o Fixed a bug where the midpoint of curved lines where not perpendicular to the midpoint between two nodes in non-square plotting areas  
+   
 
 Changes in Version 1.1.0
   o MAJOR CHANGES:

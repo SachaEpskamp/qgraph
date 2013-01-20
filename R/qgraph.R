@@ -283,7 +283,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
     if(is.null(arguments[['vsize']])) 
     {
-      vsize <- max((-1/72)*(nNodes)+5.35,1) 
+      vsize <- max((-1/72)*(nNodes)+5.35,1)
       if(is.null(arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * arguments[['vsize2']]
     } else {
       vsize <- arguments[['vsize']]
@@ -484,7 +484,7 @@ qgraph <- function( input, ... )
     {
       if (weighted)
       {
-        esize <- max((-1/72)*(nNodes)+5.35,1)
+        esize <- max((-1/72)*(nNodes)+5.35,1) 
       } else {
         esize <- 2
       }
@@ -2060,7 +2060,7 @@ qgraph <- function( input, ... )
           V.font[greekV]=5
         } else V.font <- 1
         
-        if (is.null(label.cex)) label.cex <- vsize
+        if (is.null(label.cex)) label.cex <- pmax(1,vsize)
         # Rescale labels:
         if (label.scale)
         {
