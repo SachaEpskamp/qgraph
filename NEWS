@@ -44,7 +44,6 @@ Changes in Version 1.2
 	o Argument lists can now be nested. Lower level arguments take precedence over higher nested arguments.
 	o Midpoint of straight edges for placing edge labels is now based on the center of the edge, not on the center between the two connected nodes.
     o Edge labels are now plotted only for visible edges
-    o Edge labels are now plotted only for visible edges
     o 'transparency' now defaults to FALSE if 'bg' is a color other than 'white'
     o 'transparancy' is now matched by trans argument as well 
     o The background of edge labels is now the same as the background color by default
