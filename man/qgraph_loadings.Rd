@@ -43,6 +43,7 @@ Sacha Epskamp (qgraph@sachaepskamp.com)
 \code{\link{qgraph.efa}}
 }
 \examples{
+\dontrun{
 # Load big5 dataset:
 data(big5)
 data(big5groups)
@@ -50,10 +51,11 @@ data(big5groups)
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
 big5loadings <- loadings(big5efa)
 qgraph.loadings(big5loadings,groups=big5groups,rotation="promax",minimum=0.2,
-				cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200)
+				cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
 
 # Tree layout:
 qgraph.loadings(big5loadings,groups=big5groups,rotation="promax",minimum=0.2,
-				cut=0.4,vsize=c(1,15),borders=FALSE,vTrans=200,
+				cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200,
 				layout="tree",width=20,filetype="R")
+}
 }

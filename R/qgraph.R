@@ -1542,7 +1542,7 @@ qgraph <- function( input, ... )
       # Compute normalizing constant:
       if (isTRUE(normalize))
       {
-        normC <- sum(sqrt(par("pin")^2)) / sum(sqrt(7^2 + 7^2))
+        normC <- sqrt(sum(par("pin")^2)) / sqrt(7^2 + 7^2)
         vsize <- vsize * normC
         vsize2 <- vsize2 * normC
         edge.width <- edge.width * normC

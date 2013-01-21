@@ -11,7 +11,8 @@ Changes in Version 1.2
 	  o Added argument for controlling default unweigted edge color: unCol
    	  o Custom colors now fade to the background color if fade=TRUE.
       o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
-    o Defaults added. The options "qgraph" can be assigned a list with default arguments for qgraph()	
+    o Defaults added. The options "qgraph" can be assigned a list with default arguments for qgraph().
+    o qgraph plots are now normalized across different sizes of the plots if the argument 'normalize' is set to TRUE (the default). Many arguments are normalized to the diagonal of the plot region so that the same result is obtained 
 	
   o NEW MINOR FEATURES:
 	o 'shape' can now be set to 'rectangle'
