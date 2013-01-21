@@ -1,6 +1,7 @@
 Changes in Version 1.2
   o NEW MAJOR FEATURES:
     o Support added to include R plots as nodes. This can be done with the 'subplots' argument, which takes a list of R expressions that create a plot when evaluated. The 'subplot' function in the R package Hmisc is used to create the subplots.
+    o Added the 'images' argument which can be used to plot png and jpeg files as node images.
     o Added knots, knot.size, knot.color, knot.borders, knot.border.color and knot.border.width arguments that allow tying edges together at their center.
 	o igraph support added:
 	  o the as.igraph function converts a qgraph object to an igraph object	

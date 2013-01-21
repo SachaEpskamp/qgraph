@@ -81,7 +81,9 @@ qgraph( input, ... )
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
   \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring"). Currently this only works correctly if the plotting area is square. This can be forced with exporting the graph using 'height', 'width' and 'filetype' arguments.}
     \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
+        \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
 }}
+}
 
 \section{Additional arguments for directed graphs}{
 \describe{
@@ -376,7 +378,6 @@ pc.fit <- pc(suffStat, indepTest=gaussCItest,
              p = ncol(gmI$x), alpha = 0.01)
 
 qgraph(pc.fit)
-}
 }
 }
 

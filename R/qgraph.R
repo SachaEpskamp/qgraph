@@ -132,6 +132,7 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
     
     if(is.null(arguments[['subplots']])) subplots <- NULL else subplots <- arguments[['subplots']]
+    if(is.null(arguments[['images']])) images <- NULL else images <- arguments[['images']]
     
     # Knots:
     if(is.null(arguments[['knots']])) knots <- list() else knots <- arguments[['knots']]
@@ -1560,6 +1561,31 @@ qgraph <- function( input, ... )
         omitEdge <- duplicated(srt)&bidirectional
       } else omitEdge <- NULL 
       
+      # If images is not NULL, replace subplots with images calls:
+      if (!is.null(images))
+      {
+        if (length(images) == 1) images <- rep(images, nNodes)
+        if (is.null(subplots)) subplots <- vector( "list", nNodes)
+        
+        for (i in seq_along(images))
+        {
+          if (!is.na(images[i]) && file.exists(images[[i]]))
+          {
+            if (grepl("\\.jpe?g$",images[i]))
+            {
+              subplots[[i]] <- parse(text=sprintf('
+plot(1,type="n",xlim=0:1,ylim=0:1,axes=FALSE,xlab="",ylab="",bty="n",xaxs="i",yaxs="i")
+rasterImage(read.jpeg("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
+            } else if (grepl("\\.png$",images[i]))
+            {
+              subplots[[i]] <- parse(text=sprintf('
+plot(1,type="n",xlim=0:1,ylim=0:1,axes=FALSE,xlab="",ylab="",bty="n",xaxs="i",yaxs="i")
+rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))              
+            } else warning("Only jpeg and png images supported in 'images'")
+          }
+        }
+      }
+      
       # Set non-rectangular/square dge shapes with subplots to square:
       if (!is.null(subplots))
       {
@@ -1574,14 +1600,19 @@ qgraph <- function( input, ... )
       curve[E$from==E$to]=1
       
       # Compute knot placement:
-      knotLayout <- matrix(,max(knots),2)
-      for (i in seq_len(max(knots)))
+      if (length(knots) > 0)
       {
-        knotNodes <- c(E$from[knots==i],E$to[knots==i])
-        
-        # mid X:
-        knotLayout[i,1] <- in2usrX(mean(usr2inX(layout[knotNodes,1])))
-        knotLayout[i,2] <- in2usrY(mean(usr2inY(layout[knotNodes,2])))
+        knotLayout <- matrix(,max(knots),2)
+        for (i in seq_len(max(knots)))
+        {
+          knotNodes <- c(E$from[knots==i],E$to[knots==i])
+          
+          # mid X:
+          knotLayout[i,1] <- in2usrX(mean(usr2inX(layout[knotNodes,1])))
+          knotLayout[i,2] <- in2usrY(mean(usr2inY(layout[knotNodes,2])))
+        }
+      } else {
+        knotLayout <- matrix(,0,0)
       }
       
       # For each (sorted from weak to strong) edge:
