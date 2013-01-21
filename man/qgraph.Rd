@@ -265,9 +265,10 @@ data(big5)
 data(big5groups)
 
 # Correlations:
-Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1,groups=big5groups,legend=TRUE,borders=FALSE)
+Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,borders=FALSE)
 title("Big 5 correlations",line=2.5)
 
+\dontrun{
 # Same graph with spring layout:
 Q <- qgraph(Q,layout="spring")
 title("Big 5 correlations",line=2.5)
@@ -277,7 +278,7 @@ qgraph(Q,overlay=TRUE)
 title("Big 5 correlations",line=2.5)
 
 # Same graph with different color scheme:
-qgraph(Q,edge.color=ifelse(cor(big5)>0,"blue","purple"))
+qgraph(Q,posCol="blue",negCol="purple")
 title("Big 5 correlations",line=2.5)
 
 # Significance graph (circular):
@@ -300,18 +301,19 @@ qgraph(Q,graph="sig",gray=TRUE)
 title("Big 5 correlations (p-values)",line=2.5)
 
 # Correlations graph with scores of random subject:
-qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1,groups=big5groups,legend=TRUE,borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
+qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
 title("Test scores of random subject",line=2.5)
+layout(1)
 
 # EFA:
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,7),borders=FALSE,vTrans=200,filetype="R",width=7,height=7)
+qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
 title("Big 5 EFA",line=2.5)
 
 # PCA:
 library("psych")
 big5pca <- principal(cor(big5),5,rotate="promax")
-qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1,7),borders=FALSE,vTrans=200)
+qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
 title("Big 5 PCA",line=2.5)
 
 #### UNWEIGHTED DIRECTED GRAPHS ###
@@ -321,9 +323,8 @@ qgraph(adj)
 title("Unweighted and directed graphs",line=2.5)
 
 # Save plot to nonsquare pdf file:
-\dontrun{
 qgraph(adj,filetype='pdf',height=5,width=10)
-}
+
 
 #### EXAMPLES FOR EDGES UNDER DIFFERENT ARGUMENTS ###
 # Create edgelist:
@@ -339,14 +340,14 @@ qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14)
 # Different esize, strongest edges omitted (note how 0.4 edge is now 
 # just as wide as 0.7 edge in previous graph):
 qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,
-	edge.labels=TRUE,esize=14)
+       edge.labels=TRUE,esize=14)
 
 # Different esize, with maximum:
 qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,maximum=1)
 title("maximum=1",line=2.5)
 
 qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,edge.labels=TRUE,
-	esize=14,maximum=1)
+       esize=14,maximum=1)
 title("maximum=1",line=2.5)
 
 # Different minimum
@@ -359,112 +360,23 @@ title("cut=0.4",line=2.5)
 
 # With details:
 qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,maximum=1,
-	cut=0.4,details=TRUE)
+       cut=0.4,details=TRUE)
 title("details=TRUE",line=2.5)
 
 # Trivial example of manually specifying edge color and widths:
 E <- as.matrix(data.frame(from=rep(1:3,each=3),to=rep(1:3,3),width=1:9))
 qgraph(E,mode="direct",edge.color=rainbow(9))
 
-### STRUCTURAL EQUATION MODELLING ###
-\dontrun{
-library('sem')
-
-### This example is taken from the examples of the sem function. 
-### Only names were changed to better suit the path diagram.
-
-# ----------------------- Thurstone data ---------------------------------------
-#  Second-order confirmatory factor analysis, from the SAS manual for PROC CALIS
-
-R.thur <- readMoments(diag=FALSE, names=c('Sen','Voc',
-        'SC','FL','4LW','Suf',
-        'LS','Ped', 'LG'))
-    .828                                              
-    .776   .779                                        
-    .439   .493    .46                                 
-    .432   .464    .425   .674                           
-    .447   .489    .443   .59    .541                    
-    .447   .432    .401   .381    .402   .288              
-    .541   .537    .534   .35    .367   .32   .555        
-    .38   .358    .359   .424    .446   .325   .598   .452  
-            
-model.thur <- specifyModel()
-    F1 -> Sen,               *l11, NA
-    F1 -> Voc,               *l21, NA
-    F1 -> SC,                *l31, NA
-    F2 -> FL,                *l41, NA
-    F2 -> 4LW,               *l52, NA
-    F2 -> Suf,               *l62, NA
-    F3 -> LS,                *l73, NA
-    F3 -> Ped,               *l83, NA
-    F3 -> LG,                *l93, NA
-    F4 -> F1,                *g1,  NA
-    F4 -> F2,                *g2,  NA
-    F4 -> F3,                *g3,  NA 
-    Sen <-> Sen,             q*1,   NA
-    Voc<-> Voc,              q*2,   NA
-    SC <-> SC,               q*3,   NA
-    FL <-> FL,               q*4,   NA
-    4LW <-> 4LW,             q*5,   NA
-    Suf<-> Suf,              q*6,   NA
-    LS <-> LS,               q*7,   NA
-    Ped<-> Ped,              q*8,   NA
-    LG <-> LG,               q*9,   NA
-    F1 <-> F1,               NA,     1
-    F2 <-> F2,               NA,     1
-    F3 <-> F3,               NA,     1
-    F4 <-> F4,               NA,     1
-}
-
-\dontshow{
-require('sem')
-
-### This example is taken from the examples of the sem function. 
-### Only names were changed to better suit the path diagram.
-
-# ----------------------- Thurstone data ---------------------------------------
-#  Second-order confirmatory factor analysis, from the SAS manual for PROC CALIS
-
-R.thur <- structure(c(1, 0.828, 0.776, 0.439, 0.432, 0.447, 0.447, 0.541, 
-0.38, 0, 1, 0.779, 0.493, 0.464, 0.489, 0.432, 0.537, 0.358, 
-0, 0, 1, 0.46, 0.425, 0.443, 0.401, 0.534, 0.359, 0, 0, 0, 1, 
-0.674, 0.59, 0.381, 0.35, 0.424, 0, 0, 0, 0, 1, 0.541, 0.402, 
-0.367, 0.446, 0, 0, 0, 0, 0, 1, 0.288, 0.32, 0.325, 0, 0, 0, 
-0, 0, 0, 1, 0.555, 0.598, 0, 0, 0, 0, 0, 0, 0, 1, 0.452, 0, 0, 
-0, 0, 0, 0, 0, 0, 1), .Dim = c(9L, 9L), .Dimnames = list(c("Sen", 
-"Voc", "SC", "FL", "4LW", "Suf", "LS", "Ped", "LG"), c("Sen", 
-"Voc", "SC", "FL", "4LW", "Suf", "LS", "Ped", "LG")))
-            
-model.thur <- structure(c("F1 -> Sen", "F1 -> Voc", "F1 -> SC", "F2 -> FL", 
-"F2 -> 4LW", "F2 -> Suf", "F3 -> LS", "F3 -> Ped", "F3 -> LG", 
-"F4 -> F1", "F4 -> F2", "F4 -> F3", "Sen <-> Sen", "Voc<-> Voc", 
-"SC <-> SC", "FL <-> FL", "4LW <-> 4LW", "Suf<-> Suf", "LS <-> LS", 
-"Ped<-> Ped", "LG <-> LG", "F1 <-> F1", "F2 <-> F2", "F3 <-> F3", 
-"F4 <-> F4", "*l11", "*l21", "*l31", "*l41", "*l52", "*l62", 
-"*l73", "*l83", "*l93", "*g1", "*g2", "*g3", "q*1", "q*2", "q*3", 
-"q*4", "q*5", "q*6", "q*7", "q*8", "q*9", NA, NA, NA, NA, NA, 
-NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 
-NA, NA, NA, NA, "1", "1", "1", "1"), .Dim = c(25L, 3L), class = "semmod")
-}
-
-# Path diagram of the model:
-qgraph(model.thur)
-qgraph(model.thur,layout="tree",manifest=c('Sen','Voc','SC','FL','4LW','Suf','LS','Ped','LG'))
-
-# Estimate and plot parameters:
-sem.thur <- sem(model.thur, R.thur, 213)
-qgraph(sem.thur,layout="tree",curve=0.4)
-
-\dontrun{
 ### pcalg support ###
 # Example from pcalg vignette:
 library("pcalg")
 data(gmI)
 suffStat <- list(C = cor(gmI$x), n = nrow(gmI$x))
 pc.fit <- pc(suffStat, indepTest=gaussCItest,
-p = ncol(gmI$x), alpha = 0.01)
+             p = ncol(gmI$x), alpha = 0.01)
 
 qgraph(pc.fit)
+}
 }
 }
 

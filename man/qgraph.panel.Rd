@@ -39,8 +39,10 @@ Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
 \code{\link{qgraph.svg}}
 }
 \examples{
+\dontrun{
 data(big5)
 data(big5groups)
 
 qgraph.panel(cor(big5),groups=big5groups,minimum=0.2,borders=FALSE,vsize=1,cut=0.3)
+}
 }
