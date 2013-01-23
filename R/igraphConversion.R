@@ -1,6 +1,6 @@
 # library("igraph")
 
-as.igraph <- function(object,attributes=TRUE)
+as.igraph.qgraph <- function(object,attributes=TRUE)
 {
   if (!"qgraph"%in%class(object))
   {

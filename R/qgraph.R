@@ -852,7 +852,7 @@ qgraph <- function( input, ... )
     if (!curveAll)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
-      #       curve <- ifelse(dub&!bidirectional,curve,0)
+      if (length(curve)==1) curve <- rep(curve,length(E$from))
       curve <- ifelse(is.na(curve),ifelse(knots==0&dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0),curve)
       rm(dub)
     }
@@ -1564,6 +1564,7 @@ qgraph <- function( input, ... )
       # If images is not NULL, replace subplots with images calls:
       if (!is.null(images))
       {
+        images <- gsub("\\\\","/", images)
         if (length(images) == 1) images <- rep(images, nNodes)
         if (is.null(subplots)) subplots <- vector( "list", nNodes)
         

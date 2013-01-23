@@ -122,7 +122,7 @@ qgraph( input, ... )
 \section{Arguments for manually defining graphs}{
 \describe{
   \item{mode}{The mode argument (see section on significance graph arguments) can also be used to make the weights matrix correspond directly to the width of the edges (as in lwd of plot()). To do this, set mode to "direct".}
-	\item{edge.color}{This argument can be used to overwrite the colors. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist)}
+	\item{edge.color}{This argument can be used to overwrite the colors. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used.}
 }}
 
 

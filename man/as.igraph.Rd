@@ -8,7 +8,7 @@ Converts qgraph object to igraph object.
 This function converts the output of \code{\link{qgraph}} to an 'igraph' object that can be used in the igraph package (Csardi & Nepusz, 2006)
 }
 \usage{
-as.igraph(object, attributes = TRUE)
+\method{as.igraph}{qgraph}(object, attributes = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
