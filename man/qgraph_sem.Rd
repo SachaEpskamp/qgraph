@@ -80,8 +80,8 @@ Sacha Epskamp (qgraph@sachaepskamp.com)
 
 require('sem')
 
-### This example is taken from the examples of the sem function. 
-### Only names were changed to better suit the path diagram.
+# This example is taken from the examples of the sem function. 
+# Only names were changed to better suit the path diagram.
 
 # ----------------------- Thurstone data ---------------------------------------
 #  Second-order confirmatory factor analysis, from the SAS manual for PROC CALIS

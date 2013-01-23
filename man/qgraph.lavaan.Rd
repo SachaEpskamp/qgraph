@@ -90,10 +90,9 @@ Sacha Epskamp (qgraph@sachaepskamp.com)
 }
 \examples{
 \dontrun{
-## Example from lavaan::sem help file:
-require("lavaan")
-
 ## The industrialization and Political Democracy Example 
+# Example from lavaan::sem help file:
+require("lavaan")
      ## Bollen (1989), page 332
      model <- ' 
        # latent variable definitions

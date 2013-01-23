@@ -67,11 +67,11 @@ Sacha Epskamp (qgraph@sachaepskamp.com)
 }
 \examples{
 \dontrun{
-### This example makes a multipage PDF that contains images
-### Of a building network using soft constraints.
+# This example makes a multipage PDF that contains images
+# Of a building network using soft constraints.
 
-### Each step one node is added with one edge. The max.delta
-### decreases the longer nodes are present in the network.
+# Each step one node is added with one edge. The max.delta
+# decreases the longer nodes are present in the network.
 
 pdf("Soft Constraints.pdf",width=10,height=5)
 

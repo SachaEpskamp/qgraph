@@ -365,11 +365,13 @@ qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,max
        cut=0.4,details=TRUE)
 title("details=TRUE",line=2.5)
 
+### Additional topics ###
+
 # Trivial example of manually specifying edge color and widths:
 E <- as.matrix(data.frame(from=rep(1:3,each=3),to=rep(1:3,3),width=1:9))
 qgraph(E,mode="direct",edge.color=rainbow(9))
 
-### pcalg support ###
+## pcalg support
 # Example from pcalg vignette:
 library("pcalg")
 data(gmI)
