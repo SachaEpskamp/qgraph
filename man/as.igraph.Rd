@@ -1,5 +1,5 @@
-\name{as.igraph}
-\alias{as.igraph}
+\name{as.igraph.qgraph}
+\alias{as.igraph.qgraph}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Converts qgraph object to igraph object.
