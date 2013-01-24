@@ -1868,8 +1868,8 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
             if (XKCD)
             {
               jitt <- xkcd_jitter(spl$x,spl$y)
-              spl$x <- jitt$x
-              spl$y <- jitt$y
+              spl$x[3:(length(spl$x)-3)] <- jitt$x[3:(length(spl$x)-3)]
+              spl$y[3:(length(spl$y)-3)] <- jitt$y[3:(length(spl$y)-3)]
             }
             
             # If XKCD extra white edge:
@@ -2052,7 +2052,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
         circ <- seq(0,2*pi,length=100)
         for (i in 1:nNodes)
         {
-          pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],shape[i]))
+          pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
           mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
           
           if (borders[i]) {
