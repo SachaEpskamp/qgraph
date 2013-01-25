@@ -44,9 +44,12 @@ in2usrY <- function(x)
   usr[3] + x/pin[2] * (usr[4] - usr[3])
 }
 
-## Find perpundicular poin to mid of line:
-PerpMid <- function(xy0,xy1,ang=1,cex=1)
+## Find perpundicular poin to quantile of line:
+PerpMid <- function(xy0,xy1,ang=1,cex=1,q=0.5)
 {
+  # Change xy0 to quantile:
+  xy0 <- xy0 + q * (xy1 - xy0)
+  
   # Fixed inches size:
   cexIn <- cex * 0.025 * sqrt(sum(par("pin")^2))
   

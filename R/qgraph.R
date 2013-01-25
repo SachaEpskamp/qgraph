@@ -337,6 +337,11 @@ qgraph <- function( input, ... )
     
     # Arguments for directed graphs:
     if(is.null(arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- arguments[['curveDefault']]
+    if(is.null(arguments[['curvePivot']])) curvePivot <- FALSE else curvePivot <- arguments[['curvePivot']]
+    if (isTRUE(curvePivot)) curvePivot <- 0.1
+    if(is.null(arguments[['curveShape']])) curveShape <- -1 else curveShape <- arguments[['curveShape']]
+    if(is.null(arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- arguments[['curvePivotShape']]
+    
     if(is.null(arguments[['curve']]))
     {
       curve <- NA 
@@ -1550,7 +1555,7 @@ qgraph <- function( input, ... )
         border.width <- border.width * normC
         asize <- asize * normC
         edge.label.cex <- edge.label.cex * normC
-       
+        
         knot.size <- knot.size * normC
         knot.border.width <- knot.border.width * normC
       }
@@ -1738,555 +1743,515 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
               
             } else 
             {
-              midx <- (x1 + x2)/2
-              midy <- (y1 + y2)/2
               #spx <- midx - curve[i] * (y2 - y1)/2
               #spy <- midy + curve[i] * (x2 - x1)/2
               #               curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-             if (knots[i]!=0)
-             {
-               spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
-             } else {               
-               curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
-               
-               #                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-               spx <- curvemid[1]
-               spy <- curvemid[2]
-               spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
-             }
+              
+              if (knots[i]!=0)
+              {
+                spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
+              } else {     
+                #                midx <- (x1 + x2)/2
+                #                midy <- (y1 + y2)/2
+                
+                curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
+                
+                # Add pivots:
+                if (is.numeric(curvePivot))
+                {
+                  splShape <- c(curveShape, curvePivotShape, curveShape, curvePivotShape, curveShape)
+                  
+                  curveQ1 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = curvePivot) 
+                  curveQ2 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = 1-curvePivot) 
+                  
+                  spx <- c(curveQ1[1]  , curvemid[1], curveQ2[1])
+                  spy <- c(curveQ1[2]  , curvemid[2], curveQ2[2])
+                } else 
+                {
+                  splShape <- rep(curveShape,3)
+                  spx <- curvemid[1]
+                  spy <- curvemid[2]
+                }
+                
+                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE) 
+              }
               
             }	
             if (E$from[i]!=E$to[i])
             {
+              recurve <- FALSE
+              
               # Replace destination of edge to edge of node if needed:
-              if (is.logical(arrows)| vAlpha[E$to[i]] < 255) if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
+              if (is.logical(arrows)| vAlpha[E$to[i]] < 255)
               {
-                # 				xd=x2-spl$x[length(spl$x)-1]
-                # 				yd=y2-spl$y[length(spl$y)-1]
-                # 				d2=sqrt(sum(xd^2+yd^2))
-                # 				if (shape[E$to[i]]!="square")
-                # 				{
-                # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
-                # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
-                # 				}
-                # 				if (shape[E$to[i]]=="square")
-                # 				{
-                # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-                # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-                # 				}
-                
-                NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
-                x2 <- NewPoints[1]
-                y2 <- NewPoints[2]
-                
-                #               if (E$from[i]==E$to[i])
-                #               {
-                #                 spx=c(x1+loopX,x1,x1-loopX)
-                #                 spy=c(y1,y1+loopY,y1)
-                #                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
-                #               } else 
-                #               {
-                midx <- (x1 + x2)/2
-                midy <- (y1 + y2)/2
-                #spx <- midx - curve[i] * (y2 - y1)/2
-                #spy <- midy + curve[i] * (x2 - x1)/2
-                #                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-                if (knots[i]!=0)
+                if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
                 {
-                  spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
-                } else {               
-                  curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
-                  
-                  spx <- curvemid[1]
-                  spy <- curvemid[2]
-                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
-                }
-                #               }
-                # Replace source of edge to edge of node if needed:
-                if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])| vAlpha[E$from[i]] < 255)
-                {
-                  # 					xd= spl$x[2] - x1
-                  # 					yd= spl$y[2] - y1
-                  # 					d2=sqrt(sum(xd^2+yd^2))
-                  # 					if (shape[E$from[i]]!="square")
-                  # 					{
-                  # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
-                  # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
-                  # 					}
-                  # 					if (shape[E$from[i]]=="square")
-                  # 					{
-                  # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-                  # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-                  # 					}
+                  NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
+                  x2 <- NewPoints[1]
+                  y2 <- NewPoints[2]
+                  recurve <- TRUE
                   
                   NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
                   x1 <- NewPoints[1]
                   y1 <- NewPoints[2]
-                  
+                  recurve <- TRUE
                 }
-                #               if (E$from[i]==E$to[i])
-                #               {
-                #                 loopX=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2])
-                #                 spx=c(layout[E$from[i],1]+loopX,layout[E$from[i],1],layout[E$from[i],1]-loopX)
-                #                 loopY=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2])
-                #                 spy=c(layout[E$from[i],2],layout[E$from[i],2]+loopY,layout[E$from[i],2])
-                #                 spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
-                #                 # Rotate spline:
-                #                 spl$x <- layout[E$from[i],1] + (spl2$x - layout[E$from[i],1]) * cos(loopRotation[i]) - (spl2$y - layout[E$from[i],2]) * sin(loopRotation[i])
-                #                 spl$y <- layout[E$from[i],2] + (spl2$x - layout[E$from[i],1]) * sin(loopRotation[i]) + (spl2$y - layout[E$from[i],2]) * cos(loopRotation[i])
-                #                 
-                #               } else 
-                #               {
-                midx <- (x1 + x2)/2
-                midy <- (y1 + y2)/2
-                #spx <- midx - curve[i] * (y2 - y1)/2
-                #spy <- midy + curve[i] * (x2 - x1)/2
-                #                 curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
+              }
+              
+              if (recurve)
+              {
                 if (knots[i]!=0)
                 {
                   spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
                 } else {               
-                  curvemid <- PerpMid(c(midx,midy),c(x2,y2),cex=curve[i]) 
                   
-                  #                 Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-                  spx <- curvemid[1]
-                  spy <- curvemid[2]
-                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),-1,draw=FALSE) 
-                }
-                #               }
-              }
-              #               } else if (E$from[i]==E$to[i])
-              #               {
-              #                 # Rotate spline:
-              #                 spl$x <- layout[E$from[i],1] + (spl2$x - layout[E$from[i],1]) * cos(loopRotation[i]) - (spl2$y - layout[E$from[i],2]) * sin(loopRotation[i])
-              #                 spl$y <- layout[E$from[i],2] + (spl2$x - layout[E$from[i],1]) * sin(loopRotation[i]) + (spl2$y - layout[E$from[i],2]) * cos(loopRotation[i])        
-              #               }
-            }
-            
-            
-            # If XKCD jitter edge:
-            if (XKCD)
-            {
-              jitt <- xkcd_jitter(spl$x,spl$y)
-              spl$x[3:(length(spl$x)-3)] <- jitt$x[3:(length(spl$x)-3)]
-              spl$y[3:(length(spl$y)-3)] <- jitt$y[3:(length(spl$y)-3)]
-            }
-            
-            # If XKCD extra white edge:
-            if (XKCD)
-            {
-              lines(spl,lwd=edge.width[i]*2,col="white")
-            }
-            
-            if (!is.logical(edge.labels))
-            {
-              midX[i]=spl$x[floor(length(spl$x)/2)]
-              midY[i]=spl$y[floor(length(spl$y)/2)]
-            }
-            lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
-            
-            if (directed[i])
-            {
-              if (!is.logical(arrows))
-              {
-                Ax=seq(1,length(spl$x),length=arrows+2)
-                Ay=seq(1,length(spl$y),length=arrows+2)
-                for (a in 2:(arrows+1))
-                {
-                  #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                  curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
                   
-                  DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                  # Add pivots:
+                  if (is.numeric(curvePivot))
+                  {
+                    splShape <- c(curveShape, curvePivotShape, curveShape, curvePivotShape, curveShape)
+                    
+                    curveQ1 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = curvePivot) 
+                    curveQ2 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = 1-curvePivot) 
+                    
+                    spx <- c(curveQ1[1]  , curvemid[1], curveQ2[1])
+                    spy <- c(curveQ1[2]  , curvemid[2], curveQ2[2])
+                  } else 
+                  {
+                    spx <- curvemid[1]
+                    spy <- curvemid[2]
+                  }
+                  
+                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE) 
                 }
               }
-              else if (arrows)
+            }
+          
+          
+          # If XKCD jitter edge:
+          if (XKCD)
+          {
+            jitt <- xkcd_jitter(spl$x,spl$y)
+            spl$x[3:(length(spl$x)-3)] <- jitt$x[3:(length(spl$x)-3)]
+            spl$y[3:(length(spl$y)-3)] <- jitt$y[3:(length(spl$y)-3)]
+          }
+          
+          # If XKCD extra white edge:
+          if (XKCD)
+          {
+            lines(spl,lwd=edge.width[i]*2,col="white")
+          }
+          
+          if (!is.logical(edge.labels))
+          {
+            midX[i]=spl$x[floor(length(spl$x)/2)]
+            midY[i]=spl$y[floor(length(spl$y)/2)]
+          }
+
+          lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
+          
+          if (directed[i])
+          {
+            if (!is.logical(arrows))
+            {
+              Ax=seq(1,length(spl$x),length=arrows+2)
+              Ay=seq(1,length(spl$y),length=arrows+2)
+              for (a in 2:(arrows+1))
               {
-                #                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2usr2in(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+                #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
                 
-                if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
-                {
-                  #                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(spl$x[1],spl$y[1],atan2usr2in(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-                }
+                DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
               }
-              
             }
+            else if (arrows)
+            {
+              #                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+              #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+              DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2usr2in(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+              
+              if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
+              {
+                #                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
+                #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
+                DrawArrow(spl$x[1],spl$y[1],atan2usr2in(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
+              }
+            }
+            
           }
-        } 
-      }
-      
-      
-      
-      # Plot knots:
-      if (any(knots>0))
-      {
-        if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
-        if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
-        if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
-        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
-        if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
-        
-        for (i in 1:max(knots)) if (is.na(knot.color[i])) knot.color[i] <- mixCols(edge.color[knots==i])
-        
-        if (any(knot.borders))
-        {
-          for (i in 1:max(knots))
-          {            
-            points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
-            if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
-          }
-        } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
-      }
-      
-      
-      # Edge labels
-      if (is.null(ELcolor))
-      {
-        ELcolor <- edge.color
-      }
-      
-        
-      if (!is.logical(edge.labels) & length(edge.labels)>0)
-      {
-        # Fix midpoints for knots:
-        for (i in seq_len(max(knots)))
-        {
-          midX[knots==i] <- knotLayout[i,1]
-          midY[knots==i] <- knotLayout[i,2]
         }
+      } 
+    }
     
-        edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
-        edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
-        if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
-        
-        if (plotELBG)
-        {
-          for (i in edgesort2)
-          {
-            labwd <- strwidth(edge.labels[i],cex=edge.label.cex[i])
-            labht <- strheight(edge.labels[i],cex=edge.label.cex[i])
-            polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
-                    c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
-                    border=NA,
-                    col=edge.label.bg[i])
-          }
-        }
-        
-        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
-      }			
+    
+    
+    # Plot knots:
+    if (any(knots>0))
+    {
+      if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
+      if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
+      if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
+      if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
+      if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
       
+      for (i in 1:max(knots)) if (is.na(knot.color[i])) knot.color[i] <- mixCols(edge.color[knots==i])
       
-      #if (nNodes==1) layout=matrix(0,1,2)
-      # Plot nodes:
-      
-      # scale border width:
-      #       border.width <- border.width * normC
-      
-      if(length(borders) == 1) borders <- rep(borders,nNodes)
-      if (!XKCD)
+      if (any(knot.borders))
       {
-        # Check if nodes need to be plotted in for loop:
-        if (!is.null(subplots) || any(shape=="rectangle"))
+        for (i in 1:max(knots))
+        {            
+          points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
+          if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
+        }
+      } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
+    }
+    
+    
+    # Edge labels
+    if (is.null(ELcolor))
+    {
+      ELcolor <- edge.color
+    }
+    
+    
+    if (!is.logical(edge.labels) & length(edge.labels)>0)
+    {
+      # Fix midpoints for knots:
+      for (i in seq_len(max(knots)))
+      {
+        midX[knots==i] <- knotLayout[i,1]
+        midY[knots==i] <- knotLayout[i,2]
+      }
+      
+      edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
+      edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
+      if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
+      
+      if (plotELBG)
+      {
+        for (i in edgesort2)
         {
-          # Get which nodes become a subplot:
-          #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+          labwd <- strwidth(edge.labels[i],cex=edge.label.cex[i])
+          labht <- strheight(edge.labels[i],cex=edge.label.cex[i])
+          polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
+                  c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
+                  border=NA,
+                  col=edge.label.bg[i])
+        }
+      }
+      
+      text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
+    }			
+    
+    
+    #if (nNodes==1) layout=matrix(0,1,2)
+    # Plot nodes:
+    
+    # scale border width:
+    #       border.width <- border.width * normC
+    
+    if(length(borders) == 1) borders <- rep(borders,nNodes)
+    if (!XKCD)
+    {
+      # Check if nodes need to be plotted in for loop:
+      if (!is.null(subplots) || any(shape=="rectangle"))
+      {
+        # Get which nodes become a subplot:
+        #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+        
+        #           # Plot normal nodes:
+        #           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+        #           bordVec <- bordVec[!bordVec%in%whichsub]
+        #           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
+        
+        for (i in order(vsize*vsize2,decreasing=TRUE))
+        {
+          x <- layout[i,1]
+          y <- layout[i,2]
           
-          #           # Plot normal nodes:
-          #           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-          #           bordVec <- bordVec[!bordVec%in%whichsub]
-          #           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
-          
-          for (i in order(vsize*vsize2,decreasing=TRUE))
+          if (isTRUE(is.expression(subplots[[i]])))
           {
-            x <- layout[i,1]
-            y <- layout[i,2]
+            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
+            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
             
-            if (isTRUE(is.expression(subplots[[i]])))
+            usr <- par("usr")
+            # Plot background:
+            rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=background,border=NA)
+            # Plot subplot:
+            subplot(eval(subplots[[i]]),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)))  
+            # Plot border:
+            if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
+          } else if (shape[i]!="rectangle")
+          {
+            points(layout[i,,drop=FALSE],cex=vsize[i],col=vertex.colors[i],lwd=border.width,pch=pch1[i])
+            if (borders[i])
             {
-              xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
-              yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
-              
-              usr <- par("usr")
-              # Plot background:
-              rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=background,border=NA)
-              # Plot subplot:
-              subplot(eval(subplots[[i]]),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)))  
-              # Plot border:
-              if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
-            } else if (shape[i]!="rectangle")
-            {
-              points(layout[i,,drop=FALSE],cex=vsize[i],col=vertex.colors[i],lwd=border.width,pch=pch1[i])
-              if (borders[i])
-              {
-                points(layout[i,,drop=FALSE],cex=vsize[i],col=bcolor[i],lwd=border.width,pch=pch2[i])
-              }
-            } else {
-              xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
-              yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
-              
-              # Plot background:
-              rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vertex.colors[i],border=NA)
-              if (borders[i])
-              {
-                rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
-              }              
+              points(layout[i,,drop=FALSE],cex=vsize[i],col=bcolor[i],lwd=border.width,pch=pch2[i])
             }
-          }      
-        } else {
-          bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-          points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
-        }
-        
-        
-        
-        #         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
-        #                 
-        #         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
-        #         
-        #         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
-        
-      } else {
-        circ <- seq(0,2*pi,length=100)
-        for (i in 1:nNodes)
-        {
-          pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
-          mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
-          
-          if (borders[i]) {
-            polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
-            polygon(mod$x,mod$y,border="black",col=vertex.colors[i],lwd=5)
           } else {
-            polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
-            polygon(mod$x,mod$y,border=NULL,col=vertex.colors[i],lwd=5)            
-          }
-        }
-      }
-      
-      # Make labels:
-      if (is.logical(labels))
-      {
-        if (labels)
-        {
-          labels=1:nNodes
-        }
-      }
-      
-      if (!is.logical(labels))
-      {
-        #         labels=as.character(labels)
-        # Vertex label symbols:
-        # Set symbol font:
-        if (is.character(labels))
-        {
-          strsplV=strsplit(labels,"")
-          greekV=logical(0)
-          for (i in 1:length(strsplV)) 
-          {
-            greekV[i]=any(strsplV[[i]]=="*")
-            labels[i]=paste(strsplV[[i]][which(strsplV[[i]]!="*")],collapse="") 
-          }
-          V.font=rep(1,length(E$from))
-          V.font[greekV]=5
-        } else V.font <- 1
-        
-        if (is.null(label.cex)) label.cex <- pmax(1,vsize)
-        # Rescale labels:
-        if (label.scale)
-        {
-          VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
-          VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0),SIMPLIFY=FALSE),'[',2) * 2          
-          LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
-          LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
-          
-          label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
-          #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
-        }
-        
-        # Plot labels:
-        text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
-        
-        # Set Tooltips:
-        for (i in 1:nNodes) 
-        {
-          if (!is.null(tooltips)) if (!is.na(tooltips[i]))
-          {
-            if (filetype=='svg') setSVGShapeToolTip(desc=tooltips[i])
-          }
-          if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
-          {
-            setSVGShapeToolTip(desc=SVGtooltips[i])
-          }
-          #           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
-          # 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
-        }
-      }
-      
-      
-      ### Overlay:
-      if (overlay)
-      {
-        # Transparance in vertex colors:
-        num2hex <- function(x)
-        {
-          hex=unlist(strsplit("0123456789ABCDEF",split=""))
-          return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
-        }
-        
-        colHEX <- rgb(t(col2rgb(color)/255))
-        
-        fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
-        
-        for (i in 1:length(groups)) polygon(ellipse(cov(l[groups[[i]],]),centre=colMeans(l[groups[[i]],]),level=overlaySize),border=color[i],col=fillCols[i])
-      }
-      
-      if (is.null(names(groups))) names(groups) <- LETTERS[1:length(groups)]
-      
-      #if (!legend && filetype=="svg") plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
-      
-      # Plot Legend:
-      if (legend)
-      {
-        if (is.null(scores))
-        {
-          legend.cex=legend.cex*2
-          #plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
-          if (mode=="sig")
-          {
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
-            if (gray)
+            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
+            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
+            
+            # Plot background:
+            rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vertex.colors[i],border=NA)
+            if (borders[i])
             {
-              legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                     col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
-                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            } else
-            {
-              if (any(Pvals < 0))
-              {
-                legend(1.2 + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                       col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                       lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-                
-                legend(1.2 + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                       col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
-                       lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-                
-              } else
-              {
-                legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                       col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                       lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-              }
-            }
+              rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
+            }              
+          }
+        }      
+      } else {
+        bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
+        points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
+      }
+      
+      
+      
+      #         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
+      #                 
+      #         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+      #         
+      #         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
+      
+    } else {
+      circ <- seq(0,2*pi,length=100)
+      for (i in 1:nNodes)
+      {
+        pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
+        mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
+        
+        if (borders[i]) {
+          polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
+          polygon(mod$x,mod$y,border="black",col=vertex.colors[i],lwd=5)
+        } else {
+          polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
+          polygon(mod$x,mod$y,border=NULL,col=vertex.colors[i],lwd=5)            
+        }
+      }
+    }
+    
+    # Make labels:
+    if (is.logical(labels))
+    {
+      if (labels)
+      {
+        labels=1:nNodes
+      }
+    }
+    
+    if (!is.logical(labels))
+    {
+      #         labels=as.character(labels)
+      # Vertex label symbols:
+      # Set symbol font:
+      if (is.character(labels))
+      {
+        strsplV=strsplit(labels,"")
+        greekV=logical(0)
+        for (i in 1:length(strsplV)) 
+        {
+          greekV[i]=any(strsplV[[i]]=="*")
+          labels[i]=paste(strsplV[[i]][which(strsplV[[i]]!="*")],collapse="") 
+        }
+        V.font=rep(1,length(E$from))
+        V.font[greekV]=5
+      } else V.font <- 1
+      
+      if (is.null(label.cex)) label.cex <- pmax(1,vsize)
+      # Rescale labels:
+      if (label.scale)
+      {
+        VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
+        VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0),SIMPLIFY=FALSE),'[',2) * 2          
+        LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
+        LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
+        
+        label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
+        #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
+      }
+      
+      # Plot labels:
+      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
+      
+      # Set Tooltips:
+      for (i in 1:nNodes) 
+      {
+        if (!is.null(tooltips)) if (!is.na(tooltips[i]))
+        {
+          if (filetype=='svg') setSVGShapeToolTip(desc=tooltips[i])
+        }
+        if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
+        {
+          setSVGShapeToolTip(desc=SVGtooltips[i])
+        }
+        #           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
+        # 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
+      }
+    }
+    
+    
+    ### Overlay:
+    if (overlay)
+    {
+      # Transparance in vertex colors:
+      num2hex <- function(x)
+      {
+        hex=unlist(strsplit("0123456789ABCDEF",split=""))
+        return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
+      }
+      
+      colHEX <- rgb(t(col2rgb(color)/255))
+      
+      fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
+      
+      for (i in 1:length(groups)) polygon(ellipse(cov(l[groups[[i]],]),centre=colMeans(l[groups[[i]],]),level=overlaySize),border=color[i],col=fillCols[i])
+    }
+    
+    if (is.null(names(groups))) names(groups) <- LETTERS[1:length(groups)]
+    
+    #if (!legend && filetype=="svg") plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
+    
+    # Plot Legend:
+    if (legend)
+    {
+      if (is.null(scores))
+      {
+        legend.cex=legend.cex*2
+        #plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
+        if (mode=="sig")
+        {
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          if (gray)
+          {
+            legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+                   col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
+                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           } else
           {
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
-          }
-        }
-        if (!is.null(scores))
-        {
-          plot(1, ann = FALSE, axes = FALSE, xlim = c(-0.5, scores.range[2]-scores.range[1]+8), ylim = c(0.5, length(groups)+2),
-               type = "n", xaxs = "i", yaxs = "i")
-          
-          for (i in 1:length(groups)) {
-            
-            groupcols="white"
-            groupcolors=1-t(col2rgb(color[i])/255)
-            c=1
-            for (j in (scores.range[1]:scores.range[2]-scores.range[1])/(scores.range[2]-scores.range[1])) 
+            if (any(Pvals < 0))
             {
-              groupcols[c]=rgb(1-j*groupcolors)
-              c=c+1
+              legend(1.2 + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+                     col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
+                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+              
+              legend(1.2 + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+                     col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
+                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+              
+            } else
+            {
+              legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+                     col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
+                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
             }
-            
-            for (j in scores.range[1]:scores.range[2]-scores.range[1]) {
-              
-              polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=bcolor[i],lwd=2)
-              
-            } 
-            text(j+1.5,i+0.5,names(groups)[i],pos=4)
           }
-          
-          for (i in scores.range[1]:scores.range[2]-scores.range[1]) text(i+0.5,length(groups)+1.5,i+scores.range[1])
-          
-          
+        } else
+        {
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
         }
       }
-      
-      # Plot details:
-      if (details & weighted)
+      if (!is.null(scores))
       {
-        if (cut != 0) text(0,-1.1,paste("Cutoff:",round(cut,2)),cex=0.6)
-        if (minimum != 0) text(-1,-1.1,paste("Minimum:",round(minimum,2)),pos=4,cex=0.6)
-        text(1,-1.1,paste("Maximum:",round(maximum,2)),pos=2,cex=0.6)
+        plot(1, ann = FALSE, axes = FALSE, xlim = c(-0.5, scores.range[2]-scores.range[1]+8), ylim = c(0.5, length(groups)+2),
+             type = "n", xaxs = "i", yaxs = "i")
+        
+        for (i in 1:length(groups)) {
+          
+          groupcols="white"
+          groupcolors=1-t(col2rgb(color[i])/255)
+          c=1
+          for (j in (scores.range[1]:scores.range[2]-scores.range[1])/(scores.range[2]-scores.range[1])) 
+          {
+            groupcols[c]=rgb(1-j*groupcolors)
+            c=c+1
+          }
+          
+          for (j in scores.range[1]:scores.range[2]-scores.range[1]) {
+            
+            polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=bcolor[i],lwd=2)
+            
+          } 
+          text(j+1.5,i+0.5,names(groups)[i],pos=4)
+        }
+        
+        for (i in scores.range[1]:scores.range[2]-scores.range[1]) text(i+0.5,length(groups)+1.5,i+scores.range[1])
+        
+        
       }
-      
-      
-      if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff','tex')) 
-      {
-        message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
-        dev.off()
-      }
-      par(mar=marOrig, bg=bgOrig)
     }
-    # Make output list:
-    #returnval=list(input=input, layout=layout, cut=cut, maximum=maximum, minimum=minimum, groups=groups, weighted=weighted, rescale=rescale, labels=labels, directed=directed, legend=legend, plot=plot, rotation=rotation, layout.control=layout.control, layout.par=layout.par, filetype=filetype, filename=filename, width=width, height=height, pty=pty, res=res, vsize=vsize, esize=esize, color=color, bg=bg, bgcontrol=bgcontrol, bgres=bgres, transparency=transparency, lcolor=lcolor, loop=loop, legend.cex=legend.cex, borders=borders, curve=curve, arrows=arrows, diag=diag, tooltips=tooltips, hyperlinks=hyperlinks)
     
-    # Arguments, some changed due to removal edges (included in edgelist)
-    returnval=arguments
-    returnval$layout=layout
-    returnval$weighted <- weighted
-    returnval$layout.orig=original.layout
-    returnval$nNodes <- nNodes
-    returnval$directed <- NULL
-    returnval$bidirectional <- NULL
-    returnval$background <- background
+    # Plot details:
+    if (details & weighted)
+    {
+      if (cut != 0) text(0,-1.1,paste("Cutoff:",round(cut,2)),cex=0.6)
+      if (minimum != 0) text(-1,-1.1,paste("Minimum:",round(minimum,2)),pos=4,cex=0.6)
+      text(1,-1.1,paste("Maximum:",round(maximum,2)),pos=2,cex=0.6)
+    }
     
-    # Graph attributes (only used for igraph exportation):
-    graphAttributes <- list(
-      Nodes = list(
-        border.color = bcolor,
-        borders = borders,
-        label.cex = label.cex,
-        label.color = lcolor,
-        labels = labels,
-        loopRotation = loopRotation,
-        shape = shape,
-        color = vertex.colors,
-        width = vsize,
-        height = vsize2,
-        stringsAsFactors=FALSE
-      ),
-      Edges = list(
-        curve = curve,
-        color = edge.color,
-        labels = edge.labels,
-        label.cex = edge.label.cex,
-        label.color = ELcolor,
-        width = edge.width,
-        lty = lty,
-        stringsAsFactors=FALSE
-      ),
-      edgesort = edgesort
-    )
     
-    # Edgelist:
-    E$directed <- directed
-    E$bidir <- bidirectional
-    E <- as.data.frame(E)
-    class(E) <- "qgraphEdgelist"
-    
-    returnval$qgraphEdgelist <- E
-    returnval$graphAttributes <- graphAttributes
-    
-    class(returnval)="qgraph"
-    #par(parOrig)
-    
-    invisible(returnval)
+    if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff','tex')) 
+    {
+      message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
+      dev.off()
+    }
+    par(mar=marOrig, bg=bgOrig)
   }
+  # Make output list:
+  #returnval=list(input=input, layout=layout, cut=cut, maximum=maximum, minimum=minimum, groups=groups, weighted=weighted, rescale=rescale, labels=labels, directed=directed, legend=legend, plot=plot, rotation=rotation, layout.control=layout.control, layout.par=layout.par, filetype=filetype, filename=filename, width=width, height=height, pty=pty, res=res, vsize=vsize, esize=esize, color=color, bg=bg, bgcontrol=bgcontrol, bgres=bgres, transparency=transparency, lcolor=lcolor, loop=loop, legend.cex=legend.cex, borders=borders, curve=curve, arrows=arrows, diag=diag, tooltips=tooltips, hyperlinks=hyperlinks)
+  
+  # Arguments, some changed due to removal edges (included in edgelist)
+  returnval=arguments
+  returnval$layout=layout
+  returnval$weighted <- weighted
+  returnval$layout.orig=original.layout
+  returnval$nNodes <- nNodes
+  returnval$directed <- NULL
+  returnval$bidirectional <- NULL
+  returnval$background <- background
+  
+  # Graph attributes (only used for igraph exportation):
+  graphAttributes <- list(
+    Nodes = list(
+      border.color = bcolor,
+      borders = borders,
+      label.cex = label.cex,
+      label.color = lcolor,
+      labels = labels,
+      loopRotation = loopRotation,
+      shape = shape,
+      color = vertex.colors,
+      width = vsize,
+      height = vsize2,
+      stringsAsFactors=FALSE
+    ),
+    Edges = list(
+      curve = curve,
+      color = edge.color,
+      labels = edge.labels,
+      label.cex = edge.label.cex,
+      label.color = ELcolor,
+      width = edge.width,
+      lty = lty,
+      stringsAsFactors=FALSE
+    ),
+    edgesort = edgesort
+  )
+  
+  # Edgelist:
+  E$directed <- directed
+  E$bidir <- bidirectional
+  E <- as.data.frame(E)
+  class(E) <- "qgraphEdgelist"
+  
+  returnval$qgraphEdgelist <- E
+  returnval$graphAttributes <- graphAttributes
+  
+  class(returnval)="qgraph"
+  #par(parOrig)
+  
+  invisible(returnval)
 }
-
+}

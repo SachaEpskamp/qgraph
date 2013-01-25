@@ -85,12 +85,19 @@ qgraph( input, ... )
 }}
 }
 
+
+\section{Arguments to control edge curvature}{
+  \item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behavior should be used, which only curves edges if there are multiple edges between two nodes.}
+    \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
+    \item{curveDefault}{The default curvature. Defaults to 1.}
+    \item{curveShape}{The shape of the curve, as used in \code{xspline}. Defaults to \code{-1}.}
+    \item{curvePivot}{Quantile to pivot curves on. This can be used to, rather than round edges, make straight edges as curves with "knicks" in them. Can be logical or numeric. \code{FALSE} (default) indicates no pivoting in the curved edges, a number indicates the quantile (and one minus this value as quantile) on which to pivot curved edges and \code{TRUE} indicates a value of 0.1.}
+        \item{curvePivotShape}{The shape of the curve around the pivots, as used in \code{xspline}. Defaults to \code{0.25}.}
+}
+
 \section{Additional arguments for directed graphs}{
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
-	\item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behavior should be used, which only curves edges if there are multiple edges between two nodes.}
-    \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
-    \item{curveDefault}{The default curvature. Defaults to 1.}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
   \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
 	\item{asize}{Size of the arrowhead.}
