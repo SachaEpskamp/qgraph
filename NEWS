@@ -1,3 +1,7 @@
+Changes in Version 1.2.1
+  o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
+  o Shape of curved edges can now be controlled with 'curveShape' and 'curvePivotShape'.
+
 Changes in Version 1.2
   o NEW MAJOR FEATURES:
     o Support added to include R plots as nodes. This can be done with the 'subplots' argument, which takes a list of R expressions that create a plot when evaluated. The 'subplot' function in the R package Hmisc is used to create the subplots.
