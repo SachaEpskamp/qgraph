@@ -1925,7 +1925,8 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       }
       
       edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
-      edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
+      edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,,drop=FALSE])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
+      
       if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
       
       if (plotELBG)
