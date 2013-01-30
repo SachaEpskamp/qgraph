@@ -17,6 +17,7 @@ qgraph.sem=function(
 	width=7,
 	height=7)
 {
+  warning("This funcion is deprecated,\nUse the 'semPlot' package instead.")
 #reqTest <- require("sem")
 #if (!reqTest) stop("sem could not be loaded, is this package installed?")
 if (!any(class(res)%in%c("sem","semmod"))) stop("Input must be a 'sem' object")

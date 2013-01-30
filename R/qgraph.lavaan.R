@@ -17,6 +17,7 @@ qgraph.lavaan <- function(
 	height=8,
 	titles=TRUE)
 {
+  warning("This funcion is deprecated,\nUse the 'semPlot' package instead.")
 #reqTest <- require("lavaan")
 #if (!reqTest) stop("lavaan could not be loaded, is this package installed?")
 

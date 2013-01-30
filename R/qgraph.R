@@ -1581,7 +1581,7 @@ qgraph <- function( input, ... )
             {
               subplots[[i]] <- parse(text=sprintf('
 plot(1,type="n",xlim=0:1,ylim=0:1,axes=FALSE,xlab="",ylab="",bty="n",xaxs="i",yaxs="i")
-rasterImage(read.jpeg("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
+rasterImage(readJPEG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
             } else if (grepl("\\.png$",images[i]))
             {
               subplots[[i]] <- parse(text=sprintf('
