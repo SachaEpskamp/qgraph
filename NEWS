@@ -1,3 +1,6 @@
+Changes in Version 1.2.2
+  o Using a matrix with relative positioning of nodes can now also be assigned characters of the node labels. e.g., assinging matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right.
+
 Changes in Version 1.2.1
   o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
   o Shape of curved edges can now be controlled with 'curveShape' and 'curvePivotShape'.

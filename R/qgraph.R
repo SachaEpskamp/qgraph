@@ -868,7 +868,8 @@ qgraph <- function( input, ... )
       layout <- matrix(0,1,2)
     } else {
       if (is.null(layout)) layout="default"
-      if (!is.numeric(layout))
+      
+      if (!is.matrix(layout))
       {
         # If function, assume igraph function (todo: check this)
         if (is.function(layout))
@@ -941,6 +942,12 @@ qgraph <- function( input, ... )
       # Layout matrix:
       if (is.matrix(layout)) if (ncol(layout)>2)
       {
+        # If character and labels exist, replace:
+        if (is.character(layout) && is.character(labels))
+        {
+          layout[] <- match(layout,labels)
+          layout[] <- as.numeric(layout)
+        }
         Lmat=layout
         LmatX=seq(-1,1,length=ncol(Lmat))
         LmatY=seq(1,-1,length=nrow(Lmat))
@@ -1933,8 +1940,8 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       {
         for (i in edgesort2)
         {
-          labwd <- strwidth(edge.labels[i],cex=edge.label.cex[i])
-          labht <- strheight(edge.labels[i],cex=edge.label.cex[i])
+          labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
+          labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
           polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
                   c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
                   border=NA,
@@ -1942,7 +1949,16 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
         }
       }
       
-      text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
+      if (!is.list(edge.labels))
+      {
+        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
+      } else {
+        for (i in edgesort2)
+        {
+          edge.font <- rep(edge.font,length=length(edge.labels))
+          text(midX[i],midY[i],edge.labels[[i]],font=edge.font[i],cex=edge.label.cex[i],col=ELcolor[i])
+        }
+      }
     }			
     
     
@@ -2073,8 +2089,17 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       }
       
       # Plot labels:
-      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
-      
+      if (!is.list(labels))
+      {
+        text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
+      } else {
+        lcolor <- rep(lcolor,length=nNodes)
+        V.font <- rep(V.font,length=nNodes)
+        for (i in seq_along(labels))
+        {
+          text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=V.font[i])
+        }
+      }
       # Set Tooltips:
       for (i in 1:nNodes) 
       {
