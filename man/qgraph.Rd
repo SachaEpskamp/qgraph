@@ -38,6 +38,8 @@ qgraph( input, ... )
 \section{Graphical arguments}{	
 \describe{
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
+\item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
+\item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
 	\item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}

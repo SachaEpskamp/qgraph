@@ -296,6 +296,9 @@ qgraph <- function( input, ... )
     
     if (gray) posCol <- negCol <- c("gray10","black")
     
+    if(is.null(arguments[['pastel']])) pastel <- FALSE else pastel <- arguments[['pastel']]
+    if(is.null(arguments[['rainbowStart']])) rainbowStart <- 0 else rainbowStart <- arguments[['rainbowStart']]
+      
     if(is.null(arguments$bgcontrol)) bgcontrol=6 else bgcontrol=arguments$bgcontrol
     if(is.null(arguments$bgres)) bgres=100 else bgres=arguments$bgres
     if(is.null(arguments[['trans',exact=FALSE]])) transparency <- NULL else transparency <- arguments[['trans',exact=FALSE]]
@@ -1292,7 +1295,15 @@ qgraph <- function( input, ... )
     # Vertex color:
     if (is.null(color) & !is.null(groups))
     {
-      if (!gray) color <- rainbow(length(groups))
+      if (!gray) 
+      {
+        if (pastel)
+        {
+          color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
+        } else {
+          color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1,length(groups)-1))/length(groups)) %% 1)   
+        }
+      }
       if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
     }
     if (is.null(color))	color <- "background"  
