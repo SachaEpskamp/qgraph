@@ -382,11 +382,11 @@ qgraph <- function( input, ... )
     {
       if (is.null(groups)) legend=FALSE else legend=TRUE
     }
-    #     #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
-    #     if (legend | (filetype=="svg" & !is.null(tooltips)))
-    #     {
-    #       width=width*(1+(1/GLratio))
-    #     }
+        #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
+        if ((legend&is.null(scores))|(filetype=="svg"))
+        {
+          width=width*(1+(1/GLratio))
+        }
     
     if (!DoNotPlot)
     {
@@ -1301,15 +1301,18 @@ qgraph <- function( input, ... )
         {
           color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
         } else {
-          color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1,length(groups)-1))/length(groups)) %% 1)   
+          color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
         }
       }
       if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
     }
     if (is.null(color))	color <- "background"  
     vertex.colors <- rep(color, length=nNodes)
-    if (!is.null(groups)) {
-      for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] }
+    if (!is.null(groups)) 
+    {
+      vertex.colors <- rep("background", length=nNodes)
+      for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] 
+    } else vertex.colors <- rep(color, length=nNodes)
     if (length(color)==nNodes) vertex.colors <- color
     vertex.colors[vertex.colors=="background"] <- background
     
@@ -1524,7 +1527,9 @@ qgraph <- function( input, ... )
       if (plot)
       {
         par(mar=c(0,0,0,0), bg=background)
-        plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
+        plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * (2+mar[2]+mar[4])/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
+        
+#         plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
       }
       
       # if (PlotOpen) 
@@ -2111,22 +2116,26 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
           text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=V.font[i])
         }
       }
+    }
+    
+    if (!is.null(tooltips)) 
+    {
       # Set Tooltips:
       for (i in 1:nNodes) 
       {
-        if (!is.null(tooltips)) if (!is.na(tooltips[i]))
+        if (!is.na(tooltips[i]))
         {
           if (filetype=='svg') setSVGShapeToolTip(desc=tooltips[i])
         }
         if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
         {
           setSVGShapeToolTip(desc=SVGtooltips[i])
-        }
-        #           text(layout[i,1],layout[i,2],labels[i],cex=label.cex[i],col=lcolor,font=V.font[i])
-        # 		if (filetype=='tex' & !is.null(tooltips)) if (!is.na(tooltips[i])) place_PDF_tooltip(layout[i,1],layout[i,2],tooltips[i])
+        }       
+        NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
+        polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
+                              
       }
-    }
-    
+    }    
     
     ### Overlay:
     if (overlay)
