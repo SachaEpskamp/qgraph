@@ -1744,7 +1744,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
               #               loopY=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2])
               #               spy=c(y1,y1+loopY,y1)
               #               spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
-              if (DefLoopRot)
+              if (DefLoopRot | is.na(loopRotation[E$from[i]]))
               {
                 centX <- mean(layout[,1])
                 centY <- mean(layout[,2])
