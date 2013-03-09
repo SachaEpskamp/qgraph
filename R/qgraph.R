@@ -79,12 +79,20 @@ qgraph <- function( input, ... )
     if (class(input) %in% c("graphNEL","pcAlgo"))
     {
       if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
+      arguments$directed <- graphNEL@graphData$edgemode == "directed"
       arguments$bidirectional <- TRUE
       arguments$labels <- graphNEL@nodes
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
       input <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
       input <- apply(input,2,as.numeric)
+      # Create mixed graph if pcAlgo:
+      if ("pcAlgo" %in% class(input))
+      {
+        srtInput <- aaply(input,1,sort)
+        arguments$bidirectional <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
+        rm(srtInput)
+      }
       if (any(weights!=1)) input <- cbind(input,weights)
     }
     
