@@ -84,15 +84,17 @@ qgraph <- function( input, ... )
       arguments$labels <- graphNEL@nodes
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
-      input <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
-      input <- apply(input,2,as.numeric)
+      EL <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
+      EL <- apply(EL,2,as.numeric)
       # Create mixed graph if pcAlgo:
       if ("pcAlgo" %in% class(input))
       {
-        srtInput <- aaply(input,1,sort)
-        arguments$bidirectional <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
+        srtInput <- aaply(EL,1,sort)
+        arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
         rm(srtInput)
       }
+      input <- EL
+      rm(EL)
       if (any(weights!=1)) input <- cbind(input,weights)
     }
     
@@ -449,7 +451,6 @@ qgraph <- function( input, ... )
       }
     }	
     #if (!filetype%in%c('pdf','png','jpg','jpeg','svg','R','eps','tiff')) warning(paste("File type",filetype,"is not supported")) 
-    
     
     # Specify background:
     background <- par("bg")
