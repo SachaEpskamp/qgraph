@@ -243,6 +243,8 @@ qgraph <- function( input, ... )
     
     if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
     if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
+    
+    
     if(is.null(arguments$directed))
     {
       if (edgelist) directed=TRUE else directed=NULL 
