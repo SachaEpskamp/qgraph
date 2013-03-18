@@ -7,6 +7,7 @@ Changes in Version 1.2.2
   o Using the filetype argument in combination with a legend (or filetype='svg') will now once again create a larger plotting window such that the graph is plotted in a square window.
   o graphNel objects can now result in undirected graphs 
   o pcalg objects will now result in mixed graphs.
+  o Due to unsolvable dependancy issues, the qgraph gui function has been removed.
 
 Changes in Version 1.2.1
   o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
