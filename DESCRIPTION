@@ -6,7 +6,7 @@ Date: 2013-02-26
 Author: Sacha Epskamp, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann and Denny Borsboom
 Maintainer: Sacha Epskamp <qgraph@sachaepskamp.com>
 Depends: R (>= 2.15.0)
-Suggests: RSVGTipsDevice, fdrtool, lavaan, sem
+Suggests: RSVGTipsDevice, fdrtool, lavaan, sem, rpanel
 Imports:  psych, ellipse, lavaan, sem, plyr, methods, Hmisc, igraph, jpeg, png, colorspace
 ByteCompile: yes
 Description:  The qgraph package can be used to visualize data as networks.
