@@ -7,7 +7,11 @@ Changes in Version 1.2.2
   o Using the filetype argument in combination with a legend (or filetype='svg') will now once again create a larger plotting window such that the graph is plotted in a square window.
   o graphNel objects can now result in undirected graphs 
   o pcalg objects will now result in mixed graphs.
-  o Due to unsolvable dependancy issues, the qgraph gui function has been removed.
+  o Added 'nodeNames' argument, which can be used to make a legend based on node labels for every node.
+  o Added 'legend.mode' argument to indicate if legend should be based on groups or node names.
+  o Legend placement now takes the 'mar' argument into account.
+  o Added support for custom node shapes using polygons. The polygonList argument can be used to add polygon shapes to the lookup table of the shape argument.
+  o Added "ellipse" and "heart" shapes.
 
 Changes in Version 1.2.1
   o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.

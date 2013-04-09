@@ -1,15 +1,24 @@
-SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
+SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1, polygonList = polygonList)
 {
-  # If rectangle, compute square on largext cex and move to border:
+  if (missing(polygonList))
+  {
+    polygonList = list(
+      ellipse = ELLIPSEPOLY,
+      heart  = HEARTPOLY,
+      star = STARPOLY
+    )
+  }
+  
+  # If shape is not default, compute square on largext cex and move to border:
   if (shape == "rectangle")
   {
     loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale)
     
-    xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape)[1] - x)
-    yOff <- (Cent2Edge(x,y,0,cex,cex2,shape)[2] - y)
+    xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape,polygonList = polygonList)[1] - x)
+    yOff <- (Cent2Edge(x,y,0,cex,cex2,shape,polygonList = polygonList)[2] - y)
     
-    SmallX <- (Cent2Edge(x,y,pi/2,min(cex,cex2),min(cex,cex2),"square")[1] - x)
-    SmallY <- (Cent2Edge(x,y,0,min(cex,cex2),min(cex,cex2),"square")[2] - y)
+    SmallX <- (Cent2Edge(x,y,pi/2,min(cex,cex2),min(cex,cex2),"square",polygonList = polygonList)[1] - x)
+    SmallY <- (Cent2Edge(x,y,0,min(cex,cex2),min(cex,cex2),"square",polygonList = polygonList)[2] - y)
     
     # Move up or down:
     if (cex2 > cex)
@@ -50,14 +59,14 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
   
   if (!residual)
   {
-    Cent <- Cent2Edge(x,y,rotation,cex,cex2,shape)
+    Cent <- Cent2Edge(x,y,rotation,cex,cex2,shape,polygonList = polygonList)
     Cent[1] <- x + 1.5*(Cent[1]-x)
     Cent[2] <- y + 1.5*(Cent[2]-y)
     
-    LoopPointsRight <- Cent2Edge(x,y,loopAngle + rotation,cex,cex2,shape)
-    LoopPointsLeft <- Cent2Edge(x,y,(-1*loopAngle + rotation),cex,cex2,shape)
+    LoopPointsRight <- Cent2Edge(x,y,loopAngle + rotation,cex,cex2,shape,polygonList = polygonList)
+    LoopPointsLeft <- Cent2Edge(x,y,(-1*loopAngle + rotation),cex,cex2,shape,polygonList = polygonList)
     
-    Circ <- lapply(seq(1.5*pi+ rotation,2.5*pi + rotation,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*min(cex,cex2),cex2=0.8*min(cex,cex2),shape="circle")
+    Circ <- lapply(seq(1.5*pi+ rotation,2.5*pi + rotation,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*min(cex,cex2),cex2=0.8*min(cex,cex2),shape="circle", polygonList = polygonList)
     #     deg <- atan2usr2in(LoopPointsRight[1] - LoopPointsLeft[1], LoopPointsRight[2] - LoopPointsLeft[2])
     #     Circ <- lapply(seq(deg-pi,deg,length=4),Cent2Edge,x=Cent[1],y=Cent[2],cex=0.8*mean(cex,cex2),cex2=0.8*mean(cex,cex2),shape="circle")
     CircX <- sapply(Circ,'[',1)
@@ -69,8 +78,8 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1)
     spl <- xspline(CircX,CircY,1,draw=FALSE)
     return(spl)
   } else {
-    Start <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=resScale)
-    End <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=0)
+    Start <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=resScale,polygonList = polygonList)
+    End <- Cent2Edge(x,y,rotation,cex,cex2,shape,offset=0,polygonList = polygonList)
     #     Start <- c(0,0)
     #     Start[1] <- x + 2*(End[1]-x)
     #     Start[2] <- y + 2*(End[2]-y)

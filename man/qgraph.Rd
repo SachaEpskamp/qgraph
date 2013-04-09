@@ -40,8 +40,10 @@ qgraph( input, ... )
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
 \item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
 \item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
-	\item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object is supplied}
+	\item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
+  \item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
+  \item{legend.mode}{Character, either \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object.}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
 	\item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
     \item{vsize}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
@@ -72,7 +74,10 @@ qgraph( input, ... )
 	\item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
   \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
     \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
-	\item{shape}{A character containing the shape of the nodes. "circle", "square", "triangle" and "diamond" are supported. Can also be a vector with a shape for each node. Defaults to "circle".}
+	\item{shape}{A character containing the shape of the nodes. \code{"circle"}, \code{"square"}, \code{"triangle"} and \code{"diamond"} are supported. In addition, can be a name of an element of \code{polygonList} to plot the corresponding polygon (not reccomended for large graphs), which by default includes shapes \code{"ellipse"} and \code{"heart"} Can also be a vector with a shape for each node. Defaults to "circle".}
+    \item{polygonList}{ A list contaning named lists for each element to include polygons to lookup in the \code{shape} argument. Each element must be named as they are used in \code{shape} and contain a list with elements \code{x} and \code{y} contaning the coordinates of the polygon. By default \code{ellipse} and \code{heart} are added to this list. These polygons are scaled according to \code{vsize} and \code{vsize2}}
+  
+  
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
 	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
 	\item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}

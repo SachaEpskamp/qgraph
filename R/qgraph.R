@@ -141,6 +141,8 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- arguments[['label.norm']]
     if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
     
+    if(is.null(arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- arguments[['nodeNames']]
+    
     if(is.null(arguments[['subplots']])) subplots <- NULL else subplots <- arguments[['subplots']]
     if(is.null(arguments[['images']])) images <- NULL else images <- arguments[['images']]
     
@@ -249,11 +251,14 @@ qgraph <- function( input, ... )
     {
       if (edgelist) directed=TRUE else directed=NULL 
     } else directed=arguments$directed
-    if(is.null(arguments$legend))
+    if(is.null(arguments[['legend']]))
     {
-      if (!is.null(groups) & !is.null(names(groups))) legend=TRUE else legend=FALSE
-    } else legend=arguments$legend
-    if (is.null(groups)) legend <- FALSE
+      if ((!is.null(groups) & !is.null(names(groups))) | !is.null(nodeNames)) legend <- TRUE else legend <- FALSE
+    } else legend <- arguments[['legend']]
+    
+    stopifnot(is.logical(legend))
+    
+#     if (is.null(groups)) legend <- FALSE
     if(is.null(arguments$plot)) plot=TRUE else plot=arguments$plot
     if(is.null(arguments$rotation)) rotation=NULL else rotation=arguments$rotation
     if(is.null(arguments$layout.control)) layout.control=0.5 else layout.control=arguments$layout.control
@@ -333,9 +338,32 @@ qgraph <- function( input, ... )
     if(is.null(arguments[['residScale']])) residScale=1 else residScale=arguments[['residScale']]
     if(is.null(arguments[['residEdge']])) residEdge=FALSE else residEdge=arguments[['residEdge']]
     if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
-    if(is.null(arguments$legend.cex)) legend.cex=0.6 else legend.cex=arguments$legend.cex
+    if(is.null(arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=arguments[['legend.cex']]
+    if(is.null(arguments[['legend.mode']]))
+    {
+      if (!is.null(nodeNames)) legend.mode <- "names" else legend.mode <- "groups"
+    }  else legend.mode=arguments[['legend.mode']]
+    
     if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
     if(is.null(arguments$shape)) shape="circle" else shape=arguments$shape
+    
+    
+    ### Polygon lookup list:
+    polygonList = list(
+      ellipse = ELLIPSEPOLY,
+      heart  = HEARTPOLY,
+      star = STARPOLY
+      )
+    
+    if(!is.null(arguments[['polygonList']])) polygonList  <- c( polygonList, arguments[['polygonList']])
+    
+    # Rescale to -1 - 1 and compute radians per point:
+    for (i in seq_along(polygonList))
+    {
+      polygonList[[i]]$x <- (polygonList[[i]]$x - min(polygonList[[i]]$x)) / (max(polygonList[[i]]$x) - min(polygonList[[i]]$x)) * 2 - 1
+      polygonList[[i]]$y <- (polygonList[[i]]$y - min(polygonList[[i]]$y)) / (max(polygonList[[i]]$y) - min(polygonList[[i]]$y)) * 2 - 1
+    }
+    
     if(is.null(arguments$label.scale)) label.scale=TRUE else label.scale=arguments$label.scale
     if(is.null(arguments$scores)) scores=NULL else scores=arguments$scores
     if(is.null(arguments$scores.range)) scores.range=NULL else scores.range=arguments$scores.range
@@ -389,11 +417,11 @@ qgraph <- function( input, ... )
     ### EASTER EGGS ###
     if(is.null(arguments[['XKCD']])) XKCD <- FALSE else XKCD <- TRUE
     
-    # Legend setting 1
-    if (is.null(legend))
-    {
-      if (is.null(groups)) legend=FALSE else legend=TRUE
-    }
+#     # Legend setting 1
+#     if (is.null(legend))
+#     {
+#       if (is.null(groups)) legend=FALSE else legend=TRUE
+#     }
         #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
         if ((legend&is.null(scores))|(filetype=="svg"))
         {
@@ -1328,7 +1356,10 @@ qgraph <- function( input, ... )
     vertex.colors[vertex.colors=="background"] <- background
     
     # Dummy groups list:
-    if (is.null(groups)) groups <- list(1:nNodes)
+    if (is.null(groups)) 
+    {
+      groups <- list(1:nNodes)
+    }
     
     # Scores:
     if (!is.null(scores)) 
@@ -1426,35 +1457,35 @@ qgraph <- function( input, ... )
     
     # Vertex shapes:
     if (length(shape)==1) shape=rep(shape,nNodes)
-    
-    pch1=numeric(0)
-    pch2=numeric(0)
-    
-    for (i in 1:length(shape))
-    {
-      if (shape[i]=="circle")
-      {
-        pch1[i]=16
-        pch2[i]=1
-      }
-      if (shape[i]=="square")
-      {
-        pch1[i]=15
-        pch2[i]=0
-      }
-      if (shape[i]=="triangle")
-      {
-        pch1[i]=17
-        pch2[i]=2
-      }
-      if (shape[i]=="diamond")
-      {
-        pch1[i]=18
-        pch2[i]=5
-      }
-      if (!shape[i]%in%c("circle","square","triangle","diamond","rectangle")) stop(paste("Shape",shape[i],"is not supported"))
-    }
-    
+#     
+#     pch1=numeric(0)
+#     pch2=numeric(0)
+#     
+#     for (i in 1:length(shape))
+#     {
+#       if (shape[i]=="circle")
+#       {
+#         pch1[i]=16
+#         pch2[i]=1
+#       }
+#       if (shape[i]=="square")
+#       {
+#         pch1[i]=15
+#         pch2[i]=0
+#       }
+#       if (shape[i]=="triangle")
+#       {
+#         pch1[i]=17
+#         pch2[i]=2
+#       }
+#       if (shape[i]=="diamond")
+#       {
+#         pch1[i]=18
+#         pch2[i]=5
+#       }
+#       if (!shape[i]%in%c("circle","square","triangle","diamond","rectangle")) stop(paste("Shape",shape[i],"is not supported"))
+#     }
+#     
     
     # Super cool background:
     
@@ -1686,7 +1717,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
               # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
               # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
               # 				}
-              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
+              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               
@@ -1707,7 +1738,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
                 # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
                 # 					}
                 
-                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
+                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
                 x1 <- NewPoints[1]
                 y1 <- NewPoints[2]  
                 
@@ -1773,7 +1804,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
                   rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
                 }
               } else rot <- loopRotation[E$from[i]]
-              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale)
+              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList)
               
             } else 
             {
@@ -1820,12 +1851,12 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
               {
                 if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
                 {
-                  NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0))
+                  NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
                   x2 <- NewPoints[1]
                   y2 <- NewPoints[2]
                   recurve <- TRUE
                   
-                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0))
+                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
                   x1 <- NewPoints[1]
                   y1 <- NewPoints[2]
                   recurve <- TRUE
@@ -1999,7 +2030,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
     if (!XKCD)
     {
       # Check if nodes need to be plotted in for loop:
-      if (!is.null(subplots) || any(shape=="rectangle"))
+      if (!is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")))
       {
         # Get which nodes become a subplot:
         #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
@@ -2016,8 +2047,8 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
           
           if (isTRUE(is.expression(subplots[[i]])))
           {
-            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
-            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
+            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i], polygonList)[1] - x
+            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i], polygonList)[2] - y
             
             usr <- par("usr")
             # Plot background:
@@ -2026,26 +2057,42 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
             subplot(eval(subplots[[i]]),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)))  
             # Plot border:
             if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
-          } else if (shape[i]!="rectangle")
-          {
-            points(layout[i,,drop=FALSE],cex=vsize[i],col=vertex.colors[i],lwd=border.width,pch=pch1[i])
-            if (borders[i])
-            {
-              points(layout[i,,drop=FALSE],cex=vsize[i],col=bcolor[i],lwd=border.width,pch=pch2[i])
-            }
           } else {
-            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i])[1] - x
-            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i])[2] - y
-            
-            # Plot background:
-            rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vertex.colors[i],border=NA)
-            if (borders[i])
-            {
-              rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
-            }              
+            drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width, polygonList)
           }
         }      
       } else {
+        
+        
+        pch1=numeric(0)
+        pch2=numeric(0)
+        
+        for (i in 1:length(shape))
+        {
+          if (shape[i]=="circle")
+          {
+            pch1[i]=16
+            pch2[i]=1
+          }
+          if (shape[i]=="square")
+          {
+            pch1[i]=15
+            pch2[i]=0
+          }
+          if (shape[i]=="triangle")
+          {
+            pch1[i]=17
+            pch2[i]=2
+          }
+          if (shape[i]=="diamond")
+          {
+            pch1[i]=18
+            pch2[i]=5
+          }
+          if (!shape[i]%in%c("circle","square","triangle","diamond")) stop(paste("Shape",shape[i],"is not supported"))
+        }
+        
+        
         bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
         points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
       }
@@ -2062,7 +2109,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       circ <- seq(0,2*pi,length=100)
       for (i in 1:nNodes)
       {
-        pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
+        pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],polygonList))
         mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
         
         if (borders[i]) {
@@ -2106,8 +2153,8 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       # Rescale labels:
       if (label.scale)
       {
-        VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2),SIMPLIFY=FALSE),'[',1) * 2
-        VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0),SIMPLIFY=FALSE),'[',2) * 2          
+        VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList),SIMPLIFY=FALSE),'[',1) * 2
+        VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0,polygonList=polygonList),SIMPLIFY=FALSE),'[',2) * 2          
         LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
         LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
         
@@ -2142,7 +2189,7 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
         {
           setSVGShapeToolTip(desc=SVGtooltips[i])
         }       
-        NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i]))
+        NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i], polygonList))
         polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
                               
       }
@@ -2176,38 +2223,52 @@ rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
       {
         legend.cex=legend.cex*2
         #plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
+
         if (mode=="sig")
         {
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          if (legend.mode == "names")
+          {
+            text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
+          } else 
+          {
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          }
+
           if (gray)
           {
-            legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+            legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
                    col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
                    lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           } else
           {
             if (any(Pvals < 0))
             {
-              legend(1.2 + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+              legend(1 + mar[4] + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
                      col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
                      lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
               
-              legend(1.2 + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+              legend(1 + mar[4] + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
                      col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
                      lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
               
             } else
             {
-              legend(1.2 + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+              legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
                      col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
                      lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
             }
           }
         } else
         {
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          if (legend.mode == "names")
+          {
+            text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
+          } else 
+          {
+            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n')   
+          }
         }
       }
       if (!is.null(scores))

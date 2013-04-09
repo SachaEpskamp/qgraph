@@ -27,7 +27,7 @@ usr2inY2 <- function(x)
   pin <- par("pin")
   x/(usr[4]-usr[3]) * pin[2]
 }
-atan2usr2in <- function(x,y) atan2(usr2inX2(x),usr2inY2(y))
+atan2usr2in <- function(x,y) atan2(usr2inX2(x),usr2inY2(y))%%(2*pi)
 
 # Map inches space to user space:
 in2usrX <- function(x)
