@@ -1,87 +1,86 @@
-# Main qgraph function
+# Create qgraph model:
 
 qgraph <- function( input, ... )
 {
   
-  if ("qgraph"%in%class(input)) arguments <- list(...,input) else arguments=list(...)
-  
-  if (isTRUE(arguments[['gui']]) | isTRUE(arguments[['GUI']])) 
+  # OTHER INPUT MODES: 
+  if (any(class(input)=="factanal") )
   {
-    arguments$gui <- arguments$GUI <- FALSE
-    return(invisible(do.call(qgraph.gui,c(list(input=input),arguments))))
+    return(qgraph.efa(input,...))
+  } else if (any(class(input)=="principal") )
+  {
+    return(qgraph.pca(input,...))
+  } else if (any(class(input)=="lavaan"))
+  {
+    return(qgraph.lavaan(input,edge.labels=TRUE,include=8,filetype="",...))
+  } else if (any(class(input)=="sem"))
+  {
+    return(qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...))
+  } else if (any(class(input)=="loadings"))
+  {
+    return(qgraph.loadings(input,...))
+  }  else if (any(class(input)=="semmod"))
+  {
+    return(qgraph.semModel(input,...))
+  } 
+  
+  
+  ### EMPTY QGRAPH OBJECT ####
+  qgraphObject <- list(
+    Edgelist = list(),
+    Arguments = list(),
+    plotOptions = list(),
+    graphAttributes = list(
+      Nodes = list(),
+      Edges = list(),
+      Graph = list()
+      ),
+    layout = matrix(),
+    layout.orig = matrix()
+    )
+  
+  class(qgraphObject) <- "qgraph"
+  
+  ### Extract nested arguments ###
+  if ("qgraph"%in%class(input)) qgraphObject$Arguments <- list(...,input) else qgraphObject$Arguments <- list(...)
+  
+  if (isTRUE(qgraphObject$Arguments[['gui']]) | isTRUE(qgraphObject$Arguments[['GUI']])) 
+  {
+    qgraphObject$Arguments$gui <- qgraphObject$Arguments$GUI <- FALSE
+    return(invisible(do.call(qgraph.gui,c(list(input=input),qgraphObject$Arguments))))
   }
   
-  if(!is.null(arguments$adj))
+  if(!is.null(qgraphObject$Arguments$adj))
   {
     stop("'adj' argument is no longer supported. Please use 'input'")
   }
-  
-  # S3 object methods:
-  if (any(class(input)=="factanal") )
-  {
-    qgraph.efa(input,...)
-  } else if (any(class(input)=="principal") )
-  {
-    qgraph.pca(input,...)
-  } else if (any(class(input)=="lavaan"))
-  {
-    qgraph.lavaan(input,edge.labels=TRUE,include=8,filetype="",...)
-  } else if (any(class(input)=="sem"))
-  {
-    qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...)
-  } else if (any(class(input)=="loadings"))
-  {
-    qgraph.loadings(input,...)
-  }  else if (any(class(input)=="semmod"))
-  {
-    qgraph.semModel(input,...)
-  } else {
     
-    #     if (length(arguments)>0)
-    #     {
-    #       for (i in 1:length(arguments))
-    #       {
-    #         if ("qgraph"%in%class(arguments[[i]])) 
-    #         {
-    #           if (!is.null(names(arguments[[i]])))
-    #           {
-    #             for (j in 1:length(arguments[[i]]))
-    #             {
-    #               if (!(names(arguments[[i]])[j]%in%names(arguments)))
-    #               {
-    #                 arguments[length(arguments)+1]=arguments[[i]][j]
-    #                 names(arguments)[length(arguments)]=names(arguments[[i]])[j]
-    #               }
-    #             }
-    #           }
-    #         }
-    #       }
-    #     }
-    
-    # Import arguments:
-    if (length(arguments) > 0) arguments <- getArgs(arguments)
+    # Import qgraphObject$Arguments:
+    if (length(qgraphObject$Arguments) > 0) qgraphObject$Arguments <- getArgs(qgraphObject$Arguments)
     
     # Import default arguments:
     def <- options("qgraph")
     if (!is.null(def$qgraph)) class(def$qgraph) <- "qgraph"
     if (any(sapply(def,function(x)!is.null(x))))
     {
-      arguments <- getArgs(c(arguments,def))
+      qgraphObject$Arguments <- getArgs(c(qgraphObject$Arguments,def))
     }
     
-    if (!is.null(arguments$qgraphEdgelist)&"qgraph"%in%class(input)) 
+    # If qgraph object is used as input, recreate edgelist input:
+    if ("qgraph"%in%class(input)) 
     {
-      input <- cbind(arguments$qgraphEdgelist$from,arguments$qgraphEdgelist$to,arguments$qgraphEdgelist$weight)
-      if (is.null(arguments$directed)) arguments$directed <- arguments$qgraphEdgelist$directed
-      if (is.null(arguments$bidirectional)) arguments$bidirectional <- arguments$qgraphEdgelist$bidir
+      if (is.null(qgraphObject$Arguments$directed)) qgraphObject$Arguments$directed <- input$Edgelist$directed
+      if (is.null(qgraphObject$Arguments$bidirectional)) qgraphObject$Arguments$bidirectional <- input$Edgelist$bidirectional
+      input <- cbind(input$Edgelist$from,input$Edgelist$to,input$Edgelist$weight)
     }
     
+    ### PCALG AND GRAPHNEL ###
     if (class(input) %in% c("graphNEL","pcAlgo"))
     {
       if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
-      arguments$directed <- graphNEL@graphData$edgemode == "directed"
-      arguments$bidirectional <- TRUE
-      arguments$labels <- graphNEL@nodes
+      qgraphObject$Arguments$directed <- graphNEL@graphData$edgemode == "directed"
+      qgraphObject$Arguments$bidirectional <- TRUE
+      qgraphObject$Arguments$labels <- graphNEL@nodes
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
       EL <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
@@ -90,7 +89,7 @@ qgraph <- function( input, ... )
       if ("pcAlgo" %in% class(input))
       {
         srtInput <- aaply(EL,1,sort)
-        arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
+        qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
         rm(srtInput)
       }
       input <- EL
@@ -98,11 +97,12 @@ qgraph <- function( input, ... )
       if (any(weights!=1)) input <- cbind(input,weights)
     }
     
+    # Coerce input to matrix:
     input <- as.matrix(input)
     
     # Set mode:
     sigSign <- FALSE
-    if(is.null(arguments[['graph']])) graph="association" else graph=arguments[['graph']]
+    if(is.null(qgraphObject$Arguments[['graph']])) graph="association" else graph=qgraphObject$Arguments[['graph']]
     if (graph %in% c("sig2","significance2"))
     {
       graph <- "sig"
@@ -111,22 +111,23 @@ qgraph <- function( input, ... )
     if (graph %in% c("sig","significance"))
     {
       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?") 
-      arguments[['mode']] <- "sig"
+      qgraphObject$Arguments[['mode']] <- "sig"
     }
-    if(is.null(arguments[['alpha']])) alpha <- c(0.0001,0.001,0.01,0.05) else alpha <- arguments[['alpha']]
+    if(is.null(qgraphObject$Arguments[['alpha']])) alpha <- c(0.0001,0.001,0.01,0.05) else alpha <- qgraphObject$Arguments[['alpha']]
     if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     
-    if(is.null(arguments[['mode']])) mode <- "strength" else mode <- arguments[['mode']]
-    if(is.null(arguments$sigScale)) sigScale <- function(x)0.7*(1-x)^(log(0.4/0.7,1-0.05)) else sigScale <- arguments$sigScale
+    if(is.null(qgraphObject$Arguments[['mode']])) mode <- "strength" else mode <- qgraphObject$Arguments[['mode']]
+    if(is.null(qgraphObject$Arguments$sigScale)) sigScale <- function(x)0.7*(1-x)^(log(0.4/0.7,1-0.05)) else sigScale <- qgraphObject$Arguments$sigScale
     if (!mode%in%c("strength","sig","direct")) stop("Mode must be 'direct', 'sig' or 'strength'")	
-    if(is.null(arguments$bonf)) bonf=FALSE else bonf=arguments$bonf
-    if(is.null(arguments$OmitInsig)) OmitInsig=FALSE else OmitInsig <- arguments$OmitInsig
+    if(is.null(qgraphObject$Arguments$bonf)) bonf=FALSE else bonf=qgraphObject$Arguments$bonf
+    if(is.null(qgraphObject$Arguments$OmitInsig)) OmitInsig=FALSE else OmitInsig <- qgraphObject$Arguments$OmitInsig
     # Settings for the edgelist
-    if(is.null(arguments$edgelist)) 
+    if(is.null(qgraphObject$Arguments$edgelist)) 
     {
       if (nrow(input)!=ncol(input)) edgelist=TRUE else edgelist=FALSE 
-    } else edgelist=arguments$edgelist
-    if(is.null(arguments$labels))
+    } else edgelist=qgraphObject$Arguments$edgelist
+  
+    if(is.null(qgraphObject$Arguments$labels))
     {
       labels <- TRUE
       if (!edgelist && !is.null(colnames(input)) && !is.null(rownames(input)))
@@ -136,23 +137,23 @@ qgraph <- function( input, ... )
           labels <- abbreviate(colnames(input),3)
         }
       }
-    } else labels <- arguments$labels
-    if(is.null(arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- arguments[['label.prop']]
-    if(is.null(arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- arguments[['label.norm']]
-    if(is.null(arguments[['label.cex']])) label.cex <- NULL else label.cex <- arguments[['label.cex']]
+    } else labels <- qgraphObject$Arguments$labels
+    if(is.null(qgraphObject$Arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- qgraphObject$Arguments[['label.prop']]
+    if(is.null(qgraphObject$Arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- qgraphObject$Arguments[['label.norm']]
+    if(is.null(qgraphObject$Arguments[['label.cex']])) label.cex <- NULL else label.cex <- qgraphObject$Arguments[['label.cex']]
     
-    if(is.null(arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- arguments[['nodeNames']]
+    if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
     
-    if(is.null(arguments[['subplots']])) subplots <- NULL else subplots <- arguments[['subplots']]
-    if(is.null(arguments[['images']])) images <- NULL else images <- arguments[['images']]
+    if(is.null(qgraphObject$Arguments[['subplots']])) subplots <- NULL else subplots <- qgraphObject$Arguments[['subplots']]
+    if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
     
     # Knots:
-    if(is.null(arguments[['knots']])) knots <- list() else knots <- arguments[['knots']]
-    if(is.null(arguments[['knot.size']])) knot.size <- 1 else knot.size <- arguments[['knot.size']]
-    if(is.null(arguments[['knot.color']])) knot.color <- NA else knot.color <- arguments[['knot.color']]
-    if(is.null(arguments[['knot.borders']])) knot.borders <- FALSE else knot.borders <- arguments[['knot.borders']]
-    if(is.null(arguments[['knot.border.color']])) knot.border.color <- "black" else knot.border.color <- arguments[['knot.border.color']]
-    if(is.null(arguments[['knot.border.width']])) knot.border.width <- 1 else knot.border.width <- arguments[['knot.border.width']]
+    if(is.null(qgraphObject$Arguments[['knots']])) knots <- list() else knots <- qgraphObject$Arguments[['knots']]
+    if(is.null(qgraphObject$Arguments[['knot.size']])) knot.size <- 1 else knot.size <- qgraphObject$Arguments[['knot.size']]
+    if(is.null(qgraphObject$Arguments[['knot.color']])) knot.color <- NA else knot.color <- qgraphObject$Arguments[['knot.color']]
+    if(is.null(qgraphObject$Arguments[['knot.borders']])) knot.borders <- FALSE else knot.borders <- qgraphObject$Arguments[['knot.borders']]
+    if(is.null(qgraphObject$Arguments[['knot.border.color']])) knot.border.color <- "black" else knot.border.color <- qgraphObject$Arguments[['knot.border.color']]
+    if(is.null(qgraphObject$Arguments[['knot.border.width']])) knot.border.width <- 1 else knot.border.width <- qgraphObject$Arguments[['knot.border.width']]
     
     if (edgelist)
     {
@@ -165,34 +166,34 @@ qgraph <- function( input, ... )
       }
     }
     
-    if(is.null(arguments$nNodes)) 
+    if(is.null(qgraphObject$Arguments$nNodes)) 
     {
       if (edgelist)
       {
         if (!is.logical(labels)) nNodes <- length(labels) else nNodes <- max(c(input[,1:2])) 
       } else nNodes=nrow(input)
-    } else nNodes=arguments$nNodes
+    } else nNodes=qgraphObject$Arguments$nNodes
     
     # Default for fact cut and groups
     if (graph=="factorial") fact=TRUE else fact=FALSE
     if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
     if (graph=="concentration") partial=TRUE else partial=FALSE
-    if(is.null(arguments$cut)) 
+    if(is.null(qgraphObject$Arguments$cut)) 
     {
       if (nNodes<50) cut=0 
       if (nNodes>=50 | fact) cut=0.3
       if (mode=="sig") cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
-    } else if (mode != "sig") cut <- arguments$cut else cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
+    } else if (mode != "sig") cut <- qgraphObject$Arguments$cut else cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
     
-    if(is.null(arguments$groups)) groups=NULL else groups=arguments$groups
+    if(is.null(qgraphObject$Arguments$groups)) groups=NULL else groups=qgraphObject$Arguments$groups
     
     if (is.factor(groups) | is.character(groups)) groups <- tapply(1:length(groups),groups,function(x)x)
     
     # Factorial graph:
-    if(is.null(arguments$nfact))
+    if(is.null(qgraphObject$Arguments$nfact))
     {
       nfact=NULL
-    } else nfact=arguments$nfact
+    } else nfact=qgraphObject$Arguments$nfact
     
     if (fact)
     {
@@ -214,68 +215,68 @@ qgraph <- function( input, ... )
     }
     
     
-    # SET DEFAULT ARGUMENTS:
-    # General arguments:
-    if(is.null(arguments$DoNotPlot)) DoNotPlot=FALSE else DoNotPlot=arguments$DoNotPlot
-    if(is.null(arguments[['layout']])) layout=NULL else layout=arguments[['layout']]
-    if(is.null(arguments$maximum)) maximum=0 else maximum=arguments$maximum
-    if(is.null(arguments$minimum))
+    # SET DEFAULT qgraphObject$Arguments:
+    # General qgraphObject$Arguments:
+    if(is.null(qgraphObject$Arguments$DoNotPlot)) DoNotPlot=FALSE else DoNotPlot=qgraphObject$Arguments$DoNotPlot
+    if(is.null(qgraphObject$Arguments[['layout']])) layout=NULL else layout=qgraphObject$Arguments[['layout']]
+    if(is.null(qgraphObject$Arguments$maximum)) maximum=0 else maximum=qgraphObject$Arguments$maximum
+    if(is.null(qgraphObject$Arguments$minimum))
     {
       if (nNodes<50)  minimum=0
       if (nNodes>=50)  minimum=0.1
       if (mode=="sig") minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
-    } else if (mode!="sig") minimum=arguments$minimum else minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
-    if(is.null(arguments$weighted)) weighted=NULL else weighted=arguments$weighted
-    if(is.null(arguments$rescale)) rescale=TRUE else rescale=arguments$rescale
-    if(is.null(arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=arguments[['edge.labels']]
-    if(is.null(arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=arguments[['edge.label.bg']]
+    } else if (mode!="sig") minimum=qgraphObject$Arguments$minimum else minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
+    if(is.null(qgraphObject$Arguments$weighted)) weighted=NULL else weighted=qgraphObject$Arguments$weighted
+    if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
+    if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
+    if(is.null(qgraphObject$Arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=qgraphObject$Arguments[['edge.label.bg']]
     if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
     
-    if(is.null(arguments[['posCol']])) posCol <- c("#009900","darkgreen") else posCol <- arguments[['posCol']]
+    if(is.null(qgraphObject$Arguments[['posCol']])) posCol <- c("#009900","darkgreen") else posCol <- qgraphObject$Arguments[['posCol']]
     if (length(posCol)==1) posCol <- rep(posCol,2)
     if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
     
-    if(is.null(arguments[['negCol']])) negCol <- c("#BF0000","red") else negCol <- arguments[['negCol']]
+    if(is.null(qgraphObject$Arguments[['negCol']])) negCol <- c("#BF0000","red") else negCol <- qgraphObject$Arguments[['negCol']]
     if (length(negCol)==1) negCol <- rep(negCol,2)
     if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
     
-    if(is.null(arguments[['unCol']])) unCol <- "#808080" else unCol <- arguments[['unCol']] 
+    if(is.null(qgraphObject$Arguments[['unCol']])) unCol <- "#808080" else unCol <- qgraphObject$Arguments[['unCol']] 
     
-    if(is.null(arguments[['colFactor']])) colFactor <- 1 else colFactor <- arguments[['colFactor']]
+    if(is.null(qgraphObject$Arguments[['colFactor']])) colFactor <- 1 else colFactor <- qgraphObject$Arguments[['colFactor']]
     
-    if(is.null(arguments[['edge.color']])) edge.color <- NULL else edge.color=arguments[['edge.color']]
-    if(is.null(arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=arguments[['edge.label.cex']]
+    if(is.null(qgraphObject$Arguments[['edge.color']])) edge.color <- NULL else edge.color=qgraphObject$Arguments[['edge.color']]
+    if(is.null(qgraphObject$Arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=qgraphObject$Arguments[['edge.label.cex']]
     
     
-    if(is.null(arguments$directed))
+    if(is.null(qgraphObject$Arguments$directed))
     {
       if (edgelist) directed=TRUE else directed=NULL 
-    } else directed=arguments$directed
-    if(is.null(arguments[['legend']]))
+    } else directed=qgraphObject$Arguments$directed
+    if(is.null(qgraphObject$Arguments[['legend']]))
     {
       if ((!is.null(groups) & !is.null(names(groups))) | !is.null(nodeNames)) legend <- TRUE else legend <- FALSE
-    } else legend <- arguments[['legend']]
+    } else legend <- qgraphObject$Arguments[['legend']]
     
     stopifnot(is.logical(legend))
     
 #     if (is.null(groups)) legend <- FALSE
-    if(is.null(arguments$plot)) plot=TRUE else plot=arguments$plot
-    if(is.null(arguments$rotation)) rotation=NULL else rotation=arguments$rotation
-    if(is.null(arguments$layout.control)) layout.control=0.5 else layout.control=arguments$layout.control
-    if(is.null(arguments$layout.par)) layout.par=list() else layout.par=arguments$layout.par
-    if(is.null(arguments$details)) details=FALSE else details=arguments$details
+    if(is.null(qgraphObject$Arguments$plot)) plot=TRUE else plot=qgraphObject$Arguments$plot
+    if(is.null(qgraphObject$Arguments$rotation)) rotation=NULL else rotation=qgraphObject$Arguments$rotation
+    if(is.null(qgraphObject$Arguments$layout.control)) layout.control=0.5 else layout.control=qgraphObject$Arguments$layout.control
+    if(is.null(qgraphObject$Arguments$layout.par)) layout.par=list() else layout.par=qgraphObject$Arguments$layout.par
+    if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
     
     
-    # Output arguments:
-    if(is.null(arguments$bg)) bg <- FALSE else bg <- arguments$bg
+    # Output qgraphObject$Arguments:
+    if(is.null(qgraphObject$Arguments$bg)) bg <- FALSE else bg <- qgraphObject$Arguments$bg
     
-    if(is.null(arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- arguments[['edge.label.color']]
+    if(is.null(qgraphObject$Arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- qgraphObject$Arguments[['edge.label.color']]
     
-    if(is.null(arguments[['border.color']])) {
-      if(is.null(arguments[['border.colors']])) bcolor <- NULL else bcolor <- arguments[['border.colors']]
-    } else bcolor <- arguments[['border.color']]
+    if(is.null(qgraphObject$Arguments[['border.color']])) {
+      if(is.null(qgraphObject$Arguments[['border.colors']])) bcolor <- NULL else bcolor <- qgraphObject$Arguments[['border.colors']]
+    } else bcolor <- qgraphObject$Arguments[['border.color']]
     
-    if(is.null(arguments[['border.width']])) border.width <- 1 else border.width <- arguments[['border.width']]
+    if(is.null(qgraphObject$Arguments[['border.width']])) border.width <- 1 else border.width <- qgraphObject$Arguments[['border.width']]
     #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
     #{
     #	par(mar=c(0,0,0,0), bg=background)
@@ -288,64 +289,64 @@ qgraph <- function( input, ... )
     
     PlotOpen <- !is.null(dev.list()[dev.cur()])
     
-    if(is.null(arguments$filetype)) filetype="default" else filetype=arguments$filetype
-    if(is.null(arguments$filename)) filename="qgraph" else filename=arguments$filename
-    if(is.null(arguments$width)) width <- 7 else width <- arguments[['width']]
-    if(is.null(arguments$height)) height <- 7 else height <- arguments[['height']]
-    if(is.null(arguments$pty)) pty='m' else pty=arguments$pty
-    if(is.null(arguments$res)) res=320 else res=arguments$res
-    if(is.null(arguments[['normalize']])) normalize <- TRUE else normalize <- arguments[['normalize']]
+    if(is.null(qgraphObject$Arguments$filetype)) filetype="default" else filetype=qgraphObject$Arguments$filetype
+    if(is.null(qgraphObject$Arguments$filename)) filename="qgraph" else filename=qgraphObject$Arguments$filename
+    if(is.null(qgraphObject$Arguments$width)) width <- 7 else width <- qgraphObject$Arguments[['width']]
+    if(is.null(qgraphObject$Arguments$height)) height <- 7 else height <- qgraphObject$Arguments[['height']]
+    if(is.null(qgraphObject$Arguments$pty)) pty='m' else pty=qgraphObject$Arguments$pty
+    if(is.null(qgraphObject$Arguments$res)) res=320 else res=qgraphObject$Arguments$res
+    if(is.null(qgraphObject$Arguments[['normalize']])) normalize <- TRUE else normalize <- qgraphObject$Arguments[['normalize']]
     
-    # Graphical arguments
+    # Graphical qgraphObject$Arguments
     #     defNodeSize <- max((-1/72)*(nNodes)+5.35,1) ### Default node size, used as standard unit.
-    if(is.null(arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- arguments[["mar"]]/10
-    if(is.null(arguments[['vsize']])) 
+    if(is.null(qgraphObject$Arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- qgraphObject$Arguments[["mar"]]/10
+    if(is.null(qgraphObject$Arguments[['vsize']])) 
     {
       vsize <- max((-1/72)*(nNodes)+5.35,1)
-      if(is.null(arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * arguments[['vsize2']]
+      if(is.null(qgraphObject$Arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * qgraphObject$Arguments[['vsize2']]
     } else {
-      vsize <- arguments[['vsize']]
-      if(is.null(arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- arguments[['vsize2']]
+      vsize <- qgraphObject$Arguments[['vsize']]
+      if(is.null(qgraphObject$Arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- qgraphObject$Arguments[['vsize2']]
     }
-    if(is.null(arguments$color)) color=NULL else color=arguments$color
+    if(is.null(qgraphObject$Arguments$color)) color=NULL else color=qgraphObject$Arguments$color
     
-    if(is.null(arguments[['gray']])) gray <- FALSE else gray <- arguments[['gray']]
+    if(is.null(qgraphObject$Arguments[['gray']])) gray <- FALSE else gray <- qgraphObject$Arguments[['gray']]
     
     if (gray) posCol <- negCol <- c("gray10","black")
     
-    if(is.null(arguments[['pastel']])) pastel <- FALSE else pastel <- arguments[['pastel']]
-    if(is.null(arguments[['rainbowStart']])) rainbowStart <- 0 else rainbowStart <- arguments[['rainbowStart']]
+    if(is.null(qgraphObject$Arguments[['pastel']])) pastel <- FALSE else pastel <- qgraphObject$Arguments[['pastel']]
+    if(is.null(qgraphObject$Arguments[['rainbowStart']])) rainbowStart <- 0 else rainbowStart <- qgraphObject$Arguments[['rainbowStart']]
       
-    if(is.null(arguments$bgcontrol)) bgcontrol=6 else bgcontrol=arguments$bgcontrol
-    if(is.null(arguments$bgres)) bgres=100 else bgres=arguments$bgres
-    if(is.null(arguments[['trans',exact=FALSE]])) transparency <- NULL else transparency <- arguments[['trans',exact=FALSE]]
+    if(is.null(qgraphObject$Arguments$bgcontrol)) bgcontrol=6 else bgcontrol=qgraphObject$Arguments$bgcontrol
+    if(is.null(qgraphObject$Arguments$bgres)) bgres=100 else bgres=qgraphObject$Arguments$bgres
+    if(is.null(qgraphObject$Arguments[['trans',exact=FALSE]])) transparency <- NULL else transparency <- qgraphObject$Arguments[['trans',exact=FALSE]]
     if (is.null(transparency))
     {
       if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
     }
-    if(is.null(arguments[['fade']])) fade <- TRUE else fade <- FALSE
-    if(is.null(arguments[['loop']])) loop=1 else loop=arguments[['loop']]
-    if(is.null(arguments[['loopRotation']]))
+    if(is.null(qgraphObject$Arguments[['fade']])) fade <- TRUE else fade <- FALSE
+    if(is.null(qgraphObject$Arguments[['loop']])) loop=1 else loop=qgraphObject$Arguments[['loop']]
+    if(is.null(qgraphObject$Arguments[['loopRotation']]))
     {
       loopRotation <- 0
       DefLoopRot <- TRUE
     } else {
-      loopRotation=arguments[['loopRotation']]
+      loopRotation=qgraphObject$Arguments[['loopRotation']]
       DefLoopRot <- FALSE
     }
     
-    if(is.null(arguments[['residuals']])) residuals=FALSE else residuals=arguments[['residuals']]
-    if(is.null(arguments[['residScale']])) residScale=1 else residScale=arguments[['residScale']]
-    if(is.null(arguments[['residEdge']])) residEdge=FALSE else residEdge=arguments[['residEdge']]
-    if(is.null(arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=arguments[['loopAngle']]
-    if(is.null(arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=arguments[['legend.cex']]
-    if(is.null(arguments[['legend.mode']]))
+    if(is.null(qgraphObject$Arguments[['residuals']])) residuals=FALSE else residuals=qgraphObject$Arguments[['residuals']]
+    if(is.null(qgraphObject$Arguments[['residScale']])) residScale=1 else residScale=qgraphObject$Arguments[['residScale']]
+    if(is.null(qgraphObject$Arguments[['residEdge']])) residEdge=FALSE else residEdge=qgraphObject$Arguments[['residEdge']]
+    if(is.null(qgraphObject$Arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=qgraphObject$Arguments[['loopAngle']]
+    if(is.null(qgraphObject$Arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=qgraphObject$Arguments[['legend.cex']]
+    if(is.null(qgraphObject$Arguments[['legend.mode']]))
     {
       if (!is.null(nodeNames)) legend.mode <- "names" else legend.mode <- "groups"
-    }  else legend.mode=arguments[['legend.mode']]
+    }  else legend.mode=qgraphObject$Arguments[['legend.mode']]
     
-    if(is.null(arguments$borders)) borders=TRUE else borders=arguments$borders
-    if(is.null(arguments$shape)) shape="circle" else shape=arguments$shape
+    if(is.null(qgraphObject$Arguments$borders)) borders=TRUE else borders=qgraphObject$Arguments$borders
+    if(is.null(qgraphObject$Arguments$shape)) shape="circle" else shape=qgraphObject$Arguments$shape
     
     
     ### Polygon lookup list:
@@ -355,7 +356,7 @@ qgraph <- function( input, ... )
       star = STARPOLY
       )
     
-    if(!is.null(arguments[['polygonList']])) polygonList  <- c( polygonList, arguments[['polygonList']])
+    if(!is.null(qgraphObject$Arguments[['polygonList']])) polygonList  <- c( polygonList, qgraphObject$Arguments[['polygonList']])
     
     # Rescale to -1 - 1 and compute radians per point:
     for (i in seq_along(polygonList))
@@ -364,58 +365,58 @@ qgraph <- function( input, ... )
       polygonList[[i]]$y <- (polygonList[[i]]$y - min(polygonList[[i]]$y)) / (max(polygonList[[i]]$y) - min(polygonList[[i]]$y)) * 2 - 1
     }
     
-    if(is.null(arguments$label.scale)) label.scale=TRUE else label.scale=arguments$label.scale
-    if(is.null(arguments$scores)) scores=NULL else scores=arguments$scores
-    if(is.null(arguments$scores.range)) scores.range=NULL else scores.range=arguments$scores.range
-    if(is.null(arguments$lty)) lty=NULL else lty=arguments$lty
-    if(is.null(arguments$vTrans)) vTrans=255 else vTrans=arguments$vTrans
-    if(is.null(arguments[['overlay']])) overlay <- FALSE else overlay <- arguments[['overlay']]
-    if(is.null(arguments[['overlaySize']])) overlaySize <- 0.5 else overlaySize <- arguments[['overlaySize']]
-    if(is.null(arguments[['GLratio']])) GLratio <- 2.5 else GLratio <- arguments[['GLratio']]
-    if(is.null(arguments$layoutScale)) layoutScale <- 1 else layoutScale <- arguments$layoutScale
-    if(is.null(arguments[['layoutOffset']])) layoutOffset <- 0 else layoutOffset <- arguments[['layoutOffset']]
+    if(is.null(qgraphObject$Arguments$label.scale)) label.scale=TRUE else label.scale=qgraphObject$Arguments$label.scale
+    if(is.null(qgraphObject$Arguments$scores)) scores=NULL else scores=qgraphObject$Arguments$scores
+    if(is.null(qgraphObject$Arguments$scores.range)) scores.range=NULL else scores.range=qgraphObject$Arguments$scores.range
+    if(is.null(qgraphObject$Arguments$lty)) lty=NULL else lty=qgraphObject$Arguments$lty
+    if(is.null(qgraphObject$Arguments$vTrans)) vTrans=255 else vTrans=qgraphObject$Arguments$vTrans
+    if(is.null(qgraphObject$Arguments[['overlay']])) overlay <- FALSE else overlay <- qgraphObject$Arguments[['overlay']]
+    if(is.null(qgraphObject$Arguments[['overlaySize']])) overlaySize <- 0.5 else overlaySize <- qgraphObject$Arguments[['overlaySize']]
+    if(is.null(qgraphObject$Arguments[['GLratio']])) GLratio <- 2.5 else GLratio <- qgraphObject$Arguments[['GLratio']]
+    if(is.null(qgraphObject$Arguments$layoutScale)) layoutScale <- 1 else layoutScale <- qgraphObject$Arguments$layoutScale
+    if(is.null(qgraphObject$Arguments[['layoutOffset']])) layoutOffset <- 0 else layoutOffset <- qgraphObject$Arguments[['layoutOffset']]
     
     # Aspect ratio:
-    if(is.null(arguments[['aspect']])) aspect=FALSE else aspect=arguments[['aspect']]
+    if(is.null(qgraphObject$Arguments[['aspect']])) aspect=FALSE else aspect=qgraphObject$Arguments[['aspect']]
     
-    # Arguments for directed graphs:
-    if(is.null(arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- arguments[['curveDefault']]
-    if(is.null(arguments[['curvePivot']])) curvePivot <- FALSE else curvePivot <- arguments[['curvePivot']]
+    # qgraphObject$Arguments for directed graphs:
+    if(is.null(qgraphObject$Arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- qgraphObject$Arguments[['curveDefault']]
+    if(is.null(qgraphObject$Arguments[['curvePivot']])) curvePivot <- FALSE else curvePivot <- qgraphObject$Arguments[['curvePivot']]
     if (isTRUE(curvePivot)) curvePivot <- 0.1
-    if(is.null(arguments[['curveShape']])) curveShape <- -1 else curveShape <- arguments[['curveShape']]
-    if(is.null(arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- arguments[['curvePivotShape']]
+    if(is.null(qgraphObject$Arguments[['curveShape']])) curveShape <- -1 else curveShape <- qgraphObject$Arguments[['curveShape']]
+    if(is.null(qgraphObject$Arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- qgraphObject$Arguments[['curvePivotShape']]
     
-    if(is.null(arguments[['curve']]))
+    if(is.null(qgraphObject$Arguments[['curve']]))
     {
       curve <- NA 
     } else {
-      curve <- arguments[['curve']]
+      curve <- qgraphObject$Arguments[['curve']]
       if (length(curve)==1) 
       {
         curveDefault <- curve
         curve <- NA
       }
     }
-    if(is.null(arguments[['curveAll']])) curveAll <- FALSE else curveAll <- arguments[['curveAll']]
+    if(is.null(qgraphObject$Arguments[['curveAll']])) curveAll <- FALSE else curveAll <- qgraphObject$Arguments[['curveAll']]
     if (curveAll)
     {
       curve[is.na(curve)] <- curveDefault
     }
-    if(is.null(arguments$arrows)) arrows=TRUE else arrows=arguments$arrows
+    if(is.null(qgraphObject$Arguments$arrows)) arrows=TRUE else arrows=qgraphObject$Arguments$arrows
     #     asize=asize*2.4/height
-    if(is.null(arguments$open)) open=FALSE else open=arguments$open
-    if(is.null(arguments$bidirectional)) bidirectional=FALSE else bidirectional=arguments$bidirectional
+    if(is.null(qgraphObject$Arguments$open)) open=FALSE else open=qgraphObject$Arguments$open
+    if(is.null(qgraphObject$Arguments$bidirectional)) bidirectional=FALSE else bidirectional=qgraphObject$Arguments$bidirectional
     
-    # Arguments for SVG pictures:
-    if(is.null(arguments$tooltips)) tooltips=NULL else tooltips=arguments$tooltips
-    if(is.null(arguments$SVGtooltips)) SVGtooltips=NULL else SVGtooltips=arguments$SVGtooltips
-    if(is.null(arguments$hyperlinks)) hyperlinks=NULL else hyperlinks=arguments$hyperlinks
+    # qgraphObject$Arguments for SVG pictures:
+    if(is.null(qgraphObject$Arguments$tooltips)) tooltips=NULL else tooltips=qgraphObject$Arguments$tooltips
+    if(is.null(qgraphObject$Arguments$SVGtooltips)) SVGtooltips=NULL else SVGtooltips=qgraphObject$Arguments$SVGtooltips
+    if(is.null(qgraphObject$Arguments$hyperlinks)) hyperlinks=NULL else hyperlinks=qgraphObject$Arguments$hyperlinks
     
-    # Arguments for TEX:
-    if(is.null(arguments$standAlone)) standAlone=TRUE else standAlone=arguments$standAlone
+    # qgraphObject$Arguments for TEX:
+    if(is.null(qgraphObject$Arguments$standAlone)) standAlone=TRUE else standAlone=qgraphObject$Arguments$standAlone
     
     ### EASTER EGGS ###
-    if(is.null(arguments[['XKCD']])) XKCD <- FALSE else XKCD <- TRUE
+    if(is.null(qgraphObject$Arguments[['XKCD']])) XKCD <- FALSE else XKCD <- TRUE
     
 #     # Legend setting 1
 #     if (is.null(legend))
@@ -490,9 +491,9 @@ qgraph <- function( input, ... )
     background <- rgb(background[1],background[2],background[3],maxColorValue=255)
     
     if (isTRUE(edge.label.bg)) edge.label.bg <- background
-    if(is.null(arguments[['label.color']])) {
-      if(is.null(arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- arguments$lcolor
-    } else lcolor <- arguments[['label.color']]
+    if(is.null(qgraphObject$Arguments[['label.color']])) {
+      if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- qgraphObject$Arguments$lcolor
+    } else lcolor <- qgraphObject$Arguments[['label.color']]
     
     # Legend setting 2
     if (legend & !is.null(scores))
@@ -528,7 +529,7 @@ qgraph <- function( input, ... )
     
     
     # Set default edge width:
-    if(is.null(arguments[["esize"]])) 
+    if(is.null(qgraphObject$Arguments[["esize"]])) 
     {
       if (weighted)
       {
@@ -537,29 +538,29 @@ qgraph <- function( input, ... )
         esize <- 2
       }
       if (any(directed)) esize <- max(esize/2,1)
-    } else esize <- arguments$esize
+    } else esize <- qgraphObject$Arguments$esize
     
     # asize default:
-    if(is.null(arguments[["asize"]]))
+    if(is.null(qgraphObject$Arguments[["asize"]]))
     {
       #       asize <- max((-1/10)*(nNodes)+4,1)
       asize <- ifelse(nNodes>10,2,3)
-    } else asize <- arguments[["asize"]]
+    } else asize <- qgraphObject$Arguments[["asize"]]
     
     ## arrowAngle default:
-    if(is.null(arguments[["arrowAngle"]])) 
+    if(is.null(qgraphObject$Arguments[["arrowAngle"]])) 
     {
       if (weighted) arrowAngle <- pi/4 else arrowAngle <- pi/8
     } else {
-      arrowAngle <- arguments[["arrowAngle"]]
+      arrowAngle <- qgraphObject$Arguments[["arrowAngle"]]
     }
     
     ## diag default:
-    if(is.null(arguments[['diag']])) 
+    if(is.null(qgraphObject$Arguments[['diag']])) 
     {
       if (edgelist) diag <- FALSE  else diag <- length(unique(diag(input))) > 1
     } else { 
-      diag <- arguments$diag
+      diag <- qgraphObject$Arguments$diag
     }
     
     # Partial graph:
@@ -1530,7 +1531,8 @@ qgraph <- function( input, ... )
       }
     }
     
-    
+    edge.font=rep(1,length(E$from))
+  
     if (!is.logical(edge.labels))
     {
       #       edge.labels=as.character(edge.labels)
@@ -1539,8 +1541,6 @@ qgraph <- function( input, ... )
         warning("Number of edge labels did not correspond to number of edges, edge labes have been ommited")
         edge.labels <- FALSE
       }
-      midX=numeric(0)
-      midY=numeric(0)
       
       if (length(edge.labels) > 0 & is.character(edge.labels))
       {
@@ -1554,822 +1554,122 @@ qgraph <- function( input, ... )
         edge.font[greekE]=5
         
         edge.labels[edge.labels=="NA"]=""
-      } else edge.font <- 1
+      }  
     }
     
-    # Compute alpha of each node:
-    vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
-    
+  
+  
+  
+  
+    ########### SPLIT HERE ###########
+  
+  ### Fill qgraph object with stuff:
+  ## Edgelist:
+  qgraphObject$Edgelist$from <- E$from
+  qgraphObject$Edgelist$to <- E$to
+  qgraphObject$Edgelist$weight <- E$weight
+  qgraphObject$Edgelist$directed <- directed
+  qgraphObject$Edgelist$bidirectional <- bidirectional
+  
+  # Nodes:
+  qgraphObject$graphAttributes$Nodes$border.color <- bcolor
+  qgraphObject$graphAttributes$Nodes$borders <- borders
+  qgraphObject$graphAttributes$Nodes$border.width <- border.width
+  qgraphObject$graphAttributes$Nodes$label.cex <- label.cex
+  qgraphObject$graphAttributes$Nodes$label.color <- lcolor
+  qgraphObject$graphAttributes$Nodes$labels <- labels
+  qgraphObject$graphAttributes$Nodes$loopRotation <- loopRotation
+  qgraphObject$graphAttributes$Nodes$shape <- shape
+  qgraphObject$graphAttributes$Nodes$color <- vertex.colors
+  qgraphObject$graphAttributes$Nodes$width <- vsize
+  qgraphObject$graphAttributes$Nodes$height <- vsize2
+  qgraphObject$graphAttributes$Nodes$subplots <- subplots
+  qgraphObject$graphAttributes$Nodes$images <- images
+  qgraphObject$graphAttributes$Nodes$tooltips -> tooltips
+
+  # Edges:
+  qgraphObject$graphAttributes$Edges$curve <- curve
+  qgraphObject$graphAttributes$Edges$color <- edge.color
+  qgraphObject$graphAttributes$Edges$labels <- edge.labels
+  qgraphObject$graphAttributes$Edges$label.cex <- edge.label.cex
+  qgraphObject$graphAttributes$Edges$label.bg <- edge.label.bg
+  qgraphObject$graphAttributes$Edges$font <- edge.font
+  qgraphObject$graphAttributes$Edges$label.color <- ELcolor
+  qgraphObject$graphAttributes$Edges$width <- edge.width
+  qgraphObject$graphAttributes$Edges$lty <- lty
+  qgraphObject$graphAttributes$Edges$residEdge <- residEdge
+  qgraphObject$graphAttributes$Edges$asize <- asize
+  if (mode == "sig") qgraphObject$graphAttributes$Edges$Pvals <- Pvals else Pvals <- NULL
+  
+  # Knots:
+  qgraphObject$graphAttributes$Knots$knots <- knots
+  qgraphObject$graphAttributes$Knots$knot.size <- knot.size
+  qgraphObject$graphAttributes$Knots$knot.color <- knot.color
+  qgraphObject$graphAttributes$Knots$knot.borders <- knot.borders
+  qgraphObject$graphAttributes$Knots$knot.border.color <- knot.border.color
+  qgraphObject$graphAttributes$Knots$knot.border.width <- knot.border.width
+  
+  # Graph:
+  qgraphObject$graphAttributes$Graph$nNodes <- nNodes
+  qgraphObject$graphAttributes$Graph$weighted <- weighted
+  qgraphObject$graphAttributes$Graph$edgesort <- edgesort
+  qgraphObject$graphAttributes$Graph$scores <- scores
+  qgraphObject$graphAttributes$Graph$scores.range <- scores.range
+  qgraphObject$graphAttributes$Graph$groups <- groups
+  qgraphObject$graphAttributes$Graph$minimum <- minimum
+  qgraphObject$graphAttributes$Graph$maximum <- maximum
+  qgraphObject$graphAttributes$Graph$cut <- cut
+  qgraphObject$graphAttributes$Graph$polygonList <- polygonList
+  qgraphObject$graphAttributes$Graph$mode <- mode
+  qgraphObject$graphAttributes$Graph$color <- color
+  
+  # Layout:
+  qgraphObject$layout <- layout
+  qgraphObject$layout.orig <- original.layout
+  
+  # Plot options:
+  qgraphObject$plotOptions$filetype <- filetype
+  qgraphObject$plotOptions$filename <- filename
+  qgraphObject$plotOptions$background <- background
+  qgraphObject$plotOptions$bg <- bg
+  qgraphObject$plotOptions$normalize <- normalize
+  qgraphObject$plotOptions$plot <- plot
+  qgraphObject$plotOptions$mar <- mar
+  qgraphObject$plotOptions$GLratio <- GLratio
+  qgraphObject$plotOptions$legend <- legend
+  qgraphObject$plotOptions$legend.cex <- legend.cex
+  qgraphObject$plotOptions$pty <- pty
+  qgraphObject$plotOptions$XKCD <- XKCD
+  qgraphObject$plotOptions$DefLoopRot <- DefLoopRot
+  qgraphObject$plotOptions$residuals <- residuals
+  qgraphObject$plotOptions$residScale <- residScale
+  qgraphObject$plotOptions$arrows <- arrows
+  qgraphObject$plotOptions$arrowAngle <- arrowAngle
+  qgraphObject$plotOptions$open <- open
+  qgraphObject$plotOptions$curvePivot <- curvePivot
+  qgraphObject$plotOptions$curveShape <- curveShape
+  qgraphObject$plotOptions$curvePivotShape <- curvePivotShape
+  qgraphObject$plotOptions$label.scale <- label.scale
+  qgraphObject$plotOptions$label.prop <- label.prop
+  qgraphObject$plotOptions$label.norm <- label.norm
+  qgraphObject$plotOptions$overlay <- overlay
+  qgraphObject$plotOptions$details <- details
+  qgraphObject$plotOptions$legend.mode <- legend.mode
+  qgraphObject$plotOptions$srt <- srt
+  qgraphObject$plotOptions$gray <- gray
+  qgraphObject$plotOptions$overlaySize <- overlaySize
+  qgraphObject$plotOptions$plotELBG <- plotELBG
+  qgraphObject$plotOptions$alpha <- alpha
+  
+  
     if (!DoNotPlot)
     {
-      
-      # PLOT:
-      marOrig <- par("mar")
-      bgOrig <- par("bg")
-      if (plot)
-      {
-        par(mar=c(0,0,0,0), bg=background)
-        plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * (2+mar[2]+mar[4])/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
-        
-#         plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
-      }
-      
-      # if (PlotOpen) 
-      # {
-      width <- par('pin')[1]
-      height <- par('pin')[2]
-      
-      # Rescale dims:
-      if (pty=='s')
-      {
-        width=height=min(c(width,height))
-      }
-      # }  
-      
-      
-      if (legend)
-      {
-        width <- width * (GLratio/(1+GLratio))
-      }
-      
-      
-      if (is.logical(bg)) if (bg){
-        
-        
-        for (i in 1:bgres) {
-          for (j in 1:bgres) {
-            
-            for (C in 1:3) {
-              
-              colarray2[C,i,j]=min(c(1,max(colarray[i,j,]*(col2rgb(color)[C,]/255))))  }
-            
-            polygon(c(seq[i],seq[i+1],seq[i+1],seq[i]),c(seq[j],seq[j],seq[j+1],seq[j+1]),
-                    col=rgb(colarray2[1,i,j],colarray2[2,i,j],colarray2[3,i,j]),border=NA)
-            
-          } }
-        
-      }    			
-      
-      # Compute normalizing constant:
-      if (isTRUE(normalize))
-      {
-        normC <- sqrt(sum(par("pin")^2)) / sqrt(7^2 + 7^2)
-        vsize <- vsize * normC
-        vsize2 <- vsize2 * normC
-        edge.width <- edge.width * normC
-        border.width <- border.width * normC
-        asize <- asize * normC
-        edge.label.cex <- edge.label.cex * normC
-        
-        knot.size <- knot.size * normC
-        knot.border.width <- knot.border.width * normC
-      }
-      
-      # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
-      if (any(bidirectional))
-      {
-        omitEdge <- duplicated(srt)&bidirectional
-      } else omitEdge <- NULL 
-      
-      # If images is not NULL, replace subplots with images calls:
-      if (!is.null(images))
-      {
-        images <- gsub("\\\\","/", images)
-        if (length(images) == 1) images <- rep(images, nNodes)
-        if (is.null(subplots)) subplots <- vector( "list", nNodes)
-        
-        for (i in seq_along(images))
-        {
-          if (!is.na(images[i]) && file.exists(images[[i]]))
-          {
-            if (grepl("\\.jpe?g$",images[i]))
-            {
-              subplots[[i]] <- parse(text=sprintf('
-plot(1,type="n",xlim=0:1,ylim=0:1,axes=FALSE,xlab="",ylab="",bty="n",xaxs="i",yaxs="i")
-rasterImage(readJPEG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))
-            } else if (grepl("\\.png$",images[i]))
-            {
-              subplots[[i]] <- parse(text=sprintf('
-plot(1,type="n",xlim=0:1,ylim=0:1,axes=FALSE,xlab="",ylab="",bty="n",xaxs="i",yaxs="i")
-rasterImage(readPNG("%s"), 0,0,1,1, interpolate=FALSE)', images[i]))              
-            } else warning("Only jpeg and png images supported in 'images'")
-          }
-        }
-      }
-      
-      # Set non-rectangular/square dge shapes with subplots to square:
-      if (!is.null(subplots))
-      {
-        # Get which nodes become a subplot:
-        whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
-        
-        shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
-      }
-      
-      # Plot edges: 
-      if (length(curve)==1) curve=rep(curve,length(edgesort))
-      curve[E$from==E$to]=1
-      
-      # Compute knot placement:
-      if (length(knots) > 0)
-      {
-        knotLayout <- matrix(,max(knots),2)
-        for (i in seq_len(max(knots)))
-        {
-          knotNodes <- c(E$from[knots==i],E$to[knots==i])
-          
-          # mid X:
-          knotLayout[i,1] <- in2usrX(mean(usr2inX(layout[knotNodes,1])))
-          knotLayout[i,2] <- in2usrY(mean(usr2inY(layout[knotNodes,2])))
-        }
-      } else {
-        knotLayout <- matrix(,0,0)
-      }
-      
-      # For each (sorted from weak to strong) edge:
-      for (i in edgesort)
-      {
-        
-        # Only plot if over minimum:
-        if (abs(E$weight[i])>minimum & !isTRUE(omitEdge[i]))
-        {
-          x1=layout[E$from[i],1]
-          x2=layout[E$to[i],1]
-          y1=layout[E$from[i],2]
-          y2=layout[E$to[i],2]
-          
-          # If not curved, knotted or XKCD plot straigth line instead of spline:
-          if (curve[i]==0 & !XKCD & knots[i] == 0)
-          {
-            # Replace destination of edge to edge of node if needed:
-            if (is.logical(arrows) | vAlpha[E$to[i]] < 255) if ((arrows & directed[i]) | vAlpha[E$to[i]] < 255)
-            {
-              # 				xd=x2-x1
-              # 				yd=y2-y1
-              # 				d2=sqrt(sum(xd^2+yd^2))
-              # 				if (shape[E$to[i]]!="square")
-              # 				{
-              # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
-              # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
-              # 				}
-              # 				if (shape[E$to[i]]=="square")
-              # 				{
-              # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-              # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-              # 				}
-              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
-              x2 <- NewPoints[1]
-              y2 <- NewPoints[2]
-              
-              # Replace source of edge to edge of node if needed:
-              if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
-              {
-                # 					xd=x2-x1
-                # 					yd=y2-y1
-                # 					d2=sqrt(sum(xd^2+yd^2))
-                # 					if (shape[E$from[i]]!="square")
-                # 					{
-                # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
-                # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
-                # 					}
-                # 					if (shape[E$from[i]]=="square")
-                # 					{
-                # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-                # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-                # 					}
-                
-                NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
-                x1 <- NewPoints[1]
-                y1 <- NewPoints[2]  
-                
-              }
-            }
-            if (!is.logical(edge.labels))
-            {
-              midX[i]=mean(c(x1,x2))
-              midY[i]=mean(c(y1,y2))
-            }
-            
-            lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
-            if (directed[i])
-            {
-              if (!is.logical(arrows))
-              {
-                Ax=seq(x1,x2,length=arrows+2)
-                Ay=seq(y1,y2,length=arrows+2)
-                for (a in 1:arrows+1)
-                {
-                  #                   qgraph.arrow(Ax[a],Ay[a],x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(Ax[a],Ay[a],atan2usr2in(Ax[a]-x1,Ay[a]-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-                }
-              }
-              else if (arrows)
-              {
-                #                 qgraph.arrow(x2,y2,x1,y1,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                DrawArrow(x2,y2,atan2usr2in(x2-x1,y2-y1),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-                
-                if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
-                {
-                  #                   qgraph.arrow(x1,y1,x2,y2,length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                  #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                  DrawArrow(x1,y1,atan2usr2in(x1-x2,y1-y2),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-                }
-              }
-            }
-          } else {
-            if (E$from[i]==E$to[i])
-            {
-              #               loopX=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2])
-              #               spx=c(x1+loopX,x1,x1-loopX)
-              #               loopY=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2])
-              #               spy=c(y1,y1+loopY,y1)
-              #               spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
-              if (DefLoopRot | is.na(loopRotation[E$from[i]]))
-              {
-                centX <- mean(layout[,1])
-                centY <- mean(layout[,2])
-                for (g in 1:length(groups))
-                {
-                  if (E$from[i]%in%groups[[g]])
-                  {
-                    centX <- mean(layout[groups[[g]],1])
-                    centY <- mean(layout[groups[[g]],2])
-                  }
-                }
-                rot <- atan2usr2in(x1-centX,y1-centY)
-                if (shape[E$from[i]]=="square")
-                {
-                  rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
-                }
-              } else rot <- loopRotation[E$from[i]]
-              spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList)
-              
-            } else 
-            {
-              #spx <- midx - curve[i] * (y2 - y1)/2
-              #spy <- midy + curve[i] * (x2 - x1)/2
-              #               curvemid <- Cent2Edge(midx,midy,atan2usr2in(x2-x1,y2-y1)-sign(curve[i])*pi/2,abs(curve[i])*5*2,"circle")
-              
-              if (knots[i]!=0)
-              {
-                spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
-              } else {     
-                #                midx <- (x1 + x2)/2
-                #                midy <- (y1 + y2)/2
-                
-                curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
-                
-                # Add pivots:
-                if (is.numeric(curvePivot))
-                {
-                  splShape <- c(curveShape, curvePivotShape, curveShape, curvePivotShape, curveShape)
-                  
-                  curveQ1 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = curvePivot) 
-                  curveQ2 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = 1-curvePivot) 
-                  
-                  spx <- c(curveQ1[1]  , curvemid[1], curveQ2[1])
-                  spy <- c(curveQ1[2]  , curvemid[2], curveQ2[2])
-                } else 
-                {
-                  splShape <- rep(curveShape,3)
-                  spx <- curvemid[1]
-                  spy <- curvemid[2]
-                }
-                
-                spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE) 
-              }
-              
-            }	
-            if (E$from[i]!=E$to[i])
-            {
-              recurve <- FALSE
-              
-              # Replace destination of edge to edge of node if needed:
-              if (is.logical(arrows)| vAlpha[E$to[i]] < 255)
-              {
-                if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
-                {
-                  NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
-                  x2 <- NewPoints[1]
-                  y2 <- NewPoints[2]
-                  recurve <- TRUE
-                  
-                  NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
-                  x1 <- NewPoints[1]
-                  y1 <- NewPoints[2]
-                  recurve <- TRUE
-                }
-              }
-              
-              if (recurve)
-              {
-                if (knots[i]!=0)
-                {
-                  spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
-                } else {               
-                  
-                  curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
-                  
-                  # Add pivots:
-                  if (is.numeric(curvePivot))
-                  {
-                    splShape <- c(curveShape, curvePivotShape, curveShape, curvePivotShape, curveShape)
-                    
-                    curveQ1 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = curvePivot) 
-                    curveQ2 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = 1-curvePivot) 
-                    
-                    spx <- c(curveQ1[1]  , curvemid[1], curveQ2[1])
-                    spy <- c(curveQ1[2]  , curvemid[2], curveQ2[2])
-                  } else 
-                  {
-                    spx <- curvemid[1]
-                    spy <- curvemid[2]
-                  }
-                  
-                  spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE) 
-                }
-              }
-            }
-          
-          
-          # If XKCD jitter edge:
-          if (XKCD)
-          {
-            jitt <- xkcd_jitter(spl$x,spl$y)
-            spl$x[3:(length(spl$x)-3)] <- jitt$x[3:(length(spl$x)-3)]
-            spl$y[3:(length(spl$y)-3)] <- jitt$y[3:(length(spl$y)-3)]
-          }
-          
-          # If XKCD extra white edge:
-          if (XKCD)
-          {
-            lines(spl,lwd=edge.width[i]*2,col="white")
-          }
-          
-          if (!is.logical(edge.labels))
-          {
-            midX[i]=spl$x[floor(length(spl$x)/2)]
-            midY[i]=spl$y[floor(length(spl$y)/2)]
-          }
-
-          lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
-          
-          if (directed[i])
-          {
-            if (!is.logical(arrows))
-            {
-              Ax=seq(1,length(spl$x),length=arrows+2)
-              Ay=seq(1,length(spl$y),length=arrows+2)
-              for (a in 2:(arrows+1))
-              {
-                #                   qgraph.arrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],spl$x[Ax[a]],spl$y[Ay[a]],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                
-                DrawArrow(spl$x[Ax[a]+1],spl$y[Ay[a]+1],atan2usr2in(spl$x[Ax[a]+1]-spl$x[Ax[a]],spl$y[Ay[a]+1]-spl$y[Ay[a]]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-              }
-            }
-            else if (arrows)
-            {
-              #                 qgraph.arrow(spl$x[length(spl$x)],spl$y[length(spl$y)],spl$x[length(spl$x)-1],spl$y[length(spl$y)-1],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-              #                              col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-              DrawArrow(spl$x[length(spl$x)],spl$y[length(spl$y)],atan2usr2in(spl$x[length(spl$x)]-spl$x[length(spl$x)-1],spl$y[length(spl$y)]-spl$y[length(spl$y)-1]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-              
-              if (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i])
-              {
-                #                   qgraph.arrow(spl$x[1],spl$y[1],spl$x[2],spl$y[2],length=asize[i],angle=30*pi/180,lwd=max(edge.width[i]/2,1),
-                #                                col=edge.color[i],open=open,Xasp=width/height,lty=lty[i])
-                DrawArrow(spl$x[1],spl$y[1],atan2usr2in(spl$x[1]-spl$x[2],spl$y[1]-spl$y[2]),angle=arrowAngle,cex=asize[i],open=open,lwd=max(edge.width[i]/2,1),lty=lty[i],edge.color[i])
-              }
-            }
-            
-          }
-        }
-      } 
+      plot(qgraphObject)
+      invisible(qgraphObject)
+    } else
+    {
+      return(qgraphObject)
     }
-    
-    
-    
-    # Plot knots:
-    if (any(knots>0))
-    {
-      if (length(knot.size)==1) knot.size <- rep(knot.size,length=max(knots))
-      if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
-      if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
-      if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
-      if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
       
-      for (i in 1:max(knots)) if (is.na(knot.color[i])) knot.color[i] <- mixCols(edge.color[knots==i])
-      
-      if (any(knot.borders))
-      {
-        for (i in 1:max(knots))
-        {            
-          points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.color[i],pch=16)
-          if (knot.borders[i]) points(knotLayout[i,1],knotLayout[i,2],cex=knot.size[i],col=knot.border.color[i],pch=1) 
-        }
-      } else points(knotLayout[,1],knotLayout[,2],cex=knot.size,col=knot.color,pch=16)
-    }
-    
-    
-    # Edge labels
-    if (is.null(ELcolor))
-    {
-      ELcolor <- edge.color
-    }
-    
-    
-    if (!is.logical(edge.labels) & length(edge.labels)>0)
-    {
-      # Fix midpoints for knots:
-      for (i in seq_len(max(knots)))
-      {
-        midX[knots==i] <- knotLayout[i,1]
-        midY[knots==i] <- knotLayout[i,2]
-      }
-      
-      edgesort2 <- edgesort[abs(E$weight[edgesort])>minimum]
-      edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,,drop=FALSE])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
-      
-      if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
-      
-      if (plotELBG)
-      {
-        for (i in edgesort2)
-        {
-          labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
-          labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
-          polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
-                  c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
-                  border=NA,
-                  col=edge.label.bg[i])
-        }
-      }
-      
-      if (!is.list(edge.labels))
-      {
-        text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],font=edge.font[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2])
-      } else {
-        for (i in edgesort2)
-        {
-          edge.font <- rep(edge.font,length=length(edge.labels))
-          text(midX[i],midY[i],edge.labels[[i]],font=edge.font[i],cex=edge.label.cex[i],col=ELcolor[i])
-        }
-      }
-    }			
-    
-    
-    #if (nNodes==1) layout=matrix(0,1,2)
-    # Plot nodes:
-    
-    # scale border width:
-    #       border.width <- border.width * normC
-    
-    if(length(borders) == 1) borders <- rep(borders,nNodes)
-    if (!XKCD)
-    {
-      # Check if nodes need to be plotted in for loop:
-      if (!is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")))
-      {
-        # Get which nodes become a subplot:
-        #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
-        
-        #           # Plot normal nodes:
-        #           bordVec <- unlist(lapply(order(vsize*vsize2,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-        #           bordVec <- bordVec[!bordVec%in%whichsub]
-        #           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
-        
-        for (i in order(vsize*vsize2,decreasing=TRUE))
-        {
-          x <- layout[i,1]
-          y <- layout[i,2]
-          
-          if (isTRUE(is.expression(subplots[[i]])))
-          {
-            xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i], polygonList)[1] - x
-            yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i], polygonList)[2] - y
-            
-            usr <- par("usr")
-            # Plot background:
-            rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=background,border=NA)
-            # Plot subplot:
-            subplot(eval(subplots[[i]]),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)))  
-            # Plot border:
-            if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
-          } else {
-            drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width, polygonList)
-          }
-        }      
-      } else {
-        
-        
-        pch1=numeric(0)
-        pch2=numeric(0)
-        
-        for (i in 1:length(shape))
-        {
-          if (shape[i]=="circle")
-          {
-            pch1[i]=16
-            pch2[i]=1
-          }
-          if (shape[i]=="square")
-          {
-            pch1[i]=15
-            pch2[i]=0
-          }
-          if (shape[i]=="triangle")
-          {
-            pch1[i]=17
-            pch2[i]=2
-          }
-          if (shape[i]=="diamond")
-          {
-            pch1[i]=18
-            pch2[i]=5
-          }
-          if (!shape[i]%in%c("circle","square","triangle","diamond")) stop(paste("Shape",shape[i],"is not supported"))
-        }
-        
-        
-        bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-        points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
-      }
-      
-      
-      
-      #         points(layout,cex=vsize,col=vertex.colors,pch=pch1)
-      #                 
-      #         if (any(borders) & nNodes > 1) points(layout[borders,],cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
-      #         
-      #         if (any(borders) & nNodes == 1) points(layout,cex=vsize[borders],lwd=border.width,pch=pch2[borders],col=bcolor[borders])
-      
-    } else {
-      circ <- seq(0,2*pi,length=100)
-      for (i in 1:nNodes)
-      {
-        pts <- lapply(circ,function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],polygonList))
-        mod <- xkcd_jitter(sapply(pts,'[',1),sapply(pts,'[',2),2000)
-        
-        if (borders[i]) {
-          polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
-          polygon(mod$x,mod$y,border="black",col=vertex.colors[i],lwd=5)
-        } else {
-          polygon(mod$x,mod$y,border="white",col=NA,lwd=10)
-          polygon(mod$x,mod$y,border=NULL,col=vertex.colors[i],lwd=5)            
-        }
-      }
-    }
-    
-    # Make labels:
-    if (is.logical(labels))
-    {
-      if (labels)
-      {
-        labels=1:nNodes
-      }
-    }
-    
-    if (!is.logical(labels))
-    {
-      #         labels=as.character(labels)
-      # Vertex label symbols:
-      # Set symbol font:
-      if (is.character(labels))
-      {
-        strsplV=strsplit(labels,"")
-        greekV=logical(0)
-        for (i in 1:length(strsplV)) 
-        {
-          greekV[i]=any(strsplV[[i]]=="*")
-          labels[i]=paste(strsplV[[i]][which(strsplV[[i]]!="*")],collapse="") 
-        }
-        V.font=rep(1,length(E$from))
-        V.font[greekV]=5
-      } else V.font <- 1
-      
-      if (is.null(label.cex)) label.cex <- pmax(1,vsize)
-      # Rescale labels:
-      if (label.scale)
-      {
-        VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList),SIMPLIFY=FALSE),'[',1) * 2
-        VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0,polygonList=polygonList),SIMPLIFY=FALSE),'[',2) * 2          
-        LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
-        LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
-        
-        label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
-        #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
-      }
-      
-      # Plot labels:
-      if (!is.list(labels))
-      {
-        text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=V.font)
-      } else {
-        lcolor <- rep(lcolor,length=nNodes)
-        V.font <- rep(V.font,length=nNodes)
-        for (i in seq_along(labels))
-        {
-          text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=V.font[i])
-        }
-      }
-    }
-    
-    if (!is.null(tooltips)) 
-    {
-      # Set Tooltips:
-      for (i in 1:nNodes) 
-      {
-        if (!is.na(tooltips[i]))
-        {
-          if (filetype=='svg') setSVGShapeToolTip(desc=tooltips[i])
-        }
-        if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
-        {
-          setSVGShapeToolTip(desc=SVGtooltips[i])
-        }       
-        NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i], polygonList))
-        polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
-                              
-      }
-    }    
-    
-    ### Overlay:
-    if (overlay)
-    {
-      # Transparance in vertex colors:
-      num2hex <- function(x)
-      {
-        hex=unlist(strsplit("0123456789ABCDEF",split=""))
-        return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
-      }
-      
-      colHEX <- rgb(t(col2rgb(color)/255))
-      
-      fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
-      
-      for (i in 1:length(groups)) polygon(ellipse(cov(l[groups[[i]],]),centre=colMeans(l[groups[[i]],]),level=overlaySize),border=color[i],col=fillCols[i])
-    }
-    
-    if (is.null(names(groups))) names(groups) <- LETTERS[1:length(groups)]
-    
-    #if (!legend && filetype=="svg") plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
-    
-    # Plot Legend:
-    if (legend)
-    {
-      if (is.null(scores))
-      {
-        legend.cex=legend.cex*2
-        #plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")
-
-        if (mode=="sig")
-        {
-          if (legend.mode == "names")
-          {
-            text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
-          } else 
-          {
-            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
-          }
-
-          if (gray)
-          {
-            legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                   col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
-                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          } else
-          {
-            if (any(Pvals < 0))
-            {
-              legend(1 + mar[4] + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                     col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-              
-              legend(1 + mar[4] + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                     col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
-                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-              
-            } else
-            {
-              legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
-                     col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                     lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            }
-          }
-        } else
-        {
-          if (legend.mode == "names")
-          {
-            text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
-          } else 
-          {
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n')   
-          }
-        }
-      }
-      if (!is.null(scores))
-      {
-        plot(1, ann = FALSE, axes = FALSE, xlim = c(-0.5, scores.range[2]-scores.range[1]+8), ylim = c(0.5, length(groups)+2),
-             type = "n", xaxs = "i", yaxs = "i")
-        
-        for (i in 1:length(groups)) {
-          
-          groupcols="white"
-          groupcolors=1-t(col2rgb(color[i])/255)
-          c=1
-          for (j in (scores.range[1]:scores.range[2]-scores.range[1])/(scores.range[2]-scores.range[1])) 
-          {
-            groupcols[c]=rgb(1-j*groupcolors)
-            c=c+1
-          }
-          
-          for (j in scores.range[1]:scores.range[2]-scores.range[1]) {
-            
-            polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=bcolor[i],lwd=2)
-            
-          } 
-          text(j+1.5,i+0.5,names(groups)[i],pos=4)
-        }
-        
-        for (i in scores.range[1]:scores.range[2]-scores.range[1]) text(i+0.5,length(groups)+1.5,i+scores.range[1])
-        
-        
-      }
-    }
-    
-    # Plot details:
-    if (details & weighted)
-    {
-      if (cut != 0) text(0,-1.1,paste("Cutoff:",round(cut,2)),cex=0.6)
-      if (minimum != 0) text(-1,-1.1,paste("Minimum:",round(minimum,2)),pos=4,cex=0.6)
-      text(1,-1.1,paste("Maximum:",round(maximum,2)),pos=2,cex=0.6)
-    }
-    
-    
-    if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff','tex')) 
-    {
-      message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
-      dev.off()
-    }
-    par(mar=marOrig, bg=bgOrig)
-  }
-  # Make output list:
-  #returnval=list(input=input, layout=layout, cut=cut, maximum=maximum, minimum=minimum, groups=groups, weighted=weighted, rescale=rescale, labels=labels, directed=directed, legend=legend, plot=plot, rotation=rotation, layout.control=layout.control, layout.par=layout.par, filetype=filetype, filename=filename, width=width, height=height, pty=pty, res=res, vsize=vsize, esize=esize, color=color, bg=bg, bgcontrol=bgcontrol, bgres=bgres, transparency=transparency, lcolor=lcolor, loop=loop, legend.cex=legend.cex, borders=borders, curve=curve, arrows=arrows, diag=diag, tooltips=tooltips, hyperlinks=hyperlinks)
-  
-  # Arguments, some changed due to removal edges (included in edgelist)
-  returnval=arguments
-  returnval$layout=layout
-  returnval$weighted <- weighted
-  returnval$layout.orig=original.layout
-  returnval$nNodes <- nNodes
-  returnval$directed <- NULL
-  returnval$bidirectional <- NULL
-  returnval$background <- background
-  
-  # Graph attributes (only used for igraph exportation):
-  graphAttributes <- list(
-    Nodes = list(
-      border.color = bcolor,
-      borders = borders,
-      label.cex = label.cex,
-      label.color = lcolor,
-      labels = labels,
-      loopRotation = loopRotation,
-      shape = shape,
-      color = vertex.colors,
-      width = vsize,
-      height = vsize2,
-      stringsAsFactors=FALSE
-    ),
-    Edges = list(
-      curve = curve,
-      color = edge.color,
-      labels = edge.labels,
-      label.cex = edge.label.cex,
-      label.color = ELcolor,
-      width = edge.width,
-      lty = lty,
-      stringsAsFactors=FALSE
-    ),
-    edgesort = edgesort
-  )
-  
-  # Edgelist:
-  E$directed <- directed
-  E$bidir <- bidirectional
-  E <- as.data.frame(E)
-  class(E) <- "qgraphEdgelist"
-  
-  returnval$qgraphEdgelist <- E
-  returnval$graphAttributes <- graphAttributes
-  
-  class(returnval)="qgraph"
-  #par(parOrig)
-  
-  invisible(returnval)
 }
-}
+

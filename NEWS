@@ -1,4 +1,8 @@
 Changes in Version 1.2.2
+  o INTERNAL CHANGE IN QGRAPH
+    o A change has been made to the qgraph internal repressentation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
+    o Because of this, every aspect of a graph can now be manually changed between running qgraph and plotting the output.
+    o Currently this is implemented simply by storing all values in qgraph() that are used in plot.qgraph, in a future function some of the arguments from qgraph will be moved to plot.qgraph to make a more natural distinction between plotting arguments (such as filetype) and arguments that control the graph.
   o Using a matrix with relative positioning of nodes can now also be assigned characters of the node labels. e.g., assinging matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right.
   o Added 'pastel' argument for pastel colors
   o Added 'rainbowStart' argument to control the start of rainbow functions
