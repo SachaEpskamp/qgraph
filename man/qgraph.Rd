@@ -86,7 +86,7 @@ qgraph( input, ... )
 	\item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
 	\item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
-  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring"). Currently this only works correctly if the plotting area is square. This can be forced with exporting the graph using 'height', 'width' and 'filetype' arguments.}
+  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
     \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
         \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
 }}
