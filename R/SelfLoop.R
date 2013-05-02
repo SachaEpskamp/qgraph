@@ -9,7 +9,7 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1, po
     )
   }
   
-  # If shape is not default, compute square on largext cex and move to border:
+  # If shape is rectangle, compute square on largext cex and move to border:
   if (shape == "rectangle")
   {
     loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale)
@@ -53,7 +53,6 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1, po
     
     return(loop)
   }
-  
   
   loopAngle <- pi/8
   
