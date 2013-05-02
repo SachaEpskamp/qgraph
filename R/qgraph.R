@@ -896,7 +896,7 @@ qgraph <- function( input, ... )
     if (length(bidirectional)==1) bidirectional=rep(bidirectional,length(E$from))
     if (length(bidirectional)!=length(E$from)) stop("Bidirectional vector must be of legth 1 or equal to the number of edges")
     
-    srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) , knots)
+    srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) , knots, abs(E$weight) > minimum)
     if (!curveAll)
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
