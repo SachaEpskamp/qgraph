@@ -100,6 +100,10 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$plotOptions$overlaySize -> overlaySize
   qgraphObject$plotOptions$plotELBG -> plotELBG
   qgraphObject$plotOptions$alpha -> alpha
+  qgraphObject$plotOptions$width -> width
+  qgraphObject$plotOptions$height -> height
+  qgraphObject$plotOptions$aspect -> aspect
+  qgraphObject$plotOptions$rescale -> rescale
 
   rm(qgraphObject)
   
@@ -107,6 +111,58 @@ plot.qgraph <- function(qgraphObject, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
+  
+  ### Open device:
+  # Start output:
+  if (filetype=='default') if (is.null(dev.list()[dev.cur()])) dev.new(rescale="fixed",width=width,height=height)
+  if (filetype=='R') dev.new(rescale="fixed",width=width,height=height)
+  if (filetype=='X11' | filetype=='x11') x11(width=width,height=height)
+  if (filetype=='eps') postscript(paste(filename,".eps",sep=""),height=height,width=width, horizontal=FALSE)
+  if (filetype=='pdf') pdf(paste(filename,".pdf",sep=""),height=height,width=width)
+  if (filetype=='tiff') tiff(paste(filename,".tiff",sep=""),units='in',res=res,height=height,width=width)
+  if (filetype=='png') png(paste(filename,".png",sep=""),units='in',res=res,height=height,width=width)
+  if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
+  if (filetype=="svg")
+  {
+    if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
+    require("RSVGTipsDevice")
+    devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
+  }
+  if (filetype=="tex")
+  {
+    #   # Special thanks to Charlie Sharpsteen for supplying these tikz codes on stackoverflow.com !!!
+    # 	
+    # 	if (!suppressPackageStartupMessages(require(tikzDevice,quietly=TRUE))) stop("tikzDevice must be installed to use filetype='tex'")
+    # 	opt= c( 
+    # 	getOption('tikzLatexPackages'),  
+    #     "\\def\\tooltiptarget{\\phantom{\\rule{1mm}{1mm}}}",
+    #     "\\newbox\\tempboxa\\setbox\\tempboxa=\\hbox{}\\immediate\\pdfxform\\tempboxa \\edef\\emptyicon{\\the\\pdflastxform}",
+    #     "\\newcommand\\tooltip[1]{\\pdfstartlink user{/Subtype /Text/Contents  (#1)/AP <</N \\emptyicon\\space 0 R >>}\\tooltiptarget\\pdfendlink}"
+    # 	)
+    # 	
+    # 	place_PDF_tooltip <- function(x, y, text)
+    # 	{
+    # 
+    # 		# Calculate coordinates
+    # 		tikzX <- round(grconvertX(x, to = "device"), 2)
+    # 		tikzY <- round(grconvertY(y, to = "device"), 2)
+    # 		# Insert node
+    # 		tikzAnnotate(paste(
+    # 		"\\node at (", tikzX, ",", tikzY, ") ",
+    # 		"{\\tooltip{", text, "}};",
+    # 		sep = ''
+    # 		))
+    # 	  invisible()
+    # 	}
+    # 	
+    # 	print("NOTE: Using 'tex' as filetype will take longer to run than other filetypes")
+    # 	
+    # 	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
+    
+    stop("Tikz device no longer supported due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for a fix")
+  }
+  
+  
   
   ### START PLOT:
   marOrig <- par("mar")
@@ -123,6 +179,47 @@ plot.qgraph <- function(qgraphObject, ...)
   # {
   width <- par('pin')[1]
   height <- par('pin')[2]
+  
+  if (rescale & aspect) {
+    l <- original.layout
+      # center:
+      l[,1] <- l[,1] - mean(l[,1])
+      l[,2] <- l[,2] - mean(l[,2])
+    
+      # Ajust for aspect:
+      l[,1] <- l[,1] * min(height/width, 1)
+      l[,2] <- l[,2] * min(width/height, 1)
+    
+      lTemp <- l
+      
+      if (length(unique(lTemp[,1]))>1)
+      {
+        l[,1]=(lTemp[,1]-min(lTemp))/(max(lTemp)-min(lTemp))*2-1
+      } else l[,1] <- 0
+      if (length(unique(lTemp[,2]))>1)
+      {
+        l[,2]=(lTemp[,2]-min(lTemp))/(max(lTemp)-min(lTemp))*2-1 
+      } else l[,2] <- 0
+    
+    # center again for good measures! (I really have no idea why but whatever):
+    l[,1] <- l[,1] - mean(l[,1])
+    l[,2] <- l[,2] - mean(l[,2])
+    
+      rm(lTemp)
+      
+      
+      #     # Equalize white space:
+      #     if (diff(range(l[,1])) < 2)
+      #     {
+      #       l[,1] <- diff(range(l[,1]))/2 + l[,1]
+      #     }
+      #     if (diff(range(l[,2])) < 2)
+      #     {
+      #       l[,2] <- (2-diff(range(l[,2])))/2 + l[,2]
+      #     }
+      
+      layout <- l    
+    }
   
   # Rescale dims:
   if (pty=='s')
