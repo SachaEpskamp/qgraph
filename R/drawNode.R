@@ -46,7 +46,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,"rectangle")[1] - x
     yOff <- Cent2Edge(x,y,0,cex1,cex2,"rectangle")[2] - y
     
-    if (border) bord <- bcolor else bord <- NULL
+    if (border) bord <- bcolor else bord <- NA
     
     polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor)
 

@@ -385,7 +385,7 @@ qgraph <- function( input, ... )
     if (isTRUE(curvePivot)) curvePivot <- 0.1
     if(is.null(qgraphObject$Arguments[['curveShape']])) curveShape <- -1 else curveShape <- qgraphObject$Arguments[['curveShape']]
     if(is.null(qgraphObject$Arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- qgraphObject$Arguments[['curvePivotShape']]
-    
+  if(is.null(qgraphObject$Arguments[['curveScale']])) curveScale <- TRUE else curveScale <- qgraphObject$Arguments[['curveScale']]
     if(is.null(qgraphObject$Arguments[['curve']]))
     {
       curve <- NA 
@@ -1648,6 +1648,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$open <- open
   qgraphObject$plotOptions$curvePivot <- curvePivot
   qgraphObject$plotOptions$curveShape <- curveShape
+  qgraphObject$plotOptions$curveScale <- curveScale
   qgraphObject$plotOptions$curvePivotShape <- curvePivotShape
   qgraphObject$plotOptions$label.scale <- label.scale
   qgraphObject$plotOptions$label.prop <- label.prop

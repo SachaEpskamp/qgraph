@@ -1,4 +1,5 @@
 Changes in Version 1.2.2
+  o Added 'curveScale' argument: Logical, should curve scale with distance between nodes. Defaults to TRUE. If FALSE, the curve can be exactly determined. Recommended to set to TRUE for graphs and FALSE for diagrams.
   o INTERNAL CHANGE IN QGRAPH
     o A change has been made to the qgraph internal repressentation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
     o Because of this, every aspect of a graph can now be manually changed between running qgraph and plotting the output.

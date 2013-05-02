@@ -87,6 +87,7 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$plotOptions$open -> open
   qgraphObject$plotOptions$curvePivot -> curvePivot
   qgraphObject$plotOptions$curveShape -> curveShape
+  qgraphObject$plotOptions$curveScale -> curveScale
   qgraphObject$plotOptions$curvePivotShape -> curvePivotShape
   qgraphObject$plotOptions$label.scale -> label.scale
   qgraphObject$plotOptions$label.norm -> label.norm
@@ -167,6 +168,16 @@ plot.qgraph <- function(qgraphObject, ...)
     
     knot.size <- knot.size * normC
     knot.border.width <- knot.border.width * normC
+  }
+  
+  ## Normalize curve (linear to half of diagonal in user coordinates):
+  if (isTRUE(curveScale))
+  {
+    usr <- par("usr")
+    AverageLength <- sqrt(((usr[2]-usr[1]) * (usr[4]-usr[3])) / nNodes)
+    EdgeLenghts <- sqrt((layout[E$to,1] - layout[E$from,1])^2 + (layout[E$to,2] - layout[E$from,2])^2)
+    curve <- curve * EdgeLenghts /AverageLength
+    
   }
   
   # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
