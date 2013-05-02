@@ -338,6 +338,7 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['residuals']])) residuals=FALSE else residuals=qgraphObject$Arguments[['residuals']]
     if(is.null(qgraphObject$Arguments[['residScale']])) residScale=1 else residScale=qgraphObject$Arguments[['residScale']]
     if(is.null(qgraphObject$Arguments[['residEdge']])) residEdge=FALSE else residEdge=qgraphObject$Arguments[['residEdge']]
+  if(is.null(qgraphObject$Arguments[['CircleEdgeEnd']])) CircleEdgeEnd=FALSE else CircleEdgeEnd=qgraphObject$Arguments[['CircleEdgeEnd']]
     if(is.null(qgraphObject$Arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=qgraphObject$Arguments[['loopAngle']]
     if(is.null(qgraphObject$Arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=qgraphObject$Arguments[['legend.cex']]
     if(is.null(qgraphObject$Arguments[['legend.mode']]))
@@ -764,6 +765,11 @@ qgraph <- function( input, ... )
         residEdge <- residEdge[c(incl)]
         residEdge <- residEdge[E$weight!=0]
       }
+      if (is.matrix(CircleEdgeEnd))
+      {
+        CircleEdgeEnd <- CircleEdgeEnd[c(incl)]
+        CircleEdgeEnd <- CircleEdgeEnd[E$weight!=0]
+      }      
       if (is.matrix(edge.labels))
       {
         edge.labels <- edge.labels[c(incl)]
@@ -855,6 +861,12 @@ qgraph <- function( input, ... )
     }
     if (length(residEdge)==length(keep)) residEdge <- residEdge[keep]    
     
+  if (length(CircleEdgeEnd)==1) 
+  {
+    CircleEdgeEnd <- rep(CircleEdgeEnd,length(E$from))
+  }
+  if (length(CircleEdgeEnd)==length(keep)) CircleEdgeEnd <- CircleEdgeEnd[keep]    
+  
     if (!is.logical(edge.labels))
     {
       if (length(edge.labels)==length(keep))
@@ -1598,6 +1610,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$width <- edge.width
   qgraphObject$graphAttributes$Edges$lty <- lty
   qgraphObject$graphAttributes$Edges$residEdge <- residEdge
+  qgraphObject$graphAttributes$Edges$CircleEdgeEnd <- CircleEdgeEnd
   qgraphObject$graphAttributes$Edges$asize <- asize
   if (mode == "sig") qgraphObject$graphAttributes$Edges$Pvals <- Pvals else Pvals <- NULL
   

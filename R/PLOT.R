@@ -38,6 +38,7 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$graphAttributes$Edges$lty -> lty
   qgraphObject$graphAttributes$Edges$asize -> asize
   qgraphObject$graphAttributes$Edges$residEdge -> residEdge
+  qgraphObject$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
   qgraphObject$graphAttributes$Edges$Pvals -> Pvals
   
   # Knots:
@@ -846,6 +847,35 @@ plot.qgraph <- function(qgraphObject, ...)
       
     }
   }    
+  
+  
+  ### CIRCLES AT END EDGES (RANDOM INTERCEPTS) ###
+  if (any(CircleEdgeEnd))
+  {
+    for (i in which(CircleEdgeEnd))
+    {
+      if (abs(E$weight[i]) > minimum)
+      {
+        # Center of destination node:
+        x <- layout[E$to[i],1]
+        y <- layout[E$to[i],2]
+        
+        # Edge entry point:
+        r <- atan2usr2in(layout[E$from[i],1] - x, layout[E$from[i],2] - y )
+        edge <- Cent2Edge(x,y,r,vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],offset=0, polygonList)
+        
+        # Size of bal:
+        sizeBal <- mean(vsize[E$to[i]],vsize2[E$to[i]]) / 4
+
+        # Center of bal:
+        r <- atan2usr2in(x-edge[1], y-edge[2] )
+        ball <- Cent2Edge(edge[1],edge[2],r,sizeBal,sizeBal,'circle',offset=0, polygonList)
+
+        # Draw ball:
+        points(ball[1], ball[2], pch = 16, col = edge.color[i], cex = sizeBal)
+      }
+    }
+  }
   
   ### Overlay:
   if (overlay)
