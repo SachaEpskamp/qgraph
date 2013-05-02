@@ -25,7 +25,7 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
     xNew <- xOutline[which.min(abs(rad - r))]
     yNew <- yOutline[which.min(abs(rad - r))]
     
-    return(c(xNew,yNew)) 
+    return(c(x+(cex+offset)/cex*(xNew-x),y+(cex+offset)/cex*(yNew-y)))
   } else {
     
     # Set mar:
