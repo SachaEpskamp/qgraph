@@ -153,6 +153,16 @@ qgraph( input, ... )
     \item{knot.border.width}{Width of the knot borders. Can be of length one or a vector with the size of each knot. Works similar to 'border.width'. Defaults to 1}
 }}
 
+\section{Arguments for bars}{
+\describe{
+  \item{bars}{A list with for each node containing either NULL or a vector with values between 0 and 1 indicating where bars should be placed inside the node.}
+  \item{barSide}{Integer for each node indicating at which side the bars should be drawn. 1, 2, 3 or 4 indicating at bottom, left, top or right respectively.}  
+  \item{barColor}{A vector with for each node indicating the color of bars. Defaults to the border color of the node.}  
+  \item{barLength}{A Vector indicating the relative length of bars of each node compared to the node size. Defaults to 0.5.}  
+      \item{barsAtSide}{Logical, should bars be drawn at the side of a node or at its center? Defaults to FALSE.}  
+  
+}}
+
 \section{Additional arguments}{	
 \describe{
   \item{edgelist}{Logical, if TRUE 'input' is assumed to be an edgelist, else if FALSE input is assumed to be a weights matrix. By default this is chosen automatically based on the dimensions of 'input' and this argument is only needed if the dimensions are ambiguous (square matrix with 2 or 3 rows/columns)}

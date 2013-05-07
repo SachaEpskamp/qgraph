@@ -25,6 +25,10 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$graphAttributes$Nodes$subplots -> subplots
   qgraphObject$graphAttributes$Nodes$images -> images
   qgraphObject$graphAttributes$Nodes$tooltips -> tooltips
+  qgraphObject$graphAttributes$Nodes$bars -> bars
+  qgraphObject$graphAttributes$Nodes$barSide -> barSide
+  qgraphObject$graphAttributes$Nodes$barColor -> barColor
+  qgraphObject$graphAttributes$Nodes$barLength -> barLength
   
   # Edges:
   qgraphObject$graphAttributes$Edges$curve -> curve
@@ -62,6 +66,7 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$graphAttributes$Graph$polygonList -> polygonList
   qgraphObject$graphAttributes$Graph$mode -> mode
   qgraphObject$graphAttributes$Graph$color -> color
+  
   
   # Layout:
   qgraphObject$layout -> layout
@@ -105,6 +110,7 @@ plot.qgraph <- function(qgraphObject, ...)
   qgraphObject$plotOptions$height -> height
   qgraphObject$plotOptions$aspect -> aspect
   qgraphObject$plotOptions$rescale -> rescale
+  qgraphObject$plotOptions$barsAtSide -> barsAtSide
 
   rm(qgraphObject)
   
@@ -683,7 +689,7 @@ plot.qgraph <- function(qgraphObject, ...)
   if (!XKCD)
   {
     # Check if nodes need to be plotted in for loop:
-    if (!is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")))
+    if (!is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0))
     {
       # Get which nodes become a subplot:
       #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
@@ -711,7 +717,7 @@ plot.qgraph <- function(qgraphObject, ...)
           # Plot border:
           if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width)
         } else {
-          drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width, polygonList)
+          drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width, polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide)
         }
       }      
     } else {

@@ -338,6 +338,15 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['residuals']])) residuals=FALSE else residuals=qgraphObject$Arguments[['residuals']]
     if(is.null(qgraphObject$Arguments[['residScale']])) residScale=1 else residScale=qgraphObject$Arguments[['residScale']]
     if(is.null(qgraphObject$Arguments[['residEdge']])) residEdge=FALSE else residEdge=qgraphObject$Arguments[['residEdge']]
+
+  if(is.null(qgraphObject$Arguments[['bars']])) bars <- list() else bars <- qgraphObject$Arguments[['bars']]
+  if(is.null(qgraphObject$Arguments[['barSide']])) barSide <- 1 else barSide <- qgraphObject$Arguments[['barSide']]
+  if(is.null(qgraphObject$Arguments[['barLength']])) barLength <- 0.5 else barLength <- qgraphObject$Arguments[['barLength']]
+  if(is.null(qgraphObject$Arguments[['barColor']])) barColor <- 'border' else barColor <- qgraphObject$Arguments[['barColor']]
+  if(is.null(qgraphObject$Arguments[['barsAtSide']])) barsAtSide <- FALSE else barsAtSide <- qgraphObject$Arguments[['barsAtSide']]
+  
+  if (!is.list(bars)) bars <- as.list(bars)
+  
   if(is.null(qgraphObject$Arguments[['CircleEdgeEnd']])) CircleEdgeEnd=FALSE else CircleEdgeEnd=qgraphObject$Arguments[['CircleEdgeEnd']]
     if(is.null(qgraphObject$Arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=qgraphObject$Arguments[['loopAngle']]
     if(is.null(qgraphObject$Arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=qgraphObject$Arguments[['legend.cex']]
@@ -1569,8 +1578,12 @@ qgraph <- function( input, ... )
       }  
     }
     
-  
-  
+  # Bars:
+  length(bars) <- nNodes
+  barSide <- rep(barSide,nNodes)
+  barColor <- rep(barColor, nNodes)
+  barLength <- rep(barLength, nNodes)
+  barColor[barColor == 'border'] <- bcolor[barColor == 'border']
   
   
     ########### SPLIT HERE ###########
@@ -1597,7 +1610,11 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$height <- vsize2
   qgraphObject$graphAttributes$Nodes$subplots <- subplots
   qgraphObject$graphAttributes$Nodes$images <- images
-  qgraphObject$graphAttributes$Nodes$tooltips -> tooltips
+  qgraphObject$graphAttributes$Nodes$tooltips <- tooltips
+  qgraphObject$graphAttributes$Nodes$bars <- bars
+  qgraphObject$graphAttributes$Nodes$barSide <- barSide
+  qgraphObject$graphAttributes$Nodes$barColor <- barColor
+  qgraphObject$graphAttributes$Nodes$barLength <- barLength
 
   # Edges:
   qgraphObject$graphAttributes$Edges$curve <- curve
@@ -1678,6 +1695,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$height <- height
   qgraphObject$plotOptions$aspect <- aspect
   qgraphObject$plotOptions$rescale <- rescale
+  qgraphObject$plotOptions$barsAtSide <- barsAtSide
   
   
     if (!DoNotPlot)

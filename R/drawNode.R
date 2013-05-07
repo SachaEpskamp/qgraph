@@ -1,5 +1,5 @@
 
-drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList)
+drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide)
 {
 
   if (shape %in% c("circle","square","triangle","diamond"))
@@ -51,4 +51,19 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor)
 
   } else stop(paste("Shape",shape,"is not supported or included in 'polygonList'."))
+  
+  ### ADD BARS ####
+  if (!is.null(bars))
+  {
+    if (any(bars < 0) | any(bars > 1))
+    {
+      warning("Bar detected < 0 or > 1, unexpected results might occur.")
+    }
+    for (i in seq_along(bars))
+    {
+      IntInNode(t(c(x,y)),cex1,cex2,bars[i],width=barLength,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+    }
+  }
+  
+  
 }
