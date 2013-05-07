@@ -61,7 +61,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     }
     for (i in seq_along(bars))
     {
-      IntInNode(t(c(x,y)),cex1,cex2,bars[i],width=barLength,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+      IntInNode(t(c(x,y)),cex1,cex2,shape,bars[i],width=barLength,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
     }
   }
   

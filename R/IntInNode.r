@@ -1,7 +1,8 @@
-IntInNode <- function(layout,cex,shape,m,width=0.2,triangles=TRUE,col="black",side=1,inside=TRUE)
+IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="black",side=1,inside=TRUE)
 {
   N <- nrow(layout)
   if (length(cex)==1) cex <- rep(cex,N)
+  if (length(cex2)==1) cex2 <- rep(cex2,N)
   if (length(shape)==1) shape <- rep(shape,N)
   if (length(col)==1) col <- rep(col,N)
   if (length(side)==1) side <- rep(side,N)
@@ -17,8 +18,8 @@ IntInNode <- function(layout,cex,shape,m,width=0.2,triangles=TRUE,col="black",si
       #       browser()
       x <- layout[i,1]
       y <- layout[i,2]
-      xran <- Cent2Edge(layout[i,1],layout[i,2],pi/2,cex[i],cex[i],shape[i])[1] - x
-      yran <- Cent2Edge(layout[i,1],layout[i,2],0,cex[i],cex[i],shape[i])[2] - y
+      xran <- Cent2Edge(layout[i,1],layout[i,2],pi/2,cex[i],cex2[i],shape[i])[1] - x
+      yran <- Cent2Edge(layout[i,1],layout[i,2],0,cex[i],cex2[i],shape[i])[2] - y
       
       if (!inside)
       {
