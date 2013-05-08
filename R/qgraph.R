@@ -1004,12 +1004,19 @@ qgraph <- function( input, ... )
       # Layout matrix:
       if (is.matrix(layout)) if (ncol(layout)>2)
       {
+        layout[is.na(layout)] <- 0
         # If character and labels exist, replace:
         if (is.character(layout) && is.character(labels))
         {
           layout[] <- match(layout,labels)
-          layout[] <- as.numeric(layout)
+          layout[is.na(layout)] <- 0
+          mode(layout) <- 'numeric'
         }
+        
+        # Check:
+        if (!all(seq_len(nNodes) %in% layout)) stop("Grid matrix does not contain a placement for every node.")
+        if (any(sapply(seq_len(nNodes),function(x)sum(layout==x))>1)) stop("Grid matrix contains a double entry.")
+        
         Lmat=layout
         LmatX=seq(-1,1,length=ncol(Lmat))
         LmatY=seq(1,-1,length=nrow(Lmat))
