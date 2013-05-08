@@ -328,11 +328,9 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['loop']])) loop=1 else loop=qgraphObject$Arguments[['loop']]
     if(is.null(qgraphObject$Arguments[['loopRotation']]))
     {
-      loopRotation <- 0
-      DefLoopRot <- TRUE
+      loopRotation <- NA
     } else {
       loopRotation=qgraphObject$Arguments[['loopRotation']]
-      DefLoopRot <- FALSE
     }
     
     if(is.null(qgraphObject$Arguments[['residuals']])) residuals=FALSE else residuals=qgraphObject$Arguments[['residuals']]
@@ -1509,31 +1507,6 @@ qgraph <- function( input, ... )
 #     }
 #     
     
-    # Super cool background:
-    
-    if (is.logical(bg)) if (bg) {
-      
-      colarray=array(dim=c(bgres,bgres,length(groups)))
-      
-      seq=seq(-1.2,1.2,length=bgres+1)
-      
-      for (G in 1:length(groups)) {
-        
-        Xg=l[groups[[G]],1]
-        Yg=l[groups[[G]],2]
-        
-        for (i in 1:bgres) {
-          for (j in 1:bgres) {
-            
-            Xp=mean(seq[i:(i+1)])
-            Yp=mean(seq[j:(j+1)])
-            
-            colarray[i,j,G]=min(sqrt( (Xp-Xg)^2 + (Yp-Yg)^2)) }}}
-      
-      colarray=((2.2-colarray)/2.2)^bgcontrol
-      
-      colarray2=array(dim=c(3,bgres,bgres))
-    }
     
     # Arrow sizes:
     if (length(asize)==1) asize=rep(asize,length(E$from))
@@ -1586,6 +1559,33 @@ qgraph <- function( input, ... )
   barColor[barColor == 'border'] <- bcolor[barColor == 'border']
   
   
+  # Compute loopRotation:
+  for (i in seq_len(nNodes))
+  {
+    if (is.na(loopRotation[i]))
+    {
+      centX <- mean(layout[,1])
+      centY <- mean(layout[,2])
+      for (g in 1:length(groups))
+      {
+        if (i%in%groups[[g]] & length(groups[[g]]) > 1)
+        {
+          centX <- mean(layout[groups[[g]],1])
+          centY <- mean(layout[groups[[g]],2])
+        }
+      }
+      loopRotation[i] <- atan2usr2in(layout[i,1]-centX,layout[i,2]-centY)
+      if (shape[i]=="square")
+      {
+        loopRotation[i] <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-loopRotation[i]%%(2*pi)))]
+      }
+    } 
+  } 
+  
+  
+  # Node names:
+  if (is.null(nodeNames)) nodeNames <- labels
+  
     ########### SPLIT HERE ###########
   
   ### Fill qgraph object with stuff:
@@ -1603,6 +1603,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$label.cex <- label.cex
   qgraphObject$graphAttributes$Nodes$label.color <- lcolor
   qgraphObject$graphAttributes$Nodes$labels <- labels
+  qgraphObject$graphAttributes$Nodes$names <- nodeNames
   qgraphObject$graphAttributes$Nodes$loopRotation <- loopRotation
   qgraphObject$graphAttributes$Nodes$shape <- shape
   qgraphObject$graphAttributes$Nodes$color <- vertex.colors
@@ -1611,6 +1612,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$subplots <- subplots
   qgraphObject$graphAttributes$Nodes$images <- images
   qgraphObject$graphAttributes$Nodes$tooltips <- tooltips
+  qgraphObject$graphAttributes$Nodes$SVGtooltips <- SVGtooltips
   qgraphObject$graphAttributes$Nodes$bars <- bars
   qgraphObject$graphAttributes$Nodes$barSide <- barSide
   qgraphObject$graphAttributes$Nodes$barColor <- barColor
@@ -1670,7 +1672,6 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$legend.cex <- legend.cex
   qgraphObject$plotOptions$pty <- pty
   qgraphObject$plotOptions$XKCD <- XKCD
-  qgraphObject$plotOptions$DefLoopRot <- DefLoopRot
   qgraphObject$plotOptions$residuals <- residuals
   qgraphObject$plotOptions$residScale <- residScale
   qgraphObject$plotOptions$arrows <- arrows
@@ -1696,7 +1697,9 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$aspect <- aspect
   qgraphObject$plotOptions$rescale <- rescale
   qgraphObject$plotOptions$barsAtSide <- barsAtSide
-  
+  qgraphObject$plotOptions$bgres <- bgres
+  qgraphObject$plotOptions$bgcontrol <- bgcontrol
+  qgraphObject$plotOptions$resolution <- res
   
     if (!DoNotPlot)
     {

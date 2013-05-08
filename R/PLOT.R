@@ -1,118 +1,122 @@
-plot.qgraph <- function(qgraphObject, ...)
+plot.qgraph <- function(x, ...)
 {
   ### Extract arguments:
   # My apologies, dear people that actually read my code, for the right assignment operator. I was lazy.
   ## Edgelist:
   E <- list()
-  qgraphObject$Edgelist$from -> E$from
-  qgraphObject$Edgelist$to -> E$to
-  qgraphObject$Edgelist$weight -> E$weight
-  qgraphObject$Edgelist$directed -> directed
-  qgraphObject$Edgelist$bidirectional -> bidirectional
+  x$Edgelist$from -> E$from
+  x$Edgelist$to -> E$to
+  x$Edgelist$weight -> E$weight
+  x$Edgelist$directed -> directed
+  x$Edgelist$bidirectional -> bidirectional
   
   # Nodes:
-  qgraphObject$graphAttributes$Nodes$border.color -> bcolor
-  qgraphObject$graphAttributes$Nodes$borders -> borders
-  qgraphObject$graphAttributes$Nodes$border.width -> border.width
-    qgraphObject$graphAttributes$Nodes$label.cex -> label.cex
-  qgraphObject$graphAttributes$Nodes$label.color -> lcolor
-  qgraphObject$graphAttributes$Nodes$labels -> labels
-  qgraphObject$graphAttributes$Nodes$loopRotation -> loopRotation
-  qgraphObject$graphAttributes$Nodes$shape -> shape
-  qgraphObject$graphAttributes$Nodes$color -> vertex.colors
-  qgraphObject$graphAttributes$Nodes$width -> vsize
-  qgraphObject$graphAttributes$Nodes$height -> vsize2
-  qgraphObject$graphAttributes$Nodes$subplots -> subplots
-  qgraphObject$graphAttributes$Nodes$images -> images
-  qgraphObject$graphAttributes$Nodes$tooltips -> tooltips
-  qgraphObject$graphAttributes$Nodes$bars -> bars
-  qgraphObject$graphAttributes$Nodes$barSide -> barSide
-  qgraphObject$graphAttributes$Nodes$barColor -> barColor
-  qgraphObject$graphAttributes$Nodes$barLength -> barLength
+  x$graphAttributes$Nodes$border.color -> bcolor
+  x$graphAttributes$Nodes$borders -> borders
+  x$graphAttributes$Nodes$border.width -> border.width
+  x$graphAttributes$Nodes$label.cex -> label.cex
+  x$graphAttributes$Nodes$label.color -> lcolor
+  x$graphAttributes$Nodes$labels -> labels
+  x$graphAttributes$Nodes$names -> nodeNames
+  x$graphAttributes$Nodes$loopRotation -> loopRotation
+  x$graphAttributes$Nodes$shape -> shape
+  x$graphAttributes$Nodes$color -> vertex.colors
+  x$graphAttributes$Nodes$width -> vsize
+  x$graphAttributes$Nodes$height -> vsize2
+  x$graphAttributes$Nodes$subplots -> subplots
+  x$graphAttributes$Nodes$images -> images
+  x$graphAttributes$Nodes$tooltips -> tooltips
+  x$graphAttributes$Nodes$SVGtooltips -> SVGtooltips
+  x$graphAttributes$Nodes$bars -> bars
+  x$graphAttributes$Nodes$barSide -> barSide
+  x$graphAttributes$Nodes$barColor -> barColor
+  x$graphAttributes$Nodes$barLength -> barLength
   
   # Edges:
-  qgraphObject$graphAttributes$Edges$curve -> curve
-  qgraphObject$graphAttributes$Edges$color -> edge.color
-  qgraphObject$graphAttributes$Edges$labels -> edge.labels
-  qgraphObject$graphAttributes$Edges$label.cex -> edge.label.cex
-  qgraphObject$graphAttributes$Edges$label.bg -> edge.label.bg
-  qgraphObject$graphAttributes$Edges$font -> edge.font
-  qgraphObject$graphAttributes$Edges$label.color -> ELcolor
-  qgraphObject$graphAttributes$Edges$width -> edge.width
-  qgraphObject$graphAttributes$Edges$lty -> lty
-  qgraphObject$graphAttributes$Edges$asize -> asize
-  qgraphObject$graphAttributes$Edges$residEdge -> residEdge
-  qgraphObject$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
-  qgraphObject$graphAttributes$Edges$Pvals -> Pvals
+  x$graphAttributes$Edges$curve -> curve
+  x$graphAttributes$Edges$color -> edge.color
+  x$graphAttributes$Edges$labels -> edge.labels
+  x$graphAttributes$Edges$label.cex -> edge.label.cex
+  x$graphAttributes$Edges$label.bg -> edge.label.bg
+  x$graphAttributes$Edges$font -> edge.font
+  x$graphAttributes$Edges$label.color -> ELcolor
+  x$graphAttributes$Edges$width -> edge.width
+  x$graphAttributes$Edges$lty -> lty
+  x$graphAttributes$Edges$asize -> asize
+  x$graphAttributes$Edges$residEdge -> residEdge
+  x$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
+  x$graphAttributes$Edges$Pvals -> Pvals
   
   # Knots:
-  qgraphObject$graphAttributes$Knots$knots -> knots
-  qgraphObject$graphAttributes$Knots$knot.size -> knot.size
-  qgraphObject$graphAttributes$Knots$knot.color -> knot.color
-  qgraphObject$graphAttributes$Knots$knot.borders -> knot.borders
-  qgraphObject$graphAttributes$Knots$knot.border.color -> knot.border.color
-  qgraphObject$graphAttributes$Knots$knot.border.width -> knot.border.width
+  x$graphAttributes$Knots$knots -> knots
+  x$graphAttributes$Knots$knot.size -> knot.size
+  x$graphAttributes$Knots$knot.color -> knot.color
+  x$graphAttributes$Knots$knot.borders -> knot.borders
+  x$graphAttributes$Knots$knot.border.color -> knot.border.color
+  x$graphAttributes$Knots$knot.border.width -> knot.border.width
   
   # Graph:
-  qgraphObject$graphAttributes$Graph$nNodes -> nNodes
-  qgraphObject$graphAttributes$Graph$weighted -> weighted
-  qgraphObject$graphAttributes$Graph$edgesort -> edgesort
-  qgraphObject$graphAttributes$Graph$scores -> scores
-  qgraphObject$graphAttributes$Graph$scores.range -> scores.range
-  qgraphObject$graphAttributes$Graph$groups -> groups
-  qgraphObject$graphAttributes$Graph$minimum -> minimum
-  qgraphObject$graphAttributes$Graph$maximum -> maximum
-  qgraphObject$graphAttributes$Graph$cut -> cut
-  qgraphObject$graphAttributes$Graph$polygonList -> polygonList
-  qgraphObject$graphAttributes$Graph$mode -> mode
-  qgraphObject$graphAttributes$Graph$color -> color
+  x$graphAttributes$Graph$nNodes -> nNodes
+  x$graphAttributes$Graph$weighted -> weighted
+  x$graphAttributes$Graph$edgesort -> edgesort
+  x$graphAttributes$Graph$scores -> scores
+  x$graphAttributes$Graph$scores.range -> scores.range
+  x$graphAttributes$Graph$groups -> groups
+  x$graphAttributes$Graph$minimum -> minimum
+  x$graphAttributes$Graph$maximum -> maximum
+  x$graphAttributes$Graph$cut -> cut
+  x$graphAttributes$Graph$polygonList -> polygonList
+  x$graphAttributes$Graph$mode -> mode
+  x$graphAttributes$Graph$color -> color
   
   
   # Layout:
-  qgraphObject$layout -> layout
-  qgraphObject$layout.orig -> original.layout
+  x$layout -> layout
+  x$layout.orig -> original.layout
   
   # Plot options:
-  qgraphObject$plotOptions$filetype -> filetype
-  qgraphObject$plotOptions$filename -> filename
-  qgraphObject$plotOptions$background -> background
-  qgraphObject$plotOptions$bg -> bg
-  qgraphObject$plotOptions$normalize -> normalize
-  qgraphObject$plotOptions$plot -> plot
-  qgraphObject$plotOptions$mar -> mar
-  qgraphObject$plotOptions$GLratio -> GLratio
-  qgraphObject$plotOptions$legend -> legend
-  qgraphObject$plotOptions$legend.cex -> legend.cex
-  qgraphObject$plotOptions$pty -> pty
-  qgraphObject$plotOptions$XKCD -> XKCD
-  qgraphObject$plotOptions$DefLoopRot -> DefLoopRot
-  qgraphObject$plotOptions$residuals -> residuals
-  qgraphObject$plotOptions$residScale -> residScale
-  qgraphObject$plotOptions$arrows -> arrows
-  qgraphObject$plotOptions$arrowAngle -> arrowAngle
-  qgraphObject$plotOptions$open -> open
-  qgraphObject$plotOptions$curvePivot -> curvePivot
-  qgraphObject$plotOptions$curveShape -> curveShape
-  qgraphObject$plotOptions$curveScale -> curveScale
-  qgraphObject$plotOptions$curvePivotShape -> curvePivotShape
-  qgraphObject$plotOptions$label.scale -> label.scale
-  qgraphObject$plotOptions$label.norm -> label.norm
-  qgraphObject$plotOptions$label.prop -> label.prop
-  qgraphObject$plotOptions$overlay -> overlay
-  qgraphObject$plotOptions$details -> details
-  qgraphObject$plotOptions$legend.mode -> legend.mode
-  qgraphObject$plotOptions$srt -> srt
-  qgraphObject$plotOptions$gray -> gray
-  qgraphObject$plotOptions$overlaySize -> overlaySize
-  qgraphObject$plotOptions$plotELBG -> plotELBG
-  qgraphObject$plotOptions$alpha -> alpha
-  qgraphObject$plotOptions$width -> width
-  qgraphObject$plotOptions$height -> height
-  qgraphObject$plotOptions$aspect -> aspect
-  qgraphObject$plotOptions$rescale -> rescale
-  qgraphObject$plotOptions$barsAtSide -> barsAtSide
+  x$plotOptions$filetype -> filetype
+  x$plotOptions$filename -> filename
+  x$plotOptions$background -> background
+  x$plotOptions$bg -> bg
+  x$plotOptions$normalize -> normalize
+  x$plotOptions$plot -> plot
+  x$plotOptions$mar -> mar
+  x$plotOptions$GLratio -> GLratio
+  x$plotOptions$legend -> legend
+  x$plotOptions$legend.cex -> legend.cex
+  x$plotOptions$pty -> pty
+  x$plotOptions$XKCD -> XKCD
+  x$plotOptions$residuals -> residuals
+  x$plotOptions$residScale -> residScale
+  x$plotOptions$arrows -> arrows
+  x$plotOptions$arrowAngle -> arrowAngle
+  x$plotOptions$open -> open
+  x$plotOptions$curvePivot -> curvePivot
+  x$plotOptions$curveShape -> curveShape
+  x$plotOptions$curveScale -> curveScale
+  x$plotOptions$curvePivotShape -> curvePivotShape
+  x$plotOptions$label.scale -> label.scale
+  x$plotOptions$label.norm -> label.norm
+  x$plotOptions$label.prop -> label.prop
+  x$plotOptions$overlay -> overlay
+  x$plotOptions$details -> details
+  x$plotOptions$legend.mode -> legend.mode
+  x$plotOptions$srt -> srt
+  x$plotOptions$gray -> gray
+  x$plotOptions$overlaySize -> overlaySize
+  x$plotOptions$plotELBG -> plotELBG
+  x$plotOptions$alpha -> alpha
+  x$plotOptions$width -> width
+  x$plotOptions$height -> height
+  x$plotOptions$aspect -> aspect
+  x$plotOptions$rescale -> rescale
+  x$plotOptions$barsAtSide -> barsAtSide
+  x$plotOptions$bgres -> bgres
+  x$plotOptions$bgcontrol -> bgcontrol
+  x$plotOptions$resolution -> res
 
-  rm(qgraphObject)
+  rm(x)
   
   # Some setup
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
@@ -242,8 +246,34 @@ plot.qgraph <- function(qgraphObject, ...)
   }
   
   
-  if (is.logical(bg)) if (bg){
+  # Super cool background:
+  
+  if (is.logical(bg)) if (bg) {
     
+    colarray=array(dim=c(bgres,bgres,length(groups)))
+    
+    seq=seq(-1.2,1.2,length=bgres+1)
+    
+    for (G in 1:length(groups)) {
+      
+      Xg=layout[groups[[G]],1]
+      Yg=layout[groups[[G]],2]
+      
+      for (i in 1:bgres) {
+        for (j in 1:bgres) {
+          
+          Xp=mean(seq[i:(i+1)])
+          Yp=mean(seq[j:(j+1)])
+          
+          colarray[i,j,G]=min(sqrt( (Xp-Xg)^2 + (Yp-Yg)^2)) }}}
+    
+    colarray=((2.2-colarray)/2.2)^bgcontrol
+    
+    colarray2=array(dim=c(3,bgres,bgres))
+#   }
+#   
+#   if (is.logical(bg)) if (bg){
+#     
     
     for (i in 1:bgres) {
       for (j in 1:bgres) {
@@ -445,25 +475,8 @@ plot.qgraph <- function(qgraphObject, ...)
           #               loopY=loop*3*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2])
           #               spy=c(y1,y1+loopY,y1)
           #               spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
-          if (DefLoopRot | is.na(loopRotation[E$from[i]]))
-          {
-            centX <- mean(layout[,1])
-            centY <- mean(layout[,2])
-            for (g in 1:length(groups))
-            {
-              if (E$from[i]%in%groups[[g]])
-              {
-                centX <- mean(layout[groups[[g]],1])
-                centY <- mean(layout[groups[[g]],2])
-              }
-            }
-            rot <- atan2usr2in(x1-centX,y1-centY)
-            if (shape[E$from[i]]=="square")
-            {
-              rot <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-rot%%(2*pi)))]
-            }
-          } else rot <- loopRotation[E$from[i]]
-          spl <- SelfLoop(x1,y1,rot,vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList)
+
+          spl <- SelfLoop(x1,y1,loopRotation[E$from[i]],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList)
           
         } else 
         {
@@ -919,30 +932,33 @@ plot.qgraph <- function(qgraphObject, ...)
           text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
         } else 
         {
-          legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          if (length(groups) > 1)
+          {
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+          }
         }
         
         if (gray)
         {
-          legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+          legend(1 + mar[4] + 0.5 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                  col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
                  lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
         } else
         {
           if (any(Pvals < 0))
           {
-            legend(1 + mar[4] + 0.25 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+            legend(1 + mar[4] + 0.25 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
                    lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
             
-            legend(1 + mar[4] + 0.75 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+            legend(1 + mar[4] + 0.75 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
                    lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
             
           } else
           {
-            legend(1 + mar[4] + 0.5 * 2.4/GLratio,-0.5,paste("p <",alpha[length(alpha):1]),
+            legend(1 + mar[4] + 0.5 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
                    lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           }

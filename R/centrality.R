@@ -4,13 +4,13 @@ centrality <- function(graph,alpha=1,posfun=abs)
   # Check for correct class:
   if (class(graph) != "qgraph") stop("Must be a 'qgraph' object")
   
-  if (!is.null(graph[['weighted']])) if (!graph[['weighted']]) graph[['qgraphEdgelist']][['weight']] <- ifelse(graph[['qgraphEdgelist']][['weight']]==0,0,1)
+  if (!is.null(graph[['graphAttributes']][['Graph']][['weighted']])) if (!graph[['graphAttributes']][['Graph']][['weighted']]) graph[['Edgelist']][['weight']] <- ifelse(graph[['Edgelist']][['weight']]==0,0,1)
   
   # Extract edgelist:
-  E <- graph[['qgraphEdgelist']]
+  E <- graph[['Edgelist']]
   
   # Number of nodes:
-  n <- graph$nNodes
+  n <- graph[['graphAttributes']][['Graph']][['nNodes']]
   
   ## Convert to adjacency:
   W <- matrix(0,n,n)

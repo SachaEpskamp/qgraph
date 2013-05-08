@@ -1,24 +1,35 @@
 Changes in Version 1.2.2
-  o Added functionality to draw bars inside nodes (e.g., how semPlot shows thresholds). Note that this is not intended to be used as shading lines, which will be added in a future version. See the qgraph help page for a description of the new arguments 'bars', 'barLength', 'barColor', 'barSide' and 'barsAtSide'.
-  o minimum is now taken into account in automatically curving edges. Edges are only automatically curved if multiple edges between two nodes actually show up in the graph.
-  o Added 'curveScale' argument: Logical, should curve scale with distance between nodes. Defaults to TRUE. If FALSE, the curve can be exactly determined. Recommended to set to TRUE for graphs and FALSE for diagrams.
-  o INTERNAL CHANGE IN QGRAPH
-    o A change has been made to the qgraph internal repressentation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
-    o Because of this, every aspect of a graph can now be manually changed between running qgraph and plotting the output.
-    o Currently this is implemented simply by storing all values in qgraph() that are used in plot.qgraph, in a future function some of the arguments from qgraph will be moved to plot.qgraph to make a more natural distinction between plotting arguments (such as filetype) and arguments that control the graph.
-  o Using a matrix with relative positioning of nodes can now also be assigned characters of the node labels. e.g., assinging matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right.
-  o Added 'pastel' argument for pastel colors
-  o Added 'rainbowStart' argument to control the start of rainbow functions
-  o Node and edge labels can now be assigned using a list.
-  o Fixed a bug where tooltips could not be plotted with filetype='svg'. Tooltips now no longer require labels as well.
-  o Using the filetype argument in combination with a legend (or filetype='svg') will now once again create a larger plotting window such that the graph is plotted in a square window.
-  o graphNel objects can now result in undirected graphs 
-  o pcalg objects will now result in mixed graphs.
-  o Added 'nodeNames' argument, which can be used to make a legend based on node labels for every node.
-  o Added 'legend.mode' argument to indicate if legend should be based on groups or node names.
-  o Legend placement now takes the 'mar' argument into account.
-  o Added support for custom node shapes using polygons. The polygonList argument can be used to add polygon shapes to the lookup table of the shape argument.
-  o Added "ellipse" and "heart" shapes.
+  o New features
+    o Added functionality to draw bars inside nodes (e.g., how semPlot shows thresholds). Note that this is not intended to be used as shading lines, which will be added in a future version. See the qgraph help page for a description of the new arguments 'bars', 'barLength', 'barColor', 'barSide' and 'barsAtSide'.
+    o Added 'curveScale' argument: Logical, should curve scale with distance between nodes. Defaults to TRUE. If FALSE, the curve can be exactly determined. Recommended to set to TRUE for graphs and FALSE for diagrams.
+    o Using a matrix with relative positioning of nodes (grid layout) can now also be assigned characters of the node labels. e.g., assinging matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right. Use NA rather than 0 in all other positions.
+    o Added 'pastel' argument for pastel colors
+    o Added 'rainbowStart' argument to control the start of rainbow functions
+    o Added 'nodeNames' argument, which can be used to make a legend based on node labels for every node.
+    o Added 'legend.mode' argument to indicate if legend should be based on groups or node names.
+    o Added support for custom node shapes using polygons. The polygonList argument can be used to add polygon shapes to the lookup table of the shape argument.
+      o By default this list includes the shapes "ellipse", "heart" and "star"
+
+  o Major changes
+    o INTERNAL CHANGE IN QGRAPH
+      o A change has been made to the qgraph internal repressentation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
+      o Because of this, every aspect of a graph can now be manually changed between running qgraph and plotting the output (use DoNotPlot to ignore plotting the first run).
+      o Currently this is implemented simply by storing all values in qgraph() that are used in plot.qgraph, in a future function some of the arguments from qgraph will be moved to plot.qgraph to make a more natural distinction between plotting arguments (such as filetype) and arguments that control the graph.
+
+  o Minor changes
+    o minimum is now taken into account in automatically curving edges. Edges are only automatically curved if multiple edges between two nodes actually show up in the graph.
+    o Node and edge labels can now be assigned using a list.
+    o graphNel objects can now result in undirected graphs.
+    o pcalg objects will now result in mixed graphs.
+    o Legend placement now takes the 'mar' argument into account.
+    o The 'aspect' argument now also works for non-square plotting areas
+    o The default rotation of selfloops now point away from the center of a group only if that group contains at least two nodes (rather than one)
+
+  o Bugfixes
+    o Fixed a bug where tooltips could not be plotted with filetype='svg'. Tooltips now no longer require labels as well.
+    o Using the filetype argument in combination with a legend (or filetype='svg') will now once again create a larger plotting window such that the graph is plotted in a square window.
+    o Legens are now also plotted when plotting a graph of significance values with no groups specified.
+
 
 Changes in Version 1.2.1
   o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
