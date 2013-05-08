@@ -294,7 +294,8 @@ data(big5)
 data(big5groups)
 
 # Correlations:
-Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,borders=FALSE)
+Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,
+  legend=TRUE,borders=FALSE)
 title("Big 5 correlations",line=2.5)
 
 \dontrun{
@@ -330,19 +331,22 @@ qgraph(Q,graph="sig",gray=TRUE)
 title("Big 5 correlations (p-values)",line=2.5)
 
 # Correlations graph with scores of random subject:
-qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
+qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,
+  borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
 title("Test scores of random subject",line=2.5)
 layout(1)
 
 # EFA:
 big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
+qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
+  cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
 title("Big 5 EFA",line=2.5)
 
 # PCA:
 library("psych")
 big5pca <- principal(cor(big5),5,rotate="promax")
-qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
+qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
+  cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
 title("Big 5 PCA",line=2.5)
 
 #### UNWEIGHTED DIRECTED GRAPHS ###
@@ -388,8 +392,8 @@ qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,cut=0.4)
 title("cut=0.4",line=2.5)
 
 # With details:
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,maximum=1,
-       cut=0.4,details=TRUE)
+qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,
+  maximum=1,cut=0.4,details=TRUE)
 title("details=TRUE",line=2.5)
 
 ### Additional topics ###

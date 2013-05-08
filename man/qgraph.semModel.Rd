@@ -8,7 +8,9 @@ qgraph: SEM model pathdiagram
 This is a watered down version of \code{\link{qgraph.sem}} that only plots a diagram. It is called if a "mod" object is supplied to \code{\link{qgraph}}}
 
 \usage{
-qgraph.semModel(mod, manifest = NULL, layout = "spring", vsize.man = 3, vsize.lat = 6, residuals = TRUE, latres = TRUE, curve = 0.2, residSize = 0.2,...)
+qgraph.semModel(mod, manifest = NULL, layout = "spring", vsize.man = 3, 
+  vsize.lat = 6, residuals = TRUE, latres = TRUE, curve = 0.2, residSize = 0.2,
+  ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -8,7 +8,8 @@ Animate a growing network
 This function is meant to facilitate the creation of animations based on growing networks. Networks are created based on the Fruchterman Reingold algorithm, which is constraint by limiting the maximum displacement of nodes that are already in the graph.
 }
 \usage{
-qgraph.animate(input, ind = NULL, ..., constraint = 10, growth = "order", titles = NULL, sleep = 0)
+qgraph.animate(input, ind = NULL, ..., constraint = 10, growth = "order", 
+  titles = NULL, sleep = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
