@@ -376,7 +376,7 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments$label.scale)) label.scale=TRUE else label.scale=qgraphObject$Arguments$label.scale
     if(is.null(qgraphObject$Arguments$scores)) scores=NULL else scores=qgraphObject$Arguments$scores
     if(is.null(qgraphObject$Arguments$scores.range)) scores.range=NULL else scores.range=qgraphObject$Arguments$scores.range
-    if(is.null(qgraphObject$Arguments$lty)) lty=NULL else lty=qgraphObject$Arguments$lty
+    if(is.null(qgraphObject$Arguments$lty)) lty=1 else lty=qgraphObject$Arguments$lty
     if(is.null(qgraphObject$Arguments$vTrans)) vTrans=255 else vTrans=qgraphObject$Arguments$vTrans
     if(is.null(qgraphObject$Arguments[['overlay']])) overlay <- FALSE else overlay <- qgraphObject$Arguments[['overlay']]
     if(is.null(qgraphObject$Arguments[['overlaySize']])) overlaySize <- 0.5 else overlaySize <- qgraphObject$Arguments[['overlaySize']]
@@ -907,13 +907,9 @@ qgraph <- function( input, ... )
     
     
     # lty and curve settings:
-    if (is.null(lty))
-    {
-      lty=rep(1,length(E$from))
-    } else 
-    {
+
       if (length(lty)==1) lty=rep(lty,length(E$from))
-    }
+
     
     # Make bidirectional vector:
     if (length(bidirectional)==1) bidirectional=rep(bidirectional,length(E$from))
