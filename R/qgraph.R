@@ -1593,6 +1593,19 @@ qgraph <- function( input, ... )
   # Node names:
   if (is.null(nodeNames)) nodeNames <- labels
   
+  
+  # Make labels:
+  if (is.logical(labels))
+  {
+    if (labels)
+    {
+      labels=1:nNodes
+    } else 
+    {
+      labels <- rep('',nNodes)
+    }
+  }
+  
     ########### SPLIT HERE ###########
   
   ### Fill qgraph object with stuff:

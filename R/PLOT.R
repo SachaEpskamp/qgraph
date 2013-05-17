@@ -794,16 +794,8 @@ plot.qgraph <- function(x, ...)
     }
   }
   
-  # Make labels:
-  if (is.logical(labels))
-  {
-    if (labels)
-    {
-      labels=1:nNodes
-    }
-  }
-  
-  if (!is.logical(labels))
+
+  if (any(labels != ''))
   {
     #         labels=as.character(labels)
     # Vertex label symbols:
