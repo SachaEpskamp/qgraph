@@ -28,11 +28,11 @@ centrality <- function(graph,alpha=1,posfun=abs)
   
   ## Compute default measures:
   UnweightedDegreesOut <- rowSums(X)
-  WeightedDegreesOut <- rowSums(W)
+  WeightedDegreesOut <- rowSums(posfun(W))
   CombinedDegreesOut <- UnweightedDegreesOut^(1-alpha) * WeightedDegreesOut^alpha
   
   UnweightedDegreesIn <- colSums(X)
-  WeightedDegreesIn <- colSums(W)
+  WeightedDegreesIn <- colSums(posfun(W))
   CombinedDegreesIn <- UnweightedDegreesIn^(1-alpha) * WeightedDegreesIn^alpha
   
   # Compute shortest distance using Dijkstra (code based on pseudo code on Wikipedia)

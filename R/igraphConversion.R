@@ -8,15 +8,15 @@ as.igraph.qgraph <- function(object,attributes=TRUE)
   }
   
   # Extract graph:
-  edgesort <- object$graphAttributes$edgesort
-  E <- as.matrix(as.data.frame(object$qgraphEdgelist[c("from","to")]))
+  edgesort <- object$graphAttributes$Graph$edgesort
+  E <- as.matrix(as.data.frame(object$Edgelist[c("from","to")]))
   E <- E[edgesort,]
   srt <- cbind(pmin(E[,1],E[,2]),pmax(E[,1],E[,2]))
-  Dir <- object$qgraphEdgelist$directed[edgesort]
-  Bi <-  object$qgraphEdgelist$bidir[edgesort]
+  Dir <- object$Edgelist$directed[edgesort]
+  Bi <-  object$Edgelist$bidirectional[edgesort]
   
   Graph <- graph.edgelist(E, any(Dir))
-  E(Graph)$weight <- object$qgraphEdgelist$weight[edgesort]
+  E(Graph)$weight <- object$Edgelist$weight[edgesort]
   
   # Arrow mode:
   aMode <- ifelse(Dir,2,0)
@@ -37,14 +37,14 @@ as.igraph.qgraph <- function(object,attributes=TRUE)
     V(Graph)$shape <- object$graphAttributes$Nodes$shape
     V(Graph)$shape[!V(Graph)$shape%in%c("circle", "square", "csquare", "rectangle", "crectangle", "vrectangle", "pie")] <- "none"
     V(Graph)$color <- object$graphAttributes$Nodes$color
-    V(Graph)$size <- object$graphAttributes$Nodes$width / max((-1/72)*(object$nNodes)+5.35,1) * 15
-    V(Graph)$size2 <- object$graphAttributes$Nodes$height / max((-1/72)*(object$nNodes)+5.35,1) * 15
+    V(Graph)$size <- object$graphAttributes$Nodes$width / max((-1/72)*(object$nNodes)+5.35,1) * 4
+    V(Graph)$size2 <- object$graphAttributes$Nodes$height / max((-1/72)*(object$nNodes)+5.35,1) * 4
     
     ## Edge attributes:
     E(Graph)$curved <- object$graphAttributes$Edges$curve[edgesort]
     E(Graph)$color <- object$graphAttributes$Edges$color[edgesort]
     if (is.character(object$graphAttributes$Edges$labels)) E(Graph)$label <- object$graphAttributes$Edges$labels[edgesort]
-    E(Graph)$label.color <- object$graphAttributes$Edges$label.color[edgesort]
+    if (!is.null(object$graphAttributes$Edges$label.color)) E(Graph)$label.color <- object$graphAttributes$Edges$label.color[edgesort]
     E(Graph)$lty <- object$graphAttributes$Edges$lty[edgesort]
     E(Graph)$width <- object$graphAttributes$Edges$width[edgesort]
   }

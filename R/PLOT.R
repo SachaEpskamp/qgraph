@@ -9,7 +9,7 @@ plot.qgraph <- function(x, ...)
   x$Edgelist$weight -> E$weight
   x$Edgelist$directed -> directed
   x$Edgelist$bidirectional -> bidirectional
-  
+
   # Nodes:
   x$graphAttributes$Nodes$border.color -> bcolor
   x$graphAttributes$Nodes$borders -> borders
@@ -117,7 +117,7 @@ plot.qgraph <- function(x, ...)
   x$plotOptions$resolution -> res
 
   rm(x)
-  
+
   # Some setup
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
@@ -321,7 +321,7 @@ plot.qgraph <- function(x, ...)
   {
     omitEdge <- duplicated(srt)&bidirectional
   } else omitEdge <- NULL 
-  
+
   # If images is not NULL, replace subplots with images calls:
   if (!is.null(images))
   {
@@ -347,7 +347,7 @@ plot.qgraph <- function(x, ...)
       }
     }
   }
-  
+
   # Set non-rectangular/square dge shapes with subplots to square:
   if (!is.null(subplots))
   {
@@ -624,7 +624,6 @@ plot.qgraph <- function(x, ...)
   }
   
   
-  
   # Plot knots:
   if (any(knots>0))
   {
@@ -717,6 +716,7 @@ plot.qgraph <- function(x, ...)
       #           bordVec <- bordVec[!bordVec%in%whichsub]
       #           points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width,pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))            
       
+
       for (i in order(vsize*vsize2,decreasing=TRUE))
       {
         x <- layout[i,1]
@@ -724,8 +724,8 @@ plot.qgraph <- function(x, ...)
         
         if (isTRUE(is.expression(subplots[[i]])))
         {
-          xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i], polygonList)[1] - x
-          yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i], polygonList)[2] - y
+          xOff <- Cent2Edge(x,y,pi/2,vsize[i],vsize2[i],shape[i], offset=0, polygonList=polygonList)[1] - x
+          yOff <- Cent2Edge(x,y,0,vsize[i],vsize2[i],shape[i], offset=0, polygonList=polygonList)[2] - y
           
           usr <- par("usr")
           # Plot background:
@@ -799,16 +799,8 @@ plot.qgraph <- function(x, ...)
     }
   }
   
-  # Make labels:
-  if (is.logical(labels))
-  {
-    if (labels)
-    {
-      labels=1:nNodes
-    }
-  }
-  
-  if (!is.logical(labels))
+
+  if (any(labels != ''))
   {
     #         labels=as.character(labels)
     # Vertex label symbols:
