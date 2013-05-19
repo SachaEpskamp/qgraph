@@ -122,6 +122,7 @@ plot.qgraph <- function(x, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
+  edge.labels <- as.character(edge.labels)
   
   ### Open device:
   # Start output:
