@@ -302,6 +302,8 @@ plot.qgraph <- function(x, ...)
     
     knot.size <- knot.size * normC
     knot.border.width <- knot.border.width * normC
+    
+    residScale <- residScale * normC
   }
   
   ## Normalize curve (linear to half of diagonal in user coordinates):
@@ -670,12 +672,15 @@ plot.qgraph <- function(x, ...)
     {
       for (i in edgesort2)
       {
-        labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
-        labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
-        polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
-                c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
-                border=NA,
-                col=edge.label.bg[i])
+        if ((is.character(edge.labels[[i]]) && edge.labels[[i]]!='') || length(edge.labels) == 0)
+        {
+          labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
+          labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
+          polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
+                  c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
+                  border=NA,
+                  col=edge.label.bg[i]) 
+        }
       }
     }
     

@@ -1,3 +1,6 @@
+Changes in Version 1.2.3
+  o Edge labels of '' will now not plot a background.
+
 Changes in Version 1.2.2
   o New features
     o Added functionality to draw bars inside nodes (e.g., how semPlot shows thresholds). Note that this is not intended to be used as shading lines, which will be added in a future version. See the qgraph help page for a description of the new arguments 'bars', 'barLength', 'barColor', 'barSide' and 'barsAtSide'.
