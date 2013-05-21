@@ -1524,14 +1524,7 @@ qgraph <- function( input, ... )
     
     # Edge labels:
     # Make labels:
-    if (is.logical(edge.labels))
-    {
-      if (edge.labels)
-      {
-        edge.labels=round(E$weight,2)
-      }
-    }
-    
+
     edge.font=rep(1,length(E$from))
   
     if (!is.logical(edge.labels))
@@ -1556,6 +1549,12 @@ qgraph <- function( input, ... )
         
         edge.labels[edge.labels=="NA"]=""
       }  
+    } else
+    {
+      if (edge.labels)
+      {
+        edge.labels= as.character(round(E$weight,2))
+      } else edge.labels <- rep('',length(E$from))
     }
     
   # Bars:

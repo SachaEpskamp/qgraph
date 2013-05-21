@@ -667,7 +667,7 @@ plot.qgraph <- function(x, ...)
     edgesort2 <- edgesort2[!(duplicated(srt[edgesort2,,drop=FALSE])&bidirectional[edgesort2]) & (!duplicated(knots[edgesort2])|knots[edgesort2]==0)]
     
     if (length(edge.label.cex)==1) edge.label.cex <- rep(edge.label.cex,length(E$from))
-    
+
     if (plotELBG)
     {
       for (i in edgesort2)
