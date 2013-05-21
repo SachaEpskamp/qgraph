@@ -1605,6 +1605,8 @@ qgraph <- function( input, ... )
     }
   }
   
+  border.width <- rep(border.width, nNodes)
+  
     ########### SPLIT HERE ###########
   
   ### Fill qgraph object with stuff:
