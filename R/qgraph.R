@@ -80,7 +80,7 @@ qgraph <- function( input, ... )
       if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
       qgraphObject$Arguments$directed <- graphNEL@graphData$edgemode == "directed"
       qgraphObject$Arguments$bidirectional <- TRUE
-      qgraphObject$Arguments$labels <- graphNEL@nodes
+      if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels <- graphNEL@nodes
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
       EL <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
