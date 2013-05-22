@@ -71,7 +71,15 @@ qgraph <- function( input, ... )
     {
       if (is.null(qgraphObject$Arguments$directed)) qgraphObject$Arguments$directed <- input$Edgelist$directed
       if (is.null(qgraphObject$Arguments$bidirectional)) qgraphObject$Arguments$bidirectional <- input$Edgelist$bidirectional
-      input <- cbind(input$Edgelist$from,input$Edgelist$to,input$Edgelist$weight)
+      
+      if(input[['graphAttributes']][['Graph']][['weighted']])
+      {
+        input <- cbind(input$Edgelist$from,input$Edgelist$to,input$Edgelist$weight)
+      } else
+      {
+        input <- cbind(input$Edgelist$from,input$Edgelist$to)
+      }
+      qgraphObject$Arguments$edgelist <- TRUE
     }
     
     ### PCALG AND GRAPHNEL ###
@@ -146,6 +154,9 @@ qgraph <- function( input, ... )
     
     if(is.null(qgraphObject$Arguments[['subplots']])) subplots <- NULL else subplots <- qgraphObject$Arguments[['subplots']]
   if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- NULL else subpars <- qgraphObject$Arguments[['subpars']]
+  
+  if(is.null(qgraphObject$Arguments[['subplotbg']])) subplotbg <- NULL else subplotbg <- qgraphObject$Arguments[['subplotbg']]
+  
     if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
     
     # Knots:
@@ -498,7 +509,9 @@ qgraph <- function( input, ... )
     # Remove alpha:
     background <- col2rgb(background, alpha = TRUE)
     background <- rgb(background[1],background[2],background[3],background[4],maxColorValue=255)
-    
+  
+  if (is.null(subplotbg)) subplotbg <- background
+  
     if (isTRUE(edge.label.bg)) edge.label.bg <- background
     if(is.null(qgraphObject$Arguments[['label.color']])) {
       if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- qgraphObject$Arguments$lcolor
@@ -1723,6 +1736,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$bgcontrol <- bgcontrol
   qgraphObject$plotOptions$resolution <- res
   qgraphObject$plotOptions$subpars <- subpars
+  qgraphObject$plotOptions$subplotbg <- subplotbg
   
     if (!DoNotPlot)
     {

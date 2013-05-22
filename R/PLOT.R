@@ -116,6 +116,7 @@ plot.qgraph <- function(x, ...)
   x$plotOptions$bgcontrol -> bgcontrol
   x$plotOptions$resolution -> res
   x$plotOptions$subpars -> subpars
+  x$plotOptions$subplotbg -> subplotbg
   
   rm(x)
 
@@ -731,7 +732,7 @@ plot.qgraph <- function(x, ...)
           
           usr <- par("usr")
           # Plot background:
-          rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=background,border=NA)
+          rect(max(usr[1],x-xOff),max(usr[3],y-yOff),min(usr[2],x+xOff),min(usr[4],y+yOff),col=subplotbg,border=NA)
           # Plot subplot:
           subplot(eval(subplots[[i]],envir=globalenv()),c(max(usr[1],x-xOff),min(usr[2],x+xOff)), c(max(usr[3],y-yOff),min(usr[4],y+yOff)), pars = subpars)  
           # Plot border:
