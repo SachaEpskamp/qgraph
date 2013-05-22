@@ -197,8 +197,8 @@ plot.qgraph <- function(x, ...)
   if (rescale & aspect) {
     l <- original.layout
       # center:
-      l[,1] <- l[,1] - mean(l[,1])
-      l[,2] <- l[,2] - mean(l[,2])
+      l[,1] <- l[,1] - mean(range(l[,1]))
+      l[,2] <- l[,2] - mean(range(l[,2]))
     
       # Ajust for aspect:
       l[,1] <- l[,1] * min(height/width, 1)
@@ -216,8 +216,8 @@ plot.qgraph <- function(x, ...)
       } else l[,2] <- 0
     
     # center again for good measures! (I really have no idea why but whatever):
-    l[,1] <- l[,1] - mean(l[,1])
-    l[,2] <- l[,2] - mean(l[,2])
+    l[,1] <- l[,1] - mean(range(l[,1]))
+    l[,2] <- l[,2] - mean(range(l[,2]))
     
       rm(lTemp)
       
