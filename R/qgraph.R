@@ -145,6 +145,7 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
     
     if(is.null(qgraphObject$Arguments[['subplots']])) subplots <- NULL else subplots <- qgraphObject$Arguments[['subplots']]
+  if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- NULL else subpars <- qgraphObject$Arguments[['subpars']]
     if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
     
     # Knots:
@@ -1721,6 +1722,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$bgres <- bgres
   qgraphObject$plotOptions$bgcontrol <- bgcontrol
   qgraphObject$plotOptions$resolution <- res
+  qgraphObject$plotOptions$subpars <- subpars
   
     if (!DoNotPlot)
     {
