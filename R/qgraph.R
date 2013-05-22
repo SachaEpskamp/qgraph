@@ -1394,7 +1394,10 @@ qgraph <- function( input, ... )
       for (i in 1:length(groups)) vertex.colors[groups[[i]]]=color[i] 
     } else vertex.colors <- rep(color, length=nNodes)
     if (length(color)==nNodes) vertex.colors <- color
-    vertex.colors[vertex.colors=="background"] <- background
+    if (all(col2rgb(background,TRUE) == col2rgb("transparent",TRUE)))
+    {
+      vertex.colors[vertex.colors=="background"] <- "white"
+    } else  vertex.colors[vertex.colors=="background"] <- background
     
     # Dummy groups list:
     if (is.null(groups)) 
