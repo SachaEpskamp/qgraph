@@ -495,8 +495,8 @@ qgraph <- function( input, ... )
     background <- par("bg")
     if (isColor(bg)) background <- bg
     # Remove alpha:
-    background <- col2rgb(background)
-    background <- rgb(background[1],background[2],background[3],maxColorValue=255)
+    background <- col2rgb(background, alpha = TRUE)
+    background <- rgb(background[1],background[2],background[3],background[4],maxColorValue=255)
     
     if (isTRUE(edge.label.bg)) edge.label.bg <- background
     if(is.null(qgraphObject$Arguments[['label.color']])) {
