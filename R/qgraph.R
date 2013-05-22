@@ -518,7 +518,7 @@ qgraph <- function( input, ... )
       }
       if (!edgelist)
       {
-        if (length(unique(c(input)))>2 && 0%in%input) weighted=TRUE else weighted=FALSE
+        if (all(unique(c(input)) %in% c(0,1))) weighted <- FALSE else weighted <- TRUE
       }
     }		
     if (!weighted) cut=0
