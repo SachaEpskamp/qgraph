@@ -1576,7 +1576,6 @@ qgraph <- function( input, ... )
     
     if (is.numeric(edge.labels)) edge.labels <- as.character(edge.labels)
   
-  
   # Bars:
   length(bars) <- nNodes
   barSide <- rep(barSide,nNodes)
