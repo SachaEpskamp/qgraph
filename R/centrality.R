@@ -24,7 +24,11 @@ centrality <- function(graph,alpha=1,posfun=abs)
   }
   
   # Remove diagonal:
-  diag(W) <- 0
+  if (any(diag(W)!=0))
+  {
+    message("Self-loops are not included in centrality analysis.")
+    diag(W) <- 0 
+  }
   
   ## Compute adjacency:
   X <- 1L * (W!=0)
