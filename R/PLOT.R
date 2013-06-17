@@ -124,7 +124,8 @@ plot.qgraph <- function(x, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
-  if (!(is.expression(edge.labels) | is.character(edge.labels) |is.list(edge.labels) ))  edge.labels <- as.character(edge.labels)
+  
+  if (!(is.expression(edge.labels) | is.character(edge.labels) | is.list(edge.labels) ))  edge.labels <- as.character(edge.labels)
   
   ### Open device:
   # Start output:

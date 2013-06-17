@@ -833,7 +833,7 @@ qgraph <- function( input, ... )
     }
     directed <- directed[keep]
     
-    if (!is.null(edge.color)) 
+    if (!is.null(edge.color) && length(edge.color) != sum(keep)) 
     {
       edge.color <- rep(edge.color,length=length(E$from))
       if (length(edge.color) != length(keep)) stop("'edge.color' is wrong length")
