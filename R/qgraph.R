@@ -545,7 +545,7 @@ qgraph <- function( input, ... )
     {
       if (!is.logical(directed)) if (is.null(directed))
       {
-        if (!all(input==t(input))) directed=TRUE else directed=FALSE
+        if (!isSymmetric(input)) directed=TRUE else directed=FALSE
       }
     }
     
@@ -691,7 +691,7 @@ qgraph <- function( input, ... )
             incl <- matrix(TRUE,nNodes,nNodes)
           } else
           {
-            if (all(input==t(input))) 
+            if (isSymmetric(input))
             {
               
               incl <- upper.tri(input,diag=TRUE)
