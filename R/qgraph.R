@@ -88,13 +88,14 @@ qgraph <- function( input, ... )
       if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
       qgraphObject$Arguments$directed <- graphNEL@graphData$edgemode == "directed"
       qgraphObject$Arguments$bidirectional <- TRUE
-      if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels <- graphNEL@nodes
+      TempLabs  <- graphNEL@nodes
+      if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels  <- graphNEL@nodes
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
       EL <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
 #       EL <- apply(EL,2,as.numeric)
-      EL[,1] <- match(EL[,1],qgraphObject$Arguments$labels)
-      EL[,2] <- match(EL[,2],qgraphObject$Arguments$labels)
+      EL[,1] <- match(EL[,1],TempLabs)
+      EL[,2] <- match(EL[,2],TempLabs)
       mode(EL) <- "numeric"
       # Create mixed graph if pcAlgo:
       if ("pcAlgo" %in% class(input))
@@ -107,7 +108,22 @@ qgraph <- function( input, ... )
       rm(EL)
       if (any(weights!=1)) input <- cbind(input,weights)
     }
-    
+    ### bnlearn ###
+    if (is(input,"bn"))
+    {
+      bnobject <- input
+      input <- as.matrix(bnobject$arcs)
+      TempLabs  <- names(bnobject$nodes)
+      if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels  <- TempLabs
+      
+      input[] <- as.numeric(match(c(input), TempLabs))
+      mode(input) <- "numeric"
+      
+      srtInput <- aaply(input,1,sort)
+      input <- input[!duplicated(srtInput),]
+      qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
+      qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
+    }
     # Coerce input to matrix:
     input <- as.matrix(input)
     
