@@ -92,7 +92,10 @@ qgraph <- function( input, ... )
       weights <- sapply(graphNEL@edgeData@data,'[[','weight')
       
       EL <- laply(strsplit(names(weights),split="\\|"),'[',c(1,2))
-      EL <- apply(EL,2,as.numeric)
+#       EL <- apply(EL,2,as.numeric)
+      EL[,1] <- match(EL[,1],qgraphObject$Arguments$labels)
+      EL[,2] <- match(EL[,2],qgraphObject$Arguments$labels)
+      mode(EL) <- "numeric"
       # Create mixed graph if pcAlgo:
       if ("pcAlgo" %in% class(input))
       {
