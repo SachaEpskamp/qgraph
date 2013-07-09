@@ -83,7 +83,7 @@ qgraph <- function( input, ... )
     }
     
     ### PCALG AND GRAPHNEL ###
-    if (class(input) %in% c("graphNEL","pcAlgo"))
+    if (any(c("graphNEL","pcAlgo")  %in% class(input)  ))
     {
       if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
       qgraphObject$Arguments$directed <- graphNEL@graphData$edgemode == "directed"
@@ -124,6 +124,24 @@ qgraph <- function( input, ... )
       qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
       qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
     }
+  if (is(input,"bn.strength"))
+  {
+    bnobject <- input
+    input <- as.matrix(bnobject[c("from","to","strength")])
+    TempLabs  <- unique(c(bnobject$from,bnobject$to))
+    if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels  <- TempLabs
+    
+    input[,1:2] <- as.numeric(match(c(input[,1:2]), TempLabs))
+    input <- as.matrix(input)
+    mode(input) <- "numeric"
+    
+#     srtInput <- aaply(input,1,sort)
+#     input <- input[!duplicated(srtInput),]
+#     qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
+#     qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
+    qgraphObject$Arguments$directed <- TRUE
+  }
+  
     # Coerce input to matrix:
     input <- as.matrix(input)
     
