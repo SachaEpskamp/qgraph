@@ -542,6 +542,7 @@ qgraph <- function( input, ... )
     
     # Specify background:
     background <- par("bg")
+    if (background == "transparent") background <- "white"
     if (isColor(bg)) background <- bg
     # Remove alpha:
     background <- col2rgb(background, alpha = TRUE)
