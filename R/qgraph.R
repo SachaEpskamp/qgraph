@@ -892,7 +892,7 @@ qgraph <- function( input, ... )
     if (length(edge.label.bg)==length(keep)) edge.label.bg <- edge.label.bg[keep]
     
   if (length(lty) == 1) lty <- rep(lty,length(E$from))
-  if (length(lty) != length(keep)) stop("'lty' is wrong length")
+  if (length(lty) != length(keep) & length(lty) != sum(keep)) stop("'lty' is wrong length")
   if (length(lty)==length(keep)) lty <- lty[keep]
   
     if (!is.null(ELcolor))

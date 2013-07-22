@@ -15,7 +15,9 @@ Fade <- function(col,alpha,bg)
   rgbCols <- col2rgb(col)/255
   rgbBG <-  col2rgb(bg)/255
   
+  colAlpha <- col2rgb(col,alpha=TRUE)[4,]/255
+  
   Mix <- rgbCols*rep(alpha,each=3) + rgbBG%*%t(1-alpha)
   
-  return(rgb(Mix[1,],Mix[2,],Mix[3,]))
+  return(rgb(Mix[1,],Mix[2,],Mix[3,],colAlpha))
 }
