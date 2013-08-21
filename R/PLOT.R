@@ -125,7 +125,7 @@ plot.qgraph <- function(x, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
-  plotEdgeLabel <- sapply(1:length(E$from),function(i),(is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
+  plotEdgeLabel <- sapply(1:length(E$from),function(i)(is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
   
   if (!(is.expression(edge.labels) | is.character(edge.labels) | is.list(edge.labels) ))  edge.labels <- as.character(edge.labels)
   
