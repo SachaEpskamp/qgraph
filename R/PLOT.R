@@ -675,7 +675,8 @@ plot.qgraph <- function(x, ...)
     {
       for (i in edgesort2)
       {
-        if (((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && edge.labels[[i]]!='') || length(edge.labels) == 0)
+#        if (((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],'')) || length(edge.labels) == 0)
+        if ((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
         {
           labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
           labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
