@@ -443,10 +443,10 @@ plot.qgraph <- function(x, ...)
         }
         if (plotEdgeLabel[i])
         {
-          midX[i] <- ((1-edge.label.position[i])*x1 + edge.label.position[i]*x2) / 2
-          midY[i] <- ((1-edge.label.position[i])*y1 + edge.label.position[i]*y2) / 2
+          midX[i] <- ((1-edge.label.position[i])*x1 + edge.label.position[i]*x2)
+          midY[i] <- ((1-edge.label.position[i])*y1 + edge.label.position[i]*y2)
         }
-        
+             
         lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
         if (directed[i])
         {
