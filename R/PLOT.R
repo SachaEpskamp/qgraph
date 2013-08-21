@@ -42,6 +42,7 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Edges$label.color -> ELcolor
   x$graphAttributes$Edges$width -> edge.width
   x$graphAttributes$Edges$lty -> lty
+  x$graphAttributes$Edges$edge.label.position -> edge.label.position
   x$graphAttributes$Edges$asize -> asize
   x$graphAttributes$Edges$residEdge -> residEdge
   x$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
@@ -124,6 +125,7 @@ plot.qgraph <- function(x, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
+  plotEdgeLabel <- sapply(1:length(E$from),function(i),(is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
   
   if (!(is.expression(edge.labels) | is.character(edge.labels) | is.list(edge.labels) ))  edge.labels <- as.character(edge.labels)
   
@@ -417,7 +419,7 @@ plot.qgraph <- function(x, ...)
           y2 <- NewPoints[2]
           
           # Replace source of edge to edge of node if needed:
-          if ((any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
+          if (plotEdgeLabel[i] || (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
           {
             # 					xd=x2-x1
             # 					yd=y2-y1
@@ -439,10 +441,10 @@ plot.qgraph <- function(x, ...)
             
           }
         }
-        if (!is.logical(edge.labels))
+        if (plotEdgeLabel[i])
         {
-          midX[i]=mean(c(x1,x2))
-          midY[i]=mean(c(y1,y2))
+          midX[i] <- ((1-edge.label.position[i])*x1 + edge.label.position[i]*x2) / 2
+          midY[i] <- ((1-edge.label.position[i])*y1 + edge.label.position[i]*y2) / 2
         }
         
         lines(c(x1,x2),c(y1,y2),lwd=edge.width[i],col=edge.color[i],lty=lty[i])
@@ -586,10 +588,10 @@ plot.qgraph <- function(x, ...)
           lines(spl,lwd=edge.width[i]*2,col="white")
         }
         
-        if (!is.logical(edge.labels))
+        if (plotEdgeLabel[i])
         {
-          midX[i]=spl$x[floor(length(spl$x)/2)]
-          midY[i]=spl$y[floor(length(spl$y)/2)]
+          midX[i]=spl$x[floor(edge.label.position[i]*length(spl$x))]
+          midY[i]=spl$y[floor(edge.label.position[i]*length(spl$y))]
         }
         
         lines(spl,lwd=edge.width[i],col=edge.color[i],lty=lty[i])        
@@ -676,7 +678,8 @@ plot.qgraph <- function(x, ...)
       for (i in edgesort2)
       {
 #        if (((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],'')) || length(edge.labels) == 0)
-        if ((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
+        #if ((is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
+        if (plotEdgeLabel[i])
         {
           labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
           labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])

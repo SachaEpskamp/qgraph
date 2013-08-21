@@ -295,6 +295,7 @@ qgraph <- function( input, ... )
     
     if(is.null(qgraphObject$Arguments[['edge.color']])) edge.color <- NULL else edge.color=qgraphObject$Arguments[['edge.color']]
     if(is.null(qgraphObject$Arguments[['edge.label.cex']])) edge.label.cex=1 else edge.label.cex=qgraphObject$Arguments[['edge.label.cex']]
+    if(is.null(qgraphObject$Arguments[['edge.label.position']])) edge.label.position <- 0.5 else edge.label.position=qgraphObject$Arguments[['edge.label.position']]
     
     
     if(is.null(qgraphObject$Arguments$directed))
@@ -860,6 +861,12 @@ qgraph <- function( input, ... )
         lty <- lty[c(incl)]
         lty <- lty[E$weight!=0]
       }
+      
+      if (is.matrix(edge.label.position))
+      {
+        edge.label.position <- edge.label.position[c(incl)]
+        edge.label.position <- edge.label.position[E$weight!=0]
+      }
     }	
     keep <- E$weight!=0
     
@@ -894,6 +901,11 @@ qgraph <- function( input, ... )
   if (length(lty) == 1) lty <- rep(lty,length(E$from))
   if (length(lty) != length(keep) & length(lty) != sum(keep)) stop("'lty' is wrong length")
   if (length(lty)==length(keep)) lty <- lty[keep]
+  
+  if (length(edge.label.position) == 1) edge.label.position <- rep(edge.label.position,length(E$from))
+  if (length(edge.label.position) != length(keep) & length(edge.label.position) != sum(keep)) stop("'edge.label.position' is wrong length")
+  if (length(edge.label.position)==length(keep)) edge.label.position <- edge.label.position[keep]  
+  
   
     if (!is.null(ELcolor))
     {
@@ -967,7 +979,9 @@ qgraph <- function( input, ... )
     # lty and curve settings:
 
       if (length(lty)==1) lty=rep(lty,length(E$from))
-
+      
+  if (length(edge.label.position)==1) edge.label.position=rep(edge.label.position,length(E$from))
+  
     
     # Make bidirectional vector:
     if (length(bidirectional)==1) bidirectional=rep(bidirectional,length(E$from))
@@ -1713,6 +1727,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$label.color <- ELcolor
   qgraphObject$graphAttributes$Edges$width <- edge.width
   qgraphObject$graphAttributes$Edges$lty <- lty
+  qgraphObject$graphAttributes$Edges$edge.label.position <- edge.label.position
   qgraphObject$graphAttributes$Edges$residEdge <- residEdge
   qgraphObject$graphAttributes$Edges$CircleEdgeEnd <- CircleEdgeEnd
   qgraphObject$graphAttributes$Edges$asize <- asize
