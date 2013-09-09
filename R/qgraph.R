@@ -26,8 +26,8 @@ qgraph <- function( input, ... )
   {
     layout(t(1:2))
     
-    Q1 <- qgraph(input$Bhat,...)
-    Q2 <- qgraph(input$omega,...)
+    Q1 <- qgraph((input$omega + t(input$omega) ) / 2,...)
+    Q2 <- qgraph(input$Bhat,...)
     
     return(list(Bhat = Q1, omega = Q2))
   }
@@ -320,11 +320,10 @@ qgraph <- function( input, ... )
 #     if (is.null(groups)) legend <- FALSE
     if(is.null(qgraphObject$Arguments$plot)) plot=TRUE else plot=qgraphObject$Arguments$plot
     if(is.null(qgraphObject$Arguments$rotation)) rotation=NULL else rotation=qgraphObject$Arguments$rotation
-    if(is.null(qgraphObject$Arguments$layout.control)) layout.control=0.5 else layout.control=qgraphObject$Arguments$layout.control
-    if(is.null(qgraphObject$Arguments$layout.par)) layout.par=list() else layout.par=qgraphObject$Arguments$layout.par
+    if(is.null(qgraphObject$Arguments[['layout.control']])) layout.control=0.5 else layout.control=qgraphObject$Arguments[['layout.control']]
+    if(is.null(qgraphObject$Arguments[['layout.par']])) layout.par=list() else layout.par=qgraphObject$Arguments[['layout.par']]
     if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
-    
-    
+        
     # Output qgraphObject$Arguments:
     if(is.null(qgraphObject$Arguments$bg)) bg <- FALSE else bg <- qgraphObject$Arguments$bg
     
@@ -1052,6 +1051,7 @@ qgraph <- function( input, ... )
             }
           } else if (layout=="spring")
           {
+            
             if (length(E$weight) > 0)
             {
               if (mode != "sig")

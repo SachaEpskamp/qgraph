@@ -1,4 +1,5 @@
 qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL){
+  
   Ef<-edgelist[,1]-1
   Et<-edgelist[,2]-1
   #Provide default settings
@@ -21,6 +22,12 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
 		init[,1]=sin(seq(0,2*pi, length=tl))[-tl]
 		init[,2]=cos(seq(0,2*pi, length=tl))[-tl] 
 }
+  if (any(duplicated(init)))
+  {
+    init[duplicated(init),] <- init[duplicated(init),] + rnorm(prod(dim(init[duplicated(init),,drop=FALSE])),0,1e-10)
+    warning("Duplciated initial placement found. Initial slightly pertubated.")
+  }
+  
 x<-init[,1]
 y<-init[,2]
 
