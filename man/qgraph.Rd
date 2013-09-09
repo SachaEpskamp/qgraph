@@ -27,7 +27,7 @@ qgraph( input, ... )
 \section{Output arguments}{
 \describe{
 \item{mar}{A vector of the form c(bottom, left, top, right) which gives the margins. Works similar to the argument in par(). Defaults to c(3,3,3,3)}
-	\item{filetype}{A character containing the file type to save the output in. "R" and "x11" outputs in a new R window ("x11" is preferred for Rstudio), "pdf" creates a pdf file. "svg" creates a svg file (requires RSVGTipsDevice). "tex" creates LaTeX code for the graph (requires tikzDevice). 'jpg', 'tiff' and 'png' can also be used. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device.}
+	\item{filetype}{A character containing the file type to save the output in. "R" outputs in a new R window, "pdf" creates a pdf file. "svg" creates a svg file (requires RSVGTipsDevice). "tex" creates LaTeX code for the graph (requires tikzDevice). 'jpg', 'tiff' and 'png' can also be used. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device. A function such as \code{x11} can also be used}
 	\item{filename}{Name of the file without extension}
 	\item{width}{Width of the plot, in inches}
 	\item{height}{Height of the plot, in inches}
@@ -272,7 +272,7 @@ Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement
 
 }
 \author{
-Sacha Epskamp <qgraph@sachaepskamp.com>
+Sacha Epskamp <mail@sachaepskamp.com>
 }
 
 \seealso{

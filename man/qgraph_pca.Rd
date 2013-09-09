@@ -28,7 +28,7 @@ Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
 Revelle, W. (2010) psych: Procedures for Personality and Psychological Research Northwestern University, Evanston, http://personality-project.org/r/psych.manual.pdf, 1.0-93
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -48,6 +48,6 @@ qgraph.pca(cor(big5),5,groups=big5groups,rotation="promax",minimum=0.2,
 
 # Tree layout:
 qgraph.pca(cor(big5), 5,groups=big5groups, rotation="promax", minimum=0.2, 
-  cut=0.4, vsize=c(1.5,15), borders=FALSE, layout="tree", width=20, filetype="R")
+  cut=0.4, vsize=c(1.5,7), borders=FALSE, layout="tree", width=20, filetype="R")
 }
 }

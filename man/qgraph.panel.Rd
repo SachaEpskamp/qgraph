@@ -25,7 +25,7 @@ This function will create a 4-panel plot containing four plots useful in analyzi
 }
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \references{
 Sacha Epskamp, Angelique O. J. Cramer, Lourens J.

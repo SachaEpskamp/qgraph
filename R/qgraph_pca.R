@@ -19,7 +19,7 @@ if (any(class(cor)=="principal"))
 	factors <- cor$factors
 } else
 {
-	fact <- psych:::principal(cor,factors,rotate=rotation)
+	fact <- psych::principal(cor,factors,rotate=rotation)
 }
 loadings <- loadings(fact)
 loadings <- as.matrix(loadings[1:nrow(loadings),1:factors])

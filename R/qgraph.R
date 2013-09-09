@@ -22,7 +22,15 @@ qgraph <- function( input, ... )
   }  else if (any(class(input)=="semmod"))
   {
     return(qgraph.semModel(input,...))
-  } 
+  } else if (is.list(input) && identical(names(input),c("Bhat", "omega", "lambda1", "lambda2")))
+  {
+    layout(t(1:2))
+    
+    Q1 <- qgraph(input$Bhat,...)
+    Q2 <- qgraph(input$omega,...)
+    
+    return(list(Bhat = Q1, omega = Q2))
+  }
   
   
   ### EMPTY QGRAPH OBJECT ####
@@ -81,7 +89,7 @@ qgraph <- function( input, ... )
       }
       qgraphObject$Arguments$edgelist <- TRUE
     }
-    
+      
     ### PCALG AND GRAPHNEL ###
     if (any(c("graphNEL","pcAlgo")  %in% class(input)  ))
     {
@@ -482,7 +490,7 @@ qgraph <- function( input, ... )
 #       if (is.null(groups)) legend=FALSE else legend=TRUE
 #     }
         #if ((legend & filetype!='pdf' & filetype!='eps') | filetype=="svg")
-        if ((legend&is.null(scores))|(filetype=="svg"))
+        if ((legend&is.null(scores))|(identical(filetype,"svg")))
         {
           width=width*(1+(1/GLratio))
         }

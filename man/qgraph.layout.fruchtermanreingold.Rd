@@ -60,7 +60,7 @@ Carter T. Butts <buttsc@uci.edu> (2010). sna: Tools for Social Network Analysis.
 Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129–1164.
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}

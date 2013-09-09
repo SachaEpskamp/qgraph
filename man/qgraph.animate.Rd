@@ -70,7 +70,7 @@ Other methods woth in the same way as above. However, if the 'ind' argument indi
 
 
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 
 \references{

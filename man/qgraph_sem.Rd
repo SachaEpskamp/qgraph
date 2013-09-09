@@ -67,7 +67,7 @@ John Fox with contributions from Adam Kramer <jfox@mcmaster.ca> and Michael Frie
 Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129?1164.
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}

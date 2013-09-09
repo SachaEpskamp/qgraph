@@ -125,60 +125,71 @@ plot.qgraph <- function(x, ...)
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)
   midY=numeric(0)
-  plotEdgeLabel <- sapply(1:length(E$from),function(i)(is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
+  
+  if (length(E$from)>0) 
+  {
+    plotEdgeLabel <- sapply(1:length(E$from),function(i)(is.character(edge.labels[[i]]) | is.expression(edge.labels[[i]]) |  is.call(edge.labels[[i]])) && !identical(edge.labels[[i]],''))
+  } else {
+    plotEdgeLabel <- logical(0)
+  }
   
   if (!(is.expression(edge.labels) | is.character(edge.labels) | is.list(edge.labels) ))  edge.labels <- as.character(edge.labels)
   
   ### Open device:
   # Start output:
-  if (filetype=='default') if (is.null(dev.list()[dev.cur()])) dev.new(rescale="fixed",width=width,height=height)
-  if (filetype=='R') dev.new(rescale="fixed",width=width,height=height)
-  if (filetype=='X11' | filetype=='x11') x11(width=width,height=height)
-  if (filetype=='eps') postscript(paste(filename,".eps",sep=""),height=height,width=width, horizontal=FALSE)
-  if (filetype=='pdf') pdf(paste(filename,".pdf",sep=""),height=height,width=width)
-  if (filetype=='tiff') tiff(paste(filename,".tiff",sep=""),units='in',res=res,height=height,width=width)
-  if (filetype=='png') png(paste(filename,".png",sep=""),units='in',res=res,height=height,width=width)
-  if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
-  if (filetype=="svg")
+  if (is.function(filetype))
   {
-    if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
-    require("RSVGTipsDevice")
-    devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
-  }
-  if (filetype=="tex")
-  {
-    #   # Special thanks to Charlie Sharpsteen for supplying these tikz codes on stackoverflow.com !!!
-    # 	
-    # 	if (!suppressPackageStartupMessages(require(tikzDevice,quietly=TRUE))) stop("tikzDevice must be installed to use filetype='tex'")
-    # 	opt= c( 
-    # 	getOption('tikzLatexPackages'),  
-    #     "\\def\\tooltiptarget{\\phantom{\\rule{1mm}{1mm}}}",
-    #     "\\newbox\\tempboxa\\setbox\\tempboxa=\\hbox{}\\immediate\\pdfxform\\tempboxa \\edef\\emptyicon{\\the\\pdflastxform}",
-    #     "\\newcommand\\tooltip[1]{\\pdfstartlink user{/Subtype /Text/Contents  (#1)/AP <</N \\emptyicon\\space 0 R >>}\\tooltiptarget\\pdfendlink}"
-    # 	)
-    # 	
-    # 	place_PDF_tooltip <- function(x, y, text)
-    # 	{
-    # 
-    # 		# Calculate coordinates
-    # 		tikzX <- round(grconvertX(x, to = "device"), 2)
-    # 		tikzY <- round(grconvertY(y, to = "device"), 2)
-    # 		# Insert node
-    # 		tikzAnnotate(paste(
-    # 		"\\node at (", tikzX, ",", tikzY, ") ",
-    # 		"{\\tooltip{", text, "}};",
-    # 		sep = ''
-    # 		))
-    # 	  invisible()
-    # 	}
-    # 	
-    # 	print("NOTE: Using 'tex' as filetype will take longer to run than other filetypes")
-    # 	
-    # 	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
-    
-    stop("Tikz device no longer supported due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for a fix")
-  }
-  
+    filetype(width=width, height = height)
+    filetype <- ''
+  } else {
+    if (filetype=='default') if (is.null(dev.list()[dev.cur()])) dev.new(rescale="fixed",width=width,height=height)
+    if (filetype=='R') dev.new(rescale="fixed",width=width,height=height)
+    # if (filetype=='X11' | filetype=='x11') x11(width=width,height=height)
+    if (filetype=='eps') postscript(paste(filename,".eps",sep=""),height=height,width=width, horizontal=FALSE)
+    if (filetype=='pdf') pdf(paste(filename,".pdf",sep=""),height=height,width=width)
+    if (filetype=='tiff') tiff(paste(filename,".tiff",sep=""),units='in',res=res,height=height,width=width)
+    if (filetype=='png') png(paste(filename,".png",sep=""),units='in',res=res,height=height,width=width)
+    if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
+    if (filetype=="svg")
+    {
+      if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
+      require("RSVGTipsDevice")
+      devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
+    }
+    if (filetype=="tex")
+    {
+      #   # Special thanks to Charlie Sharpsteen for supplying these tikz codes on stackoverflow.com !!!
+      # 	
+      # 	if (!suppressPackageStartupMessages(require(tikzDevice,quietly=TRUE))) stop("tikzDevice must be installed to use filetype='tex'")
+      # 	opt= c( 
+      # 	getOption('tikzLatexPackages'),  
+      #     "\\def\\tooltiptarget{\\phantom{\\rule{1mm}{1mm}}}",
+      #     "\\newbox\\tempboxa\\setbox\\tempboxa=\\hbox{}\\immediate\\pdfxform\\tempboxa \\edef\\emptyicon{\\the\\pdflastxform}",
+      #     "\\newcommand\\tooltip[1]{\\pdfstartlink user{/Subtype /Text/Contents  (#1)/AP <</N \\emptyicon\\space 0 R >>}\\tooltiptarget\\pdfendlink}"
+      # 	)
+      # 	
+      # 	place_PDF_tooltip <- function(x, y, text)
+      # 	{
+      # 
+      # 		# Calculate coordinates
+      # 		tikzX <- round(grconvertX(x, to = "device"), 2)
+      # 		tikzY <- round(grconvertY(y, to = "device"), 2)
+      # 		# Insert node
+      # 		tikzAnnotate(paste(
+      # 		"\\node at (", tikzX, ",", tikzY, ") ",
+      # 		"{\\tooltip{", text, "}};",
+      # 		sep = ''
+      # 		))
+      # 	  invisible()
+      # 	}
+      # 	
+      # 	print("NOTE: Using 'tex' as filetype will take longer to run than other filetypes")
+      # 	
+      # 	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
+      
+      stop("Tikz device no longer supported due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for a fix")
+    }
+  }  
   
   
   ### START PLOT:
@@ -382,6 +393,7 @@ plot.qgraph <- function(x, ...)
   } else {
     knotLayout <- matrix(,0,0)
   }
+  
   
   # For each (sorted from weak to strong) edge:
   for (i in edgesort)
@@ -1025,4 +1037,5 @@ plot.qgraph <- function(x, ...)
     dev.off()
   }
   par(mar=marOrig, bg=bgOrig)
+  
 }

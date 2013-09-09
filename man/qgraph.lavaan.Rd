@@ -80,7 +80,7 @@ Yves Rosseel <Yves.Rosseel@UGent.be> (2011). lavaan: Latent Variable Analysis. R
 Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129?1164.
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}

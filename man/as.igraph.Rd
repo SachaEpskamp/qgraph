@@ -24,5 +24,5 @@ Logical, should graphical attributes also be transferred?
  Csardi G, Nepusz T (2006). The igraph software package for complex network research, InterJournal, Complex Systems 1695. http://igraph.sf.net
 }
 \author{
-Sacha Epskamp <qgraph@sachaepskamp.com>
+Sacha Epskamp <mail@sachaepskamp.com>
 }

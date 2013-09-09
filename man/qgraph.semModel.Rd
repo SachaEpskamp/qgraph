@@ -38,7 +38,7 @@ John Fox with contributions from Adam Kramer <jfox@mcmaster.ca> and Michael Frie
 
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 
 \seealso{

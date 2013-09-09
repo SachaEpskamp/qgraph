@@ -31,7 +31,7 @@ Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
 
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}

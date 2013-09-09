@@ -17,7 +17,7 @@ LazyLoad: \tab yes\cr
 }
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 
 Maintainer: Sacha Epskamp<s.epskamp@uva.nl>
 }

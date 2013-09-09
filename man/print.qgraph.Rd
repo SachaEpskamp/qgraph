@@ -21,7 +21,7 @@ These arguments are not used
 }
 
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 
 \seealso{

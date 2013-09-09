@@ -45,7 +45,7 @@ Dijkstra, E.W. (1959). A note on two problems in connexion with graphs. Numerisc
 
 }
 \author{
-Sacha Epskamp (qgraph@sachaepskamp.com)
+Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}

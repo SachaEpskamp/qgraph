@@ -1,5 +1,37 @@
 Changes in Version 1.2.3
-  o Edge labels of '' will now not plot a background.
+  o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me
+
+  o Major changes:
+    o centrality() now also makes weights positive in computing in and out degree
+    o bnlearn and bn.strength classes are now supported
+    o Added edge.label.position argument. If an edge has a label its source is now rescaled when its destination is rescaled to keep the middle of the edge correctly
+
+  o Minor changes:
+    o Graphs now only default to unweighted if all entries are either 0 or 1
+    o residScale is now normalized
+    o border width can now be varied per node
+    o Evaluation of subplots now uses the global environment for lookups
+    o The 'labels' argument can now be used with pcalg input
+    o Background color can now be transparent
+    o Added subpars argument to pass 'par' arguments to sublots
+    o Added argument 'subplotbg' to control the background of subplots
+    o numeric edge labels now converted to characters
+    o Centering with aspect is TRUE now only looks at the range of x and y coordinates, placing the graph more to the center
+    o Self-loops are now removed in centrality()
+    o Machine tolerance is now taken into account when testing if an input matrix is symmetrical. Because of this, correlation matrices computed with cov2cor no longer need to be rounded
+    o If the par("bg") color is "transparent" the background is set to "white" instead of "transparent"
+    o filetype argument no longer supports 'x11'
+
+  o Bug fixes:
+    o Edge labels of '' will now not plot a background.
+    o Fixed a bug where 'lty' was not working correctly when edge lists with weights of zero where used as input. Reported by Laura Bringmann.
+    o as.igraph works again
+    o Fixed a bug causing background on edge labels not to be plotted when edge.labels = TRUE
+    o Fixed bug with edge.labels = FALSE
+    o Node color on transparent background now default to white instead of transparent
+    o Fixed a bug where in qgraph.animate where no default arguments could be passed anymore
+    o Fixed a bug where edge labels could not be expressions
+    o curve entries for edges of weight 0 are now correctly removed
 
 Changes in Version 1.2.2
   o New features
