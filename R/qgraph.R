@@ -67,7 +67,7 @@ qgraph <- function( input, ... )
     if (length(qgraphObject$Arguments) > 0) qgraphObject$Arguments <- getArgs(qgraphObject$Arguments)
     
     # Import default arguments:
-    def <- options("qgraph")
+    def <-  getOption("qgraph")
     if (!is.null(def$qgraph)) class(def$qgraph) <- "qgraph"
     if (any(sapply(def,function(x)!is.null(x))))
     {
