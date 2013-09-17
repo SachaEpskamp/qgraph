@@ -115,6 +115,7 @@ qgraph <- function( input, ... )
       input <- EL
       rm(EL)
       if (any(weights!=1)) input <- cbind(input,weights)
+      qgraphObject$Arguments$edgelist <- TRUE
     }
     ### bnlearn ###
     if (is(input,"bn"))
