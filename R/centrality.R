@@ -6,6 +6,11 @@ centrality <- function(graph,alpha=1,posfun=abs)
   
   if (!is.null(graph[['graphAttributes']][['Graph']][['weighted']])) if (!graph[['graphAttributes']][['Graph']][['weighted']]) graph[['Edgelist']][['weight']] <- ifelse(graph[['Edgelist']][['weight']]==0,0,1)
   
+  if (!isTRUE(graph[['graphAttributes']][['Graph']][['minimum']] == 0))
+  {
+    warning("Minimum in graph is not set to zero. Omitted edges will not be included in computation of centrality measures.")
+  }
+  
   # Extract edgelist:
   E <- graph[['Edgelist']]
   
