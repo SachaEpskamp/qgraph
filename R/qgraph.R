@@ -446,16 +446,27 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['aspect']])) aspect=FALSE else aspect=qgraphObject$Arguments[['aspect']]
     
     # qgraphObject$Arguments for directed graphs:
-    if(is.null(qgraphObject$Arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- qgraphObject$Arguments[['curveDefault']]
     if(is.null(qgraphObject$Arguments[['curvePivot']])) curvePivot <- FALSE else curvePivot <- qgraphObject$Arguments[['curvePivot']]
     if (isTRUE(curvePivot)) curvePivot <- 0.1
     if(is.null(qgraphObject$Arguments[['curveShape']])) curveShape <- -1 else curveShape <- qgraphObject$Arguments[['curveShape']]
     if(is.null(qgraphObject$Arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- qgraphObject$Arguments[['curvePivotShape']]
   if(is.null(qgraphObject$Arguments[['curveScale']])) curveScale <- TRUE else curveScale <- qgraphObject$Arguments[['curveScale']]
+  
+  if(is.null(qgraphObject$Arguments[['parallelEdge']])) parallelEdge <- FALSE else parallelEdge <- qgraphObject$Arguments[['parallelEdge']]
+  
+  if(is.null(qgraphObject$Arguments[['parallelAngle']])) parallelAngle <- NA else parallelAngle <- qgraphObject$Arguments[['parallelAngle']]
+  
+  if(is.null(qgraphObject$Arguments[['parallelAngleDefault']])) parallelAngleDefault <- pi/6 else parallelAngleDefault <- qgraphObject$Arguments[['parallelAngleDefault']]
+  
+  if(is.null(qgraphObject$Arguments[['curveDefault']])) curveDefault <- 1 else curveDefault <- qgraphObject$Arguments[['curveDefault']]
+  
     if(is.null(qgraphObject$Arguments[['curve']]))
     {
-      curve <- NA 
-    } else {
+      if (any(parallelEdge))
+      { 
+        curve <- ifelse(parallelEdge,0,NA)
+      } else curve <- NA 
+    } else {      
       curve <- qgraphObject$Arguments[['curve']]
       if (length(curve)==1) 
       {
@@ -823,6 +834,16 @@ qgraph <- function( input, ... )
         curve <- curve[c(incl)]
         curve <- curve[E$weight!=0]
       }
+      if (is.matrix(parallelEdge))
+      {
+        parallelEdge <- parallelEdge[c(incl)]
+        parallelEdge <- parallelEdge[E$weight!=0]
+      }
+      if (is.matrix(parallelAngle))
+      {
+        parallelAngle <- parallelAngle[c(incl)]
+        parallelAngle <- parallelAngle[E$weight!=0]
+      }
       if (is.matrix(bidirectional))
       {
         bidirectional <- bidirectional[c(incl)]
@@ -962,8 +983,22 @@ qgraph <- function( input, ... )
   {
     curve <- rep(curve,length(E$from))
   }
-  if (length(curve)==length(keep)) curve <- curve[keep]    
+  if (length(curve)==length(keep)) curve <- curve[keep]   
+  
+  
+  if (length(parallelEdge)==1) 
+  {
+    parallelEdge <- rep(parallelEdge,length(E$from))
+  }
+  if (length(parallelEdge)==length(keep)) parallelEdge <- parallelEdge[keep]    
     
+  
+  if (length(parallelAngle)==1) 
+  {
+    parallelAngle <- rep(parallelAngle,length(E$from))
+  }
+  if (length(parallelAngle)==length(keep)) parallelAngle <- parallelAngle[keep]    
+  
     E$from=E$from[keep]
     E$to=E$to[keep]
     if (mode=="sig") Pvals <- Pvals[keep]
@@ -1002,8 +1037,13 @@ qgraph <- function( input, ... )
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
       if (length(curve)==1) curve <- rep(curve,length(E$from))
       curve <- ifelse(is.na(curve),ifelse(knots==0&dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0),curve)
+      
+      # Set parallelAngle value:   
+      parallelAngle <- ifelse(is.na(parallelAngle),ifelse(knots==0&dub&!bidirectional&is.na(parallelAngle),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(parallelAngleDefault,-parallelAngleDefault,length=length(x))),0),parallelAngle)
+      
       rm(dub)
     }
+    
     
     # Layout settings:
     if (nNodes == 1)
@@ -1741,6 +1781,8 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$CircleEdgeEnd <- CircleEdgeEnd
   qgraphObject$graphAttributes$Edges$asize <- asize
   if (mode == "sig") qgraphObject$graphAttributes$Edges$Pvals <- Pvals else Pvals <- NULL
+  qgraphObject$graphAttributes$Edges$parallelEdge <- parallelEdge
+  qgraphObject$graphAttributes$Edges$parallelAngle <- parallelAngle
   
   # Knots:
   qgraphObject$graphAttributes$Knots$knots <- knots
@@ -1811,6 +1853,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$resolution <- res
   qgraphObject$plotOptions$subpars <- subpars
   qgraphObject$plotOptions$subplotbg <- subplotbg
+
   
     if (!DoNotPlot)
     {

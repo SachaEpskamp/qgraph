@@ -1,7 +1,9 @@
 plot.qgraph <- function(x, ...)
 {
   ### Extract arguments:
-  # My apologies, dear people that actually read my code, for the right assignment operator. I was lazy.
+  # My apologies, dear people that actually read my code, for the right 
+  # assignment operator---I was lazy.
+  
   ## Edgelist:
   E <- list()
   x$Edgelist$from -> E$from
@@ -47,6 +49,8 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Edges$residEdge -> residEdge
   x$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
   x$graphAttributes$Edges$Pvals -> Pvals
+  x$graphAttributes$Edges$parallelEdge -> parallelEdge
+  x$graphAttributes$Edges$parallelAngle -> parallelAngle
   
   # Knots:
   x$graphAttributes$Knots$knots -> knots
@@ -411,7 +415,7 @@ plot.qgraph <- function(x, ...)
       if (curve[i]==0 & !XKCD & knots[i] == 0)
       {
         # Replace destination of edge to edge of node if needed:
-        if (is.logical(arrows) | vAlpha[E$to[i]] < 255) if ((arrows & directed[i]) | vAlpha[E$to[i]] < 255)
+        if (parallelEdge[i] | is.logical(arrows) | vAlpha[E$to[i]] < 255) if (parallelEdge[i] | (arrows & directed[i]) | vAlpha[E$to[i]] < 255)
         {
           # 				xd=x2-x1
           # 				yd=y2-y1
@@ -426,12 +430,12 @@ plot.qgraph <- function(x, ...)
           # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
           # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
           # 				}
-          NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+          NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2) + parallelEdge[i]*parallelAngle[i]),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
           x2 <- NewPoints[1]
           y2 <- NewPoints[2]
           
           # Replace source of edge to edge of node if needed:
-          if (plotEdgeLabel[i] || (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
+          if (parallelEdge[i] | plotEdgeLabel[i] || (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
           {
             # 					xd=x2-x1
             # 					yd=y2-y1
@@ -447,12 +451,13 @@ plot.qgraph <- function(x, ...)
             # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
             # 					}
             
-            NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1) - parallelEdge[i]*parallelAngle[i]),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
             x1 <- NewPoints[1]
             y1 <- NewPoints[2]  
             
           }
         }
+        
         if (plotEdgeLabel[i])
         {
           midX[i] <- ((1-edge.label.position[i])*x1 + edge.label.position[i]*x2)

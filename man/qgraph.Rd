@@ -103,6 +103,8 @@ qgraph( input, ... )
     \item{curveScale}{Logical, should curve scale with distance between nodes. Defaults to TRUE. If FALSE, the curve can be exactly determined. Recommended to set to TRUE for graphs and FALSE for diagrams.}
     \item{curvePivot}{Quantile to pivot curves on. This can be used to, rather than round edges, make straight edges as curves with "knicks" in them. Can be logical or numeric. \code{FALSE} (default) indicates no pivoting in the curved edges, a number indicates the quantile (and one minus this value as quantile) on which to pivot curved edges and \code{TRUE} indicates a value of 0.1.}
         \item{curvePivotShape}{The shape of the curve around the pivots, as used in \code{xspline}. Defaults to \code{0.25}.}
+        \item{parallelEdge}{Logical, set to \code{TRUE} to draw parallel straight edges rather than curved edges when there are multiple edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
+         \item{parallelAngle}{The distance in radians an edge is shifted if \code{parallel=TRUE}. Can be set to \code{NA} (default) to determine based on number of edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
 }
 }
 

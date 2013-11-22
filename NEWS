@@ -1,3 +1,6 @@
+Changes in Version 1.2.4
+  o Added 'parallelEdge' and 'parallelAngle' arguments. Set parallelEdge = TRUE to obtain parallel straight edges rather than curved edges.
+
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me
 
