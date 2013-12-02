@@ -1,5 +1,6 @@
 Changes in Version 1.2.4
   o Added 'parallelEdge' and 'parallelAngle' arguments. Set parallelEdge = TRUE to obtain parallel straight edges rather than curved edges.
+  o Added 'edgeConnectPoints' argument. This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes
 
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me

@@ -176,6 +176,7 @@ qgraph( input, ... )
 	\item{rescale}{Logical. Defines if the layout should be rescaled to fit the -1 to 1 x and y area. Defaults to TRUE. Can best be used in combination with plot=FALSE.}
     \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
     \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
+    \item{edgeConnectPoints}{This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
 }}
 
 \details{

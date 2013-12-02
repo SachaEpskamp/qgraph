@@ -180,6 +180,9 @@ qgraph <- function( input, ... )
     {
       if (nrow(input)!=ncol(input)) edgelist=TRUE else edgelist=FALSE 
     } else edgelist=qgraphObject$Arguments$edgelist
+
+  if(is.null(qgraphObject$Arguments[['edgeConnectPoints']])) edgeConnectPoints <- NULL else edgeConnectPoints <- qgraphObject$Arguments[['edgeConnectPoints']]
+  
   
     if(is.null(qgraphObject$Arguments$labels))
     {
@@ -891,6 +894,15 @@ qgraph <- function( input, ... )
         lty <- lty[E$weight!=0]
       }
       
+      if (!is.null(edgeConnectPoints))
+      {
+        if (is.array(edgeConnectPoints) && isTRUE(dim(edgeConnectPoints)[3]==2))
+        {
+          edgeConnectPoints <- matrix(edgeConnectPoints[c(incl,incl)],,2)
+          edgeConnectPoints <- edgeConnectPoints[E$weight!=0,,drop=FALSE]
+        }
+      }
+      
       if (is.matrix(edge.label.position))
       {
         edge.label.position <- edge.label.position[c(incl)]
@@ -930,6 +942,13 @@ qgraph <- function( input, ... )
   if (length(lty) == 1) lty <- rep(lty,length(E$from))
   if (length(lty) != length(keep) & length(lty) != sum(keep)) stop("'lty' is wrong length")
   if (length(lty)==length(keep)) lty <- lty[keep]
+  
+  if (!is.null(edgeConnectPoints))
+  {
+    if (length(edgeConnectPoints) == 1) edgeConnectPoints <- matrix(rep(edgeConnectPoints,2*length(E$from)),,2)
+    if (nrow(edgeConnectPoints) != length(keep) & nrow(edgeConnectPoints) != sum(keep)) stop("Number of rows in 'edgeConnectPoints' do not match number of edges")
+    if (nrow(edgeConnectPoints)==length(keep)) edgeConnectPoints <- edgeConnectPoints[keep,,drop=FALSE]
+  }
   
   if (length(edge.label.position) == 1) edge.label.position <- rep(edge.label.position,length(E$from))
   if (length(edge.label.position) != length(keep) & length(edge.label.position) != sum(keep)) stop("'edge.label.position' is wrong length")
@@ -1783,6 +1802,7 @@ qgraph <- function( input, ... )
   if (mode == "sig") qgraphObject$graphAttributes$Edges$Pvals <- Pvals else Pvals <- NULL
   qgraphObject$graphAttributes$Edges$parallelEdge <- parallelEdge
   qgraphObject$graphAttributes$Edges$parallelAngle <- parallelAngle
+  qgraphObject$graphAttributes$Edges$edgeConnectPoints <- edgeConnectPoints
   
   # Knots:
   qgraphObject$graphAttributes$Knots$knots <- knots

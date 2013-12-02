@@ -51,6 +51,7 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Edges$Pvals -> Pvals
   x$graphAttributes$Edges$parallelEdge -> parallelEdge
   x$graphAttributes$Edges$parallelAngle -> parallelAngle
+  x$graphAttributes$Edges$edgeConnectPoints -> edgeConnectPoints
   
   # Knots:
   x$graphAttributes$Knots$knots -> knots
@@ -414,42 +415,35 @@ plot.qgraph <- function(x, ...)
       # If not curved, knotted or XKCD plot straigth line instead of spline:
       if (curve[i]==0 & !XKCD & knots[i] == 0)
       {
-        # Replace destination of edge to edge of node if needed:
-        if (parallelEdge[i] | is.logical(arrows) | vAlpha[E$to[i]] < 255) if (parallelEdge[i] | (arrows & directed[i]) | vAlpha[E$to[i]] < 255)
+        # Replace destination to fixed points if specified in edgeConnectPoints:
+        if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,2]))
         {
-          # 				xd=x2-x1
-          # 				yd=y2-y1
-          # 				d2=sqrt(sum(xd^2+yd^2))
-          # 				if (shape[E$to[i]]!="square")
-          # 				{
-          # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/d2)
-          # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/d2)
-          # 				}
-          # 				if (shape[E$to[i]]=="square")
-          # 				{
-          # 					x2=x2-xd*(0.5*vsize[E$to[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-          # 					y2=y2-yd*(0.5*vsize[E$to[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-          # 				}
-          NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2) + parallelEdge[i]*parallelAngle[i]),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+          NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
           x2 <- NewPoints[1]
           y2 <- NewPoints[2]
+        } else {
+          
+          # Replace destination of edge to edge of node if needed:
+          #         if (parallelEdge[i] | is.logical(arrows) | vAlpha[E$to[i]] < 255)
+          if (parallelEdge[i] | (isTRUE(arrows) & directed[i]) | vAlpha[E$to[i]] < 255)
+          {
+            NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2) + parallelEdge[i]*parallelAngle[i]),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            x2 <- NewPoints[1]
+            y2 <- NewPoints[2]
+          }
+        }
+        
+        # Replace source to fixed points if specified in edgeConnectPoints:
+        if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,1]))
+        {
+          NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+          x1 <- NewPoints[1]
+          y1 <- NewPoints[2]
+        } else {
           
           # Replace source of edge to edge of node if needed:
           if (parallelEdge[i] | plotEdgeLabel[i] || (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
           {
-            # 					xd=x2-x1
-            # 					yd=y2-y1
-            # 					d2=sqrt(sum(xd^2+yd^2))
-            # 					if (shape[E$from[i]]!="square")
-            # 					{
-            # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/d2)
-            # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/d2)
-            # 					}
-            # 					if (shape[E$from[i]]=="square")
-            # 					{
-            # 						x1=x1+xd*(0.5*vsize[E$from[i]]*0.130*(7/width)*par("cin")[2]/max(abs(c(xd,yd))))
-            # 						y1=y1+yd*(0.5*vsize[E$from[i]]*0.130*(7/height)*par("cin")[2]/max(abs(c(xd,yd))))
-            # 					}
             
             NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1) - parallelEdge[i]*parallelAngle[i]),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
             x1 <- NewPoints[1]
@@ -457,6 +451,7 @@ plot.qgraph <- function(x, ...)
             
           }
         }
+ 
         
         if (plotEdgeLabel[i])
         {
@@ -543,22 +538,52 @@ plot.qgraph <- function(x, ...)
         {
           recurve <- FALSE
           
-          # Replace destination of edge to edge of node if needed:
-          if (is.logical(arrows)| vAlpha[E$to[i]] < 255)
+
+          # Replace source to fixed points if specified in edgeConnectPoints:
+          if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,1]))
           {
-            if (arrows & directed[i]| vAlpha[E$to[i]] < 255)
+            NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            x1 <- NewPoints[1]
+            y1 <- NewPoints[2]
+          } 
+          
+          # Replace destination to fixed points if specified in edgeConnectPoints:
+          if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,2]))
+          {
+            NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            x2 <- NewPoints[1]
+            y2 <- NewPoints[2]
+            
+            recurve <- TRUE
+          } 
+            
+            
+          
+          # Replace destination of edge to edge of node if needed:
+          #           if (is.logical(arrows)| vAlpha[E$to[i]] < 255)
+          #           {
+          
+          if (isTRUE(arrows) & directed[i]| vAlpha[E$to[i]] < 255 |  vAlpha[E$from[i]] < 255)
+          {
+            if (is.null(edgeConnectPoints) || is.na(edgeConnectPoints[i,2]))
             {
               NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               recurve <- TRUE
-              
+            }
+            
+            if (is.null(edgeConnectPoints) || is.na(edgeConnectPoints[i,1]))
+            {
               NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
               x1 <- NewPoints[1]
               y1 <- NewPoints[2]
               recurve <- TRUE
             }
           }
+          
+          
+          #           }
           
           if (recurve)
           {
@@ -902,8 +927,14 @@ plot.qgraph <- function(x, ...)
         y <- layout[E$to[i],2]
         
         # Edge entry point:
-        r <- atan2usr2in(layout[E$from[i],1] - x, layout[E$from[i],2] - y )
-        edge <- Cent2Edge(x,y,r,vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],offset=0, polygonList)
+        if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,2]))
+        {
+          edge <- Cent2Edge(x,y,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],offset=0, polygonList)  
+        } else {
+          r <- atan2usr2in(layout[E$from[i],1] - x, layout[E$from[i],2] - y )
+          edge <- Cent2Edge(x,y,r,vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],offset=0, polygonList)  
+        }
+        
         
         # Size of bal:
         sizeBal <- mean(vsize[E$to[i]],vsize2[E$to[i]]) / 4
