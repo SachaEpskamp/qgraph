@@ -1,6 +1,16 @@
 Changes in Version 1.2.4
   o Added 'parallelEdge' and 'parallelAngle' arguments. Set parallelEdge = TRUE to obtain parallel straight edges rather than curved edges.
   o Added 'edgeConnectPoints' argument. This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes
+  o 'arrowAngle' now defaults to pi/6 for weighted graph instead of pi/4.
+  o Edges are now drawn only to the start of arrows instead of to the edge of nodes regardless of if there is an arrow.
+  o Added internal function 'drawEdge' which draws the edge. This function can be used similary to arrows() in any plot.
+  o XKCD easter egg works once again
+  o Edges repressenting p-values of exactly 0 in mode="sig" graphs are now repressented by the strongest possible positive edge.
+  o Added the argument 'label.font' which can be used to specify the font of node labels.
+  o Added the argument 'edge.label.font' which can be used to specify the font of edge labels.
+  o Added the argument 'font' which can be used to set both node and edge label fonts.
+  o The functionality of using * in labels to plot the label in symbol font has been removed as this is now possible by using either an expression as label or by setting the font manually to 5.
+  o Graphical arguments in the qgraph help page have been grouped in subcatagories.
 
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me

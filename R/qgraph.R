@@ -198,6 +198,10 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- qgraphObject$Arguments[['label.prop']]
     if(is.null(qgraphObject$Arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- qgraphObject$Arguments[['label.norm']]
     if(is.null(qgraphObject$Arguments[['label.cex']])) label.cex <- NULL else label.cex <- qgraphObject$Arguments[['label.cex']]
+  
+  if(is.null(qgraphObject$Arguments[['font']])) font <- 1 else font <- qgraphObject$Arguments[['font']]
+  
+  if(is.null(qgraphObject$Arguments[['label.font']])) label.font <- font else label.font <- qgraphObject$Arguments[['label.font']]
     
     if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
     
@@ -222,7 +226,8 @@ qgraph <- function( input, ... )
       {
         if(!is.logical(labels)) allNodes <- labels else allNodes <- unique(c(input[,1:2]))
         input[,1:2] <- match(input[,1:2],allNodes)
-        input <- apply(input,2,as.numeric)
+        input <- as.matrix(input)
+        mode(input) <- "numeric"
         if (is.logical(labels) && labels) labels <- allNodes
       }
     }
@@ -290,6 +295,7 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments$weighted)) weighted=NULL else weighted=qgraphObject$Arguments$weighted
     if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
     if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
+    if(is.null(qgraphObject$Arguments[['edge.label.font']])) edge.label.font=font else edge.label.font=qgraphObject$Arguments[['edge.label.font']]
     if(is.null(qgraphObject$Arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=qgraphObject$Arguments[['edge.label.bg']]
     if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
     
@@ -593,7 +599,7 @@ qgraph <- function( input, ... )
       }
       if (!edgelist)
       {
-        if (all(unique(c(input)) %in% c(0,1))) weighted <- FALSE else weighted <- TRUE
+        if (all(unique(c(input)) %in% c(0,1)) & !grepl("sig",mode)) weighted <- FALSE else weighted <- TRUE
       }
     }		
     if (!weighted) cut=0
@@ -633,7 +639,7 @@ qgraph <- function( input, ... )
     ## arrowAngle default:
     if(is.null(qgraphObject$Arguments[["arrowAngle"]])) 
     {
-      if (weighted) arrowAngle <- pi/4 else arrowAngle <- pi/8
+      if (weighted) arrowAngle <- pi/6 else arrowAngle <- pi/8
     } else {
       arrowAngle <- qgraphObject$Arguments[["arrowAngle"]]
     }
@@ -686,7 +692,7 @@ qgraph <- function( input, ... )
     # CREATE EDGELIST:
     
     E <- list()
-    
+
     # Remove nonfinite weights:
     if (any(!is.finite(input)))
     {
@@ -704,7 +710,7 @@ qgraph <- function( input, ... )
       {
         if (sigSign)
         {
-          E$weight <- sign(E$weight) * fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
+          E$weight <- sign0(E$weight) * fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
         } else E$weight <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       }
       if (bonf)
@@ -726,7 +732,7 @@ qgraph <- function( input, ... )
       if (mode=="sig") 
       {
         Pvals <- E$weight
-        E$weight <- sign(E$weight) * sigScale(abs(E$weight))
+        E$weight <- sign0(E$weight) * sigScale(abs(E$weight))
       }
       if (OmitInsig)
       {
@@ -782,7 +788,7 @@ qgraph <- function( input, ... )
       {
         if (sigSign)
         {
-          E$weight <- sign(E$weight) * fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
+          E$weight <- sign0(E$weight) * fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
         } else E$weight <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       }
       if (bonf)
@@ -804,7 +810,7 @@ qgraph <- function( input, ... )
       if (mode=="sig") 
       {
         Pvals <- E$weight
-        E$weight <- sign(E$weight) * sigScale(abs(E$weight))
+        E$weight <- sign0(E$weight) * sigScale(abs(E$weight))
       }
       
       if (OmitInsig)
@@ -877,6 +883,11 @@ qgraph <- function( input, ... )
         edge.label.bg <- edge.label.bg[c(incl)]
         edge.label.bg <- edge.label.bg[E$weight!=0]
       }
+      if (is.matrix(edge.label.font))
+      {
+        edge.label.font <- edge.label.font[c(incl)]
+        edge.label.font <- edge.label.font[E$weight!=0]
+      }
       if (!is.null(ELcolor))
       {
         if (is.matrix(ELcolor))
@@ -936,8 +947,14 @@ qgraph <- function( input, ... )
     #       edge.label.bg <- "white"
     #     }
     if (length(edge.label.bg) == 1) edge.label.bg <- rep(edge.label.bg,length(E$from))
-    if (length(edge.label.bg) != length(keep)) stop("'edge.label.bg' is wrong length")
+    if (length(edge.label.bg) != length(keep) & length(edge.label.bg) != sum(keep)) stop("'edge.label.bg' is wrong length")
     if (length(edge.label.bg)==length(keep)) edge.label.bg <- edge.label.bg[keep]
+
+  
+  if (length(edge.label.font) == 1) edge.label.font <- rep(edge.label.font,length(E$from))
+  if (length(edge.label.font) != length(keep) & length(edge.label.font) != sum(keep)) stop("'edge.label.font' is wrong length")
+  if (length(edge.label.font)==length(keep)) edge.label.font <- edge.label.font[keep]
+  
     
   if (length(lty) == 1) lty <- rep(lty,length(E$from))
   if (length(lty) != length(keep) & length(lty) != sum(keep)) stop("'lty' is wrong length")
@@ -1050,18 +1067,27 @@ qgraph <- function( input, ... )
     if (length(bidirectional)!=length(E$from)) stop("Bidirectional vector must be of legth 1 or equal to the number of edges")
     
     srt <- cbind(pmin(E$from,E$to), pmax(E$from,E$to) , knots, abs(E$weight) > minimum)
-
-    if (!curveAll)
+  
+    if (!curveAll | any(parallelEdge))
     {
       dub <- duplicated(srt)|duplicated(srt,fromLast=TRUE)
-      if (length(curve)==1) curve <- rep(curve,length(E$from))
-      curve <- ifelse(is.na(curve),ifelse(knots==0&dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0),curve)
       
-      # Set parallelAngle value:   
-      parallelAngle <- ifelse(is.na(parallelAngle),ifelse(knots==0&dub&!bidirectional&is.na(parallelAngle),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(parallelAngleDefault,-parallelAngleDefault,length=length(x))),0),parallelAngle)
+      if (!curveAll)
+      {
+        if (length(curve)==1) curve <- rep(curve,length(E$from))
+        curve <- ifelse(is.na(curve),ifelse(knots==0&dub&!bidirectional&is.na(curve),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(curveDefault,-curveDefault,length=length(x))),0),curve)
+      }
+      
+      if (any(parallelEdge))
+      {
+        # Set parallelAngle value:   
+        parallelAngle <- ifelse(is.na(parallelAngle),ifelse(knots==0&dub&!bidirectional&is.na(parallelAngle),ifelse(E$from==srt[,1],1,-1) * ave(1:nrow(srt),srt[,1],srt[,2],bidirectional,FUN=function(x)seq(parallelAngleDefault,-parallelAngleDefault,length=length(x))),0),parallelAngle) 
+      }
       
       rm(dub)
     }
+  
+  parallelAngle[is.na(parallelAngle)] <- 0
     
     
     # Layout settings:
@@ -1440,13 +1466,13 @@ qgraph <- function( input, ... )
           {
             
             # Set colors for edges over sig > 0.01 :
-            if (length(alpha) > 3) edge.color[Pvals > 0 & Pvals < alpha[4]  & E$weight > minimum] <- "cadetblue1"	
+            if (length(alpha) > 3) edge.color[Pvals >= 0 & Pvals < alpha[4]  & E$weight > minimum] <- "cadetblue1"	
             # Set colors for edges over sig > 0.01 :
-            if (length(alpha) > 2) edge.color[Pvals > 0 & Pvals < alpha[3]  & E$weight > minimum] <- "#6495ED"
+            if (length(alpha) > 2) edge.color[Pvals >= 0 & Pvals < alpha[3]  & E$weight > minimum] <- "#6495ED"
             # Set colors for edges over sig > 0.01 :
-            if (length(alpha) > 1) edge.color[Pvals > 0 & Pvals < alpha[2]  & E$weight > minimum] <- "blue"				
+            if (length(alpha) > 1) edge.color[Pvals >= 0 & Pvals < alpha[2]  & E$weight > minimum] <- "blue"				
             # Set colors for edges over sig < 0.01 :
-            edge.color[Pvals > 0 & Pvals < alpha[1]  & E$weight > minimum] <- "darkblue"
+            edge.color[Pvals >= 0 & Pvals < alpha[1]  & E$weight > minimum] <- "darkblue"
             
             # Set colors for edges over sig > 0.01 :
             if (length(alpha) > 3) edge.color[Pvals < 0 & Pvals > (-1 * alpha[4])  & E$weight < -1 * minimum] <- rgb(1,0.8,0.4) 	
@@ -1668,8 +1694,6 @@ qgraph <- function( input, ... )
     
     # Edge labels:
     # Make labels:
-
-    edge.font=rep(1,length(E$from))
   
     if (!is.logical(edge.labels))
     {
@@ -1682,15 +1706,6 @@ qgraph <- function( input, ... )
       
       if (length(edge.labels) > 0 & is.character(edge.labels))
       {
-        ## Set fonts (symbol):
-        strsplE=strsplit(edge.labels,"")
-        
-        greekE=sapply(strsplE,function(x)any(x=="*"))
-        edge.labels=sapply(strsplE,function(x)paste(x[x!="*"],collapse=""))
-        
-        edge.font=rep(1,length(E$from))
-        edge.font[greekE]=5
-        
         edge.labels[edge.labels=="NA"]=""
       }  
     } else
@@ -1753,6 +1768,10 @@ qgraph <- function( input, ... )
   
   border.width <- rep(border.width, nNodes)
   
+  # Node argument setup:
+  borders <- rep(borders,length=nNodes)
+  label.font <- rep(label.font,length=nNodes)
+  
     ########### SPLIT HERE ###########
   
   ### Fill qgraph object with stuff:
@@ -1768,6 +1787,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$borders <- borders
   qgraphObject$graphAttributes$Nodes$border.width <- border.width
   qgraphObject$graphAttributes$Nodes$label.cex <- label.cex
+  qgraphObject$graphAttributes$Nodes$label.font <- label.font
   qgraphObject$graphAttributes$Nodes$label.color <- lcolor
   qgraphObject$graphAttributes$Nodes$labels <- labels
   qgraphObject$graphAttributes$Nodes$names <- nodeNames
@@ -1791,7 +1811,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$labels <- edge.labels
   qgraphObject$graphAttributes$Edges$label.cex <- edge.label.cex
   qgraphObject$graphAttributes$Edges$label.bg <- edge.label.bg
-  qgraphObject$graphAttributes$Edges$font <- edge.font
+  qgraphObject$graphAttributes$Edges$label.font <- edge.label.font
   qgraphObject$graphAttributes$Edges$label.color <- ELcolor
   qgraphObject$graphAttributes$Edges$width <- edge.width
   qgraphObject$graphAttributes$Edges$lty <- lty

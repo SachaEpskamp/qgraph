@@ -21,6 +21,7 @@ qgraph( input, ... )
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
 \item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to NULL, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 50 nodes and 0.3 to larger graphs.}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
+  \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 }
 }
 
@@ -32,69 +33,67 @@ qgraph( input, ... )
 	\item{width}{Width of the plot, in inches}
 	\item{height}{Height of the plot, in inches}
   \item{normalize}{Logical, should the plot be normalized to the plot size. If TRUE (default) border width, vertex size, edge width and arrow sizes are adjusted to look the same for all sizes of the plot, corresponding to what they would look in a 7 by 7 inches plot if normalize is FALSE.}
-  \item{standAlone}{Logical. If filetype="tex" this argument can be used to choose between making the output a standalone LaTeX file or only the codes to include the graph.}
+    \item{DoNotPlot}{Runs qgraph but does not plot. Useful for saving the output (i.e. layout) without plotting}
+	\item{plot}{Logical. Should a new plot be made? Defaults to TRUE. Set to FALSE to add the graph to the existing plot.}
+	\item{rescale}{Logical. Defines if the layout should be rescaled to fit the -1 to 1 x and y area. Defaults to TRUE. Can best be used in combination with plot=FALSE.}
+    \item{standAlone}{Logical. If filetype="tex" this argument can be used to choose between making the output a standalone LaTeX file or only the codes to include the graph.}
 }}
 
 \section{Graphical arguments}{	
+\subsection{Nodes}{
+These arguments influence the plotting of nodes in qgraph. Most of them can be assigned a single value or a vector with a value for each node.
 \describe{
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
+    \item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
+    \item{vsize2}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
+  \item{label.color}{Character containing the color of the labels, defaults to "black"}
+    \item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
+  \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
+    \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
+	\item{shape}{A character containing the shape of the nodes. \code{"circle"}, \code{"square"}, \code{"triangle"} and \code{"diamond"} are supported. In addition, can be a name of an element of \code{polygonList} to plot the corresponding polygon (not reccomended for large graphs), which by default includes shapes \code{"ellipse"} and \code{"heart"} Can also be a vector with a shape for each node. Defaults to "circle".}
+    \item{polygonList}{ A list contaning named lists for each element to include polygons to lookup in the \code{shape} argument. Each element must be named as they are used in \code{shape} and contain a list with elements \code{x} and \code{y} contaning the coordinates of the polygon. By default \code{ellipse} and \code{heart} are added to this list. These polygons are scaled according to \code{vsize} and \code{vsize2}}
+      \item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
+          \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
+        \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
+}
 \item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
 \item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
-	\item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
-	\item{legend.cex}{Scalar of the legend. defaults to 1}
-  \item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
-  \item{legend.mode}{Character, either \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object.}
-	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
-	\item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
-    \item{vsize}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
-	\item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
-	\item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults for graphs with less than 20 nodes to a 3 character abbreviation of the columnames and rownames if these are identical or else to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}
+}
+}
+
+\subsection{Node labels}{
+These arguments influence the plotting of node labels in qgraph. Most of them can be assigned a single value or a vector with a value for each node.
+\describe{
+    \item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults for graphs with less than 20 nodes to a 3 character abbreviation of the columnames and rownames if these are identical or else to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}
   \item{label.cex}{Scalar on the label size.}
   \item{label.prop}{Controls the proportion of the width of the node that the label rescales to. Defaults to 0.
   9.}
     \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
     \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
-	\item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}
-	\item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}
-    \item{edge.label.bg}{Either a logical or character vector/matrix. Indicates the background behind edge labels. If TRUE (default) a white background is plotted behind each edge label. If FALSE no background is plotted behind edge labels. Can also be a single color character, a vector or matrix of color vectors for each edge.}
-    \item{    edge.label.position}{Vetor of numbers between 0 and 1 controlling the relative position of each edge label. Defaults to 0.5 for placing edge labels at the middle of the edge.}
-	\item{bg}{If this is TRUE, a background is plotted in which node colors cast a light of that color on a black background. Can also be a character containing the color of the background Defaults to FALSE}
-	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
-	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
-	\item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}
-    \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparency will be added to edges that are not transparent (or for which no transparency has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+\item{label.font}{Integer specifying the label font of nodes. Can be a vector with value for each node}
+}
+}
+
+
+\subsection{Edges}{
+These arguments influence the plotting of edges qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
+\describe{
+  \item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
+    \item{edge.color}{Color of edges. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used. Note that unless \code{fade=FALSE} colors still fade to white corresponding to their strength}
     \item{posCol}{Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
 \item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
 \item{unCol}{Color to indicate the default edge color of unweighted graphs. Defaults to "#808080".}
 \item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
-	\item{label.color}{Character containing the color of the labels, defaults to "black"}
-	\item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
-	\item{loop}{If diag=T, this can be used to scale the size of the loop. defaults to 1.}
+  \item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}
+    \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparency will be added to edges that are not transparent (or for which no transparency has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+	\item{loop}{If diag=TRUE, this can be used to scale the size of the loop. defaults to 1.}
 	\item{lty}{Line type, see 'par'}
-	\item{pty}{See 'par'}
-	\item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
-  \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
-    \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
-	\item{shape}{A character containing the shape of the nodes. \code{"circle"}, \code{"square"}, \code{"triangle"} and \code{"diamond"} are supported. In addition, can be a name of an element of \code{polygonList} to plot the corresponding polygon (not reccomended for large graphs), which by default includes shapes \code{"ellipse"} and \code{"heart"} Can also be a vector with a shape for each node. Defaults to "circle".}
-    \item{polygonList}{ A list contaning named lists for each element to include polygons to lookup in the \code{shape} argument. Each element must be named as they are used in \code{shape} and contain a list with elements \code{x} and \code{y} contaning the coordinates of the polygon. By default \code{ellipse} and \code{heart} are added to this list. These polygons are scaled according to \code{vsize} and \code{vsize2}}
-  
-  
-	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
-	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
-	\item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
-	\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
-	\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
-	\item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
-	\item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
-	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
-  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
-    \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
-        \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
-}}
+      \item{edgeConnectPoints}{This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
+}
 }
 
-
-\section{Arguments to control edge curvature}{
+\subsection{Edge Curvature}{
+These arguments control the curvature of edges.  Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
 \describe{
 \item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behavior should be used, which only curves edges if there are multiple edges between two nodes.}
     \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
@@ -108,7 +107,66 @@ qgraph( input, ... )
 }
 }
 
-\section{Additional arguments for directed graphs}{
+\subsection{Edge Labels}{
+These arguments influence the plotting of edge labels qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
+\describe{
+  \item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}  
+    \item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}
+    \item{edge.label.bg}{Either a logical or character vector/matrix. Indicates the background behind edge labels. If TRUE (default) a white background is plotted behind each edge label. If FALSE no background is plotted behind edge labels. Can also be a single color character, a vector or matrix of color vectors for each edge.}
+    \item{edge.label.position}{Vetor of numbers between 0 and 1 controlling the relative position of each edge label. Defaults to 0.5 for placing edge labels at the middle of the edge.}
+\item{edge.label.font}{Integer specifying the label font of edges. Can be a vector or matrix with value for each node}
+}
+}
+
+\subsection{Layout}{
+Arguments concerning the placement of nodes, in combination with 'layout'.
+\describe{
+  \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
+	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
+  \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
+  \item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
+
+}
+
+}
+
+\subsection{Legend}{
+Arguments to control the legend placed on the right side of the graph.
+\describe{
+  \item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
+	\item{legend.cex}{Scalar of the legend. defaults to 1}
+  \item{legend.mode}{Character, either \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object.}
+	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
+      \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
+    \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
+  \item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
+}
+}
+
+\subsection{Background}{
+These arguments control the background of the plot
+\describe{
+  \item{bg}{If this is TRUE, a background is plotted in which node colors cast a light of that color on a black background. Can also be a character containing the color of the background Defaults to FALSE}
+	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
+	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
+}
+}
+
+\subsection{General graphical arguments}{
+\describe{
+	\item{pty}{See 'par'}
+	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
+	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
+	\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
+	\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
+\item{font}{Integer specifying the default font for node and edge labels}
+}
+}
+}
+
+
+
+\section{Arguments for directed graphs}{
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
@@ -142,7 +200,7 @@ qgraph( input, ... )
 \section{Arguments for manually defining graphs}{
 \describe{
   \item{mode}{The mode argument (see section on significance graph arguments) can also be used to make the weights matrix correspond directly to the width of the edges (as in lwd of plot()). To do this, set mode to "direct".}
-	\item{edge.color}{This argument can be used to overwrite the colors. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used.}
+	\item{edge.color}{This argument can be used to overwrite the colors. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used. Note that unless \code{fade=FALSE} colors still fade to white corresponding to their strength}
 }}
 
 
@@ -171,12 +229,7 @@ qgraph( input, ... )
   \item{edgelist}{Logical, if TRUE 'input' is assumed to be an edgelist, else if FALSE input is assumed to be a weights matrix. By default this is chosen automatically based on the dimensions of 'input' and this argument is only needed if the dimensions are ambiguous (square matrix with 2 or 3 rows/columns)}
 	\item{weighted}{Logical that can be used to force either a weighted graph (TRUE) or an unweighted graph(FALSE).}
 	\item{nNodes}{The number of nodes, only needs to be specified if the first argument is an edge-list and some nodes have no edges}
-	\item{DoNotPlot}{Runs qgraph but does not plot. Useful for saving the output (i.e. layout) without plotting}
-	\item{plot}{Logical. Should a new plot be made? Defaults to TRUE. Set to FALSE to add the graph to the existing plot.}
-	\item{rescale}{Logical. Defines if the layout should be rescaled to fit the -1 to 1 x and y area. Defaults to TRUE. Can best be used in combination with plot=FALSE.}
-    \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
-    \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
-    \item{edgeConnectPoints}{This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
+  \init{XKCD}{If set to TRUE the graph is plotted in XKCD style based on http://stackoverflow.com/a/12680841/567015.}
 }}
 
 \details{
@@ -223,11 +276,11 @@ By default qgraph will plot the graph in a new R window. However the graphs are 
 
 Furthermore filetype can also be set to numerous other values. Alternatively any output device in R can be used by simply opening the device before calling qgraph and closing it with dev.off() after calling qgraph.
 
-The graphs can also be outputted in an SVG file using the RSVGTipsDevice package (Plate, 2009). An SVG image can be opened in most browsers (firefox and chrome are recommended), and can be used to display tooltips. Each node can be given a tooltip with the 'tooltips' argument. The function \code{\link{qgraph.svg}} can be used to make a battery of svg pictures with hyperlinks to each other, working like a navigation menu.
+The graphs can also be outputted in an SVG file using the RSVGTipsDevice package (Plate, 2009). An SVG image can be opened in most browsers (firefox and chrome are recommended), and can be used to display tooltips. Each node can be given a tooltip with the 'tooltips' argument. The function \code{\link{qgraph.svg}} can be used to make a battery of svg pictures with hyperlinks to each other, working like a navigation menu (note, RSVGTipsDevice is a 32-bit only package, so SVG functionality is not available in 64bit versions of R).
 
-IMPORTANT NOTE: RSVGTipsDevice is a 32-bit only package, so SVG functionality is not available in 64bit versions of R.
+Finally, the filetype 'tex' can be used. This uses the tikzDevice package to create a LaTeX file that can then be compiled in your LaTeX compiler to create a pdf file. The main benefit of this over plotting directly in a pdf file is that tooltips can be added which can be viewed in several PDF document readers (Adobe Reader is recommended for the best result).
 
-Finally, the filetype 'tex' can be used. This uses the tikzDevice package to create a LaTeX file that can then be compiled in your LaTeX compiler to create a pdf file. The main benefit of this over plotting directly in a pdf file is that tooltips can be added which can be viewed in several PDF document readers (Adobe Reader is recommended for the best result).}
+IMPORTANT NOTE: graphs made in qgraph must be exported programatically using device functions such as pdf() and png(). Manually resizing a graph and using export functions such as the one built into RStudio will give UNSTABLE RESULTS.}
 
 \section{Manual specification of color and width}{
 In qgraph the widths and colors of each edge can also be manually controlled. To directly specify the width of each edge set the 'mode'' argument to "direct". This will then use the absolute edge weights as the width of each edge (negative values can still be used to make red edges). To manually set the color of each edge, set the 'edge.color' argument to a matrix with colors for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist).
