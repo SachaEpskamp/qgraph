@@ -86,7 +86,7 @@ drawEdge <- function(x,y,col=1,lwd=1,arrowlwd=1,lty=1,directed=FALSE,bidirection
       
       if (bidirectional)
       {
-        DrawArrow(xRange[1],yRange[1],atan2usr2in(xRange[1]-x[2],yRange[1]-y[2]),angle=arrowAngle,cex=arrowlwd,open=open,lwd=max(lwd/2,1),lty=lty,color)
+        DrawArrow(xRange[1],yRange[1],atan2usr2in(xRange[1]-x[2],yRange[1]-y[2]),angle=arrowAngle,cex=arrowlwd,open=open,lwd=max(lwd/2,1),lty=lty,col)
       }
     }
   }
