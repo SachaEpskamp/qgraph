@@ -151,6 +151,64 @@ qgraph <- function( input, ... )
     qgraphObject$Arguments$directed <- TRUE
   }
   
+   ### BDgraph ####
+  if (is(input,"bdgraph"))
+  {
+    if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
+    if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
+
+    if(is.null(qgraphObject$Arguments[['BDprobCol']])) BDprobCol <- "blue" else BDprobCol <- qgraphObject$Arguments[['BDprobCol']]
+    
+    if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
+    
+    
+    Res <- list()
+
+    if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
+    {
+      # phat:
+      W <- phat(input)
+      W <- W + t(W)
+      Res[["phat"]] <- do.call(qgraph,c(list(input=W,posCol=BDprobCol),qgraphObject$Arguments))
+      L <- Res[["phat"]]$layout
+      
+      if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
+          
+      # Khat:
+      W <- input$Khat
+      diag(W) <- -1*diag(W)
+      W <-  - W / sqrt(diag(W)%o%diag(W))
+      Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
+      L <- Res[["Khat"]]$layout
+      if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
+          
+    } else 
+    {
+      if ("Khat" %in% BDgraph)
+      {
+        W <- input$Khat
+        diag(W) <- -1*diag(W)
+        W <-  - W / sqrt(diag(W)%o%diag(W))
+        Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
+        L <- Res[["Khat"]]$layout
+        if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
+      } else L <- qgraphObject$Arguments$layout
+      
+      if ("phat" %in% BDgraph)
+      {
+        W <- phat(input)
+        W <- W + t(W)
+        Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,posCol=BDprobCol), qgraphObject$Arguments))
+        if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
+      }
+    }  
+    
+      if (length(Res)==1) Res <- Res[[1]]
+      return(Res)
+    
+    }
+
+  
     # Coerce input to matrix:
     input <- as.matrix(input)
     
@@ -375,6 +433,17 @@ qgraph <- function( input, ... )
       vsize <- qgraphObject$Arguments[['vsize']]
       if(is.null(qgraphObject$Arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- qgraphObject$Arguments[['vsize2']]
     }
+  
+  if(!is.null(qgraphObject$Arguments[['node.width']])) 
+  {
+    vsize <- vsize * qgraphObject$Arguments[['node.width']]
+  }
+  
+  if(!is.null(qgraphObject$Arguments[['node.height']])) 
+  {
+    vsize2 <- vsize2 * qgraphObject$Arguments[['node.height']]
+  }
+  
     if(is.null(qgraphObject$Arguments$color)) color=NULL else color=qgraphObject$Arguments$color
     
     if(is.null(qgraphObject$Arguments[['gray']])) gray <- FALSE else gray <- qgraphObject$Arguments[['gray']]
@@ -635,6 +704,13 @@ qgraph <- function( input, ... )
       #       asize <- max((-1/10)*(nNodes)+4,1)
       asize <- ifelse(nNodes>10,2,3)
     } else asize <- qgraphObject$Arguments[["asize"]]
+  
+  
+  if(!is.null(qgraphObject$Arguments[["edge.width"]]))
+  {
+    esize <- esize * qgraphObject$Arguments[["edge.width"]]
+    asize <- asize * sqrt(qgraphObject$Arguments[["edge.width"]])
+  }
     
     ## arrowAngle default:
     if(is.null(qgraphObject$Arguments[["arrowAngle"]])) 
@@ -656,15 +732,7 @@ qgraph <- function( input, ... )
     if (partial) 
     {
       if (edgelist) stop("Concentration graph requires correlation matrix")
-      mi=solve(input)
-      for (i in 1:nrow(input)) 
-      {
-        for (j in 1:nrow(input)) 
-        {
-          input[i,j]=-1*mi[i,j]/sqrt(mi[i,i]*mi[j,j]) 
-        }
-      } 
-      input=round(input,7) 
+      input <- cor2pcor(input)
     }
     
     # Diag:
@@ -939,7 +1007,11 @@ qgraph <- function( input, ... )
     
     if (!is.logical(edge.labels))
     {
-      edge.labels <- rep(edge.labels,length=length(E$from))
+      if (length(edge.labels) == 1) edge.labels <- rep(edge.labels,length(E$from))
+      if (length(edge.labels) != length(keep) & length(edge.labels) != sum(keep)) stop("'edge.label.bg' is wrong length")
+      if (length(edge.labels)==length(keep)) edge.labels <- edge.labels[keep]
+      
+      # edge.labels <- rep(edge.labels,length=length(E$from))
     }
     
     #     if (is.logical(edge.label.bg))
@@ -1104,6 +1176,21 @@ qgraph <- function( input, ... )
         {
           Graph <- graph.edgelist(as.matrix(cbind(E$from,E$to)), any(directed))
           E(Graph)$weight <- E$weight
+          
+          # set roots:
+          if (deparse(match.call()[['layout']]) == "layout.reingold.tilford" && is.null(layout.par[['root']]))
+          {
+            sp <- shortest.paths(Graph, mode = "out")
+            diag(sp) <- Inf
+            
+            # Find root nodes:
+            roots <- which(colSums(sp==Inf) == nrow(sp))
+            # Find roots with longest outgoing paths:
+            maxs <- sapply(roots,function(x)max(sp[x,sp[x,]!=Inf]))
+            
+            layout.par[['root']] <- roots[maxs==max(maxs)]
+          }
+            
           layout <- do.call(layout,c(list(graph = Graph),layout.par))
         } else {
           

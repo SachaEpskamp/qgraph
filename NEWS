@@ -11,6 +11,10 @@ Changes in Version 1.2.4
   o Added the argument 'font' which can be used to set both node and edge label fonts.
   o The functionality of using * in labels to plot the label in symbol font has been removed as this is now possible by using either an expression as label or by setting the font manually to 5.
   o Graphical arguments in the qgraph help page have been grouped in subcatagories.
+  o Added the 'edge.width' argument that scales both 'esize' and 'asize'. Making it easier to make both edges and arrows larger.
+  o Added 'node.width' and 'node.height' arguments that scales 'vsize' and 'vsize2'.
+  o Fixed a bug where edge labels could not be assigned using a matrix.
+  o BDgraph is now supported.
 
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me

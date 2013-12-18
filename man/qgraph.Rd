@@ -9,7 +9,7 @@ This is the main function of qgraph. It is typically used to visualize the relat
 qgraph( input, ... )
 }
 \arguments{
-	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz) or "pcAlgo" (pcalg)}
+	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz), "pcAlgo" (pcalg) or \code{"bdgraph"} (BDgraph)}
 	\item{...}{Any additional arguments described below. Also a list with class "qgraph" can be added that contains any of these arguments (this is returned invisibly by the function)}
 }	
 \section{Important additional arguments}{	
@@ -46,7 +46,8 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
     \item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
     \item{vsize2}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
-  \item{label.color}{Character containing the color of the labels, defaults to "black"}
+    \item{node.width}{Scalar on the default value of 'vsize'. Defaults to 1.}
+    \item{node.height}{Scalar on the default value of 'vsize2'. Defaults to 1.}
     \item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
   \item{border.color}{Color vector indicating colors of the borders. Is repeated if length is equal to 1. Defaults to "black"}
     \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
@@ -66,6 +67,7 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 \describe{
     \item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults for graphs with less than 20 nodes to a 3 character abbreviation of the columnames and rownames if these are identical or else to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}
   \item{label.cex}{Scalar on the label size.}
+    \item{label.color}{Character containing the color of the labels, defaults to "black"}
   \item{label.prop}{Controls the proportion of the width of the node that the label rescales to. Defaults to 0.
   9.}
     \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
@@ -79,6 +81,7 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 These arguments influence the plotting of edges qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
 \describe{
   \item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
+  \item{edge.width}{Scalar on 'esize' and 'asize' arguments to make edges wider with a single argument. 'esize' is multiplied with this value and 'asize' with the square root of this value.}
     \item{edge.color}{Color of edges. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used. Note that unless \code{fade=FALSE} colors still fade to white corresponding to their strength}
     \item{posCol}{Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
 \item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
@@ -171,7 +174,7 @@ These arguments control the background of the plot
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
   \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
-	\item{asize}{Size of the arrowhead.}
+	\item{asize}{Size of the arrowhead. Defaults to 2 for graphs with more than 10 nodes and 2 to smaller graphs.}
 	\item{open}{Logical indicating if open (TRUE) or closed (FALSE) arrowheads should be drawn.}
 	\item{bidirectional}{If this is TRUE, Then directional edges between nodes that have two edges between them are not curved. Defaults to FALSE. Can also be a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 }}
@@ -222,6 +225,13 @@ These arguments control the background of the plot
   \item{barLength}{A Vector indicating the relative length of bars of each node compared to the node size. Defaults to 0.5.}  
       \item{barsAtSide}{Logical, should bars be drawn at the side of a node or at its center? Defaults to FALSE.}  
   
+}}
+
+\section{Arguments that support the BDgraph package}{  
+\describe{
+  \item{BDgraph}{A character vector containing \code{"phat"} for plotting posterior probabilities of each edge, \code{"Khat"} for plotting mean posterior partial correlations or both. The order matters as the layout of the second plot is based on the layout of the first plot. Defaults to \code{c("phat","Khat")}}
+  \item{BDtitles}{Logical, should titles be drawn above the plots?}  
+    \item{BDprobCol}{Color of the posterior probability edges. Defaults to \code{"blue"}}
 }}
 
 \section{Additional arguments}{	

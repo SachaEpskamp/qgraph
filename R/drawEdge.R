@@ -41,8 +41,8 @@ drawEdge <- function(x,y,col=1,lwd=1,arrowlwd=1,lty=1,directed=FALSE,bidirection
       OutsideArrow <- curveDist > arrowRad
       
       # Censor x and y:
-      x <- x[rev(cumsum(rev(OutsideArrow))>0)]
-      y <- y[rev(cumsum(rev(OutsideArrow))>0)]
+      x <- x[cumsum(OutsideArrow)>0]
+      y <- y[cumsum(OutsideArrow)>0]
       
       # Add midpoint:
       mid <- ArrowMidPoint(xRange[1],yRange[1],atan2usr2in(xRange[1]-x[1],yRange[1]-y[1]),angle=arrowAngle,cex=arrowlwd)

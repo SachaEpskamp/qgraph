@@ -419,7 +419,7 @@ plot.qgraph <- function(x, ...)
         # Replace destination to fixed points if specified in edgeConnectPoints:
         if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,2]))
         {
-          NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+          NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
           x2 <- NewPoints[1]
           y2 <- NewPoints[2]
         } else {
@@ -428,7 +428,7 @@ plot.qgraph <- function(x, ...)
           #         if (parallelEdge[i] | is.logical(arrows) | vAlpha[E$to[i]] < 255)
           if (parallelEdge[i] | (isTRUE(arrows) & directed[i]) | vAlpha[E$to[i]] < 255)
           {
-            NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2) + parallelEdge[i]*parallelAngle[i]),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(x1-x2,y1-y2) + parallelEdge[i]*parallelAngle[i]),vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
             x2 <- NewPoints[1]
             y2 <- NewPoints[2]
           }
@@ -437,7 +437,7 @@ plot.qgraph <- function(x, ...)
         # Replace source to fixed points if specified in edgeConnectPoints:
         if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,1]))
         {
-          NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+          NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
           x1 <- NewPoints[1]
           y1 <- NewPoints[2]
         } else {
@@ -446,7 +446,7 @@ plot.qgraph <- function(x, ...)
           if (parallelEdge[i] | plotEdgeLabel[i] || (any(E$from==E$to[i] & E$to==E$from[i]) & bidirectional[i]) | vAlpha[E$from[i]] < 255)
           {
             
-            NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1) - parallelEdge[i]*parallelAngle[i]),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(x2-x1,y2-y1) - parallelEdge[i]*parallelAngle[i]),vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
             x1 <- NewPoints[1]
             y1 <- NewPoints[2]  
             
@@ -510,7 +510,7 @@ plot.qgraph <- function(x, ...)
           #               spy=c(y1,y1+loopY,y1)
           #               spl <- spl2 <- xspline(c(x1,spx,x2),c(y1,spy,y2),1,draw=FALSE)
 
-          spl <- SelfLoop(x1,y1,loopRotation[E$from[i]],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList)
+          spl <- SelfLoop(x1,y1,loopRotation[E$from[i]],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],residuals,residScale,polygonList,offset=ifelse(XKCD,2,0))
           
         } else 
         {
@@ -556,7 +556,7 @@ plot.qgraph <- function(x, ...)
           # Replace source to fixed points if specified in edgeConnectPoints:
           if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,1]))
           {
-            NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            NewPoints <- Cent2Edge(x1,y1,edgeConnectPoints[i,1],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
             x1 <- NewPoints[1]
             y1 <- NewPoints[2]
           } 
@@ -564,7 +564,7 @@ plot.qgraph <- function(x, ...)
           # Replace destination to fixed points if specified in edgeConnectPoints:
           if (!is.null(edgeConnectPoints) && !is.na(edgeConnectPoints[i,2]))
           {
-            NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+            NewPoints <- Cent2Edge(x2,y2,edgeConnectPoints[i,2],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
             x2 <- NewPoints[1]
             y2 <- NewPoints[2]
             
@@ -581,7 +581,7 @@ plot.qgraph <- function(x, ...)
           {
             if (is.null(edgeConnectPoints) || is.na(edgeConnectPoints[i,2]))
             {
-              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)) + parallelEdge[i]*parallelAngle[i],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,0), polygonList)
+              NewPoints <- Cent2Edge(x2,y2,ifelse(residEdge[i],loopRotation[E$to[i]],atan2usr2in(spl$x[length(spl$x)-1]-x2,spl$y[length(spl$y)-1]-y2)) + parallelEdge[i]*parallelAngle[i],vsize[E$to[i]],vsize2[E$to[i]],shape[E$to[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
               x2 <- NewPoints[1]
               y2 <- NewPoints[2]
               recurve <- TRUE
@@ -589,7 +589,7 @@ plot.qgraph <- function(x, ...)
             
             if (is.null(edgeConnectPoints) || is.na(edgeConnectPoints[i,1]))
             {
-              NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)) - parallelEdge[i]*parallelAngle[i],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,0), polygonList)
+              NewPoints <- Cent2Edge(x1,y1,ifelse(residEdge[i],loopRotation[E$from[i]],atan2usr2in(spl$x[2]-x1,spl$y[2]-y1)) - parallelEdge[i]*parallelAngle[i],vsize[E$from[i]],vsize2[E$from[i]],shape[E$from[i]],ifelse(residEdge[i],residScale,ifelse(XKCD,2,0)), polygonList)
               x1 <- NewPoints[1]
               y1 <- NewPoints[2]
               recurve <- TRUE
