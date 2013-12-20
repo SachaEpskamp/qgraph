@@ -149,6 +149,7 @@ qgraph <- function( input, ... )
 #     qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
 #     qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
     qgraphObject$Arguments$directed <- TRUE
+    qgraphObject$Arguments$probabilityEdges <- TRUE
   }
   
    ### BDgraph ####
@@ -157,8 +158,6 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
     if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
 
-    if(is.null(qgraphObject$Arguments[['BDprobCol']])) BDprobCol <- "blue" else BDprobCol <- qgraphObject$Arguments[['BDprobCol']]
-    
     if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
     
     
@@ -169,7 +168,7 @@ qgraph <- function( input, ... )
       # phat:
       W <- phat(input)
       W <- W + t(W)
-      Res[["phat"]] <- do.call(qgraph,c(list(input=W,posCol=BDprobCol),qgraphObject$Arguments))
+      Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
       L <- Res[["phat"]]$layout
       
       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
@@ -198,7 +197,7 @@ qgraph <- function( input, ... )
       {
         W <- phat(input)
         W <- W + t(W)
-        Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,posCol=BDprobCol), qgraphObject$Arguments))
+        Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
       }
     }  
@@ -364,6 +363,16 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['negCol']])) negCol <- c("#BF0000","red") else negCol <- qgraphObject$Arguments[['negCol']]
     if (length(negCol)==1) negCol <- rep(negCol,2)
     if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
+
+  if(is.null(qgraphObject$Arguments[['probCol']])) probCol <- "blue" else probCol <- qgraphObject$Arguments[['probCol']]
+  if(!is.null(qgraphObject$Arguments[['probabilityEdges']])) 
+  {
+    if (isTRUE(qgraphObject$Arguments[['probabilityEdges']]))
+    {
+      posCol <- probCol
+    }
+  }
+
     
     if(is.null(qgraphObject$Arguments[['unCol']])) unCol <- "#808080" else unCol <- qgraphObject$Arguments[['unCol']] 
     
