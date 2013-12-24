@@ -75,8 +75,7 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Graph$polygonList -> polygonList
   x$graphAttributes$Graph$mode -> mode
   x$graphAttributes$Graph$color -> color
-  
-  
+
   # Layout:
   x$layout -> layout
   x$layout.orig -> original.layout
@@ -124,6 +123,9 @@ plot.qgraph <- function(x, ...)
   x$plotOptions$resolution -> res
   x$plotOptions$subpars -> subpars
   x$plotOptions$subplotbg -> subplotbg
+  x$plotOptions$title -> title
+  x$plotOptions$preExpression -> preExpression
+  x$plotOptions$postExpression -> postExpression
   
   rm(x)
 
@@ -207,6 +209,12 @@ plot.qgraph <- function(x, ...)
     plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * (2+mar[2]+mar[4])/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
     
     #         plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
+  }
+  
+  # Run preExpression
+  if (!is.null(preExpression))
+  {
+    eval(parse(text = preExpression))
   }
   
   # if (PlotOpen) 
@@ -1091,6 +1099,17 @@ plot.qgraph <- function(x, ...)
     text(1,-1.1,paste("Maximum:",round(maximum,2)),pos=2,cex=0.6)
   }
   
+  # plot title:
+  if (!is.null(title))
+  {
+    addTitle(title)
+  }
+  
+  # Run postExpression
+  if (!is.null(postExpression))
+  {
+    eval(parse(text = postExpression))
+  }
   
   if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff','tex')) 
   {

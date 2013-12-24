@@ -15,6 +15,8 @@ Changes in Version 1.2.4
   o Added 'node.width' and 'node.height' arguments that scales 'vsize' and 'vsize2'.
   o Fixed a bug where edge labels could not be assigned using a matrix.
   o BDgraph is now supported.
+  o Added 'title' argument.
+  o Added preExpression and postExpression arguments
 
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me

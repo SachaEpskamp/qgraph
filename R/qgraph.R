@@ -135,21 +135,43 @@ qgraph <- function( input, ... )
     }
   if (is(input,"bn.strength"))
   {
+
     bnobject <- input
     input <- as.matrix(bnobject[c("from","to","strength")])
     TempLabs  <- unique(c(bnobject$from,bnobject$to))
     if (is.null(qgraphObject$Arguments$labels)) qgraphObject$Arguments$labels  <- TempLabs
     
     input[,1:2] <- as.numeric(match(c(input[,1:2]), TempLabs))
+    
     input <- as.matrix(input)
     mode(input) <- "numeric"
+    
+    if (is.null(qgraphObject$Arguments$directed))
+    {
+      if (is.null(bnobject$direction) || all(bnobject$direction %in% c(0,0.5)))
+      { 
+        qgraphObject$Arguments$directed <- FALSE
+      } else qgraphObject$Arguments$directed <- TRUE
+    }
+      
+    if (!is.null(bnobject$direction))
+    {
+      input[,3] <- input[,3] * ( 1 - qgraphObject$Arguments$directed * bnobject$direction )
+    }
+    
+    # remove undirect duplicates:
+    srt <- cbind( pmin(input[,1],input[,2]), pmax(input[,1],input[,2]))
+    input <- input[!(duplicated(srt)&!qgraphObject$Arguments$directed),  ]
+    rm(srt)
     
 #     srtInput <- aaply(input,1,sort)
 #     input <- input[!duplicated(srtInput),]
 #     qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
 #     qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
-    qgraphObject$Arguments$directed <- TRUE
     qgraphObject$Arguments$probabilityEdges <- TRUE
+    
+    if (is.null( qgraphObject$Arguments$parallelEdge))  qgraphObject$Arguments$parallelEdge <- TRUE
+    
   }
   
    ### BDgraph ####
@@ -400,7 +422,11 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['layout.control']])) layout.control=0.5 else layout.control=qgraphObject$Arguments[['layout.control']]
     if(is.null(qgraphObject$Arguments[['layout.par']])) layout.par=list() else layout.par=qgraphObject$Arguments[['layout.par']]
     if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
-        
+  if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
+  if(is.null(qgraphObject$Arguments$preExpression)) preExpression <- NULL else preExpression <- qgraphObject$Arguments$preExpression
+  if(is.null(qgraphObject$Arguments$postExpression)) postExpression <- NULL else postExpression <- qgraphObject$Arguments$postExpression
+  
+  
     # Output qgraphObject$Arguments:
     if(is.null(qgraphObject$Arguments$bg)) bg <- FALSE else bg <- qgraphObject$Arguments$bg
     
@@ -1973,6 +1999,9 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$label.norm <- label.norm
   qgraphObject$plotOptions$overlay <- overlay
   qgraphObject$plotOptions$details <- details
+  qgraphObject$plotOptions$title <- title
+  qgraphObject$plotOptions$preExpression <- preExpression
+  qgraphObject$plotOptions$postExpression <- postExpression
   qgraphObject$plotOptions$legend.mode <- legend.mode
   qgraphObject$plotOptions$srt <- srt
   qgraphObject$plotOptions$gray <- gray
