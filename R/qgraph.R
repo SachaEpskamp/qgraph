@@ -156,7 +156,7 @@ qgraph <- function( input, ... )
       
     if (!is.null(bnobject$direction))
     {
-      input[,3] <- input[,3] * ( 1 - qgraphObject$Arguments$directed * bnobject$direction )
+      input[,3] <- input[,3] * ( 1 - qgraphObject$Arguments$directed * (1- bnobject$direction ))
     }
     
     # remove undirect duplicates:
