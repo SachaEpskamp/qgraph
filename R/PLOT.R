@@ -344,7 +344,6 @@ plot.qgraph <- function(x, ...)
     AverageLength <- sqrt(((usr[2]-usr[1]) * (usr[4]-usr[3])) / nNodes)
     EdgeLenghts <- sqrt((layout[E$to,1] - layout[E$from,1])^2 + (layout[E$to,2] - layout[E$from,2])^2)
     curve <- curve * EdgeLenghts /AverageLength
-    
   }
   
   # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
@@ -609,12 +608,21 @@ plot.qgraph <- function(x, ...)
           
           if (recurve)
           {
+#             # Update curve if needed:
+#             if (isTRUE(curveScale))
+#             {
+#               usr <- par("usr")
+#               AverageLength <- sqrt(((usr[2]-usr[1]) * (usr[4]-usr[3])) / nNodes)
+#               EdgeLenght <- sqrt((x2 - x1)^2 + (y2 - y1)^2)
+#               curve[i] <- curve[i] * EdgeLenght /AverageLength
+#             }
+            
             if (knots[i]!=0)
             {
               spl <- xspline(c(x1,knotLayout[knots[i],1],x2),c(y1,knotLayout[knots[i],2],y2),0,draw=FALSE)
             } else {               
               
-              curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
+            if (residEdge[i])  curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
               
               # Add pivots:
               if (is.numeric(curvePivot))
@@ -654,8 +662,14 @@ plot.qgraph <- function(x, ...)
         
         if (plotEdgeLabel[i])
         {
-          midX[i]=spl$x[floor(edge.label.position[i]*length(spl$x))]
-          midY[i]=spl$y[floor(edge.label.position[i]*length(spl$y))]
+          if (E$from[i] != E$to[i] && knots[i] == 0 && edge.label.position[i] == 0.5)
+          {
+            midX[i] <- curvemid[1]
+            midY[i] <- curvemid[2]
+          } else {
+            midX[i]=spl$x[round(edge.label.position[i]*length(spl$x))]
+            midY[i]=spl$y[round(edge.label.position[i]*length(spl$y))] 
+          }
         }
         
         
