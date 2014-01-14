@@ -79,6 +79,8 @@ qgraph <- function( input, ... )
     {
       if (is.null(qgraphObject$Arguments$directed)) qgraphObject$Arguments$directed <- input$Edgelist$directed
       if (is.null(qgraphObject$Arguments$bidirectional)) qgraphObject$Arguments$bidirectional <- input$Edgelist$bidirectional
+      if (is.null(qgraphObject$Arguments$nNodes)) qgraphObject$Arguments$nNodes <- input$graphAttributes$Graph$nNodes
+      
       
       if(input[['graphAttributes']][['Graph']][['weighted']])
       {
