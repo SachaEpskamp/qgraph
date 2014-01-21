@@ -170,15 +170,13 @@ qgraph <- function( input, ... )
 #     input <- input[!duplicated(srtInput),]
 #     qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
 #     qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
-<<<<<<< HEAD
+
     qgraphObject$Arguments$directed <- TRUE
-    qgraphObject$Arguments$probabilityEdges <- TRUE
-=======
+
     qgraphObject$Arguments$probabilityEdges <- TRUE
     
     if (is.null( qgraphObject$Arguments$parallelEdge))  qgraphObject$Arguments$parallelEdge <- TRUE
-    
->>>>>>> 63de41cfbd4daedd5c94090d8abbde70bbbd7ee2
+
   }
   
    ### BDgraph ####
