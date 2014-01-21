@@ -1,0 +1,1 @@
+sign0 <- function(x) ifelse(sign(x)<0,-1,1)
