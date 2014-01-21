@@ -21,6 +21,13 @@ qgraph( input, ... )
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
 \item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to NULL, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 50 nodes and 0.3 to larger graphs.}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
+
+\item{title}{String with a title to be drawn in the topleft of the plot.}
+
+\item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
+
+\item{postExpression}{A parsable string containing R codes to be evaluated just before closing the device.}
+
   \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 }
 }

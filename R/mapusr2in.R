@@ -51,7 +51,7 @@ PerpMid <- function(xy0,xy1,ang=1,cex=1,q=0.5)
   xy0 <- xy0 + q * (xy1 - xy0)
   
   # Fixed inches size:
-  cexIn <- cex * 0.025 * sqrt(sum(par("pin")^2))
+  cexIn <-  cex * 0.025 * sqrt(sum(par("pin")^2))
   
   # Rotate about origin:
   xyr <- matrix(c(0,ang,-ang,0),2,2) %*% (c(usr2inX(xy1[1]),usr2inY(xy1[2])) - c(usr2inX(xy0[1]),usr2inY(xy0[2])))  
