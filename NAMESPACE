@@ -37,10 +37,10 @@ importFrom(colorspace,rainbow_hcl)
 importFrom(Matrix,sparseMatrix)
 
 export(getWmat)
-s3method(getWmat, matrix)
-s3method(getWmat, data.frame)
-s3method(getWmat, igrpah)
-s3method(getWmat, qgraph)
+S3method(getWmat, matrix)
+S3method(getWmat, data.frame)
+S3method(getWmat, igraph)
+S3method(getWmat, qgraph)
 
 import(sna)
 

@@ -248,7 +248,7 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
 #   require(igraph)
 #   require(sna)
   # Compute weights matrix:
-  W <- getWmat(W)
+  x <- getWmat(x)
   
   # consider only the adjacency matrix
   A<-x!=0
