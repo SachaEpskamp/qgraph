@@ -60,7 +60,6 @@ centrality_auto<-function(x)
   diag(x)<-0 # loops are not included in centrality analysis
   x<-abs(x) # signs are not included in centrality analysis
   directed.gr<-ifelse(isSymmetric.matrix(object=x, tol=1e-12), FALSE, TRUE) # detect whether the graph is directed
-  if(directed.gr) x[upper.tri(x)]<-t(x)[upper.tri(x)]
   weighted.gr<-ifelse(all(mat2vec(x)%in%c(0,1)), FALSE, TRUE) # detect whether the graph is weighted
   
   # compute centrality with package qgraph: InDegree, OutDegree, Closeness, Betwenness
