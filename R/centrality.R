@@ -2,31 +2,34 @@
 centrality <- function(graph,alpha=1,posfun=abs)
 {
   # Check for correct class:
-  if (class(graph) != "qgraph") stop("Must be a 'qgraph' object")
+#   if (class(graph) != "qgraph") stop("Must be a 'qgraph' object")
   
-  if (!is.null(graph[['graphAttributes']][['Graph']][['weighted']])) if (!graph[['graphAttributes']][['Graph']][['weighted']]) graph[['Edgelist']][['weight']] <- ifelse(graph[['Edgelist']][['weight']]==0,0,1)
+#   if (!is.null(graph[['graphAttributes']][['Graph']][['weighted']])) if (!graph[['graphAttributes']][['Graph']][['weighted']]) graph[['Edgelist']][['weight']] <- ifelse(graph[['Edgelist']][['weight']]==0,0,1)
   
-  if (!isTRUE(graph[['graphAttributes']][['Graph']][['minimum']] == 0))
-  {
-    warning("Minimum in graph is not set to zero. Omitted edges will not be included in computation of centrality measures.")
-  }
-  
-  # Extract edgelist:
-  E <- graph[['Edgelist']]
-  
-  # Number of nodes:
-  n <- graph[['graphAttributes']][['Graph']][['nNodes']]
-  
-  ## Convert to adjacency:
-  W <- matrix(0,n,n)
-  for (i in 1:length(E$from))
-  {
-    if (E$weight[i]!=0)
-    {
-      W[E$from[i],E$to[i]] <- E$weight[i]
-      if (!E$directed[i] | E$bidir[i]) W[E$to[i],E$from[i]] <- E$weight[i]
-    }
-  }
+#   if (!isTRUE(graph[['graphAttributes']][['Graph']][['minimum']] == 0))
+#   {
+#     warning("Minimum in graph is not set to zero. Omitted edges will not be included in computation of centrality measures.")
+#   }
+#   
+#   # Extract edgelist:
+#   E <- graph[['Edgelist']]
+#   
+#   # Number of nodes:
+#   n <- graph[['graphAttributes']][['Graph']][['nNodes']]
+#   
+#   ## Convert to adjacency:
+#   W <- matrix(0,n,n)
+#   for (i in 1:length(E$from))
+#   {
+#     if (E$weight[i]!=0)
+#     {
+#       W[E$from[i],E$to[i]] <- E$weight[i]
+#       if (!E$directed[i] | E$bidir[i]) W[E$to[i],E$from[i]] <- E$weight[i]
+#     }
+#   }
+
+  W <- getWmat(graph)
+  n <- nrow(W)
   
   # Remove diagonal:
   if (any(diag(W)!=0))

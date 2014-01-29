@@ -34,3 +34,22 @@ importFrom(Hmisc,"subplot")
 import(igraph)
 S3method(as.igraph, qgraph)
 importFrom(colorspace,rainbow_hcl)
+importFrom(Matrix,sparseMatrix)
+
+export(getWmat)
+s3method(getWmat, matrix)
+s3method(getWmat, data.frame)
+s3method(getWmat, igrpah)
+s3method(getWmat, qgraph)
+
+import(sna)
+
+# Functions Giulio:
+export(smallworldness)
+export(clustOnnela)
+export(clustZhang)
+export(clustWS)
+export(clustcoef_auto)
+export(centrality_auto)
+export(mat2vec)
+
