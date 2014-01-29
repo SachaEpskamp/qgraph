@@ -2,6 +2,8 @@
 # a wrapper for centrality measures ##
 ######################################
 
+
+
 # converts a matrix to a vector
 mat2vec<-function(x, diag=FALSE, tol=1e-10)
 {
