@@ -7,7 +7,7 @@ getWmat <- function(x,...)
 }
 
 # Matrix:
-getWmat.matrix <- function(x,nNodes,labels)
+getWmat.matrix <- function(x,nNodes,labels, directed = TRUE)
 {
   if (mode(x)!="numeric") stop("Input matrix must be numeric")
   
@@ -47,15 +47,27 @@ getWmat.matrix <- function(x,nNodes,labels)
     if (length(labels) != nNodes) stop("Length of labels must match number of nodes")
   }
   
+  
+  from <- c(x[,1], x[!directed,2])
+  to <- c(x[,2] , x[!directed,1])
+  if (ncol(x) == 2)
+  {
+    w <- rep(1,length(from))
+  } else 
+  {
+    w <- c(x[,3], x[!directed,3]) 
+  }
+  
+  
   # Unweighted Edgelist:
   if ( ncol(x)==2 )
   {
-    mat <- as.matrix(1*sparseMatrix(x[,1],x[,2], dims = c(nNodes,nNodes)))
+    mat <- as.matrix(1*sparseMatrix(from,to, dims = c(nNodes,nNodes)))
     if (!missing(labels)) rownames(mat) <- colnames(mat) <- labels
     return(mat)
   } else 
   {
-    mat <- as.matrix(1*sparseMatrix(x[,1],x[,2],x=x[,3], dims = c(nNodes,nNodes)))
+    mat <- as.matrix(1*sparseMatrix(from,to,x=w, dims = c(nNodes,nNodes)))
     if (!missing(labels)) rownames(mat) <- colnames(mat) <- labels
     return(mat)
   }
@@ -63,7 +75,7 @@ getWmat.matrix <- function(x,nNodes,labels)
 
 
 # Data frame (edgelist)
-getWmat.data.frame <- function(x,nNodes,labels)
+getWmat.data.frame <- function(x,nNodes,labels,directed=TRUE)
 {
   if (!ncol(x) %in% c(2,3))
   {
@@ -103,15 +115,26 @@ getWmat.data.frame <- function(x,nNodes,labels)
     if (length(labels) != nNodes) stop("Length of labels must match number of nodes")
   }
   
+  from <- c(x[,1], x[!directed,2])
+  to <- c(x[,2] , x[!directed,1])
+  if (ncol(x) == 2)
+  {
+    w <- rep(1,length(from))
+  } else 
+  {
+    w <- c(x[,3], x[!directed,3]) 
+  }
+  
+  
   # Unweighted Edgelist:
   if ( ncol(x)==2 )
   {
-    mat <- as.matrix(1*sparseMatrix(x[,1],x[,2], dims = c(nNodes,nNodes)))
+    mat <- as.matrix(1*sparseMatrix(from,to, dims = c(nNodes,nNodes)))
     if (!missing(labels)) rownames(mat) <- colnames(mat) <- labels
     return(mat)
   } else 
   {
-    mat <- as.matrix(1*sparseMatrix(x[,1],x[,2],x=x[,3], dims = c(nNodes,nNodes)))
+    mat <- as.matrix(1*sparseMatrix(from,to,x=w, dims = c(nNodes,nNodes)))
     if (!missing(labels)) rownames(mat) <- colnames(mat) <- labels
     return(mat)
   }
@@ -124,14 +147,22 @@ getWmat.igraph <- function(x, labels)
   return(as.matrix(get.adjacency(x)))
 }
 
+
 ### qgraph:
-getWmat.qgraph <- function(x)
+getWmat.qgraph <- function(x, directed)
 {
   if (!is.null(x[['graphAttributes']][['Graph']][['weighted']])) if (!x[['graphAttributes']][['Graph']][['weighted']]) x[['Edgelist']][['weight']] <- ifelse(x[['Edgelist']][['weight']]==0,0,1)
   
   E <- x[['Edgelist']]
   n <- x[['graphAttributes']][['Graph']][['nNodes']]
-  mat <- as.matrix(1*sparseMatrix(E$from,E$to,x=E$weight, dims = c(n,n)))
+  
+  if (!missing(directed)) E$directed <- directed
+  
+  from <- c(E$from, E$to[!E$directed | E$bidir])
+  to <- c(E$to , E$from[!E$directed | E$bidir])
+  w <- c(E$weight, E$weight[!E$directed | E$bidir])
+  
+  mat <- as.matrix(1*sparseMatrix(from,to,x=w, dims = c(n,n)))
   rownames(mat) <- colnames(mat) <- x$graphAttributes$Nodes$labels
   return(mat)
 }
