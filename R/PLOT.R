@@ -629,8 +629,10 @@ plot.qgraph <- function(x, ...)
               {
                 splShape <- c(curveShape, curvePivotShape, curveShape, curvePivotShape, curveShape)
                 
+                curvemid <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i]) 
                 curveQ1 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = curvePivot) 
                 curveQ2 <- PerpMid(c(x1,y1),c(x2,y2),cex=curve[i], q = 1-curvePivot) 
+                
                 
                 spx <- c(curveQ1[1]  , curvemid[1], curveQ2[1])
                 spy <- c(curveQ1[2]  , curvemid[2], curveQ2[2])
@@ -639,7 +641,7 @@ plot.qgraph <- function(x, ...)
                 spx <- curvemid[1]
                 spy <- curvemid[2]
               }
-              
+            
               spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE) 
             }
           }
