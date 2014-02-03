@@ -75,7 +75,7 @@ centrality_auto<-function(x)
   row.names(centr1)<-colnames(x)
   
   # if the largest component is smaller than the network, closeness is recomputed only on the largest component
-  largcomp<-component.largest(x) # select only the largest component
+  largcomp<-component.largest(x, connected="strong") # select only the largest component
   if(sum(largcomp)<ncol(x))
   {
     x2<-x[largcomp,largcomp]
@@ -172,10 +172,11 @@ clustcoef_auto<-function(x, thresholdWS=0, thresholdON=0)
 }
 
 
-clustWS<-function(W, threshold=0)
+clustWS<-function(x, thresholdWS=0)
 {
   # Compute weights matrix:
-  W <- getWmat(W)
+  W <- getWmat(x)
+  threshold<-thresholdWS
   
   diag(W)<-0
   A<-matrix(0, nrow=nrow(W), ncol=ncol(W))
@@ -193,13 +194,13 @@ clustWS<-function(W, threshold=0)
   cW<-num/den
   a_cW<-a_num/den
   
-  cbind("clustWS"=a_cW, "signed_clustWS"=cW)
+  data.frame(cbind("clustWS"=a_cW, "signed_clustWS"=cW))
 }
 
-clustZhang<-function(W)
+clustZhang<-function(x)
 {
   # Compute weights matrix:
-  W <- getWmat(W)
+  W <- getWmat(x)
   
   # this function is mostly borrowed from package WGCNA
   diag(W)<-0
@@ -209,13 +210,14 @@ clustZhang<-function(W)
   den<-colSums(a_W)^2-colSums(W^2)
   cZ<-num/den
   a_cZ<-a_num/den
-  cbind("clustZhang"=a_cZ, "signed_clustZhang"=cZ)
+  data.frame(cbind("clustZhang"=a_cZ, "signed_clustZhang"=cZ))
 }
 
-clustOnnela<-function(W, threshold=0)
+clustOnnela<-function(x, thresholdON=0)
 {
   # Compute weights matrix:
-  W <- getWmat(W)
+  W <- getWmat(x)
+  threshold<-thresholdON
   
   diag(W)<-0
   W[abs(W)<threshold]<-0
@@ -236,7 +238,7 @@ clustOnnela<-function(W, threshold=0)
   cO<-num/den
   a_cO<-a_num/den
   
-  cbind("clustOnnela"=a_cO, "signed_clustOnnela"=cO)
+  data.frame(cbind("clustOnnela"=a_cO, "signed_clustOnnela"=cO))
 }
 
 ##################################
