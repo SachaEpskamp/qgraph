@@ -42,7 +42,7 @@ S3method(getWmat, data.frame)
 S3method(getWmat, igraph)
 S3method(getWmat, qgraph)
 
-import(sna)
+importFrom(sna, component.largest)
 
 # Functions Giulio:
 export(smallworldness)
