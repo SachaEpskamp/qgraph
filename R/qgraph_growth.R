@@ -142,6 +142,8 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
   if (ncol(ind) != n) stop("Number of columns in ind must correspond to total number of nodes")
   if (inputIsList) if (nrow(ind)!=length(inputList)) stop("Number of frames according to length of input different than according to length of ind")
   
+  # Graphs list:
+  Graphs <- list()
   
   # Start the loop:
   sub <- NULL
@@ -166,12 +168,20 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
     class(arg2) <- "qgraph"
     
     # Run qgraph:
-    if (length(labels) ==n) init <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels[sub])$layout.orig
-    else init <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels)$layout.orig
+    if (length(labels) ==n)
+    {
+      Graphs[[i]] <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels[sub])
+      init <- Graphs[[i]]$layout.orig
+    } else 
+    {
+      Graphs[[i]] <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels)
+      init <- Graphs[[i]]$layout.orig
+    }
     
     if (!is.null(titles)) title(titles[i],line=-1)
     Sys.sleep(sleep)
   }
+  invisible(Graphs)
 }
 
 

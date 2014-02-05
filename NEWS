@@ -18,6 +18,7 @@ Changes in Version 1.2.4
   o Added 'title' argument.
   o Added preExpression and postExpression arguments
   o The midpoint of curved edges is now based on the centers of nodes.
+  o qgraph.animate now returns a list of graph objects
 
 Changes in Version 1.2.3
   o Maintainer e-mail changed to mail@sachaepskamp.com to be in line with other packages maintained by me
