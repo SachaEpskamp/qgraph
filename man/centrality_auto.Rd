@@ -28,11 +28,11 @@ If \code{x} is weighted and undirected, then the strength, the node betweenness 
 }
 \value{
 A list containing:
-\item{node.centrality } {A dataframe that includes the node centrality statistics. A subset of the following centrality indices is included, depending on the input network: \code{Degree}, \code{InDegree}, \code{OutDegree}, \code{Strength}, \code{InStrength}, \code{OutStrength}, \code{Betweenness}, and \code{Closeness}.}
-\item{ShortestPathLengths } {A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
-\item{edge.betweenness.centrality} {The edge betweenness centrality statistic (Newman & Girvan, 2004). Edges are ordered by their decreasing centrality.}
+\item{node.centrality }{A dataframe that includes the node centrality statistics. A subset of the following centrality indices is included, depending on the input network: \code{Degree}, \code{InDegree}, \code{OutDegree}, \code{Strength}, \code{InStrength}, \code{OutStrength}, \code{Betweenness}, and \code{Closeness}.}
+\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
+\item{edge.betweenness.centrality}{The edge betweenness centrality statistic (Newman & Girvan, 2004). Edges are ordered by their decreasing centrality.}
 }
-}
+
 \references{
 Newman, M. E. J., Girvan, M. (2004). Finding and evaluating community structure in networks. Phisical Review E 69(026113).
 

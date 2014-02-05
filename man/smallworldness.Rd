@@ -32,16 +32,16 @@ A network can be said "smallworld" if \code{smallworldness} is higher than one (
 Edge weights, signs and directions are ignored in the computation of the indices.
 }
 \value{
-\item{smallworldness} {the "small-worldness" index proposed by Humphries & Gurney (2008)}
-\item{trans_target} {the global transitivity (Newman, 2003)}
-\item{mean_trans_random} {the average of the transitivities of the random networks}
-\item{loCI_trans_random} {the \code{lo} quantile of the distribution of the transitivity in the B random networks}
-\item{upCI_trans_random} {the \code{up} quantile of the distribution of the transitivity in the B random networks}
-\item{avlength_target} {the mean length of the shortest paths in the target network}
-\item{avlength_target} {the mean length of the shortest paths in the target network}
-\item{mean_avlength_rnd} {the average of the mean shortest path lengths in the random networks}
-\item{loCI_avlength_rnd} {the \code{lo} quantile of the distribution of the mean shortest path lengths in the random networks}
-\item{upCI_avlength_rnd} {the \code{up} quantile of the distribution of the mean shortest path lengths in the random networks}
+\item{smallworldness}{the "small-worldness" index proposed by Humphries & Gurney (2008)}
+\item{trans_target}{the global transitivity (Newman, 2003)}
+\item{mean_trans_random}{the average of the transitivities of the random networks}
+\item{loCI_trans_random}{the \code{lo} quantile of the distribution of the transitivity in the B random networks}
+\item{upCI_trans_random}{the \code{up} quantile of the distribution of the transitivity in the B random networks}
+\item{avlength_target}{the mean length of the shortest paths in the target network}
+\item{avlength_target}{the mean length of the shortest paths in the target network}
+\item{mean_avlength_rnd}{the average of the mean shortest path lengths in the random networks}
+\item{loCI_avlength_rnd}{the \code{lo} quantile of the distribution of the mean shortest path lengths in the random networks}
+\item{upCI_avlength_rnd}{the \code{up} quantile of the distribution of the mean shortest path lengths in the random networks}
 }
 \references{
 Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mõttus, R., Waldorp, L., Cramer, A. O. J., State of the aRt personality research: A tutorial on network analysis of personality data in R. Manuscript submitted for publication.

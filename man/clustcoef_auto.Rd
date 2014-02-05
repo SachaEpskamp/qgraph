@@ -35,13 +35,13 @@ In the computation of Onnela's clustering coefficient \code{clustOnnela}, edge o
 For the computation of the local clustering coefficient, a node must have at least two neighbors: for nodes with less than two neighbors \code{NaN} is returned.
 }
 \value{A dataframe that includes one or more of the following indices.
-\item{clustWS} {The Watts & Strogatz's (1998) unweighted clustering coefficient}
-\item{signed_clustWS} {The signed version of the Watts & Strogatz's clustering coefficient}
-\item{clustZhang} {The Zhang & Horvath's (2005) weighted clustering coefficient}
-\item{signed_clustZhang} {The signed version of the Zhang & Horvath's (2005) clustering coefficient}
-\item{clustOnnela} {The Onnela et al.'s (2005) clustering coefficient}
-\item{signed_clustOnnela} {The signed version of the Onnela et al.'s (2005) clustering coefficient}
-\item{clustBarrat} {The Barrat et al.'s (2004) weighted clustering coefficient}
+\item{clustWS}{The Watts & Strogatz's (1998) unweighted clustering coefficient}
+\item{signed_clustWS}{The signed version of the Watts & Strogatz's clustering coefficient}
+\item{clustZhang}{The Zhang & Horvath's (2005) weighted clustering coefficient}
+\item{signed_clustZhang}{The signed version of the Zhang & Horvath's (2005) clustering coefficient}
+\item{clustOnnela}{The Onnela et al.'s (2005) clustering coefficient}
+\item{signed_clustOnnela}{The signed version of the Onnela et al.'s (2005) clustering coefficient}
+\item{clustBarrat}{The Barrat et al.'s (2004) weighted clustering coefficient}
 }
 \references{
 Barrat, A., Barthelemy, M., Pastor-Satorras, R., & Vespignani, A. (2004). The architecture of complex weighted networks. In Proc. Natl. Acad. Sci. USA 101 (pp. 3747-3752).
@@ -63,7 +63,7 @@ Giulio Costantini (giulio.costantini@unimib.it), Sacha Epskamp (mail@sachaepskam
 Part of the code has been adapted from package \code{\link[WGCNA]{WGCNA}} (Langfelder & Horvath, 2008).
 }
 
-\Warning{
+\section{Warning}{
 The function requires an undirected network. To convert a directed network to undirected use for instance function \code{\link{upper.tri}} (see \link{examples}).
 }
 \seealso{
