@@ -126,7 +126,7 @@ E2adj <- function(E,n)
 
 ### EXAMPLE 1: Animation of construction algorithm: ###
 adjs <- lapply(1:nrow(E),function(i) E2adj(E[1:i,,drop=FALSE],n))
-qgraph.animate(adjs,color="black",labels=FALSE,sleep=0.1)
+qgraph.animate(adjs,color="black",labels=FALSE,sleep=0.1, smooth = FALSE)
 rm(adjs)
 
 ### EXAMPLE 2: Add nodes by final degree: ###

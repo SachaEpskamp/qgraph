@@ -44,6 +44,9 @@ S3method(getWmat, qgraph)
 
 importFrom(sna, component.largest)
 
+export(smoothAnimationList)
+export(mixGraphs)
+
 # Functions Giulio:
 export(smallworldness)
 export(clustOnnela)
