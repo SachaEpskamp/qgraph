@@ -7,7 +7,7 @@ getWmat <- function(x,...)
 }
 
 # Matrix:
-getWmat.matrix <- function(x,nNodes,labels, directed = TRUE)
+getWmat.matrix <- function(x,nNodes,labels, directed = TRUE,...)
 {
   if (mode(x)!="numeric") stop("Input matrix must be numeric")
   
@@ -75,7 +75,7 @@ getWmat.matrix <- function(x,nNodes,labels, directed = TRUE)
 
 
 # Data frame (edgelist)
-getWmat.data.frame <- function(x,nNodes,labels,directed=TRUE)
+getWmat.data.frame <- function(x,nNodes,labels,directed=TRUE,...)
 {
   if (!ncol(x) %in% c(2,3))
   {
@@ -142,14 +142,14 @@ getWmat.data.frame <- function(x,nNodes,labels,directed=TRUE)
 
 
 ### igraph
-getWmat.igraph <- function(x, labels)
+getWmat.igraph <- function(x, labels,...)
 {
   return(as.matrix(get.adjacency(x)))
 }
 
 
 ### qgraph:
-getWmat.qgraph <- function(x, directed)
+getWmat.qgraph <- function(x, directed,...)
 {
   if (!is.null(x[['graphAttributes']][['Graph']][['weighted']])) if (!x[['graphAttributes']][['Graph']][['weighted']]) x[['Edgelist']][['weight']] <- ifelse(x[['Edgelist']][['weight']]==0,0,1)
   

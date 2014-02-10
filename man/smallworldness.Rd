@@ -1,11 +1,12 @@
 \name{smallworldness}
 \alias{smallworldness}
+\encoding{UTF8}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Compute the small-worldness index.
 }
 \description{
-Compute the small-worldness index (Humphries & Gurney, 2008) relying on the global transitity of the network (Newman, 2003).
+Compute the small-worldness index (Humphries \& Gurney, 2008) relying on the global transitity of the network (Newman, 2003).
 }
 \usage{
 smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
@@ -13,7 +14,7 @@ smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-A graph. Can be a "qgraph" object object, an "igraph" object, an adjacency matrix, a weight matrix and an edgelist (possibly weighted).
+A graph. Can be a \code{qgraph} object object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist (possibly weighted).
 }
   \item{B}{
 The number of random networks.
@@ -44,8 +45,8 @@ Edge weights, signs and directions are ignored in the computation of the indices
 \item{upCI_avlength_rnd}{the \code{up} quantile of the distribution of the mean shortest path lengths in the random networks}
 }
 \references{
-Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mõttus, R., Waldorp, L., Cramer, A. O. J., State of the aRt personality research: A tutorial on network analysis of personality data in R. Manuscript submitted for publication.
-Humphries, M. D., & Gurney, K. (2008). Network “small-world-ness”: a quantitative method for determining canonical network equivalence. PloS One, 3(4), e0002051.
+Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mottus, R., Waldorp, L., Cramer, A. O. J., State of the aRt personality research: A tutorial on network analysis of personality data in R. Manuscript submitted for publication.
+Humphries, M. D., & Gurney, K. (2008). Network "small-world-ness": a quantitative method for determining canonical network equivalence. PloS One, 3(4), e0002051.
 Newman, M. E. J. (2003). The structure and function of complex networks*. SIAM Review, 45(3), 167–256.
 }
 \author{

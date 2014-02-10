@@ -31,7 +31,7 @@ In the computation of Onnela's clustering coefficient \code{clustOnnela}, edge o
 \code{clustWS} computes the clustering coefficient for unweighted networks introduced by Watts & Strogatz (1998) and the corresponding signed version (Costantini & Perugini, in press).
 \code{ClustZhang} computes the clustering coefficient for weighted networks introduced by Zhang & Horvath (2005) and the corresponding signed version (Costantini & Perugini, in press).
 \code{clustOnnela} computes the clustering coefficient for weighted networks introduced by Onnela et al. (2005) and the corresponding signed version (Costantini & Perugini, in press).
-\code{clustering_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However the unsigned indices are computed for signed networks and the unweighted indices are computed for weighted networks according to the parameter \code{thresholdWS}. \code{clustering_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph::transitivity]{transitivity}} from package \code{\link[igraph]{igraph}}.
+\code{clustering_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However the unsigned indices are computed for signed networks and the unweighted indices are computed for weighted networks according to the parameter \code{thresholdWS}. \code{clustering_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph]{transitivity}} from package \code{\link[igraph]{igraph}}.
 For the computation of the local clustering coefficient, a node must have at least two neighbors: for nodes with less than two neighbors \code{NaN} is returned.
 }
 \value{A dataframe that includes one or more of the following indices.
@@ -64,7 +64,7 @@ Part of the code has been adapted from package \code{\link[WGCNA]{WGCNA}} (Langf
 }
 
 \section{Warning}{
-The function requires an undirected network. To convert a directed network to undirected use for instance function \code{\link{upper.tri}} (see \link{examples}).
+The function requires an undirected network. To convert a directed network to undirected use for instance function \code{\link{upper.tri}} (see examples).
 }
 \seealso{
 \code{\link{centrality_auto}}
@@ -72,7 +72,7 @@ The function requires an undirected network. To convert a directed network to un
 \examples{
 set.seed(1)
 net_ig<-igraph::erdos.renyi.game(n=8, p.or.m=.4, type="gnp", directed=TRUE) # generate a random (directed) network
-net<-as.matrix(get.adjacency(net2, type="both")) # convert it to an adjacency matrix
+net<-as.matrix(igraph:::get.adjacency(net_ig, type="both")) # convert it to an adjacency matrix
 net<-net*matrix(rnorm(ncol(net)^2), ncol=ncol(net)) # convert it to a signed and weighted network
 net[upper.tri(net)]<-t(net)[upper.tri(net)] # make it undirected
 clustcoef_auto(net)
