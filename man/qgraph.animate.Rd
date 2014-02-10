@@ -9,7 +9,7 @@ This function is meant to facilitate the creation of animations based on growing
 }
 \usage{
 qgraph.animate(input, ind = NULL, ..., constraint = 10, growth = "order", 
-  titles = NULL, sleep = 0)
+  titles = NULL, sleep = 0, smooth = TRUE, plotGraphs = TRUE, progress = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +33,15 @@ The way nodes are added by default. Set to "order" to include nodes in the order
 }
   \item{sleep}{
 Optional value sent to Sys.sleep() for showing the animation in R
+}
+  \item{smooth}{
+Logical. If set to \code{TRUE} smoothing via \link[stats]{loess} is performed on the layout of all frames.
+}
+  \item{plotGraphs}{
+Logical. If set to \code{FALSE} graphs are not plotted.
+}
+  \item{progress}{
+Logical. If set to \code{TRUE} progress bars are included.
 }
 }
 \details{
@@ -68,7 +77,9 @@ If 'ind' is a logical vector of length n then only one plot is made with the nod
 Other methods woth in the same way as above. However, if the 'ind' argument indicates a different number of frames than the 'input' argument the function will stop and give an error.
 }
 
-
+\value{
+Invisibly returns a list of all graphs.
+}
 \author{
 Sacha Epskamp (mail@sachaepskamp.com)
 }

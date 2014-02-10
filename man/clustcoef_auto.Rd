@@ -60,7 +60,7 @@ Zhang, B., & Horvath, S. (2005). A general framework for weighted gene co-expres
 Giulio Costantini (giulio.costantini@unimib.it), Sacha Epskamp (mail@sachaepskamp.com)
 }
 \note{
-Part of the code has been adapted from package \code{\link[WGCNA]{WGCNA}} (Langfelder & Horvath, 2008).
+Part of the code has been adapted from package \code{WGCNA} (Langfelder & Horvath, 2008).
 }
 
 \section{Warning}{
