@@ -6,7 +6,7 @@
 Compute the small-worldness index.
 }
 \description{
-Compute the small-worldness index (Humphries \& Gurney, 2008) relying on the global transitity of the network (Newman, 2003).
+Compute the small-worldness index (Humphries & Gurney, 2008) relying on the global transitity of the network (Newman, 2003).
 }
 \usage{
 smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
