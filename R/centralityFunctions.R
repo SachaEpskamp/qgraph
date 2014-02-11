@@ -2,8 +2,6 @@
 # a wrapper for centrality measures ##
 ######################################
 
-
-
 # converts a matrix to a vector
 mat2vec<-function(x, diag=FALSE, tol=1e-10)
 {
@@ -202,7 +200,7 @@ clustZhang<-function(x)
   # Compute weights matrix:
   W <- getWmat(x)
   
-  # this function is mostly borrowed from package WGCNA
+  # this function has been adapted from package WGCNA
   diag(W)<-0
   a_W<-abs(W)
   num<-diag(W%*%W%*%W)
@@ -283,5 +281,6 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
   
   # compute humphries&gourney(2008) smallworld-ness
   sigma<-(clusttrg/clustrnd_m)/(lengthtrg/lengthrnd_m)
-  c("smallworldness"=sigma, "trans_target"=clusttrg, "mean_trans_random"=clustrnd_m, "loCI_trans_random"=clustrnd_lo, "upCI_trans_random"=clustrnd_up, "avlength_target"=lengthtrg, "mean_avlength_rnd"=lengthrnd_m, "loCI_avlength_rnd"=lengthrnd_lo, "upCI_avlength_rnd"=lengthrnd_up)
+  
+  c("smallworldness"=sigma, "trans_target"=clusttrg, "averagelength_target"=lengthtrg, "trans_rnd_M"=clustrnd_m, "trans_rnd_lo"=unname(clustrnd_lo), "trans_rnd_up"=unname(clustrnd_up), "averagelength_rnd_M"=lengthrnd_m, "averagelength_rnd_lo"=unname(lengthrnd_lo), "averagelength_rnd_up"=unname(lengthrnd_up))
 }

@@ -9,7 +9,7 @@
 Local clustering coefficients.
 }
 \description{
-Compute local clustering coefficients, both signed and signed and both for weighted and for unweighted networks.
+Compute local clustering coefficients, both signed and unsigned and both for weighted and for unweighted networks.
 }
 \usage{
 clustcoef_auto(x, thresholdWS = 0, thresholdON = 0)
@@ -19,7 +19,7 @@ clustOnnela(x, thresholdON=0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An undirected graph. Can be a "qgraph" object object, an "igraph" object, an adjacency matrix, a weight matrix and an edgelist (possibly weighted).}
+  \item{x}{An undirected graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.}
   \item{thresholdWS}{
 The threshold used to binarize a weighted network \code{x} to compute the binary clustering coefficients \code{clustWS} and \code{signed_clustWS}. Edges with weights lower than \code{thresholdWS} in absolute value are zeroed. For unweighted networks, \code{thresholdWS = 0} is the suggested value.
 }
@@ -31,7 +31,7 @@ In the computation of Onnela's clustering coefficient \code{clustOnnela}, edge o
 \code{clustWS} computes the clustering coefficient for unweighted networks introduced by Watts & Strogatz (1998) and the corresponding signed version (Costantini & Perugini, in press).
 \code{ClustZhang} computes the clustering coefficient for weighted networks introduced by Zhang & Horvath (2005) and the corresponding signed version (Costantini & Perugini, in press).
 \code{clustOnnela} computes the clustering coefficient for weighted networks introduced by Onnela et al. (2005) and the corresponding signed version (Costantini & Perugini, in press).
-\code{clustering_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However the unsigned indices are computed for signed networks and the unweighted indices are computed for weighted networks according to the parameter \code{thresholdWS}. \code{clustering_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph]{transitivity}} from package \code{\link[igraph]{igraph}}.
+\code{clustering_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However the unsigned indices are computed for signed networks, by considering the absolute value of the weights, and the unweighted indices are computed for weighted networks, after a binarization according to the parameter \code{thresholdWS}. \code{clustering_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph]{transitivity}} from package \code{\link[igraph]{igraph}}.
 For the computation of the local clustering coefficient, a node must have at least two neighbors: for nodes with less than two neighbors \code{NaN} is returned.
 }
 \value{A dataframe that includes one or more of the following indices.

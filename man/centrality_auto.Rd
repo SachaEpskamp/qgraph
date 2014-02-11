@@ -14,7 +14,7 @@ centrality_auto(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-A graph. Can be a "qgraph" object object, an "igraph" object, an adjacency matrix, a weight matrix and an edgelist (possibly weighted).
+A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.
 }
 }
 \details{
@@ -24,12 +24,12 @@ If \code{x} is unweighted and directed, then the indegree, the outdegree, the no
 If \code{x} is unweighted and undirected, then the degree, the node betweenness centrality, the closenes centrality, and the edge betweenness centralities are computed.
 If \code{x} is weighted and directed, then the instrength and the outstrength (same as indegree and outdegree, but considering weights), the node betweenness centrality, the closeness centrality, and edge betweenness centralities are computed
 If \code{x} is weighted and undirected, then the strength, the node betweenness centrality, the closenes centrality, and edge betweenness centralities are computed.
-
+Additionally, the shortest path length between each pair of nodes is also computed for all the kinds of networks.
 }
 \value{
 A list containing:
 \item{node.centrality }{A dataframe that includes the node centrality statistics. A subset of the following centrality indices is included, depending on the input network: \code{Degree}, \code{InDegree}, \code{OutDegree}, \code{Strength}, \code{InStrength}, \code{OutStrength}, \code{Betweenness}, and \code{Closeness}.}
-\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
+\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights.}
 \item{edge.betweenness.centrality}{The edge betweenness centrality statistic (Newman & Girvan, 2004). Edges are ordered by their decreasing centrality.}
 }
 
@@ -49,7 +49,7 @@ Giulio Costantini (giulio.costantini@unimib.it), Sacha Epskamp (mail@sachaepskam
 set.seed(1)
 adj <- matrix(sample(0:1,10^2,TRUE,prob=c(0.8,0.2)),nrow=10,ncol=10)
 Q <- qgraph(adj)
-centrality_auto(Q) # notice that a value NA is returned for nodes 3 and 9, which are not strongly connected to the largest component of the network (3 cannot reach other nodes, 9 cannot be reached).
+centrality_auto(Q) # notice that a value NA is returned for the closeness centrality of nodes 3 and 9, which are not strongly connected to the largest component of the network (3 cannot reach other nodes, 9 cannot be reached).
 }
 
 \keyword{ graphs }
