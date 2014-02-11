@@ -1,6 +1,11 @@
 Changes in Version 1.2.4
 
 New features:
+  o New graph analysis functions added by Giulio Costantini:
+      o 'centrality_auto' 
+      o 'clustcoef_auto' 
+      o 'smallworldness'
+      o  'clustOnnela', 'clustZhang', 'clustWS', 'mat2vec'
   o Added 'parallelEdge' and 'parallelAngle' arguments. Set parallelEdge = TRUE to obtain parallel straight edges rather than curved edges.
   o Added 'edgeConnectPoints' argument. This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes
   o 'arrowAngle' now defaults to pi/6 for weighted graph instead of pi/4.

@@ -62,17 +62,20 @@ If a directed network is given as input, an edge between every two nodes i and j
 \examples{
 
 set.seed(1)
-# a regular lattice. Even if the small-worldness is higher than three, the average path length is much higher than that of random networks.
+# a regular lattice. Even if the small-worldness is higher than three, the average path length is 
+# much higher than that of random networks.
 regnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=0, loops=FALSE, multiple=FALSE)
-smallworldness(regnet, B=100)
+smallworldness(regnet, B=10)
 
-# a small-world network: the transitivity is much higher than random, the average path length is close to that of random networks
+# a small-world network: the transitivity is much higher than random, the average path length is 
+# close to that of random networks
 swnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=.1, loops=FALSE, multiple=FALSE)
-smallworldness(swnet, B=100)
+smallworldness(swnet, B=10)
 
-# a pseudorandom network: both the average path length and the transitivity are similar to random networks.
+# a pseudorandom network: both the average path length and the transitivity are similar to random 
+# networks.
 rndnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=1, loops=FALSE, multiple=FALSE)
-smallworldness(rndnet, B=100)
+smallworldness(rndnet, B=10)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

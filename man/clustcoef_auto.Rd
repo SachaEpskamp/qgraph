@@ -71,10 +71,17 @@ The function requires an undirected network. To convert a directed network to un
 }
 \examples{
 set.seed(1)
-net_ig<-igraph::erdos.renyi.game(n=8, p.or.m=.4, type="gnp", directed=TRUE) # generate a random (directed) network
-net<-as.matrix(igraph:::get.adjacency(net_ig, type="both")) # convert it to an adjacency matrix
-net<-net*matrix(rnorm(ncol(net)^2), ncol=ncol(net)) # convert it to a signed and weighted network
-net[upper.tri(net)]<-t(net)[upper.tri(net)] # make it undirected
+# generate a random (directed) network:
+net_ig <- igraph::erdos.renyi.game(n=8, p.or.m=.4, type="gnp", directed=TRUE) 
+
+# convert it to an adjacency matrix:
+net <- as.matrix(igraph:::get.adjacency(net_ig, type="both")) 
+
+# convert it to a signed and weighted network:
+net <- net*matrix(rnorm(ncol(net)^2), ncol=ncol(net)) 
+
+# make it undirected:
+net[upper.tri(net)] <- t(net)[upper.tri(net)] 
 clustcoef_auto(net)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

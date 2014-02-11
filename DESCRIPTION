@@ -2,7 +2,7 @@ Package: qgraph
 Type: Package
 Title: Network representations of relationships in data
 Version: 1.2.4
-Date: 2014-02-10
+Date: 2014-02-11
 Author: Sacha Epskamp, Giulio Costantini, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann and Denny Borsboom
 Maintainer: Sacha Epskamp <mail@sachaepskamp.com>
 Depends: R (>= 2.15.0)
