@@ -29,6 +29,12 @@ centrality <- function(graph,alpha=1,posfun=abs)
 #   }
 
   W <- getWmat(graph)
+  
+  # If is list, compute for all:
+  if (is.list(W))
+  {
+    return(lapply(W, alpha=alpha,posfun=posfun))
+  }
   n <- nrow(W)
   
   # Remove diagonal:
