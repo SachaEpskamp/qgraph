@@ -33,8 +33,9 @@ centrality <- function(graph,alpha=1,posfun=abs)
   # If is list, compute for all:
   if (is.list(W))
   {
-    return(lapply(W, alpha=alpha,posfun=posfun))
+    return(lapply(W,centrality, alpha=alpha,posfun=posfun))
   }
+  
   n <- nrow(W)
   
   # Remove diagonal:
