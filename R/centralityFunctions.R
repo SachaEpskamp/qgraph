@@ -53,6 +53,12 @@ centrality_auto<-function(x)
   # Compute weights matrix:
   x <- getWmat(x)
   
+  # If list of matrices, return list of output:
+  if (is.list(x))
+  {
+    return(lapply(x, centrality_auto))
+  }
+  
   if(!is.matrix(x)) stop("the input network must be an adjacency or weights matrix")  
   
   diag(x)<-0 # loops are not included in centrality analysis
@@ -131,6 +137,12 @@ clustcoef_auto<-function(x, thresholdWS=0, thresholdON=0)
   # Compute weights matrix:
   x <- getWmat(x)
   
+  # If list of matrices, return list of output:
+  if (is.list(x))
+  {
+    return(lapply(x, clustcoef_auto, thresholdWS=thresholdWS, thresholdON=thresholdWS))
+  }
+  
   # check adjacency matrix (this code is mostly borrowed from package WGCNA, function checkAdjMat)
   dim = dim(x)
   if (is.null(dim) || length(dim) != 2) 
@@ -174,6 +186,13 @@ clustWS<-function(x, thresholdWS=0)
 {
   # Compute weights matrix:
   W <- getWmat(x)
+  
+  # If list of matrices, return list of output:
+  if (is.list(W))
+  {
+    return(lapply(W, clustWS, thresholdWS=thresholdWS))
+  }
+  
   threshold<-thresholdWS
   
   diag(W)<-0
@@ -200,6 +219,12 @@ clustZhang<-function(x)
   # Compute weights matrix:
   W <- getWmat(x)
   
+  # If list of matrices, return list of output:
+  if (is.list(W))
+  {
+    return(lapply(W, clustZhang))
+  }
+  
   # this function has been adapted from package WGCNA
   diag(W)<-0
   a_W<-abs(W)
@@ -215,6 +240,13 @@ clustOnnela<-function(x, thresholdON=0)
 {
   # Compute weights matrix:
   W <- getWmat(x)
+  
+  # If list of matrices, return list of output:
+  if (is.list(W))
+  {
+    return(lapply(W, clustOnnela, thresholdON = thresholdON))
+  }
+  
   threshold<-thresholdON
   
   diag(W)<-0
@@ -250,6 +282,12 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
 #   require(sna)
   # Compute weights matrix:
   x <- getWmat(x)
+  
+  # If list of matrices, return list of output:
+  if (is.list(x))
+  {
+    return(lapply(x, smallworldness, B=B, up=up, lo=lo))
+  }
   
   # consider only the adjacency matrix
   A<-x!=0
