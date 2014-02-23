@@ -1,4 +1,9 @@
 Changes in Version 1.2.4
+  o Fixed a bug where curved edges became indented between two large, close nodes.
+  o Added 'centralityPlot', 'centralityTable', 'clusteringPlot' and 'clusteringTable' functions
+
+
+Changes in Version 1.2.4
 
 New features:
   o New graph analysis functions added by Giulio Costantini:
