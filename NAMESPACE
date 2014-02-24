@@ -1,5 +1,8 @@
 useDynLib(qgraph)
-
+export(clusteringTable)
+export(clusteringPlot)
+export(centralityTable)
+export(centralityPlot)
 export(qgraph)
 export(qgraph.layout.fruchtermanreingold)
 export(qgraph.loadings)
@@ -41,6 +44,7 @@ S3method(getWmat, matrix)
 S3method(getWmat, data.frame)
 S3method(getWmat, igraph)
 S3method(getWmat, qgraph)
+S3method(getWmat, list)
 
 importFrom(reshape2, "melt")
 import(ggplot2)

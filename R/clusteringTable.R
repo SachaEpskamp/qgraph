@@ -1,15 +1,6 @@
 clusteringTable <- function(..., labels, signed = FALSE, relative = TRUE)
 {
-  dotList <- list(...)
-  
-  Wmats <- lapply(dotList, getWmat)
-  if (!is.null(names(dotList)))
-  {
-    names(Wmats) <- names(dotList) 
-  } else 
-  {
-    names(Wmats) <- paste("graph",seq_along(dotList))
-  }
+  Wmats <- getWmat(list(...))
   
   # Check symmetric and remove:
   sym <- sapply(Wmats,isSymmetric)

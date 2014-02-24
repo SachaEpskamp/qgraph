@@ -1,18 +1,9 @@
 centralityTable <- function(..., labels, relative = TRUE)
 {
-  # Compute centrality:
-  dotList <- list(...)
 
-  Wmats <- lapply(dotList, getWmat)
+  Wmats <- getWmat(list(...))
+  
   CentAuto <- lapply(Wmats, centrality_auto)
-  if (!is.null(names(dotList)))
-  {
-    names(CentAuto) <- names(dotList) 
-  } else 
-  {
-    names(CentAuto) <- paste("graph",seq_along(dotList))
-  }
-
   
   # Add method and labels to tables:
   for (i in seq_along(CentAuto))

@@ -6,6 +6,51 @@ getWmat <- function(x,...)
   UseMethod("getWmat")
 }
 
+# List:
+getWmat.list <- function(x,...)
+{
+  if (is.null(names(x)))
+  {
+    names(x) <- ""
+  }
+  
+  names(x) <- ifelse(names(x)=="",seq_along(names(x)),names(x))
+  
+  # Check if some objects are psynet objects or psynetGraph objects and adjust accordingly:
+  if (any(sapply(x,class) == "psynet","psynetGraph"))
+  {
+    psynets <- which(sapply(x,class) == "psynet")
+    for (g in psynets)
+    {
+      if (length(psynets) > 1)
+      {
+        names(x[[g]]) <- paste0(g,names(x[[g]]))
+      }
+      x <- c(x,x[[g]])
+    }
+    x <- x[-psynets]
+  }
+  
+  if (any(sapply(x,class) == "psynetGraph"))
+  {
+    psynetGraphs <- which(sapply(x,class) == "psynetGraph")
+    for (g in psynetGraphs)
+    {
+      graph <- x[[g]]$graph
+      if (names(x)[g] == as.character(g))
+      {
+        nam <- x[[g]]$method
+      } else nam <- names(x)[g]
+      x[[g]] <- graph
+      names(x)[g] <- nam
+    }
+  }
+  
+  Wmats <- lapply(x, getWmat)
+  
+  return(Wmats)
+}
+
 # Matrix:
 getWmat.matrix <- function(x,nNodes,labels, directed = TRUE,...)
 {
