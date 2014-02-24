@@ -102,7 +102,9 @@ centrality_auto<-function(x)
   ShortestPathLengths<-centr$ShortestPathLengths
   rownames(ShortestPathLengths)<-colnames(ShortestPathLengths)<-colnames(x)
   
-  list("node.centrality"=centr1, "edge.betweenness.centrality"=edgebet, "ShortestPathLengths"=ShortestPathLengths)
+  Res <- list("node.centrality"=centr1, "edge.betweenness.centrality"=edgebet, "ShortestPathLengths"=ShortestPathLengths)
+  class(Res) <- c("list","centrality_auto")
+  return(Res)
 }
 
 
@@ -178,7 +180,9 @@ clustcoef_auto<-function(x, thresholdWS=0, thresholdON=0)
   # this puts their value to zero
   output[is.na(output)]<-0
   
-  data.frame(output)
+  Res <- data.frame(output)
+  class(Res) <- c("data.frame","clustcoef_auto")
+  return(Res)
 }
 
 

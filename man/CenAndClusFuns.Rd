@@ -19,8 +19,8 @@ clusteringPlot(\dots, labels, relative = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-Graph objects that have \code{getWmat} methods.
+  \item{\dots}{
+Graph objects that have \code{getWmat} methods, or lists of such objects. Eache entry will be interpreted as a seperate graph. A list of objects will be plotted as multiple types of the same graph. See examples.
 }
   \item{labels}{
 An optional string overwriting the labels
