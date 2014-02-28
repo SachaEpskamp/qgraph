@@ -38,6 +38,7 @@ import(igraph)
 S3method(as.igraph, qgraph)
 importFrom(colorspace,rainbow_hcl)
 importFrom(Matrix,sparseMatrix)
+export(averageLayout)
 
 export(getWmat)
 S3method(getWmat, matrix)

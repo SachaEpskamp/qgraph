@@ -1,7 +1,7 @@
 Changes in Version 1.2.4
   o Fixed a bug where curved edges became indented between two large, close nodes.
   o Added 'centralityPlot', 'centralityTable', 'clusteringPlot' and 'clusteringTable' functions
-
+  o Added 'averageLayout' to compute the average layout of multiple graphs.
 
 Changes in Version 1.2.4
 
