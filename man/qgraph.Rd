@@ -62,6 +62,8 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
     \item{polygonList}{ A list contaning named lists for each element to include polygons to lookup in the \code{shape} argument. Each element must be named as they are used in \code{shape} and contain a list with elements \code{x} and \code{y} contaning the coordinates of the polygon. By default \code{ellipse} and \code{heart} are added to this list. These polygons are scaled according to \code{vsize} and \code{vsize2}}
       \item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
           \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
+          \item{subpars}{List of graphical parameters to be used in the subplots}
+          \item{subplotbg}{Background to be used in the sublots. If missing inherits from 'background' argument.}
         \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
 }
 \item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}

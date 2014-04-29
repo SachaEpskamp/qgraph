@@ -33,15 +33,30 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
         points(x, y, ,cex=cex1,col=bcolor,lwd=border.width,pch=pch2)
       }
     } else {
-      Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape))
-      
-      
-      xs <- sapply(Coord,'[[',1)
-      ys <- sapply(Coord,'[[',2)
-      
-      if (border) bord <- bcolor else bord <- NA
-      
-      polygon(xs, ys, lwd=border.width, border = bord, col = vcolor)
+      if (shape == "square")
+      {
+          xOff <- Cent2Edge(x,y,pi/2,cex1,cex1,shape)[1] - x
+          yOff <- Cent2Edge(x,y,0,cex1,cex1,shape)[2] - y
+          
+          # Plot background:
+          rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA)
+          if (border)
+          {
+            rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor,lwd=border.width)
+          }  
+      } else {
+        Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape))
+        
+        
+        xs <- sapply(Coord,'[[',1)
+        ys <- sapply(Coord,'[[',2)
+        
+        if (border) bord <- bcolor else bord <- NA
+        
+        polygon(xs, ys, lwd=border.width, border = bord, col = vcolor)
+        
+      }
+
     }
     
   } 
