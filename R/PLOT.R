@@ -126,6 +126,8 @@ plot.qgraph <- function(x, ...)
   x$plotOptions$title -> title
   x$plotOptions$preExpression -> preExpression
   x$plotOptions$postExpression -> postExpression
+  x$plotOptions$usePCH -> usePCH
+  x$plotOptions$node.resolution -> node.resolution
   
   rm(x)
   
@@ -807,11 +809,13 @@ plot.qgraph <- function(x, ...)
   # scale border width:
   #       border.width <- border.width * normC
   
+  # If usePCH = NULL, detect if device or resizable R plot:
+  if (is.null(usePCH)) usePCH <- grepl("(RStudioGD)|(x11)|(X11)|(quartz)|(windows)",dev.cur(), ignore.case = TRUE)
   
   if (!XKCD)
   {
     # Check if nodes need to be plotted in for loop:
-    if (!is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0))
+    if (!usePCH || !is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0))
     {
       # Get which nodes become a subplot:
       #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
@@ -840,7 +844,8 @@ plot.qgraph <- function(x, ...)
           # Plot border:
           if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width[i])
         } else {
-          drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide)
+          drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide,
+                   usePCH = usePCH, resolution = node.resolution)
         }
       }      
     } else {

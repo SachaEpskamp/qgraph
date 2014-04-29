@@ -1,35 +1,49 @@
 
-drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1)
+drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
+                     usePCH = TRUE, resolution = 100)
 {
-
   if (shape %in% c("circle","square","triangle","diamond"))
   {
-    if (shape=="circle")
+    if (usePCH)
     {
-      pch1=16
-      pch2=1
-    }
-    if (shape=="square")
-    {
-      pch1=15
-      pch2=0
-    }
-    if (shape=="triangle")
-    {
-      pch1=17
-      pch2=2
-    }
-    if (shape=="diamond")
-    {
-      pch1=18
-      pch2=5
+      if (shape=="circle")
+      {
+        pch1=16
+        pch2=1
+      }
+      if (shape=="square")
+      {
+        pch1=15
+        pch2=0
+      }
+      if (shape=="triangle")
+      {
+        pch1=17
+        pch2=2
+      }
+      if (shape=="diamond")
+      {
+        pch1=18
+        pch2=5
+      }
+      
+      points(x, y, ,cex=cex1,col=vcolor,lwd=border.width,pch=pch1)
+      if (border)
+      {
+        points(x, y, ,cex=cex1,col=bcolor,lwd=border.width,pch=pch2)
+      }
+    } else {
+      Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape))
+      
+      
+      xs <- sapply(Coord,'[[',1)
+      ys <- sapply(Coord,'[[',2)
+      
+      if (border) bord <- bcolor else bord <- NA
+      
+      polygon(xs, ys, lwd=border.width, border = bord, col = vcolor)
     }
     
-    points(x, y, ,cex=cex1,col=vcolor,lwd=border.width,pch=pch1)
-    if (border)
-    {
-      points(x, y, ,cex=cex1,col=bcolor,lwd=border.width,pch=pch2)
-    }
   } 
   else if (shape == "rectangle")  {
     xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,shape)[1] - x

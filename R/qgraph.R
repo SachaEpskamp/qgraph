@@ -303,7 +303,7 @@ qgraph <- function( input, ... )
     if(is.null(qgraphObject$Arguments[['knot.borders']])) knot.borders <- FALSE else knot.borders <- qgraphObject$Arguments[['knot.borders']]
     if(is.null(qgraphObject$Arguments[['knot.border.color']])) knot.border.color <- "black" else knot.border.color <- qgraphObject$Arguments[['knot.border.color']]
     if(is.null(qgraphObject$Arguments[['knot.border.width']])) knot.border.width <- 1 else knot.border.width <- qgraphObject$Arguments[['knot.border.width']]
-    
+
     if (edgelist)
     {
       if (is.character(input))
@@ -324,6 +324,15 @@ qgraph <- function( input, ... )
       } else nNodes=nrow(input)
     } else nNodes=qgraphObject$Arguments$nNodes
     
+
+    if(is.null(qgraphObject$Arguments[['usePCH']])) 
+    {
+      if (nNodes > 50) usePCH <- TRUE else usePCH <- NULL 
+    } else usePCH <- qgraphObject$Arguments[['usePCH']]
+
+    if(is.null(qgraphObject$Arguments[['node.resolution']])) node.resolution <- 100 else node.resolution <- qgraphObject$Arguments[['node.resolution']]
+
+
     # Default for fact cut and groups
     if (graph=="factorial") fact=TRUE else fact=FALSE
     if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
@@ -2023,6 +2032,8 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$resolution <- res
   qgraphObject$plotOptions$subpars <- subpars
   qgraphObject$plotOptions$subplotbg <- subplotbg
+  qgraphObject$plotOptions$usePCH <- usePCH
+  qgraphObject$plotOptions$node.resolution <- node.resolution
 
   
     if (!DoNotPlot)
