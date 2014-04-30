@@ -1022,8 +1022,14 @@ plot.qgraph <- function(x, ...)
     colHEX <- rgb(t(col2rgb(color)/255))
     
     fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
-    
-    for (i in 1:length(groups)) polygon(ellipse(cov(layout[groups[[i]],]),centre=colMeans(layout[groups[[i]],]),level=overlaySize),border=color[i],col=fillCols[i])
+
+    for (i in 1:length(groups)) 
+    {
+      if (length(groups[[i]]) > 1)
+      {
+        polygon(ellipse(cov(layout[groups[[i]],,drop=FALSE]),centre=colMeans(layout[groups[[i]],,drop=FALSE]),level=overlaySize),border=color[i],col=fillCols[i]) 
+      }
+    }
   }
   
   if (is.null(names(groups))) names(groups) <- LETTERS[1:length(groups)]
