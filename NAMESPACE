@@ -49,7 +49,7 @@ S3method(getWmat, list)
 
 importFrom(reshape2, "melt")
 import(ggplot2)
-
+importFrom(glasso, glasso)
 importFrom(sna, component.largest)
 
 # export(smoothAnimationList)
@@ -63,4 +63,17 @@ export(clustWS)
 export(clustcoef_auto)
 export(centrality_auto)
 export(mat2vec)
+
+# LASSO STUFF:
+export(wi2net)
+export(EBICglasso)
+
+
+## corauto stuff:
+importFrom(huge, huge.npn)
+importFrom(psych, tetrachoric)
+importFrom(psych, polychoric)
+export(cor_auto)
+
+
 

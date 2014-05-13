@@ -1,3 +1,12 @@
+DOCUMENT STILL
+  - tuning argument
+  - sampleSize argument
+  - cutQuantile
+  - corAuto
+
+cut default changed and is now based such that 5% of edges are above cut.
+
+
 Changes in Version 1.2.4
   o Fixed a bug where curved edges became indented between two large, close nodes.
   o Added 'centralityPlot', 'centralityTable', 'clusteringPlot' and 'clusteringTable' functions
