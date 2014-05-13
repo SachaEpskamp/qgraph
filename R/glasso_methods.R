@@ -56,9 +56,6 @@ EBICglasso <- function(
     -2 * L + E * log(n) + 4 * E * gamma * log(p)
   }, gamma = gamma, n = n, S = S)
 
-  plot(rho, EBICs)
-  plot(rho,sapply(glassoRes,function(x)sum(x$wi[upper.tri(x$wi,diag=TRUE)] != 0)))
-  
   # Smalles EBIC:
   opt <- which.min(EBICs)
 
