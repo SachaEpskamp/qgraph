@@ -67,7 +67,7 @@ export(mat2vec)
 # LASSO STUFF:
 export(wi2net)
 export(EBICglasso)
-
+importFrom(Matrix, forceSymmetric)
 
 ## corauto stuff:
 importFrom(huge, huge.npn)

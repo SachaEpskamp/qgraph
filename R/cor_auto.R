@@ -37,11 +37,14 @@ cor_auto <- function(
       return(isInt & nLevel <= ordinalLevelMax)
     } )
     
-    message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd])))
-    
-    for (i in Numerics[isOrd])
+    if (any(isOrd))
     {
-      data[,i] <- ordered(data[,i])
+      message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd])))
+      
+      for (i in Numerics[isOrd])
+      {
+        data[,i] <- ordered(data[,i])
+      } 
     }
     
   }

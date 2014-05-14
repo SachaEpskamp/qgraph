@@ -366,7 +366,7 @@ qgraph <- function( input, ... )
   
   if(is.null(qgraphObject$Arguments[['tuning']]))
   {
-    tuning <- 0
+    tuning <- 0.5
   } else tuning <- qgraphObject$Arguments[['tuning']]    
   
   # Factorial graph:
