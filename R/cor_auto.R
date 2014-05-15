@@ -39,7 +39,7 @@ cor_auto <- function(
     
     if (any(isOrd))
     {
-      message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd])))
+      message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd], collapse = "; ")))
       
       for (i in Numerics[isOrd])
       {

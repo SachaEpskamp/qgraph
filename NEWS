@@ -3,6 +3,7 @@ DOCUMENT STILL
   - sampleSize argument
   - cutQuantile
   - corAuto
+- Cut defaults to 20 now
 
 cut default changed and is now based such that 5% of edges are above cut.
 

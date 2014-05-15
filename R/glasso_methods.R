@@ -24,42 +24,59 @@ EBICglasso <- function(
     # Compute rho max (code taken from huge):
     rho.max = max(max(S - diag(nrow(S))), -min(S - diag(nrow(S))))
     rho.min = rho.max/100
-    rho = exp(seq(log(rho.max), log(rho.min), length = 100))
+    rho = exp(seq(log(rho.min), log(rho.max), length = 100))
 #   }
   
-  # For each rho, run glasso and store matrix indices of zeroes:
-  Zeroes <- lapply(rho, function(r) {
-    Res <- glasso(S, r, ...)
-    which(Res$wi==0,arr.ind=TRUE)    
+
+#   sink("/dev/null")
+  glas_path <- glassopath(S, rho, trace = 0)
+#   sink()
+
+    # Likelihoods:
+    EBICs <- apply(glas_path$wi,3,function(C){
+      L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
+      E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
+      p <- nrow(C)
+      
+      # EBIC:
+      -2 * L + E * log(n) + 4 * E * gamma * log(p)
     })
 
-  # Rerun glasso to estimate unpenalized models with forced zeroes:
-  sink("/dev/null")
-  glassoRes <- lapply(Zeroes, function(z) glasso(S, 0, z, ...))
-  sink()
+# 
+# # For each rho, run glasso and store matrix indices of zeroes:
+#   Zeroes <- lapply(rho, function(r) {
+#     Res <- glasso(S, r, ...)
+#     which(Res$wi==0,arr.ind=TRUE)    
+#     })
+# 
+#   # Rerun glasso to estimate unpenalized models with forced zeroes:
+#   sink("/dev/null")
+#   glassoRes <- lapply(Zeroes, function(z) glasso(S, 0, z, ...))
+#   sink()
+# #   
+# #   i <- 10
+# #   unPenalized <- glasso(S, rho[i], zero = which(glassoRes[[i]]$wi !=0,arr.ind=TRUE))
+# #   unPenalized$loglik
+# #   glassoRes[[i]]$loglik
 #   
-#   i <- 10
-#   unPenalized <- glasso(S, rho[i], zero = which(glassoRes[[i]]$wi !=0,arr.ind=TRUE))
-#   unPenalized$loglik
-#   glassoRes[[i]]$loglik
-  
-  # Compute EBIC:
-  EBICs <- sapply(glassoRes, function(res,gamma, n, S){
-
-    C <- res$wi
-    L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
-#     L <- res$loglik
-    E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
-    p <- nrow(C)
-    
-    # EBIC:
-    -2 * L + E * log(n) + 4 * E * gamma * log(p)
-  }, gamma = gamma, n = n, S = S)
+#   # Compute EBIC:
+#   EBICs <- sapply(glassoRes, function(res,gamma, n, S){
+# 
+#     C <- res$wi
+#     L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
+# #     L <- res$loglik
+#     E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
+#     p <- nrow(C)
+#     
+#     # EBIC:
+#     -2 * L + E * log(n) + 4 * E * gamma * log(p)
+#   }, gamma = gamma, n = n, S = S)
 
   # Smalles EBIC:
   opt <- which.min(EBICs)
 
-  net <- as.matrix(forceSymmetric(wi2net(glassoRes[[opt]]$wi)))
+#   net <- as.matrix(forceSymmetric(wi2net(glassoRes[[opt]]$wi)))
+  net <- as.matrix(forceSymmetric(wi2net(glas_path$wi[,,opt])))
   colnames(net) <- rownames(net) <- colnames(S)
 
   # Return 

@@ -338,14 +338,14 @@ qgraph <- function( input, ... )
   if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
   #     if (graph=="concentration") partial=TRUE else partial=FALSE
   
-  if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.95 else cutQuantile <- qgraphObject$Arguments$cutQuantile
+  if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.8 else cutQuantile <- qgraphObject$Arguments$cutQuantile
   
   defineCut <- FALSE
   if(is.null(qgraphObject$Arguments$cut)) 
   {
     cut=0
     #       if (nNodes<50) 
-    if (nNodes>=50 | fact) 
+    if (nNodes>=20 | fact) 
     {
       cut=0.3
       defineCut <- FALSE
