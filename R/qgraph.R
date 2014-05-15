@@ -338,20 +338,20 @@ qgraph <- function( input, ... )
   if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
   #     if (graph=="concentration") partial=TRUE else partial=FALSE
   
-  if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.8 else cutQuantile <- qgraphObject$Arguments$cutQuantile
+  if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.9 else cutQuantile <- qgraphObject$Arguments$cutQuantile
   
   defineCut <- FALSE
-  if(is.null(qgraphObject$Arguments$cut)) 
+  if(is.null(qgraphObject$Arguments[['cut']])) 
   {
     cut=0
     #       if (nNodes<50) 
     if (nNodes>=20 | fact) 
     {
       cut=0.3
-      defineCut <- FALSE
+      defineCut <- TRUE
     }
     if (mode=="sig") cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
-  } else if (mode != "sig") cut <- qgraphObject$Arguments$cut else cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
+  } else if (mode != "sig") cut <- qgraphObject$Arguments[['cut']] else cut <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)-1]),sigScale(alpha[length(alpha)]))
   
   if(is.null(qgraphObject$Arguments$groups)) groups=NULL else groups=qgraphObject$Arguments$groups
   
@@ -1194,7 +1194,11 @@ qgraph <- function( input, ... )
   ## Define cut:
   if (defineCut)
   {
-    cut <- quantile(abs(E$weight), cutQuantile)
+    if (length(E$weight) > 2*nNodes)
+    {
+      cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
+    } else cut <- median(sort(E$weight))
+#     cut <- quantile(abs(E$weight), cutQuantile)
   }
   
   
