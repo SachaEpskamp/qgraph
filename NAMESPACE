@@ -71,10 +71,12 @@ importFrom(Matrix, forceSymmetric)
 import(glasso)
 
 ## corauto stuff:
+importFrom(huge, huge.select)
 importFrom(huge, huge.npn)
-importFrom(psych, tetrachoric)
-importFrom(psych, polychoric)
+#importFrom(psych, tetrachoric)
+#importFrom(psych, polychoric)
 export(cor_auto)
+importFrom(lavaan, lavCor)
 
 
 

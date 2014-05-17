@@ -1,7 +1,13 @@
-centralityPlot <- function(..., labels, relative = TRUE)
+centralityPlot <- function(..., labels, relative = TRUE, include)
 {
   Long <- centralityTable(..., labels=labels, relative=relative)
 
+  # If not missing, include only include vars:
+  if (!missing(include))
+  {
+    Long <- subset(Long, measure %in% include)
+  }
+  
   # Ordereing by node name to make nice paths:
   Long <- Long[order(Long$node),] 
   # PLOT:

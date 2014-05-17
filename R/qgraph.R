@@ -235,6 +235,33 @@ qgraph <- function( input, ... )
   }
   
   
+  ### GLASSO ###
+  # glasso has no class but is a list with elements w, wi, loglik, errflag, approx, del and niter:
+  if (is(input, "list") && all(c('w', 'wi', 'loglik','errflag', 'approx', 'del',  'niter' ) %in% names(input)))
+  {
+    input <- wi2net(input$wi)
+  }
+  
+
+
+  if(is.null(qgraphObject$Arguments[['tuning']]))
+  {
+    tuning <- 0.5
+  } else tuning <- qgraphObject$Arguments[['tuning']]  
+  
+  
+  ### HUGE (select via EBIC):
+  if (is(input,"huge"))
+  {
+    input <- huge.select(input, "ebic", ebic.gamma = tuning)
+  }
+  
+  ### HUGE select ###
+  if (is(input,"select"))
+  {
+    input <- wi2net(forceSymmetric(input$opt.icov))
+  }
+  
   # Coerce input to matrix:
   input <- as.matrix(input)
   
@@ -363,11 +390,7 @@ qgraph <- function( input, ... )
   {
     sampleSize <- NULL
   } else sampleSize <- qgraphObject$Arguments[['sampleSize']]
-  
-  if(is.null(qgraphObject$Arguments[['tuning']]))
-  {
-    tuning <- 0.5
-  } else tuning <- qgraphObject$Arguments[['tuning']]    
+    
   
   # Factorial graph:
   if(is.null(qgraphObject$Arguments$nfact))
@@ -1196,7 +1219,8 @@ qgraph <- function( input, ... )
   {
     if (length(E$weight) > 2*nNodes)
     {
-      cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
+#       cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
+      cut <- sort(E$weight,decreasing=TRUE)[nNodes]
     } else cut <- median(sort(E$weight))
 #     cut <- quantile(abs(E$weight), cutQuantile)
   }

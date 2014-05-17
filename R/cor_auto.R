@@ -1,10 +1,12 @@
 ## Automatically computes a correlation matrix:
+# Wrapper around lavCor which detects ordinal variables!
 
 cor_auto <- function(
   data, # A data frame
   select, # Columns to select
   detectOrdinal = TRUE, # Detect ordinal variables
-  ordinalLevelMax = 5 # Maximum amount of levels to be classified as ordinal
+  ordinalLevelMax = 5, # Maximum amount of levels to be classified as ordinal
+  npn.SKEPTIC = FALSE # If TRUE, will compute nonparanormal SKEPTIC on fully continous data
   )
 {
   # Check for data frame:
@@ -52,49 +54,53 @@ cor_auto <- function(
 
   ### START COMPUTING CORRELATIONS ###
   # IF ALL NUMERIC OR INTEGER, NONPARANORMAL SKEPTIC:
-  if (all(sapply(data,is,"numeric") | sapply(data,is,"integer") ))
+  if (all(sapply(data,is,"numeric") | sapply(data,is,"integer") ) & npn.SKEPTIC)
   {
-    message("All variables detected to be continuous, computing nonparanormal skeptic!")
+#     message("All variables detected to be continuous, computing nonparanormal skeptic!")
     
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
     CorMat <- huge.npn(data, "skeptic")
     return(CorMat)
+  } else {
+    CorMat <- lavaan::lavCor(data)
+    class(CorMat) <- "matrix"
+    return(CorMat)
   }
   
-  ## If all ordinal, do tetrachoric or polychoric:
-  if (all(sapply(data,is,"ordered")))
-  {
-    nLevel <- sapply(data,nlevels)
-    
-    # Tetrachoric:
-    if (all(nLevel == 2))
-    {
-      message("Binary data detected, computing tetrachoric correlations!")
-      for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
-      res <- tetrachoric(as.matrix(data))
-      CorMat <- as.matrix(res$rho)
-      attr(CorMat, "thresholds") <- res$tau
-      return(CorMat)
-      
-    } else {
-      message("Polytomous data detected, computing polychoric correlations!")
-      for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
-      res <- polychoric(as.matrix(data))
-      CorMat <- as.matrix(res$rho)
-      attr(CorMat, "thresholds") <- res$tau
-      return(CorMat)
-    }
-    
-  } 
-  
-  # Else shared data detected, use muthen1984 from lavaan:
-  message("Both continuous and ordinal data detected, using muthen1984 from Lavaan package!")
-  ov.names <- names(data)
-  ov.types <- lavaan:::lav_dataframe_check_vartype(data, ov.names=ov.names)
-  ov.levels <- sapply(lapply(data, levels), length)
-  mutRes <- lavaan:::muthen1984(data, ov.names, ov.types, ov.levels)
-  
-  CorMat <- mutRes$COR
-  attr(CorMat,"thresholds") <- mutRes$TH
-  return(CorMat)
+#   ## If all ordinal, do tetrachoric or polychoric:
+#   if (all(sapply(data,is,"ordered")))
+#   {
+#     nLevel <- sapply(data,nlevels)
+#     
+#     # Tetrachoric:
+#     if (all(nLevel == 2))
+#     {
+#       message("Binary data detected, computing tetrachoric correlations!")
+#       for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
+#       res <- tetrachoric(as.matrix(data))
+#       CorMat <- as.matrix(res$rho)
+#       attr(CorMat, "thresholds") <- res$tau
+#       return(CorMat)
+#       
+#     } else {
+#       message("Polytomous data detected, computing polychoric correlations!")
+#       for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
+#       res <- polychoric(as.matrix(data))
+#       CorMat <- as.matrix(res$rho)
+#       attr(CorMat, "thresholds") <- res$tau
+#       return(CorMat)
+#     }
+#     
+#   } 
+#   
+#   # Else shared data detected, use muthen1984 from lavaan:
+#   message("Both continuous and ordinal data detected, using muthen1984 from Lavaan package!")
+#   ov.names <- names(data)
+#   ov.types <- lavaan:::lav_dataframe_check_vartype(data, ov.names=ov.names)
+#   ov.levels <- sapply(lapply(data, levels), length)
+#   mutRes <- lavaan:::muthen1984(data, ov.names, ov.types, ov.levels)
+#   
+#   CorMat <- mutRes$COR
+#   attr(CorMat,"thresholds") <- mutRes$TH
+#   return(CorMat)
 }

@@ -1,11 +1,15 @@
 DOCUMENT STILL
+
+Now supported:
+  - glasso
+  - huge select
+  - huge (selection via EBIC and tuning parameter)
+
   - tuning argument
   - sampleSize argument
   - cutQuantile
-  - corAuto
-- Cut defaults to 20 now
-
-cut default changed and is now based such that 5% of edges are above cut.
+  - cor_auto (wrapper around lavCor)
+- Cut defaults to value such that an equal number of edges to the number of nodes is abve cut
 
 
 Changes in Version 1.2.4
