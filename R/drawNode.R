@@ -4,7 +4,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
 {
   if (shape %in% c("circle","square","triangle","diamond"))
   {
-    if (usePCH)
+    if (usePCH | shape %in% c("triangle","diamond"))
     {
       if (shape=="circle")
       {

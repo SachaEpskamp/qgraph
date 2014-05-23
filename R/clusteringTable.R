@@ -1,4 +1,4 @@
-clusteringTable <- function(..., labels, signed = FALSE, relative = TRUE)
+clusteringTable <- function(..., labels, relative = TRUE, signed = FALSE)
 {
   Wmats <- getWmat(list(...))
   

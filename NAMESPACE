@@ -25,7 +25,7 @@ importFrom(psych,"principal")
 importFrom(lavaan,"lavaan","cfa","standardizedSolution", "standardizedsolution", "parameterEstimates", "parameterestimates","inspect")
 importClassesFrom(lavaan,"lavaan")
 importFrom(stats,"factanal")
-importFrom(BDgraph,"phat")
+# importFrom(BDgraph,"phat")
 importFrom(ellipse,"ellipse")
 importFrom(corpcor,"pseudoinverse")
 importFrom(corpcor,"cor2pcor")
@@ -78,5 +78,5 @@ importFrom(huge, huge.npn)
 export(cor_auto)
 importFrom(lavaan, lavCor)
 
-
+export(VARglm)
 

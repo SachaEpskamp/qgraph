@@ -286,9 +286,17 @@ if (!is.null(factorCors))
 }
 	
 ### RUN QGRAPH ###
-class(arguments)="qgraph"
-Q <- qgraph(m,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
-	height=height,width=width,legend=F,arguments,directed=directed,bidirectional=TRUE)
+# class(arguments)="qgraph"
+args <- list(input=m,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
+             height=height,width=width,legend=F,directed=directed,bidirectional=TRUE)
+
+args <- c(args,arguments[!names(arguments) %in% names(args)])
+
+Q <- do.call(qgraph,args)
+
+# 
+# Q <- qgraph(m,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
+# 	height=height,width=width,legend=F,arguments,directed=directed,bidirectional=TRUE)
 
 Q$filetype <- filetype
 	

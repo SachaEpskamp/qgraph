@@ -182,55 +182,58 @@ qgraph <- function( input, ... )
   ### BDgraph ####
   if (is(input,"bdgraph"))
   {
-    if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
-    if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
     
-    if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
+    stop("BDgraph support has temporarily been removed")
     
-    
-    Res <- list()
-    
-    if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
-    {
-      # phat:
-      W <- phat(input)
-      W <- W + t(W)
-      Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
-      L <- Res[["phat"]]$layout
-      
-      if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
-      
-      # Khat:
-      W <- input$Khat
-      diag(W) <- -1*diag(W)
-      W <-  - W / sqrt(diag(W)%o%diag(W))
-      Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
-      L <- Res[["Khat"]]$layout
-      if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
-      
-    } else 
-    {
-      if ("Khat" %in% BDgraph)
-      {
-        W <- input$Khat
-        diag(W) <- -1*diag(W)
-        W <-  - W / sqrt(diag(W)%o%diag(W))
-        Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
-        L <- Res[["Khat"]]$layout
-        if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
-      } else L <- qgraphObject$Arguments$layout
-      
-      if ("phat" %in% BDgraph)
-      {
-        W <- phat(input)
-        W <- W + t(W)
-        Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
-        if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
-      }
-    }  
-    
-    if (length(Res)==1) Res <- Res[[1]]
-    return(Res)
+#     if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
+#     if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
+#     
+#     if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
+#     
+#     
+#     Res <- list()
+#     
+#     if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
+#     {
+#       # phat:
+#       W <- phat(input)
+#       W <- W + t(W)
+#       Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
+#       L <- Res[["phat"]]$layout
+#       
+#       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
+#       
+#       # Khat:
+#       W <- input$Khat
+#       diag(W) <- -1*diag(W)
+#       W <-  - W / sqrt(diag(W)%o%diag(W))
+#       Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
+#       L <- Res[["Khat"]]$layout
+#       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
+#       
+#     } else 
+#     {
+#       if ("Khat" %in% BDgraph)
+#       {
+#         W <- input$Khat
+#         diag(W) <- -1*diag(W)
+#         W <-  - W / sqrt(diag(W)%o%diag(W))
+#         Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
+#         L <- Res[["Khat"]]$layout
+#         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
+#       } else L <- qgraphObject$Arguments$layout
+#       
+#       if ("phat" %in% BDgraph)
+#       {
+#         W <- phat(input)
+#         W <- W + t(W)
+#         Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
+#         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
+#       }
+#     }  
+#     
+#     if (length(Res)==1) Res <- Res[[1]]
+#     return(Res)
     
   }
   
@@ -253,12 +256,14 @@ qgraph <- function( input, ... )
   ### HUGE (select via EBIC):
   if (is(input,"huge"))
   {
+    if (input$method != "glasso") stop("Only 'glasso' method is supported")
     input <- huge.select(input, "ebic", ebic.gamma = tuning)
   }
   
   ### HUGE select ###
   if (is(input,"select"))
   {
+    if (input$method != "glasso") stop("Only 'glasso' method is supported")
     input <- wi2net(forceSymmetric(input$opt.icov))
   }
   
@@ -268,6 +273,10 @@ qgraph <- function( input, ... )
   # Set mode:
   sigSign <- FALSE
   if(is.null(qgraphObject$Arguments[['graph']])) graph="association" else graph=qgraphObject$Arguments[['graph']]
+  
+  # Reset graph for replotting:
+  qgraphObject$Arguments[['graph']] <- NULL
+  
   if (graph %in% c("sig2","significance2"))
   {
     graph <- "sig"
@@ -298,12 +307,12 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$labels))
   {
     labels <- TRUE
-    if (!edgelist && !is.null(colnames(input)) && !is.null(rownames(input)))
+    if (!edgelist && !is.null(colnames(input)))
     {
-      if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
-      {
+#       if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
+#       {
         labels <- abbreviate(colnames(input),3)
-      }
+#       }
     }
   } else labels <- qgraphObject$Arguments$labels
   if(is.null(qgraphObject$Arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- qgraphObject$Arguments[['label.prop']]
@@ -365,8 +374,7 @@ qgraph <- function( input, ... )
   if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
   #     if (graph=="concentration") partial=TRUE else partial=FALSE
   
-  if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.9 else cutQuantile <- qgraphObject$Arguments$cutQuantile
-  
+#   if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.9 else cutQuantile <- qgraphObject$Arguments$cutQuantile
   defineCut <- FALSE
   if(is.null(qgraphObject$Arguments[['cut']])) 
   {
@@ -520,7 +528,8 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['mar']])) mar <- c(3,3,3,3)/10 else mar <- qgraphObject$Arguments[["mar"]]/10
   if(is.null(qgraphObject$Arguments[['vsize']])) 
   {
-    vsize <- max((-1/72)*(nNodes)+5.35,1)
+    vsize <- 8*exp(-nNodes/80)+1
+#     vsize <- max((-1/72)*(nNodes)+5.35,1)
     if(is.null(qgraphObject$Arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * qgraphObject$Arguments[['vsize2']]
   } else {
     vsize <- qgraphObject$Arguments[['vsize']]
@@ -784,7 +793,8 @@ qgraph <- function( input, ... )
   {
     if (weighted)
     {
-      esize <- max((-1/72)*(nNodes)+5.35,1) 
+#       esize <- max((-1/72)*(nNodes)+5.35,2) 
+      esize <- 15*exp(-nNodes/90)+1
     } else {
       esize <- 2
     }
@@ -795,9 +805,9 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[["asize"]]))
   {
     #       asize <- max((-1/10)*(nNodes)+4,1)
-    asize <- ifelse(nNodes>10,2,3)
+#     asize <- ifelse(nNodes>10,2,3)
+    asize <- 2*exp(-nNodes/20)+2
   } else asize <- qgraphObject$Arguments[["asize"]]
-  
   
   if(!is.null(qgraphObject$Arguments[["edge.width"]]))
   {
@@ -1217,11 +1227,12 @@ qgraph <- function( input, ... )
   ## Define cut:
   if (defineCut)
   {
-    if (length(E$weight) > 2*nNodes)
+    
+    if (length(E$weight) > 3*nNodes)
     {
 #       cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
-      cut <- sort(E$weight,decreasing=TRUE)[nNodes]
-    } else cut <- median(sort(E$weight))
+      cut <- max(sort(abs(E$weight),decreasing=TRUE)[2*nNodes], quantile(abs(E$weight),0.75))
+    } else if (length(E$weight) > 1) cut <- quantile(abs(E$weight),0.75) else cut <- 0
 #     cut <- quantile(abs(E$weight), cutQuantile)
   }
   

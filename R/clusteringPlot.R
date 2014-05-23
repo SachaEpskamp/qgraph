@@ -1,6 +1,13 @@
-clusteringPlot <- function(..., labels, signed = FALSE, relative = TRUE)
+clusteringPlot <- function(..., labels, relative = TRUE, include , signed = FALSE)
 {
-  Long <- clusteringTable(..., labels=labels, signed=signed, relative=relative)
+  # Some dummies to get rid of NOTES:
+  measure <- NULL
+  value <- NULL
+  node <- NULL
+  type <- NULL
+  
+  
+  Long <- clusteringTable(..., labels=labels, relative=relative, signed=signed)
   
   # If not missing, include only include vars:
   if (!missing(include))

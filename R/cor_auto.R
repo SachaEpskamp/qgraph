@@ -5,7 +5,7 @@ cor_auto <- function(
   data, # A data frame
   select, # Columns to select
   detectOrdinal = TRUE, # Detect ordinal variables
-  ordinalLevelMax = 5, # Maximum amount of levels to be classified as ordinal
+  ordinalLevelMax = 7, # Maximum amount of levels to be classified as ordinal
   npn.SKEPTIC = FALSE # If TRUE, will compute nonparanormal SKEPTIC on fully continous data
   )
 {

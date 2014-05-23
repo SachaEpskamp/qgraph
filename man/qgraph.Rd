@@ -4,22 +4,22 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{qgraph}
 \description{
-This is the main function of qgraph. It is typically used to visualize the relationship between several variables as a network. This function can be used to create various types of networks based on a number of input options. Please see the details section for more detail.}
+This is the main function of qgraph which automatically creates an appropriate network and sends it to the plotting method.}
 \usage{
 qgraph( input, ... )
 }
 \arguments{
-	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz), "pcAlgo" (pcalg) or \code{"bdgraph"} (BDgraph)}
+	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz), "pcAlgo" (pcalg),  \code{"huge"} (huge), \code{"select"} (huge) or the output of \code{glasso}} 
 	\item{...}{Any additional arguments described below. Also a list with class "qgraph" can be added that contains any of these arguments (this is returned invisibly by the function)}
 }	
 \section{Important additional arguments}{	
 \describe{
 \item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open GUI window.}
-\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "circular" gives a circular layout in which each group is put in separate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
+\item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "groups" gives a circular layout in which each group is put in separate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
 \item{minimum}{Edges with absolute weights under this value are omitted. Defaults to 0 for graphs with less than 50 nodes or 0.1 for larger graphs.}
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
-\item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to NULL, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 50 nodes and 0.3 to larger graphs.}
+\item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to \code{NULL}, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 20 nodes. For larger graphs the \code{cut} value is automatically chosen to be equal to the maximum of the 75th quantile of absolute edge strengths or the edge strength corresponding to 2n-th edge strength (n being the number of nodes.)}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
 
 \item{title}{String with a title to be drawn in the topleft of the plot.}
@@ -30,6 +30,15 @@ qgraph( input, ... )
 
   \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 }
+}
+
+
+\section{Additional options for Correlation Matrices}{
+\describe{
+  \item{graph}{Type of graph to be made, for use with a correlation matrix as input. "association" will plot the matrix as is, "concentration" will first compute partial correlations between each pair of nodes (controlled for all other variables), \code{"glasso"} will run \code{\link{EBICglasso}} to obtain an optimal sparse estimate of the partial correlation matrix and "factorial" will create a graph based on an exploratory factor analysis. Finally "sig" will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2009) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}
+  \item{sampleSize}{The sample-size. Currently only used when \code{graph = "glasso"}}
+    \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
+  }
 }
 
 \section{Output arguments}{
@@ -51,7 +60,7 @@ qgraph( input, ... )
 These arguments influence the plotting of nodes in qgraph. Most of them can be assigned a single value or a vector with a value for each node.
 \describe{
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
-    \item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to: max((-1/72)*(nNodes)+5.35,1)}
+    \item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to 8*exp(-nNodes/80)+1}
     \item{vsize2}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
     \item{node.width}{Scalar on the default value of 'vsize'. Defaults to 1.}
     \item{node.height}{Scalar on the default value of 'vsize2'. Defaults to 1.}
@@ -68,6 +77,8 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
 }
 \item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
 \item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
+\item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
+\item{node.resolution}{Resolution of the nodes if \code{usePCH=FALSE}. Defaults to 100}
 }
 }
 
@@ -89,7 +100,7 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 \subsection{Edges}{
 These arguments influence the plotting of edges qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
 \describe{
-  \item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to: max((-1/72)*(nNodes)+5.35,1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
+  \item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to 15*exp(-nNodes/90)+1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
   \item{edge.width}{Scalar on 'esize' and 'asize' arguments to make edges wider with a single argument. 'esize' is multiplied with this value and 'asize' with the square root of this value.}
     \item{edge.color}{Color of edges. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used. Note that unless \code{fade=FALSE} colors still fade to white corresponding to their strength}
     \item{posCol}{Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
@@ -185,7 +196,7 @@ These arguments control the background of the plot
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
   \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
-	\item{asize}{Size of the arrowhead. Defaults to 2 for graphs with more than 10 nodes and 2 to smaller graphs.}
+	\item{asize}{Size of the arrowhead. Defaults to 2*exp(-nNodes/20)+2.}
 	\item{open}{Logical indicating if open (TRUE) or closed (FALSE) arrowheads should be drawn.}
 	\item{bidirectional}{If this is TRUE, Then directional edges between nodes that have two edges between them are not curved. Defaults to FALSE. Can also be a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 }}
@@ -198,12 +209,6 @@ These arguments control the background of the plot
 	\item{sigScale}{The function used to scale the edges if mode="sig". Defaults to $function(x)0.8*(1-x)^(log(0.4/0.8,1-0.05))$}
 	\item{bonf}{Logical indicating if a bonferonni correction should be applied if mode="sig". If so p-values are multiplied by the number of edges}	
 }}
-
-\section{Additional options for Correlation Matrices}{
-\describe{
-	\item{graph}{Type of graph to be made, for use with a correlation matrix as input. "association" will plot the matrix as is, "concentration" will first compute partial correlations between each pair of nodes (controlled for all other variables) and "factorial" will create a graph based on an exploratory factor analysis. Finally "sig" will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2009) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}
-}
-}
 
 \section{Arguments for plotting scores on nodes}{	
 \describe{
@@ -238,11 +243,11 @@ These arguments control the background of the plot
   
 }}
 
-\section{Arguments that support the BDgraph package}{  
-\describe{
-  \item{BDgraph}{A character vector containing \code{"phat"} for plotting posterior probabilities of each edge, \code{"Khat"} for plotting mean posterior partial correlations or both. The order matters as the layout of the second plot is based on the layout of the first plot. Defaults to \code{c("phat","Khat")}}
-  \item{BDtitles}{Logical, should titles be drawn above the plots?}  
-}}
+%\section{Arguments that support the BDgraph package}{  
+%\describe{
+  %\item{BDgraph}{A character vector containing \code{"phat"} for plotting posterior probabilities of each edge, \code{"Khat"} for plotting mean posterior partial correlations or both. The order matters as the layout of the second plot is based on the layout of the first plot. Defaults to \code{c("phat","Khat")}}
+  %\item{BDtitles}{Logical, should titles be drawn above the plots?}  
+%}}
 
 \section{Additional arguments}{	
 \describe{
@@ -253,17 +258,19 @@ These arguments control the background of the plot
 }}
 
 \details{
-The qgraph function has a lot of arguments. Mostly the default values of these work well. Because of the amount of arguments the usage of the qgraph function has been reduced by using the ... method for clarity. This does mean that arguments need to be specified by using their exact name. For instance, to specify color="red" you can not use col="red".
+Because of the amount of arguments the usage of the qgraph function has been reduced by using the ... method for clarity. This does mean that arguments need to be specified by using their exact name. For instance, to specify color="red" you can not use col="red".
 
-Below is a complete list of all the arguments that can be used in qgraph and a detailed guide on how the function can be used.
+Important to note is that qgraph needs to compute in many graphs where the border of nodes are in the plotting area. If the graph is manually rescaled (such as through the "zoom" option in RStudio) the plotting area is changed. This means that the computed location of the border of nodes is no longer valid if the nodes are to remain perfectly square or circular. To overcome this, the \code{usePCH} argument can be used. If this argument is set to \code{FALSE} nodes will be plotted as polygons meaning they will rescale with rescaling the graph (circles can become ovals) and not have perfect resolution in PDF files. If \code{usePCH} is set to \code{TRUE} a default plotting symbol is used meaning the graph can not be rescaled but the node will look good in PDF. By defaut, \code{qgraph} sets \code{usePCH} to \code{TRUE} if it detects the graph is stored in a file. 
+
+While the \code{usePCH} argument makes graphs rescalable it is not a perfect solution. It is highly recommended to NOT RESCALE PLOTTING AREAS when using qgraph, or to rerun qgraph after the plotting area is rescaled. This means using save graph option fro RStudio shoud be avoided in favor of the \code{filetype} argument in \code{qgraph}
 }
 
 \section{Using qgraph to plot graphs}{
 The first argument of qgraph(), 'input', is the input. This can be a number of objects but is mainly either a weights matrix or an edgelist. Here we will assume a graph is made of n nodes connected by m edges. qgraph is mainly aimed at visualizing (statistical) relationships between variables as weighted edges. In these edge weights a zero indicates no connection and negative values are comparable in strength to positive values. Many (standardized) statistics follow these rules, the most important example being correlations. In the special case where all edge weights are either 0 or 1 the weights matrix is interpreted as an adjacency matrix and an unweighted graph is made.
 
-a weights matrix is a square n by n matrix in which each row and column represents a node. The element at row i and column j indicates the connection from node i to node j. If the weights matrix is symmetrical an undirected graph is made and if the matrix is asymmetrical a directed graph is made (note that due to floating point errors seemingly symmetrical matrices may actually be asymmetrical). These matrices occur naturally in statistics or can easily be obtained through matrix algebra, the most important example being correlation matrices.
+a weights matrix is a square n by n matrix in which each row and column represents a node. The element at row i and column j indicates the connection from node i to node j. If the weights matrix is symmetrical an undirected graph is made and if the matrix is asymmetrical a directed graph is made.
 
-An edgelist can also be used. This is a m by 2 matrix (not a list!) in which each row indicates an edge. The first column indicates the number of the start of the edge and the second column indicates the number of the end of the edge. The number of each node is a unique integer between 1 and n. The total number of nodes will be estimated by taking the highest value of the edgelist. If this is incorrect (there are nodes with no edges beyond the ones already specified) the 'nNodes' argument can be used. If an integer between 1 and n is missing in the edgelist it is assumed to be a node with no edges. To create a weighted graph edge weights can be added as a third column in the edgelist. By default using an edgelist creates a directed graph, but this can be set with the 'directed' argument.
+Alternatively an edgelist can be used. This is a m by 2 matrix (not a list!) in which each row indicates an edge. The first column indicates the number of the start of the edge and the second column indicates the number of the end of the edge. The number of each node is a unique integer between 1 and n. The total number of nodes will be estimated by taking the highest value of the edgelist. If this is incorrect (there are nodes with no edges beyond the ones already specified) the 'nNodes' argument can be used. If an integer between 1 and n is missing in the edgelist it is assumed to be a node with no edges. To create a weighted graph edge weights can be added as a third column in the edgelist. By default using an edgelist creates a directed graph, but this can be set with the 'directed' argument.
 }
 
 \section{Interpreting graphs}{
@@ -288,8 +295,8 @@ A solution to use this function for weighted graphs has been taken from the igra
 By default, 'layout' is set to "spring" for unweighted and directed graphs and "circular" otherwise.
 }
 
-\section{Specifying a measurement model}{
-A measurement model can be specified with the 'groups' argument. This must be a list in which each element is a vector containing the numbers of nodes that belong together (numbers are taken from the order in the weights matrix). All numbers must be included. If a groups list is specified the "groups" layout can be used to place these nodes together, the nodes in each group will be given a color, and a legend can be plotted (by setting 'legend' to TRUE). The colors will be taken from the 'color' argument, or be generated with the \code{\link{rainbow}} function.}
+\section{Grouping nodes}{
+Grouping nodes (e.g., according to a measurement model) can be specified with the 'groups' argument. This can be a factor or a list in which each element is a vector containing the numbers of nodes that belong together (numbers are taken from the order in the weights matrix). All numbers must be included. If a groups list is specified the "groups" layout can be used to place these nodes together, the nodes in each group will be given a color, and a legend can be plotted (by setting 'legend' to TRUE). The colors will be taken from the 'color' argument, or be generated with the \code{\link{rainbow}} function.}
 
 \section{Output}{
 By default qgraph will plot the graph in a new R window. However the graphs are optimized to be plotted in a PDF file. To easily create a pdf file set the 'filetype' argument to "pdf". 'filename' can be used to specify the filename and folder to output in. 'height' and 'width' can be used to specify the height and width of the image in inches. By default a new R window is opened if the current device is the NULL-device, otherwise the current device is used (note that when doing this 'width' and 'height' still optimize the image for those widths and heights, even though the output screen size isn't affected, this is especially important for directed graphs!).
@@ -306,8 +313,16 @@ IMPORTANT NOTE: graphs made in qgraph must be exported programatically using dev
 In qgraph the widths and colors of each edge can also be manually controlled. To directly specify the width of each edge set the 'mode'' argument to "direct". This will then use the absolute edge weights as the width of each edge (negative values can still be used to make red edges). To manually set the color of each edge, set the 'edge.color' argument to a matrix with colors for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist).
 }
 
+\section{Replotting graphs and reusing layouts}{
+If the result of \code{\link{qgraph}} is stored, such as \code{Graph <- qgraph(...)}, the plot can be recreated in two ways. \code{qgraph(Graph, ...))} reruns \code{qgraph} with the same arguments used in the origina call except those restated in the dots. For example \code{qgraph(Graph, shape = "square")} will recreate the same plot but now use square nodes instead of circular. \code{plot(Graph)} will NOT rerun \code{qgraph} but simply plot the qgraph object. This means that now specific graph attributes can be changed before plotting.
+
+More specific, \code{qgraph(Graph)} will base the new plot only on the \code{Arguments} element of the \code{qgraph} object and \code{plot(qgraph)} will base the new plot on the \code{graphAttributes} and  \code{plotOptions} elements of the qgraph object.
+
+To reuse a layout, use the \code{layout} element. e.g., to plot a new graph with the same layout use \code{qgraph(..., layout = Graph$layout)}
+}
+
 \section{Additional information}{
-By default, edges will be straight between two nodes unless there are two edges between two nodes. To overwrite this the 'bidirectional' argument can be set to TRUE, which will turn two edges between two nodes into one bidirectional edge. 'bidirectional' can also be a vector with TRUE or FALSE for each edge.
+By default, edges will be straight between two nodes unless there are two edges between two nodes. To overwrite this behavior the 'bidirectional' argument can be set to TRUE, which will turn two edges between two nodes into one bidirectional edge. 'bidirectional' can also be a vector with TRUE or FALSE for each edge.
 
 To specify the strength of the curve the argument 'curve' can be used (but only in directional graphs). 'curve' must be given a numerical value that represent an offset from the middle of the straight edge through where the curved edge must be drawn. 0 indicates no curve, and any other value  indicates a curve of that strength. A value of 0.3 is recommended for nice curves. This can be either one number or a vector with the curve of each edge.
 
@@ -323,9 +338,14 @@ dev.off()
 To shut down the output device!} 
  
 \value{
-qgraph returns (invisibly) a 'qgraph' object that contains all the arguments used, with the exception of the 'layout' argument which is set to the final layout used in the graph. This can then be sent to a new qgraph function to use the same arguments in the new plot.
-
-One of the values returned is 'layout.orig', the original (not rescaled) layout, which needs to be used when using constraint layouts.}
+qgraph returns (invisibly) a 'qgraph' object containing:
+\item{Edgelist}{A list containing for each edge the node of origin, node of destination, weight en wether the edge is directed and bidirectional.}
+\item{Arguments}{A list containing the arguments used in the \code{qgraph} call.}
+\item{plotOptions}{A list containing numerous options used in the plotting method.}
+\item{graphAttributes}{A list containing numerous attributes for nodes, edges and the entire graph}
+\item{layout}{A matrix containing the layout used in the plot}
+\item{layout.orig}{A matrix containing the original (unscaled) layout.}
+}
 
 
 \references{
@@ -344,7 +364,7 @@ Korbinian Strimmer (2009). fdrtool: Estimation and Control of (Local) False Disc
 
 Plate, T. <tplate@acm.org> and based on RSvgDevice by T Jake Luciani <jakeluciani@yahoo.com> (2009). RSVGTipsDevice: An R SVG graphics device with dynamic tips and hyperlinks. R package version 1.0-1.
 
-Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129?1164.
+Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129-1164.
 
 }
 \author{
@@ -352,143 +372,159 @@ Sacha Epskamp <mail@sachaepskamp.com>
 }
 
 \seealso{
-\code{\link{qgraph}}
-\code{\link{qgraph.gui}}
+\code{\link{cor_auto}}
 \code{\link{qgraph.animate}}
 \code{\link{qgraph.efa}}
 \code{\link{qgraph.pca}}
 \code{\link{qgraph.loadings}}
-\code{\link{qgraph.sem}}
-\code{\link{qgraph.lavaan}}
-\code{\link{qgraph.cfa}}
-\code{\link{qgraph.svg}}
-\code{\link{qgraph.panel}}
 }
 \examples{
-### BIG 5 DATASET ###
+\dontrun{  
+### Correlations ###
 # Load big5 dataset:
 data(big5)
 data(big5groups)
 
+# Compute correlation matrix:
+big5_cors <- cor_auto(big5, detectOrdinal = FALSE)
+
 # Correlations:
-Q <- qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,
-  legend=TRUE,borders=FALSE)
-title("Big 5 correlations",line=2.5)
-
-\dontrun{
-# Same graph with spring layout:
-Q <- qgraph(Q,layout="spring")
-title("Big 5 correlations",line=2.5)
-
-# Same graph with Venn diagram overlay:
-qgraph(Q,overlay=TRUE)
-title("Big 5 correlations",line=2.5)
-
-# Same graph with different color scheme:
-qgraph(Q,posCol="blue",negCol="purple")
-title("Big 5 correlations",line=2.5)
-
-# Significance graph (circular):
-qgraph(Q,graph="sig",layout="circular")
-title("Big 5 correlations (p-values)",line=2.5)
-
-# Significance graph:
-qgraph(Q,graph="sig")
-title("Big 5 correlations (p-values)",line=2.5)
-
-# Significance graph (distinguishing positive and negative statistics):
-qgraph(Q,graph="sig2")
-title("Big 5 correlations (p-values)",line=2.5)
-
-# Grayscale graphs:
-qgraph(Q,gray=TRUE,layout="circular")
-title("Big 5 correlations",line=2.5)
-
-qgraph(Q,graph="sig",gray=TRUE)
-title("Big 5 correlations (p-values)",line=2.5)
-
-# Correlations graph with scores of random subject:
-qgraph(cor(big5),minimum=0.25,cut=0.4,vsize=1.5,groups=big5groups,legend=TRUE,
-  borders=FALSE,scores=as.integer(big5[sample(1:500,1),]),scores.range=c(1,5))
-title("Test scores of random subject",line=2.5)
-layout(1)
-
-# EFA:
-big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-qgraph(big5efa,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
-  cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
-title("Big 5 EFA",line=2.5)
-
-# PCA:
-library("psych")
-big5pca <- principal(cor(big5),5,rotate="promax")
-qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
-  cut=0.4,vsize=c(1.5,15),borders=FALSE,vTrans=200)
-title("Big 5 PCA",line=2.5)
-
-#### UNWEIGHTED DIRECTED GRAPHS ###
-set.seed(1)
-adj=matrix(sample(0:1,10^2,TRUE,prob=c(0.8,0.2)),nrow=10,ncol=10)
-qgraph(adj)
-title("Unweighted and directed graphs",line=2.5)
-
-# Save plot to nonsquare pdf file:
-qgraph(adj,filetype='pdf',height=5,width=10)
+big5Graph <- qgraph(cor(big5),minimum=0.25,groups=big5groups,
+            legend=TRUE,borders=FALSE, title = "Big 5 correlations")
 
 
-#### EXAMPLES FOR EDGES UNDER DIFFERENT ARGUMENTS ###
-# Create edgelist:
-dat.3 <- matrix(c(1:15*2-1,1:15*2),,2)
-dat.3 <- cbind(dat.3,round(seq(-0.7,0.7,length=15),1))
+  # Same graph with spring layout:
+  qgraph(big5Graph,layout="spring")
+  
+  # Same graph with different color scheme:
+  qgraph(big5Graph,posCol="blue",negCol="purple")
+ 
+  ### Network analysis ###
+  ### Using bfi dataset from psych ###
+  library("psych")
+  data(bfi)
+  
+  # Compute correlations:
+  CorMat <- cor_auto(bfi[,1:25])
+  
+  # Compute graph with tuning = 0 (BIC):
+  BICgraph <- qgraph(CorMat, graph = "glasso", sampleSize = nrow(bfi),
+            tuning = 0, layout = "spring", title = "BIC", details = TRUE)
+  
+  # Compute graph with tuning = 0.5 (EBIC)
+  EBICgraph <- qgraph(CorMat, graph = "glasso", sampleSize = nrow(bfi),
+            tuning = 0.5, layout = "spring", title = "BIC", details = TRUE)
+  
+  # Compare centrality and clustering:
+  centralityPlot(list(BIC = BICgraph, EBIC = EBICgraph))
+  clusteringPlot(list(BIC = BICgraph, EBIC = EBICgraph))
 
-# Create grid layout:
-L.3 <- matrix(1:30,nrow=2)
-
-# Different esize:
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14)
-
-# Different esize, strongest edges omitted (note how 0.4 edge is now 
-# just as wide as 0.7 edge in previous graph):
-qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,
-       edge.labels=TRUE,esize=14)
-
-# Different esize, with maximum:
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,maximum=1)
-title("maximum=1",line=2.5)
-
-qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,edge.labels=TRUE,
-       esize=14,maximum=1)
-title("maximum=1",line=2.5)
-
-# Different minimum
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1)
-title("minimum=0.1",line=2.5)
-
-# With cutoff score:
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,cut=0.4)
-title("cut=0.4",line=2.5)
-
-# With details:
-qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,
-  maximum=1,cut=0.4,details=TRUE)
-title("details=TRUE",line=2.5)
-
-### Additional topics ###
-
-# Trivial example of manually specifying edge color and widths:
-E <- as.matrix(data.frame(from=rep(1:3,each=3),to=rep(1:3,3),width=1:9))
-qgraph(E,mode="direct",edge.color=rainbow(9))
-
-## pcalg support
-# Example from pcalg vignette:
-library("pcalg")
-data(gmI)
-suffStat <- list(C = cor(gmI$x), n = nrow(gmI$x))
-pc.fit <- pc(suffStat, indepTest=gaussCItest,
-             p = ncol(gmI$x), alpha = 0.01)
-
-qgraph(pc.fit)
+  # Compute centrality and clustering:
+  centrality_auto(BICgraph)
+  clustcoef_auto(BICgraph)
+  
+  ### Directed unweighted graphs ###
+  set.seed(1)
+  adj=matrix(sample(0:1,10^2,TRUE,prob=c(0.8,0.2)),nrow=10,ncol=10)
+  qgraph(adj)
+  title("Unweighted and directed graphs",line=2.5)
+  
+  # Save plot to nonsquare pdf file:
+  qgraph(adj,filetype='pdf',height=5,width=10)
+  
+  #### EXAMPLES FOR EDGES UNDER DIFFERENT ARGUMENTS ###
+  # Create edgelist:
+  dat.3 <- matrix(c(1:15*2-1,1:15*2),,2)
+  dat.3 <- cbind(dat.3,round(seq(-0.7,0.7,length=15),1))
+  
+  # Create grid layout:
+  L.3 <- matrix(1:30,nrow=2)
+  
+  # Different esize:
+  qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14)
+  
+  # Different esize, strongest edges omitted (note how 0.4 edge is now 
+  # just as wide as 0.7 edge in previous graph):
+  qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,
+         edge.labels=TRUE,esize=14)
+  
+  # Different esize, with maximum:
+  qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,maximum=1)
+  title("maximum=1",line=2.5)
+  
+  qgraph(dat.3[-c(1:3,13:15),],layout=L.3,nNodes=30,directed=FALSE,edge.labels=TRUE,
+         esize=14,maximum=1)
+  title("maximum=1",line=2.5)
+  
+  # Different minimum
+  qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1)
+  title("minimum=0.1",line=2.5)
+  
+  # With cutoff score:
+  qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,cut=0.4)
+  title("cut=0.4",line=2.5)
+  
+  # With details:
+  qgraph(dat.3,layout=L.3,directed=FALSE,edge.labels=TRUE,esize=14,minimum=0.1,
+         maximum=1,cut=0.4,details=TRUE)
+  title("details=TRUE",line=2.5)
+  
+  
+  # Trivial example of manually specifying edge color and widths:
+  E <- as.matrix(data.frame(from=rep(1:3,each=3),to=rep(1:3,3),width=1:9))
+  qgraph(E,mode="direct",edge.color=rainbow(9))
+  
+  
+  ### Input based on other R objects ###
+  
+  ## Exploratory factor analysis:
+  big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
+  qgraph(big5efa,groups=big5groups,layout="circle",minimum=0.2,
+         cut=0.4,vsize=c(1.5,10),borders=FALSE,vTrans=200,title="Big 5 EFA")
+  
+  ## Principal component analysis:
+  library("psych")
+  big5pca <- principal(cor(big5),5,rotate="promax")
+  qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
+         cut=0.4,vsize=c(1.5,10),borders=FALSE,vTrans=200,title="Big 5 PCA")
+  
+  ## pcalg
+  # Example from pcalg vignette:
+  library("pcalg")
+  data(gmI)
+  suffStat <- list(C = cor(gmI$x), n = nrow(gmI$x))
+  pc.fit <- pc(suffStat, indepTest=gaussCItest,
+               p = ncol(gmI$x), alpha = 0.01)
+  
+  qgraph(pc.fit)
+  
+  ## glasso:
+  # Using bfi dataset from psych:
+  library("psych")
+  data(bfi)
+  cor_bfi <- cor_auto(bfi[,1:25])
+  
+  # Run qgraph:
+  library("glasso")
+  bfi_glasso <- glasso(cor_bfi, 0.1)
+  
+  # Plot:
+  qgraph(bfi_glasso, layout = "spring")
+  
+  
+  ## Huge (glasso):
+  library("huge")
+  bfi_huge <- huge(huge.npn(bfi[,1:25]), method="glasso")
+  
+  # Auto select optimal and plot:
+  qgraph(bfi_huge, layout = "spring")
+  
+  # Manual select and plot:
+  sel <- huge.select(bfi_huge)
+  qgraph(sel, layout = "spring")
+  
 }
+
 }
 
 

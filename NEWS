@@ -1,24 +1,29 @@
-DOCUMENT STILL
+Changes in Version 1.2.5
+  o Changes in default behavior:
+	o The default for the 'cut' argument has significantly changed. Instead of using a static value of 0.3 the cut value is now adapted to the edge weights present in the graph. It is now chosen such that the number of edges above cut is equal to two times the number of nodes, or 25% of all edges.
+	o esize now makes edges larger in small graphs and about the same in larger graphs.
+	o vsize now makes nodes larger in small graphs and smaller in large graphs.
+	o asize is now a bit larger in small graphs.
+	o Graphs should now be somewhat zoomable in flexible graphical devices such as RStudio zoom button. However, this is still not recommended. See 'usePCH' argument documentation for details.
 
-Now supported:
-  - glasso
-  - huge select
-  - huge (selection via EBIC and tuning parameter)
+  o New features:
+	o Added the function 'EBICglasso' which will compute a sparse partial correlation matrix using glasso and EBIC criterium.
+	o Added option to 'graph' argument in qgraph(). Setting graph = "glasso" will automatically call EBICglasso. This makes use of the new 'sampleSize' and 'tuning' parameters.
+	o Packages glasso and huge are now supported.
+	o Added 'centralityPlot', 'centralityTable', 'clusteringPlot' and 'clusteringTable' functions to facilitate interpretation of centrality and clustering statistics.
+  	o Added 'averageLayout' to compute the average layout of multiple graphs.
+	o Added cor_auto function which automatically detects ordinal variables in a dataset and computes an appropriate correlation matrix using Lavaan's lavCor.
+  o Added VARglm function for estimating VAR models using GLM.
 
-  - tuning argument
-  - sampleSize argument
-  - cutQuantile
-  - cor_auto (wrapper around lavCor)
-- Cut defaults to value such that an equal number of edges to the number of nodes is abve cut
+  o Changes:
+	o Updated qgraph help page and examples
 
+  o Bug fixes:
+  o Fixed a bug where curved edges became indented between two large, close nodes.	
+	o Fixed a bug when using overlay with groups consisting of only one node.
+	
 
-Changes in Version 1.2.4
-  o Fixed a bug where curved edges became indented between two large, close nodes.
-  o Added 'centralityPlot', 'centralityTable', 'clusteringPlot' and 'clusteringTable' functions
-  o Added 'averageLayout' to compute the average layout of multiple graphs.
-
-Changes in Version 1.2.4
-
+Changes in Version 1.2.3
 New features:
   o New graph analysis functions added by Giulio Costantini:
       o 'centrality_auto' 

@@ -1,5 +1,11 @@
 centralityPlot <- function(..., labels, relative = TRUE, include)
 {
+  # Some dummies to get rid of NOTES:
+  measure <- NULL
+  value <- NULL
+  node <- NULL
+  type <- NULL
+  
   Long <- centralityTable(..., labels=labels, relative=relative)
 
   # If not missing, include only include vars:

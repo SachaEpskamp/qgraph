@@ -1,15 +1,15 @@
 Package: qgraph
 Type: Package
-Title: Network representations of relationships in data
+Title: Network-based data visualization
 Version: 1.2.5
-Date: 2014-02-11
+Date: 2014-05-22
 Author: Sacha Epskamp, Giulio Costantini, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann and Denny Borsboom
 Maintainer: Sacha Epskamp <mail@sachaepskamp.com>
-Depends: R (>= 2.15.0)
+Depends: R (>= 3.0.0)
 Suggests: RSVGTipsDevice, fdrtool
-Imports:  psych, ellipse, lavaan, sem, plyr, Hmisc, igraph, jpeg, png, colorspace, BDgraph, Matrix, sna, corpcor, reshape2, ggplot2, glasso
+Imports:  psych, ellipse, lavaan, sem, plyr, Hmisc, igraph, jpeg, png, colorspace, Matrix, sna, corpcor, reshape2, ggplot2, glasso, huge
 ByteCompile: yes
-Description:  The qgraph package can be used to visualize data as networks.
+Description:  The qgraph package can be used to visualize data as networks as well as provides an interface for visualizing weighted graphical models.
 URL: http://sachaepskamp.com/qgraph
 License: GPL-2
 LazyLoad: yes

@@ -7,6 +7,8 @@ Centrality statistics of graphs
 }
 \description{
 This function can be used on the output of \code{\link{qgraph}} to compute the node centrality statistics for weighted graphs proposed by Opsahl, Agneessens and Skvoretz (2010).
+
+PLEASE USE \code{\link{centrality_auto}} FOR A MORE USER FRIENDLY VERSION!
 }
 \usage{
 centrality(graph, alpha = 1, posfun = abs)

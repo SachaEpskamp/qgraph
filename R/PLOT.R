@@ -81,33 +81,61 @@ plot.qgraph <- function(x, ...)
   x$layout.orig -> original.layout
   
   # Plot options:
-  x$plotOptions$filetype -> filetype
-  x$plotOptions$filename -> filename
+#   x$plotOptions$filetype -> filetype
+#   if (missing(filetype)) x$plotOptions$filetype -> filetype
+#   if (missing(filename)) x$plotOptions$filename -> filename
+#   if (missing(normalize)) x$plotOptions$normalize -> normalize
+#   if (missing(plot)) x$plotOptions$plot -> plot
+#   if (missing(mar)) x$plotOptions$mar -> mar
+#   if (missing(GLratio)) x$plotOptions$GLratio -> GLratio
+#   if (missing(legend)) x$plotOptions$legend -> legend
+#   if (missing(legend.cex)) x$plotOptions$legend.cex -> legend.cex
+#   if (missing(pty)) x$plotOptions$pty -> pty
+#   if (missing(XKCD)) x$plotOptions$XKCD -> XKCD
+#   if (missing(arrows)) x$plotOptions$arrows -> arrows
+#   if (missing(arrowAngle)) x$plotOptions$arrowAngle -> arrowAngle
+#   if (missing(open)) x$plotOptions$open -> open
+#   if (missing(curvePivot)) x$plotOptions$curvePivot -> curvePivot
+#   if (missing(curveShape)) x$plotOptions$curveShape -> curveShape
+#   if (missing(curveScale)) x$plotOptions$curveScale -> curveScale
+#   if (missing(curvePivotShape)) x$plotOptions$curvePivotShape -> curvePivotShape
+#   if (missing(label.scale)) x$plotOptions$label.scale -> label.scale
+#   if (missing(label.norm)) x$plotOptions$label.norm -> label.norm
+#   if (missing(label.prop)) x$plotOptions$label.prop -> label.prop
+#   if (missing(overlay)) x$plotOptions$overlay -> overlay
+#   if (missing(details)) x$plotOptions$details -> details
+#   if (missing(legend.mode)) x$plotOptions$legend.mode -> legend.mode
+
+x$plotOptions$filetype -> filetype
+x$plotOptions$filename -> filename
+x$plotOptions$normalize -> normalize
+x$plotOptions$plot -> plot
+x$plotOptions$mar -> mar
+x$plotOptions$GLratio -> GLratio
+x$plotOptions$legend -> legend
+x$plotOptions$legend.cex -> legend.cex
+x$plotOptions$pty -> pty
+x$plotOptions$XKCD -> XKCD
+x$plotOptions$arrows -> arrows
+x$plotOptions$arrowAngle -> arrowAngle
+x$plotOptions$open -> open
+x$plotOptions$curvePivot -> curvePivot
+x$plotOptions$curveShape -> curveShape
+x$plotOptions$curveScale -> curveScale
+x$plotOptions$curvePivotShape -> curvePivotShape
+x$plotOptions$label.scale -> label.scale
+x$plotOptions$label.norm -> label.norm
+x$plotOptions$label.prop -> label.prop
+x$plotOptions$overlay -> overlay
+x$plotOptions$details -> details
+x$plotOptions$legend.mode -> legend.mode
+
   x$plotOptions$background -> background
   x$plotOptions$bg -> bg
-  x$plotOptions$normalize -> normalize
-  x$plotOptions$plot -> plot
-  x$plotOptions$mar -> mar
-  x$plotOptions$GLratio -> GLratio
-  x$plotOptions$legend -> legend
-  x$plotOptions$legend.cex -> legend.cex
-  x$plotOptions$pty -> pty
-  x$plotOptions$XKCD -> XKCD
   x$plotOptions$residuals -> residuals
   x$plotOptions$residScale -> residScale
-  x$plotOptions$arrows -> arrows
-  x$plotOptions$arrowAngle -> arrowAngle
-  x$plotOptions$open -> open
-  x$plotOptions$curvePivot -> curvePivot
-  x$plotOptions$curveShape -> curveShape
-  x$plotOptions$curveScale -> curveScale
-  x$plotOptions$curvePivotShape -> curvePivotShape
-  x$plotOptions$label.scale -> label.scale
-  x$plotOptions$label.norm -> label.norm
-  x$plotOptions$label.prop -> label.prop
-  x$plotOptions$overlay -> overlay
-  x$plotOptions$details -> details
-  x$plotOptions$legend.mode -> legend.mode
+
+
   x$plotOptions$srt -> srt
   x$plotOptions$gray -> gray
   x$plotOptions$overlaySize -> overlaySize
@@ -643,10 +671,13 @@ plot.qgraph <- function(x, ...)
                 spy <- curvemid[2]
               }
               
-              # Check if midpoint is not curved but indented:
-              if (sign(atan2(x2-x1,y2-y1) - atan2(spx-x1,spy-y1)) != sign(curve[i]))
+              # Check if midpoint is not curved but indented:r
+              tans <- atan2(x2-x1,y2-y1) - (atan2(spx-x1,spy-y1) + c(-2*pi,0,2*pi))
+              tans <- tans[which.min(abs(tans))]
+#               if (sign(atan2(x2-x1,y2-y1) - atan2(spx-x1,spy-y1)) != sign(curve[i]))
+              if (sign(tans) != sign(curve[i]))
               {
-                spl <- list(x = c(x1, x2), y = c(y1, y2))
+                spl <- list(x = seq(x1, x2, length=length(spx)+2), y = seq(y1, y2, length=length(spx)+2))
               } else 
               {
                 spl=xspline(c(x1,spx,x2),c(y1,spy,y2),splShape,draw=FALSE)  

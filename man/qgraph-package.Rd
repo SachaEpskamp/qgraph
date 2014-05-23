@@ -10,8 +10,8 @@ This package can be used to visualize psychometric data. See \code{\link{qgraph}
 \tabular{ll}{
 Package: \tab qgraph\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-08-16\cr
+Version: \tab 1.2.5\cr
+Date: \tab 2014-05-22\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
@@ -19,7 +19,7 @@ LazyLoad: \tab yes\cr
 \author{
 Sacha Epskamp (mail@sachaepskamp.com)
 
-Maintainer: Sacha Epskamp<s.epskamp@uva.nl>
+Maintainer: Sacha Epskamp<mail@sachaepskamp.com>
 }
 \references{
 Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
