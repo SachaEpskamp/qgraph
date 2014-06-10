@@ -14,7 +14,7 @@ wi2net <- function(x)
 EBICglasso <- function(
   S, # Sample covariance matrix
   n, # Sample size
-  gamma = 0,
+  gamma = 0.5,
   ... # glasso arguments
 ) {
 #   stopifnot(require("glasso"))
