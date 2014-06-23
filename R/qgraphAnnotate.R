@@ -5,6 +5,7 @@ qgraphAnnotate <- function(
   fromqgraph = c("labels","nodeNames","tooltips","groups"), # Vector indicating which info should be extracted from qgraph object and plotted.
   filename = "qgraph",
   image.size = "600x600", 
+  window.size = image.size,
   legend = FALSE # Overwries legend plotting
   )
 {
@@ -52,7 +53,8 @@ qgraphAnnotate <- function(
             xy.labels = TooltipContents,
             fname.root = filename,
             dir = paste0(getwd(),"/"),
-            image.size = image.size)
+            image.size = image.size,
+            window.size = window.size)
   } else {
     xy.send(paste0("load('",gObj,"');qgraph:::plot.qgraph(graph)"),
             x.pos = -100,
@@ -60,7 +62,8 @@ qgraphAnnotate <- function(
             xy.labels = data.frame(` ` = ''),
             fname.root = filename,
             dir = paste0(getwd(),"/"),
-            image.size = image.size)
+            image.size = image.size,
+            window.size = window.size)
   }
 #     xy.send("plot.qgraph(graph)",
 
