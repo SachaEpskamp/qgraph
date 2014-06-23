@@ -999,7 +999,7 @@ x$plotOptions$legend.mode -> legend.mode
       {
         setSVGShapeToolTip(desc=SVGtooltips[i])
       }       
-      NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i], polygonList))
+      NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],offset=0,polygonList))
       polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
       
     }

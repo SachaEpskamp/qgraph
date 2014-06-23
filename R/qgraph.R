@@ -185,55 +185,55 @@ qgraph <- function( input, ... )
     
     stop("BDgraph support has temporarily been removed")
     
-#     if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
-#     if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
-#     
-#     if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
-#     
-#     
-#     Res <- list()
-#     
-#     if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
-#     {
-#       # phat:
-#       W <- phat(input)
-#       W <- W + t(W)
-#       Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
-#       L <- Res[["phat"]]$layout
-#       
-#       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
-#       
-#       # Khat:
-#       W <- input$Khat
-#       diag(W) <- -1*diag(W)
-#       W <-  - W / sqrt(diag(W)%o%diag(W))
-#       Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
-#       L <- Res[["Khat"]]$layout
-#       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
-#       
-#     } else 
-#     {
-#       if ("Khat" %in% BDgraph)
-#       {
-#         W <- input$Khat
-#         diag(W) <- -1*diag(W)
-#         W <-  - W / sqrt(diag(W)%o%diag(W))
-#         Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
-#         L <- Res[["Khat"]]$layout
-#         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
-#       } else L <- qgraphObject$Arguments$layout
-#       
-#       if ("phat" %in% BDgraph)
-#       {
-#         W <- phat(input)
-#         W <- W + t(W)
-#         Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
-#         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
-#       }
-#     }  
-#     
-#     if (length(Res)==1) Res <- Res[[1]]
-#     return(Res)
+    #     if(is.null(qgraphObject$Arguments[['BDgraph']])) BDgraph=c("phat","Khat") else BDgraph=qgraphObject$Arguments[['BDgraph']]
+    #     if (all(c("Khat","phat")%in%BDgraph)) layout(t(1:2))
+    #     
+    #     if(is.null(qgraphObject$Arguments[['BDtitles']])) BDtitles <- TRUE else BDtitles <- qgraphObject$Arguments[['BDtitles']]
+    #     
+    #     
+    #     Res <- list()
+    #     
+    #     if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
+    #     {
+    #       # phat:
+    #       W <- phat(input)
+    #       W <- W + t(W)
+    #       Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
+    #       L <- Res[["phat"]]$layout
+    #       
+    #       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))     
+    #       
+    #       # Khat:
+    #       W <- input$Khat
+    #       diag(W) <- -1*diag(W)
+    #       W <-  - W / sqrt(diag(W)%o%diag(W))
+    #       Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
+    #       L <- Res[["Khat"]]$layout
+    #       if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
+    #       
+    #     } else 
+    #     {
+    #       if ("Khat" %in% BDgraph)
+    #       {
+    #         W <- input$Khat
+    #         diag(W) <- -1*diag(W)
+    #         W <-  - W / sqrt(diag(W)%o%diag(W))
+    #         Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
+    #         L <- Res[["Khat"]]$layout
+    #         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
+    #       } else L <- qgraphObject$Arguments$layout
+    #       
+    #       if ("phat" %in% BDgraph)
+    #       {
+    #         W <- phat(input)
+    #         W <- W + t(W)
+    #         Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
+    #         if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
+    #       }
+    #     }  
+    #     
+    #     if (length(Res)==1) Res <- Res[[1]]
+    #     return(Res)
     
   }
   
@@ -245,12 +245,21 @@ qgraph <- function( input, ... )
     input <- wi2net(input$wi)
   }
   
-
-
+  if(is.null(qgraphObject$Arguments[['verbose']]))
+  {
+    verbose <- FALSE
+  } else verbose <- qgraphObject$Arguments[['verbose']] 
+  
   if(is.null(qgraphObject$Arguments[['tuning']]))
   {
     tuning <- 0.5
   } else tuning <- qgraphObject$Arguments[['tuning']]  
+  
+  
+  if(is.null(qgraphObject$Arguments[['FDRcutoff']]))
+  {
+    FDRcutoff <- 0.9
+  } else FDRcutoff <- qgraphObject$Arguments[['FDRcutoff']]  
   
   
   ### HUGE (select via EBIC):
@@ -272,7 +281,19 @@ qgraph <- function( input, ... )
   
   # Set mode:
   sigSign <- FALSE
-  if(is.null(qgraphObject$Arguments[['graph']])) graph="association" else graph=qgraphObject$Arguments[['graph']]
+  if(is.null(qgraphObject$Arguments[['graph']])) graph <- "default" else graph=qgraphObject$Arguments[['graph']]
+  if (graph == "cor")
+  {
+    graph <- "assosciation"
+  }
+  if (graph == "pcor")
+  {
+    graph <- "concentration"
+  }
+  if (graph == "fdr")
+  {
+    graph <- "fdr.cor"
+  }
   
   # Reset graph for replotting:
   qgraphObject$Arguments[['graph']] <- NULL
@@ -284,17 +305,27 @@ qgraph <- function( input, ... )
   }
   if (graph %in% c("sig","significance"))
   {
-    if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?") 
+#     if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?") 
     qgraphObject$Arguments[['mode']] <- "sig"
   }
-  if(is.null(qgraphObject$Arguments[['alpha']])) alpha <- c(0.0001,0.001,0.01,0.05) else alpha <- qgraphObject$Arguments[['alpha']]
-  if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
+### SIGNIFICANCE GRAPH ARGUMENTS ###
   if(is.null(qgraphObject$Arguments[['mode']])) mode <- "strength" else mode <- qgraphObject$Arguments[['mode']]
   if(is.null(qgraphObject$Arguments$sigScale)) sigScale <- function(x)0.7*(1-x)^(log(0.4/0.7,1-0.05)) else sigScale <- qgraphObject$Arguments$sigScale
   if (!mode%in%c("strength","sig","direct")) stop("Mode must be 'direct', 'sig' or 'strength'")	
   if(is.null(qgraphObject$Arguments$bonf)) bonf=FALSE else bonf=qgraphObject$Arguments$bonf
   if(is.null(qgraphObject$Arguments$OmitInsig)) OmitInsig=FALSE else OmitInsig <- qgraphObject$Arguments$OmitInsig
+if(is.null(qgraphObject$Arguments[['alpha']]))
+{
+  if (mode != "sig")
+  {
+    alpha <- 0.05
+  } else alpha <- c(0.0001,0.001,0.01,0.05) 
+} else alpha <- qgraphObject$Arguments[['alpha']]
+if (length(alpha) > 4) stop("`alpha' can not have length > 4")
+
+
+#####
   # Settings for the edgelist
   if(is.null(qgraphObject$Arguments$edgelist)) 
   {
@@ -309,10 +340,10 @@ qgraph <- function( input, ... )
     labels <- TRUE
     if (!edgelist && !is.null(colnames(input)))
     {
-#       if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
-#       {
-        labels <- abbreviate(colnames(input),3)
-#       }
+      #       if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
+      #       {
+      labels <- abbreviate(colnames(input),3)
+      #       }
     }
   } else labels <- qgraphObject$Arguments$labels
   if(is.null(qgraphObject$Arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- qgraphObject$Arguments[['label.prop']]
@@ -374,7 +405,7 @@ qgraph <- function( input, ... )
   if (fact & edgelist) stop('Factorial graph needs a correlation matrix')
   #     if (graph=="concentration") partial=TRUE else partial=FALSE
   
-#   if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.9 else cutQuantile <- qgraphObject$Arguments$cutQuantile
+  #   if(is.null(qgraphObject$Arguments$cutQuantile)) cutQuantile <- 0.9 else cutQuantile <- qgraphObject$Arguments$cutQuantile
   defineCut <- FALSE
   if(is.null(qgraphObject$Arguments[['cut']])) 
   {
@@ -393,12 +424,8 @@ qgraph <- function( input, ... )
   if (is.factor(groups) | is.character(groups)) groups <- tapply(1:length(groups),groups,function(x)x)
   
   
-  # Glasso arguments:
-  if(is.null(qgraphObject$Arguments[['sampleSize']]))
-  {
-    sampleSize <- NULL
-  } else sampleSize <- qgraphObject$Arguments[['sampleSize']]
-    
+
+  
   
   # Factorial graph:
   if(is.null(qgraphObject$Arguments$nfact))
@@ -425,7 +452,12 @@ qgraph <- function( input, ... )
     diag(input)=0
   }
   
-  
+  # Glasso arguments:
+  if(is.null(qgraphObject$Arguments[['sampleSize']]))
+  {
+    sampleSize <- NULL
+  } else sampleSize <- qgraphObject$Arguments[['sampleSize']]
+
   # SET DEFAULT qgraphObject$Arguments:
   # General qgraphObject$Arguments:
   if(is.null(qgraphObject$Arguments$DoNotPlot)) DoNotPlot=FALSE else DoNotPlot=qgraphObject$Arguments$DoNotPlot
@@ -433,10 +465,61 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$maximum)) maximum=0 else maximum=qgraphObject$Arguments$maximum
   if(is.null(qgraphObject$Arguments$minimum))
   {
-    if (nNodes<50)  minimum=0
-    if (nNodes>=50)  minimum=0.1
+#     if (nNodes<50)  minimum=0
+#     if (nNodes>=50)  minimum=0.1
+    minimum <- 0
     if (mode=="sig") minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
-  } else if (mode!="sig") minimum=qgraphObject$Arguments$minimum else minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
+  } else 
+  {
+    if (mode!="sig") minimum=qgraphObject$Arguments$minimum else minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
+    if (is.character(minimum))
+    {
+      if (grepl("sig",minimum,ignore.case = TRUE))
+      {
+        if (is.null(sampleSize))
+        {
+          stop("'sampleSize' argument must be assigned to use significance as minimum")
+        }
+        if (graph == "default")
+        {
+          warning("'graph' argument did not specify type of graph. Assuming correlation graph (graph = 'assosciation')")
+          graph <- "assosciation"
+        }
+        if (graph %in% c("assosciation","concentration")) {
+          # Find threshold for significance!
+          # difference between cor and pcor is in df:
+          if (graph == "assosciation")
+          {
+            df <- sampleSize - 2
+          } else {
+            df <- sampleSize - 2 - (nNodes - 2)
+          }
+          siglevel <- max(alpha)/2
+          if (bonf)
+          {
+            siglevel <- siglevel / (nNodes*(nNodes-1)/2)
+          }
+          t <- abs(qt(siglevel, df, lower.tail=TRUE))
+          minimum <- t/sqrt(t^2+df) 
+        } else stop("minimum = 'sig' is not supported with this 'graph' argument")
+        
+      } else stop("Minimum is specified a string which is not 'sig'.")
+    }
+  }
+  if (minimum < 0)
+  {
+    warning("'minimum' set to absolute value")
+    minimum <- abs(minimum)
+  }
+
+  # Threshold argument removes edges from network:
+  if(is.null(qgraphObject$Arguments[['threshold']]))
+  {
+    threshold <- 0
+  } else {
+    threshold <- qgraphObject$Arguments[['threshold']]
+  }
+
   if(is.null(qgraphObject$Arguments$weighted)) weighted=NULL else weighted=qgraphObject$Arguments$weighted
   if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
   if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
@@ -486,7 +569,12 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$plot)) plot=TRUE else plot=qgraphObject$Arguments$plot
   if(is.null(qgraphObject$Arguments$rotation)) rotation=NULL else rotation=qgraphObject$Arguments$rotation
   if(is.null(qgraphObject$Arguments[['layout.control']])) layout.control=0.5 else layout.control=qgraphObject$Arguments[['layout.control']]
-  if(is.null(qgraphObject$Arguments[['layout.par']])) layout.par=list() else layout.par=qgraphObject$Arguments[['layout.par']]
+  
+  # repulsion controls the repulse.rad argument
+  if(is.null(qgraphObject$Arguments[['repulsion']])) repulsion=1 else repulsion=qgraphObject$Arguments[['repulsion']]
+  if(is.null(qgraphObject$Arguments[['layout.par']])) {
+    if (is.null(layout) || layout == "spring") layout.par <- list(repulse.rad = nNodes^(repulsion * 3))  else layout.par <- list()
+    } else layout.par=qgraphObject$Arguments[['layout.par']]
   if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
   if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
   if(is.null(qgraphObject$Arguments$preExpression)) preExpression <- NULL else preExpression <- qgraphObject$Arguments$preExpression
@@ -529,7 +617,7 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['vsize']])) 
   {
     vsize <- 8*exp(-nNodes/80)+1
-#     vsize <- max((-1/72)*(nNodes)+5.35,1)
+    #     vsize <- max((-1/72)*(nNodes)+5.35,1)
     if(is.null(qgraphObject$Arguments[['vsize2']])) vsize2 <- vsize else vsize2 <- vsize * qgraphObject$Arguments[['vsize2']]
   } else {
     vsize <- qgraphObject$Arguments[['vsize']]
@@ -793,7 +881,7 @@ qgraph <- function( input, ... )
   {
     if (weighted)
     {
-#       esize <- max((-1/72)*(nNodes)+5.35,2) 
+      #       esize <- max((-1/72)*(nNodes)+5.35,2) 
       esize <- 15*exp(-nNodes/90)+1
     } else {
       esize <- 2
@@ -805,7 +893,7 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[["asize"]]))
   {
     #       asize <- max((-1/10)*(nNodes)+4,1)
-#     asize <- ifelse(nNodes>10,2,3)
+    #     asize <- ifelse(nNodes>10,2,3)
     asize <- 2*exp(-nNodes/20)+2
   } else asize <- qgraphObject$Arguments[["asize"]]
   
@@ -823,21 +911,168 @@ qgraph <- function( input, ... )
     arrowAngle <- qgraphObject$Arguments[["arrowAngle"]]
   }
   
+
+  ########### GRAPHICAL MODEL SELECTION #######
+  
+  if (graph == "assosciation") {
+    if(!all(eigen(input)$values > 0))  {
+      warning("Correlation/covariance matrix is not positive definite. Finding nearest positive definite matrix")
+      
+      input <- as.matrix(Matrix::nearPD(input, keepDiag = TRUE, ensureSymmetry = TRUE)$mat)
+    }
+  }
   
   
   # Partial graph:
-  if (graph=="concentration") 
+  if (graph != "default")
   {
-    if (edgelist) stop("Concentration graph requires correlation matrix")
-    input <- cor2pcor(input)
+    if (edgelist) stop("Graph requires correlation or covariance matrix")
+    
+    # Check for symmetric matrix:
+    if (!isSymmetric(input))
+    {
+      stop("Input matrix is not symmetric, thus can not be a correlation or covariance matrix.")
+    }
+    
+    # Check for positive definiteness (glasso does its own check):
+    if (graph != "glasso")
+    {
+      if(!all(eigen(input)$values > 0))  {
+        warning("Correlation/covariance matrix is not positive definite. Finding nearest positive definite matrix")
+        
+        input <- as.matrix(Matrix::nearPD(input, keepDiag = TRUE, ensureSymmetry = TRUE)$mat)
+      }
+    }
+    
+    # Association graph:
+    if (graph == "assosciation")
+    {
+      if (!all(diag(input) == 1)){
+        input <- cov2cor(input)
+      }
+    }
+    
+    # Concentration graph:
+    if (graph=="concentration") 
+    {
+      coln <- colnames(input)
+      rown <- rownames(input)
+      input <- cor2pcor(input)
+      rownames(input) <- rown
+      colnames(input) <- coln
+    } 
+    
+#     # FDR:
+#     if (tolower(graph)=="fdr.cor") 
+#     {
+#       if (!all(diag(input) == 1)){
+#         input <- cov2cor(input)
+#       }
+#       input <- FDRnetwork(input, FDRcutoff)
+#     } 
+#     
+#     if (tolower(graph)=="fdr.pcor") 
+#     {
+#       input <- cor2pcor(input)
+#       input <- FDRnetwork(input, FDRcutoff)
+#     } 
+#     
+#     if (tolower(graph) == "fdr")
+#     {
+#       input <- cor2pcor(input)
+#       testResult <- GeneNet::ggm.test.edges(input, fdr = TRUE, plot = FALSE)
+#       net <- GeneNet::extract.network(testResult)
+#       input <- matrix(0, nrow(input), ncol(input))
+#       for (i in seq_len(nrow(net)))
+#       {
+#         input[net$node1[i],net$node2[i]] <- input[net$node2[i],net$node1[i]] <- net$pcor[i]
+#       }
+#     }
+    
+    # Glasso graph:
+    if (graph == "glasso")
+    {
+      if (edgelist) stop("Concentration graph requires correlation matrix")
+      if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
+      input <- EBICglasso(input, sampleSize, gamma = tuning)
+    }
+    
     diag(input) <- 1
-  } else if (graph == "glasso")
-  {
-    if (edgelist) stop("Concentration graph requires correlation matrix")
-    if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
-    input <- EBICglasso(input, sampleSize, gamma = tuning)
+    input <- as.matrix(forceSymmetric(input))
+  }
+
+  
+  ## Thresholding ####
+  if (is.character(threshold))
+  {    
+    if (graph == "default")
+    {
+      if (verbose) message("'threshold' is assigned a string but 'graph' is not assigned. Detecting if input could be a correlation matrix.")
+      # Detect if graph could be correlations or covariance matrix:
+      
+      # Check if input was a matrix:
+      if (!is.matrix(input) | edgelist) stop(paste0("'",threshold,"' threshold requires a (partial) correlation/covariance matrix as input"))
+      
+      # Check if input is square matrix:
+      if (!isSymmetric(input)) stop(paste0("'",threshold,"' threshold requires a (partial) correlation/covariance matrix as input: input was not a square matrix."))
+      
+      # Check if input is positive semi definite:
+      if (any(eigen(input)$values < 0)) stop(paste0("'",threshold,"' threshold requires a (partial) correlation/covariance matrix as input: input was not a positive semi-definite matrix"))
+      
+      # If these checks are passed assume matrix is correlation or covariance: 
+    } else {
+      if (!graph %in% c("assosciation","concentration"))
+      {
+        stop("Thresholding by significance level only supported for graph = 'assosciation' (graph = 'cor') or graph = 'concentration' (graph = 'pcor')")
+      }
+    }
+    
+    # Stop for incorrect threshold:
+    if (!threshold %in% c('sig','holm', 'hochberg', 'hommel', 'bonferroni', 'BH', 'BY', 'fdr', 'none', 'locfdr'))
+    {
+      stop("'threshold' argument must be number or 'sig','holm', 'hochberg', 'hommel', 'bonferroni', 'BH', 'BY', 'fdr', 'none' or 'locfdr'")
+    }
+    
+    # Significance:
+    if (threshold != "locfdr")
+    {
+      if (grepl("sig",threshold,ignore.case=TRUE))
+      {
+        threshold <- "none"
+      }
+
+      if (is.null(sampleSize))
+      {
+        stop("'sampleSize' argument is needed for all thresholding with significance except 'locfdr'")
+      }
+      nadj <- sampleSize
+      if (graph == "concentration")
+      {
+        nadj <- nadj - (nNodes - 2)
+      }
+      
+      if (all(diag(input)==1)) 
+      {
+        pvals <- psych::corr.p(input,n = nadj, adjust = threshold, alpha = max(alpha))$p
+      } else {
+        pvals <- psych::corr.p(cov2cor(input), n = nadj, adjust = threshold, alpha = max(alpha))$p
+      }
+      
+      # Symmetrize:
+      pvals[lower.tri(pvals)] <- t(pvals)[lower.tri(pvals)]
+      
+      # Remove insignificant edges:
+      input <- input * (pvals < max(alpha))
+    } else {
+      input <- FDRnetwork(input, FDRcutoff)
+    }
+    
+    threshold <- 0
   }
   
+  
+#######################3
+
   ## diag default:
   if(is.null(qgraphObject$Arguments[['diag']])) 
   {
@@ -899,7 +1134,7 @@ qgraph <- function( input, ... )
         E$weight <- E$weight * length(E$weight)
         E$weight[E$weight > 1] <- 1
         E$weight[E$weight < -1] <- -1
-      } else warning("Bonferonni correction is only applied if mode='sig'")
+      } # else warning("Bonferonni correction is only applied if mode='sig'")
     }
     if (mode=="sig" & any(E$weight < -1 | E$weight > 1))
     {
@@ -915,7 +1150,7 @@ qgraph <- function( input, ... )
     }
     if (OmitInsig)
     {
-      if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
+#       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
       if (mode != "sig") Pvals <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       E$weight[abs(Pvals) > alpha[length(alpha)]] <- 0
     }
@@ -977,11 +1212,11 @@ qgraph <- function( input, ... )
         E$weight <- E$weight * length(E$weight)
         E$weight[E$weight > 1] <- 1
         E$weight[E$weight < -1] <- -1
-      } else warning("Bonferonni correction is only applied if mode='sig'")
+      } # else warning("Bonferonni correction is only applied if mode='sig'")
     }
     if (mode=="sig" & any(E$weight < -1 | E$weight > 1))
     {
-      warning("Weights under -1 inputusted to -1 and weights over 1 inputusted to 1")
+      warning("Weights under -1 inputusted to -1 and weights over 1 input adjusted to 1")
       E$weight[E$weight < -1] <- -1
       E$weight[E$weight > 1] <- 1
     }
@@ -994,7 +1229,7 @@ qgraph <- function( input, ... )
     
     if (OmitInsig)
     {
-      if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
+#       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
       if (mode != "sig") Pvals <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       E$weight[abs(Pvals) > alpha[length(alpha)]] <- 0
     }	
@@ -1015,64 +1250,64 @@ qgraph <- function( input, ... )
     if (is.matrix(knots))
     {
       knots <- knots[c(incl)]
-      knots <- knots[E$weight!=0]
+#       knots <- knots[E$weight!=0]
     }
     if (is.matrix(curve))
     {
       curve <- curve[c(incl)]
-      curve <- curve[E$weight!=0]
+#       curve <- curve[E$weight!=0]
     }
     if (is.matrix(parallelEdge))
     {
       parallelEdge <- parallelEdge[c(incl)]
-      parallelEdge <- parallelEdge[E$weight!=0]
+#       parallelEdge <- parallelEdge[E$weight!=0]
     }
     if (is.matrix(parallelAngle))
     {
       parallelAngle <- parallelAngle[c(incl)]
-      parallelAngle <- parallelAngle[E$weight!=0]
+#       parallelAngle <- parallelAngle[E$weight!=0]
     }
     if (is.matrix(bidirectional))
     {
       bidirectional <- bidirectional[c(incl)]
-      bidirectional <- bidirectional[E$weight!=0]
+#       bidirectional <- bidirectional[E$weight!=0]
     }
     if (is.matrix(residEdge))
     {
       residEdge <- residEdge[c(incl)]
-      residEdge <- residEdge[E$weight!=0]
+#       residEdge <- residEdge[E$weight!=0]
     }
     if (is.matrix(CircleEdgeEnd))
     {
       CircleEdgeEnd <- CircleEdgeEnd[c(incl)]
-      CircleEdgeEnd <- CircleEdgeEnd[E$weight!=0]
+#       CircleEdgeEnd <- CircleEdgeEnd[E$weight!=0]
     }      
     if (is.matrix(edge.labels))
     {
       edge.labels <- edge.labels[c(incl)]
-      edge.labels <- edge.labels[E$weight!=0]
+#       edge.labels <- edge.labels[E$weight!=0]
     }
     if (is.matrix(edge.color))
     {
       edge.color <- edge.color[c(incl)]
-      edge.color <- edge.color[E$weight!=0]
+#       edge.color <- edge.color[E$weight!=0]
     }
     if (is.matrix(edge.label.bg))
     {
       edge.label.bg <- edge.label.bg[c(incl)]
-      edge.label.bg <- edge.label.bg[E$weight!=0]
+#       edge.label.bg <- edge.label.bg[E$weight!=0]
     }
     if (is.matrix(edge.label.font))
     {
       edge.label.font <- edge.label.font[c(incl)]
-      edge.label.font <- edge.label.font[E$weight!=0]
+#       edge.label.font <- edge.label.font[E$weight!=0]
     }
     if (!is.null(ELcolor))
     {
       if (is.matrix(ELcolor))
       {
         ELcolor <- ELcolor[c(incl)]
-        ELcolor <- ELcolor[E$weight!=0]
+#         ELcolor <- ELcolor[E$weight!=0]
       }      
     }
     
@@ -1081,7 +1316,7 @@ qgraph <- function( input, ... )
     if (is.matrix(lty))
     {
       lty <- lty[c(incl)]
-      lty <- lty[E$weight!=0]
+#       lty <- lty[E$weight!=0]
     }
     
     if (!is.null(edgeConnectPoints))
@@ -1089,17 +1324,20 @@ qgraph <- function( input, ... )
       if (is.array(edgeConnectPoints) && isTRUE(dim(edgeConnectPoints)[3]==2))
       {
         edgeConnectPoints <- matrix(edgeConnectPoints[c(incl,incl)],,2)
-        edgeConnectPoints <- edgeConnectPoints[E$weight!=0,,drop=FALSE]
+#         edgeConnectPoints <- edgeConnectPoints[E$weight!=0,,drop=FALSE]
       }
     }
     
     if (is.matrix(edge.label.position))
     {
       edge.label.position <- edge.label.position[c(incl)]
-      edge.label.position <- edge.label.position[E$weight!=0]
+#       edge.label.position <- edge.label.position[E$weight!=0]
     }
   }	
-  keep <- E$weight!=0
+
+  keep <- abs(E$weight)>threshold
+
+ ######
   
   if (length(loopRotation)==1) loopRotation <- rep(loopRotation,nNodes)
   
@@ -1230,10 +1468,10 @@ qgraph <- function( input, ... )
     
     if (length(E$weight) > 3*nNodes)
     {
-#       cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
+      #       cut <- median(sort(E$weight,decreasing=TRUE)[seq_len(nNodes)])
       cut <- max(sort(abs(E$weight),decreasing=TRUE)[2*nNodes], quantile(abs(E$weight),0.75))
     } else if (length(E$weight) > 1) cut <- quantile(abs(E$weight),0.75) else cut <- 0
-#     cut <- quantile(abs(E$weight), cutQuantile)
+    #     cut <- quantile(abs(E$weight), cutQuantile)
   }
   
   
@@ -1343,8 +1581,8 @@ qgraph <- function( input, ... )
             for (i in 1:length(groups)) 
             {
               tl=length(groups[[i]])+1
-              layout[groups[[i]],1]=sin(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,1]
-              layout[groups[[i]],2]=cos(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,2] 
+              layout[groups[[i]],1]=repulsion*sin(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,1]
+              layout[groups[[i]],2]=repulsion*cos(seq(rotation[i],rotation[i]+2*pi, length=tl))[-tl]+l1[i,2] 
             }
           }
         } else if (layout=="spring")

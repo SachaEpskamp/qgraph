@@ -5,10 +5,10 @@
 Automatically compute an apppropriate correlation matrix
 }
 \description{
-This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Rosseel, 2012) to compute a correlation matrix based on pychoric, polyserial and/or Pearson correlations. The wrapper removes all factors and searches for possible ordinal variabes. A variable is classified as ordinal if it is either \code{ordered} or if it consist of at most 7 unique integer values.
+This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Rosseel, 2012) to compute a correlation matrix based on pychoric, polyserial and/or Pearson correlations. The wrapper removes all factors and searches for possible ordinal variabes. A variable is classified as ordinal if it is either \code{ordered} or if it consist of at most 7 unique integer values. After computing the correlations an additional check will be performed to see if the correlation matrix is positive definite.
 }
 \usage{
-cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE)
+cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, forcePD = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,7 +27,12 @@ Integer specyfying the amount of unique integer values a variable should have to
   \item{npn.SKEPTIC}{
 Logical, should the Nonparanormal SKEPTIC from the huge package be applied if the data is continuous? See \code{\link[huge]{huge.npn}} (Zhao, Liu, Roeder, Lafferty and Wasserman, 2014)
 }
+\item{forcePD}{
+If \code{TRUE} the function checks if the correlation matrix is positive definite. If the matrix is not positive definite 
+\code{\link[Matrix]{nearPD}} from the Matrix package will be used  (Bates and Maechler, 2014).
 }
+}
+
 
 \value{
 A correlation matrix
@@ -40,6 +45,9 @@ http://www.jstatsoft.org/v48/i02/.
 Tuo Zhao, Han Liu, Kathryn Roeder, John Lafferty and Larry Wasserman (2014). huge:
 High-dimensional Undirected Graph Estimation. R package version 1.2.6.
 http://CRAN.R-project.org/package=huge
+
+Douglas Bates and Martin Maechler (2014). Matrix: Sparse and Dense Matrix Classes and
+Methods. R package version 1.1-3. http://CRAN.R-project.org/package=Matrix
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>

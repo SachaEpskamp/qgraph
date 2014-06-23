@@ -10,7 +10,7 @@ This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie an
 
 
 \usage{
-EBICglasso(S, n, gamma = 0, ...)
+EBICglasso(S, n, gamma = 0, forcePD = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,6 +46,9 @@ Chicago
 Revelle, W. (2014) psych: Procedures for Personality and Psychological Research,
 Northwestern University, Evanston, Illinois, USA,
 http://CRAN.R-project.org/package=psych Version = 1.4.4.
+
+Douglas Bates and Martin Maechler (2014). Matrix: Sparse and Dense Matrix Classes and
+Methods. R package version 1.1-3. http://CRAN.R-project.org/package=Matrix
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>

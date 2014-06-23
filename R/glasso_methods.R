@@ -35,12 +35,13 @@ EBICglasso <- function(
 
     # Likelihoods:
     EBICs <- apply(glas_path$wi,3,function(C){
-      L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
-      E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
-      p <- nrow(C)
-      
-      # EBIC:
-      -2 * L + E * log(n) + 4 * E * gamma * log(p)
+#       L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
+#       E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
+#       p <- nrow(C)
+#       
+#       # EBIC:
+#       -2 * L + E * log(n) + 4 * E * gamma * log(p)
+      EBIC(S, C, n, gamma)
     })
 
 # 

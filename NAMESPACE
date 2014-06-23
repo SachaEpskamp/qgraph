@@ -52,6 +52,10 @@ import(ggplot2)
 # importFrom(glasso, glasso)
 importFrom(sna, component.largest)
 
+import(fdrtool)
+
+importFrom(psych,corr.p)
+
 # export(smoothAnimationList)
 # export(mixGraphs)
 
@@ -80,3 +84,13 @@ importFrom(lavaan, lavCor)
 
 export(VARglm)
 
+export(FDRnetwork)
+
+export(findGraph)
+
+importFrom(ggm,fitConGraph)
+importFrom(ggm,fitCovGraph)
+
+
+importFrom(sendplot, "xy.send")
+export(qgraphAnnotate)

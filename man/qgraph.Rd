@@ -14,30 +14,35 @@ qgraph( input, ... )
 }	
 \section{Important additional arguments}{	
 \describe{
-\item{gui}{Logical, calls \code{\link{qgraph.gui}} if TRUE to open GUI window.}
 \item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "groups" gives a circular layout in which each group is put in separate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
-\item{minimum}{Edges with absolute weights under this value are omitted. Defaults to 0 for graphs with less than 50 nodes or 0.1 for larger graphs.}
+\item{minimum}{Edges with absolute weights under this value are not shown (but not omitted). Defaults to 0. Can also be set to \code{"sig"} to only show significant edges for \code{graph = "association"} and \code{graph = "concentration"}).  Significance level is controlled by \code{alpha} and \code{bonf} arguments}
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
 \item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to \code{NULL}, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 20 nodes. For larger graphs the \code{cut} value is automatically chosen to be equal to the maximum of the 75th quantile of absolute edge strengths or the edge strength corresponding to 2n-th edge strength (n being the number of nodes.)}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
 
-\item{title}{String with a title to be drawn in the topleft of the plot.}
-
-\item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
-
-\item{postExpression}{A parsable string containing R codes to be evaluated just before closing the device.}
-
-  \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
+\item{threshold}{A numeric value that defaults to 0. Edges with absolute weight that are not above this value are REMOVED from the network. This differs from \code{minimum} which simply changes the scaling of width and color so that edges with absolute weight under minimum are not plotted/invisible. Setting a threshold influences the spring layout and centrality measures obtained with the graph whereass setting a minimum does not. In the case of correlation (\code{graph = "association"}) or partial correlation (\code{graph = "concentration"}) networks this argument can also be given a string to omit insignificant edges. See description of this argumet in the next section (Additional options for correlation/covariance matrices).}
 }
 }
 
 
-\section{Additional options for Correlation Matrices}{
+\section{Additional options for correlation/covariance matrices}{
 \describe{
-  \item{graph}{Type of graph to be made, for use with a correlation matrix as input. "association" will plot the matrix as is, "concentration" will first compute partial correlations between each pair of nodes (controlled for all other variables), \code{"glasso"} will run \code{\link{EBICglasso}} to obtain an optimal sparse estimate of the partial correlation matrix and "factorial" will create a graph based on an exploratory factor analysis. Finally "sig" will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2009) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}
-  \item{sampleSize}{The sample-size. Currently only used when \code{graph = "glasso"}}
+  \item{graph}{Type of graph to be made when a correlation or covariance matrix is used as input. Setting this to other values than 
+  \code{"default"} will check if the matrix is a correlation or covariance matrix; if the matrix is not positive definite \code{\link[Matrix]{nearPD}} from the Matrix package will be used. Options are:
+  \describe{
+  \item{"association" or "cor"}{Plots a correlation network. Runs \code{\link[stats]{cov2cor}} if input is detected to be a covariance matrix and plots the input as is}
+  \item{"concentration" or "pcor"}{Plots a partial correlation network, using \code{\link[parcor]{cor2pcor}} from the parcor package (Kraemer, Schaefer and Boulesteix, 2009) on the input matrix}
+      \item{"glasso"}{Will run \code{\link{EBICglasso}} to obtain an optimal sparse estimate of the partial correlation matrix using the glasso package (Friedman, Hastie and Tibshirani, 2011)}
+  }
+  Outdated and limited supported options are \code{"factorial"}, which will create a graph based on an exploratory factor analysis, and \code{"sig"} will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2014) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}
+  \item{threshold}{In addition to a numeric value to omit edges this argument can also be assigned a string to omit insignficant edges. Note that this REMOVES edges from the network (which influences centrality measures and the spring layout). Can be \code{"sig"} to compute significance without correction for multiple testing, \code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"bonferroni"}, \code{"BH"}, \code{"BY"}, \code{"fdr"} or \code{"none"} which are used directly in the \code{adjust} argument in \code{\link[psych]{corr.p}} of the psych package (Revelle, 2014). In addition, this argument can be assigned \code{"locfdr"} in which edges are set to zero if the local FDR is below \code{FDRcutoff}. \code{\link[fdrtool]{fdrtool}} from the fdrtool package (Klaus and Strimmer, 2014) is used to compute these measures, which is used inside \code{\link{FDRnetwork}}.}
+  
+  \item{sampleSize}{The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
     \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
+    \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}.}
+	  \item{bonf}{Logical indicating if a bonferonni correction should be applied if \code{minimum = "sig"}.}
+    \item{FDRcutoff}{Cutoff used in which partial correlations should be included if \code{graph = "fdr"}. Defaults to 0.9}
   }
 }
 
@@ -79,6 +84,13 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
 \item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
 \item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
 \item{node.resolution}{Resolution of the nodes if \code{usePCH=FALSE}. Defaults to 100}
+\item{title}{String with a title to be drawn in the topleft of the plot.}
+
+\item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
+
+\item{postExpression}{A parsable string containing R codes to be evaluated just before closing the device.}
+
+  \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 }
 }
 
@@ -146,7 +158,8 @@ These arguments influence the plotting of edge labels qgraph. Most of them can b
 \subsection{Layout}{
 Arguments concerning the placement of nodes, in combination with 'layout'.
 \describe{
-  \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when layout="spring" or to an igraph function when such a function is assigned to 'layout'}
+  \item{repulsion}{Scalar on the default repulse radius in the spring layout. Defaults to 1. Setting this argument to lower values (e.g., 0.5) will cause nodes in the spring layout to repulse eachother less. This is especially useful if a few unconnected nodes cause the giant component to visually be clustered too much in the same place.}
+  \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when \code{layout = "spring"} or to an igraph function when such a function is assigned to 'layout'. Defaults to \code{ list(repulse.rad = nNodes^(repulsion * 3))} if \code{layout = "spring"} and \code{list()} otherwise.}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
   \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
   \item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
@@ -204,10 +217,9 @@ These arguments control the background of the plot
 \section{Arguments for graphs based on significance values}{
 \describe{
 	\item{mode}{This argument defines the mode used for coloring the edges. The default, "strength" assumes each edge weight indicates the strength of connection centered around  and makes positive edges green and negative edges red. If this is set to "sig" then the edge weights are assumed to be significance values and colored accordingly. This can also include negative values, which will be interpreted as p-values based on negative statistics.}
-	\item{alpha}{A vector of max 4 elements indicating the alpha level cutoffs. Defaults to c(0.0001,0.001,0.01,0.05)}
-	\item{OmitInsig}{Logical indicating if edge weights with a p-value over the highest alpha level should be omitted. Defaults to FALSE, can be used with any mode}
+  \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}, or if \code{Graph = "sig"} a vector of max 4 elements indicating the alpha level cutoffs. Defaults to c(0.0001,0.001,0.01,0.05)}
 	\item{sigScale}{The function used to scale the edges if mode="sig". Defaults to $function(x)0.8*(1-x)^(log(0.4/0.8,1-0.05))$}
-	\item{bonf}{Logical indicating if a bonferonni correction should be applied if mode="sig". If so p-values are multiplied by the number of edges}	
+	  \item{bonf}{Logical indicating if a bonferonni correction should be applied if \code{minimum = "sig"} or \code{mode="sig"}}
 }}
 
 \section{Arguments for plotting scores on nodes}{	
@@ -349,23 +361,23 @@ qgraph returns (invisibly) a 'qgraph' object containing:
 
 
 \references{
-Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
-  Waldorp, Verena D. Schmittmann, Denny Borsboom (2012).
-  qgraph: Network Visualizations of Relationships in
-  Psychometric Data. Journal of Statistical Software,
-  48(4), 1-18. URL http://www.jstatsoft.org/v48/i04/.
-
-
 Carter T. Butts <buttsc@uci.edu> (2010). sna: Tools for Social Network Analysis. R package version 2.2-0. http://CRAN.R-project.org/package=sna
 
 Csardi G, Nepusz T (2006). The igraph software package for complex network research, InterJournal, Complex Systems 1695. http://igraph.sf.net
 
-Korbinian Strimmer (2009). fdrtool: Estimation and Control of (Local) False Discovery Rates. R package version 1.2.6. http://CRAN.R-project.org/package=fdrtool
+Sacha Epskamp, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann, Denny Borsboom (2012). qgraph: Network Visualizations of Relationships in Psychometric Data. Journal of Statistical Software, 48(4), 1-18. URL http://www.jstatsoft.org/v48/i04/.
 
-Plate, T. <tplate@acm.org> and based on RSvgDevice by T Jake Luciani <jakeluciani@yahoo.com> (2009). RSVGTipsDevice: An R SVG graphics device with dynamic tips and hyperlinks. R package version 1.0-1.
+Jerome Friedman, Trevor Hastie and Rob Tibshirani (2011). glasso: Graphical lasso-estimation of Gaussian graphical models. R package version 1.7. http://CRAN.R-project.org/package=glasso
+
+Bernd Klaus and Korbinian Strimmer. (2014). fdrtool: Estimation of (Local) False Discovery Rates and Higher Criticism. R package version 1.2.12. http://CRAN.R-project.org/package=
 
 Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129-1164.
 
+N. Kraemer, J. Schaefer. A.-L. Boulesteix (2009). Regularized Estimation of Large-Scale Gene Regulatory Networks using Gaussian Graphical Models BMC Bioinformatics 10:384
+
+Plate, T. <tplate@acm.org> and based on RSvgDevice by T Jake Luciani <jakeluciani@yahoo.com> (2009). RSVGTipsDevice: An R SVG graphics device with dynamic tips and hyperlinks. R package version 1.0-1.
+
+Revelle, W. (2014) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston, Illinois, USA, http://CRAN.R-project.org/package=psych Version = 1.4.4.
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>
