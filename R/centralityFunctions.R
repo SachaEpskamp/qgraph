@@ -182,6 +182,7 @@ clustcoef_auto<-function(x, thresholdWS=0, thresholdON=0)
   
   Res <- data.frame(output)
   class(Res) <- c("data.frame","clustcoef_auto")
+  rownames(Res) <- colnames(x)
   return(Res)
 }
 
