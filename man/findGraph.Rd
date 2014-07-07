@@ -31,7 +31,7 @@ The EBIC tuning parameter
 Logical. If \code{method} is \code{"stepup"} or \code{"stepdown"}, should the stepping be reversed if a minimum is found? For example, if in stepwise up search a best model is found, should the search be continued by looking at if different edges could be deleted?
 }
   \item{startSig}{
-Logical. If \code{TRUE} the initial model in if \code(method) is \code{"stepup"} or \code{"stepdown"} is the model in which all edges that are insignificant using Holm adjustment are deleted. Otherwise,  \code{"stepup"} will start with an empty graph and  \code{"stepdown"} with a fully connected graph.
+Logical. If \code{TRUE} the initial model in if \code{method} is \code{"stepup"} or \code{"stepdown"} is the model in which all edges that are insignificant using Holm adjustment are deleted. Otherwise,  \code{"stepup"} will start with an empty graph and  \code{"stepdown"} with a fully connected graph.
 }
 }
 \details{

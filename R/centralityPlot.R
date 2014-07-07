@@ -1,4 +1,4 @@
-centralityPlot <- function(..., labels, relative = TRUE, include)
+centralityPlot <- function(..., labels, standardized = TRUE, relative = FALSE, include)
 {
   # Some dummies to get rid of NOTES:
   measure <- NULL
@@ -6,7 +6,7 @@ centralityPlot <- function(..., labels, relative = TRUE, include)
   node <- NULL
   type <- NULL
   
-  Long <- centralityTable(..., labels=labels, relative=relative)
+  Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative)
 
   # If not missing, include only include vars:
   if (!missing(include))

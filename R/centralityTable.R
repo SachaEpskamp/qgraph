@@ -1,4 +1,4 @@
-centralityTable <- function(..., labels, relative = TRUE)
+centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
 {
   
   Wmats <- getWmat(list(...))
@@ -62,16 +62,29 @@ centralityTable <- function(..., labels, relative = TRUE)
   # Add method and labels to tables:
   for (i in seq_along(CentAuto))
   {
-    # Relativate:
-    if (relative)
+    # Relativate or standardize:
+    if (relative | standardized )
     {
+      if (relative & standardized)
+      {
+        warning("Using 'relative' and 'standardized' together is not recommended")
+      }
       for (j in which(sapply(CentAuto[[i]][['node.centrality']],mode)=="numeric"))
       {
-        mx <- max(abs(CentAuto[[i]][['node.centrality']][,j]), na.rm = TRUE)
-        if (mx != 0)
-        {
-          CentAuto[[i]][['node.centrality']][,j] <- CentAuto[[i]][['node.centrality']][,j] /  mx
+        if (standardized) {
+          # Standardize:
+          CentAuto[[i]][['node.centrality']][,j]  <- scale(CentAuto[[i]][['node.centrality']][,j] ,TRUE, TRUE)
         }
+        
+        if (relative)
+        {
+          mx <- max(abs(CentAuto[[i]][['node.centrality']][,j]), na.rm = TRUE)
+          if (mx != 0)
+          {
+            CentAuto[[i]][['node.centrality']][,j] <- CentAuto[[i]][['node.centrality']][,j] /  mx
+          }  
+        } 
+        
       } 
     }
   

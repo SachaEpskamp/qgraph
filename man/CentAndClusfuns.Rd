@@ -11,10 +11,10 @@ Centrality and Clustering plots and tables
 These functions can be used to facilitate interpreting centrality and clustering coefficients. The plot functions use ggplot2 (Wickham, 2009). The table functions create a long format table which can easilly be plotted in ggplot2.
 }
 \usage{
-centralityPlot(..., labels, relative = TRUE, include)
-clusteringPlot(..., labels, relative = TRUE,  include, signed = FALSE)
-centralityTable(..., labels, relative = TRUE)
-clusteringTable(..., labels, relative = TRUE, signed = FALSE)
+centralityPlot(..., labels, standardized = TRUE, relative = FALSE, include)
+clusteringPlot(..., labels,  standardized = TRUE, relative = FALSE,  include, signed = FALSE)
+centralityTable(..., labels, standardized = TRUE,  relative = FALSE)
+clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, signed = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,9 @@ Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and
 }
   \item{labels}{
 A vector overwriting the labels used
+}
+  \item{relative}{
+Logical, should all measures be standardized?
 }
   \item{relative}{
 Logical, should all measures be divided by the largest measure?

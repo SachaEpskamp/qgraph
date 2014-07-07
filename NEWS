@@ -9,6 +9,7 @@ Changes in Version 1.3
   o Added the 'findGraph' function that uses brute, stepup and stepdown model search to find an optimal correlation or partial correlation network according to EBIC. This is only recommended for small networks; for larger network EBICglasso should be preferred.
   o Fixed a bug causing tooltips to be unusable with filetype = "svg"
   o Added qgraphAnnotate function to create a HTML file with tooltips.
+  o centralityPlot/Table and clusteringPlot/Table now return standardized measures by default.
 
 Changes in Version 1.2.5
   o Changes in default behavior:

@@ -1,4 +1,4 @@
-clusteringTable <- function(..., labels, relative = TRUE, signed = FALSE)
+clusteringTable <- function(..., labels,standardized=TRUE,  relative = FALSE, signed = FALSE)
 {
   Wmats <- getWmat(list(...))
   
@@ -100,11 +100,30 @@ clusteringTable <- function(..., labels, relative = TRUE, signed = FALSE)
     names(ClustAuto[[i]]) <- gsub("clust","",names(ClustAuto[[i]])) 
     
     # Relativate:
-    if (relative)
+    if (relative | standardized)
     {
+      if (relative & standardized)
+      {
+        warning("Using 'relative' and 'standardized' together is not recommended")
+      }
       for (j in which(sapply(ClustAuto[[i]],mode)=="numeric"))
       {
-        ClustAuto[[i]][,j] <- ClustAuto[[i]][,j] / max(abs(ClustAuto[[i]][,j]), na.rm = TRUE)
+        if (standardized)
+        {
+          ClustAuto[[i]][,j] <- scale(ClustAuto[[i]][,j], TRUE, TRUE)
+        }
+        
+        
+        if (relative)
+        {
+          mx <-  max(abs(ClustAuto[[i]][,j]), na.rm = TRUE)
+          if (mx != 0)
+          {
+            ClustAuto[[i]][,j] <- ClustAuto[[i]][,j] / mx  
+          }
+        }
+
+        
       } 
     }
     

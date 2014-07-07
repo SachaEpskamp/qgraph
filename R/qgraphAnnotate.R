@@ -15,17 +15,17 @@ qgraphAnnotate <- function(
   # Extract info from qgraph:
   if ("labels" %in% fromqgraph && !is.null(graph$graphAttributes$Nodes$labels) && !is.logical(graph$graphAttributes$Nodes$labels))
   {
-    TooltipContents$Label <- G$graphAttributes$Nodes$labels
+    TooltipContents$Label <- graph$graphAttributes$Nodes$labels
   }
 
   if ("nodeNames" %in% fromqgraph && !is.null(graph$graphAttributes$Nodes$names) && !is.logical(graph$graphAttributes$Nodes$names))
   {
-    TooltipContents$Name <- G$graphAttributes$Nodes$names
+    TooltipContents$Name <- graph$graphAttributes$Nodes$names
   }
   
   if ("tooltips" %in% fromqgraph && !is.null(graph$graphAttributes$Nodes$tooltips) && !is.logical(graph$graphAttributes$Nodes$tooltips))
   {
-    TooltipContents$Tooltip <- G$graphAttributes$Nodes$tooltips
+    TooltipContents$Tooltip <- graph$graphAttributes$Nodes$tooltips
   }
   
   if ("groups" %in% fromqgraph && !is.null(graph$graphAttributes$Graph$groups) && length(graph$graphAttributes$Graph$groups) > 1)
