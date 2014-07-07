@@ -67,7 +67,11 @@ centralityTable <- function(..., labels, relative = TRUE)
     {
       for (j in which(sapply(CentAuto[[i]][['node.centrality']],mode)=="numeric"))
       {
-        CentAuto[[i]][['node.centrality']][,j] <- CentAuto[[i]][['node.centrality']][,j] / max(abs(CentAuto[[i]][['node.centrality']][,j]), na.rm = TRUE)
+        mx <- max(abs(CentAuto[[i]][['node.centrality']][,j]), na.rm = TRUE)
+        if (mx != 0)
+        {
+          CentAuto[[i]][['node.centrality']][,j] <- CentAuto[[i]][['node.centrality']][,j] /  mx
+        }
       } 
     }
   
@@ -79,6 +83,10 @@ centralityTable <- function(..., labels, relative = TRUE)
   
   # LONG FORMAT:
   LongCent <- melt(WideCent, variable.name = "measure", id.var = c("graph","type", "node"))
+  
+  if (any(is.nan(LongCent$value))){
+    warning("NaN detected in centrality measures. Try relative = FALSE")
+  }
   
   return(LongCent)  
 }

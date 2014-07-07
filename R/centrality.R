@@ -124,6 +124,7 @@ centrality <- function(graph,alpha=1,posfun=abs)
   Betweenness <- numeric(n)
   
   Gtot <- apply(Paths,1:2,sapply,length)
+  
   # Compute betweenness:
   for (i in 1:n)
   {
