@@ -573,7 +573,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   # repulsion controls the repulse.rad argument
   if(is.null(qgraphObject$Arguments[['repulsion']])) repulsion=1 else repulsion=qgraphObject$Arguments[['repulsion']]
   if(is.null(qgraphObject$Arguments[['layout.par']])) {
-    if (is.null(layout) || layout == "spring") layout.par <- list(repulse.rad = nNodes^(repulsion * 3))  else layout.par <- list()
+    if (is.null(layout) || identical(layout,"spring")) layout.par <- list(repulse.rad = nNodes^(repulsion * 3))  else layout.par <- list()
     } else layout.par=qgraphObject$Arguments[['layout.par']]
   if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
   if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
