@@ -10,6 +10,8 @@ Changes in Version 1.3
   o Fixed a bug causing tooltips to be unusable with filetype = "svg"
   o Added qgraphAnnotate function to create a HTML file with tooltips.
   o centralityPlot/Table and clusteringPlot/Table now return standardized measures by default.
+  o Fixed a bug using an expression for labels.
+  o 'cut' can now be set to NA to mimic cut=0
 
 Changes in Version 1.2.5
   o Changes in default behavior:
