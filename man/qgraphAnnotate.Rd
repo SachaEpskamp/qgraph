@@ -8,7 +8,7 @@ Annotates a qgraph object with mouseover tooltips in a HTML file
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-qgraphAnnotate(graph, ..., fromqgraph = c("labels", "nodeNames", "tooltips", "groups"), filename = "qgraph", image.size = "600x600", legend = FALSE)
+qgraphAnnotate(graph, ..., fromqgraph = c("labels", "nodeNames", "tooltips", "groups"), filename = "qgraph", image.size = "600x600", window.size = image.size, legend = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -26,6 +26,9 @@ String indicating the root name of the file
 }
   \item{image.size}{
 String indicating the size of the file in pixels.
+}
+  \item{window.size}{
+String indicating the size of the image window in pixels.
 }
   \item{legend}{
 Logical, should a legend be plotted? Defaults to \code{FALSE}

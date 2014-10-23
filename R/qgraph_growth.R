@@ -1,6 +1,6 @@
 
-
-qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",titles=NULL,sleep=0,smooth = TRUE, plotGraphs = TRUE, progress = TRUE)
+# init = initial layout in first frame
+qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",titles=NULL,sleep=0,smooth = TRUE, plotGraphs = TRUE, progress = TRUE, initLayout)
 {
   
   
@@ -157,7 +157,11 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
     pb <- txtProgressBar(min = 0, max = nrow(ind), title = "Computing Graphs:", style = 3)
   }
   
-  
+  if (!missing(initLayout)){
+    Layout <- initLayout
+  } else {
+    Layout <- "spring"
+  }
   for (i in seq(nrow(ind)))
   {
     if (inputIsList) input <- inputList[[i]]
@@ -180,13 +184,14 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
     # Run qgraph:
     if (length(labels) ==n)
     {
-      Graphs[[i]] <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels[sub],DoNotPlot = TRUE)
+      Graphs[[i]] <- qgraph(inputSub,layout=Layout,layout.par=layout.par,arg2,labels=labels[sub],DoNotPlot = TRUE)
       init <- Graphs[[i]]$layout.orig
     } else 
     {
-      Graphs[[i]] <- qgraph(inputSub,layout="spring",layout.par=layout.par,arg2,labels=labels,DoNotPlot = TRUE)
+      Graphs[[i]] <- qgraph(inputSub,layout=Layout,layout.par=layout.par,arg2,labels=labels,DoNotPlot = TRUE)
       init <- Graphs[[i]]$layout.orig
     }
+    Layout <- "spring"
     
     if (!is.null(titles)) title(titles[i],line=-1)
     
