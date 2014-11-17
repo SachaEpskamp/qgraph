@@ -10,6 +10,7 @@ cor_auto <- function(
   forcePD = TRUE # Forces the result to be positive definite using nearPD from Matrix
   )
 {
+  
   # Check for data frame:
   if (!is.data.frame(data))
   {

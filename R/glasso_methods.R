@@ -15,74 +15,55 @@ EBICglasso <- function(
   S, # Sample covariance matrix
   n, # Sample size
   gamma = 0.5,
+  penalize.diagonal = FALSE, # Penalize diagonal?
+  nlambda = 100,
+  lambda.min.ratio = 0.1,
+  returnAllResults = FALSE, # If true, returns a list
   ... # glasso arguments
 ) {
-#   stopifnot(require("glasso"))
   
-  # Default rho:
-#   if (missing(rho))
-#   {
-    # Compute rho max (code taken from huge):
-    rho.max = max(max(S - diag(nrow(S))), -min(S - diag(nrow(S))))
-    rho.min = rho.max/100
-    rho = exp(seq(log(rho.min), log(rho.max), length = 100))
-#   }
+  # Standardize cov matrix:
+  S <- cov2cor(S)
+
   
+  # Compute lambda sequence (code taken from huge package):
+    lambda.max = max(max(S - diag(nrow(S))), -min(S - diag(nrow(S))))
+lambda.min = lambda.min.ratio*lambda.max
+    lambda = exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
+  
+  # Run glasso path:
+  glas_path <- glassopath(S, lambda, trace = 0, penalize.diagonal=penalize.diagonal)
 
-#   sink("/dev/null")
-  glas_path <- glassopath(S, rho, trace = 0)
-#   sink()
+    # Compute EBICs:
+#     EBICs <- apply(glas_path$wi,3,function(C){
+#       EBIC(S, C, n, gamma)
+#     })
 
-    # Likelihoods:
-    EBICs <- apply(glas_path$wi,3,function(C){
-#       L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
-#       E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
-#       p <- nrow(C)
-#       
-#       # EBIC:
-#       -2 * L + E * log(n) + 4 * E * gamma * log(p)
-      EBIC(S, C, n, gamma)
+    lik <- sapply(seq_along(lambda),function(i){
+    logGaus(S, glas_path$wi[,,i], n)
     })
 
-# 
-# # For each rho, run glasso and store matrix indices of zeroes:
-#   Zeroes <- lapply(rho, function(r) {
-#     Res <- glasso(S, r, ...)
-#     which(Res$wi==0,arr.ind=TRUE)    
-#     })
-# 
-#   # Rerun glasso to estimate unpenalized models with forced zeroes:
-#   sink("/dev/null")
-#   glassoRes <- lapply(Zeroes, function(z) glasso(S, 0, z, ...))
-#   sink()
-# #   
-# #   i <- 10
-# #   unPenalized <- glasso(S, rho[i], zero = which(glassoRes[[i]]$wi !=0,arr.ind=TRUE))
-# #   unPenalized$loglik
-# #   glassoRes[[i]]$loglik
-#   
-#   # Compute EBIC:
-#   EBICs <- sapply(glassoRes, function(res,gamma, n, S){
-# 
-#     C <- res$wi
-#     L <- n/2 * (log(det(C)) - sum(diag(S %*% C)))
-# #     L <- res$loglik
-#     E <- sum(C[lower.tri(C,diag=TRUE)] != 0)
-#     p <- nrow(C)
-#     
-#     # EBIC:
-#     -2 * L + E * log(n) + 4 * E * gamma * log(p)
-#   }, gamma = gamma, n = n, S = S)
+    EBICs <- sapply(seq_along(lambda),function(i){
+      EBIC(S, glas_path$wi[,,i], n, gamma)
+    })
 
-  # Smalles EBIC:
+  # Smallest EBIC:
   opt <- which.min(EBICs)
-
-#   net <- as.matrix(forceSymmetric(wi2net(glassoRes[[opt]]$wi)))
+  
+  # Return network:
   net <- as.matrix(forceSymmetric(wi2net(glas_path$wi[,,opt])))
   colnames(net) <- rownames(net) <- colnames(S)
 
   # Return 
-  return(net)
+  if (returnAllResults){
+    return(list(
+      results = glas_path,
+      ebic = EBICs,
+      loglik = lik,
+      optnet = net,
+      lambda = lambda
+      ))
+  } else return(net)
 }
 
 
