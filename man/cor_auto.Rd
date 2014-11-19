@@ -8,7 +8,8 @@ Automatically compute an apppropriate correlation matrix
 This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Rosseel, 2012) to compute a correlation matrix based on pychoric, polyserial and/or Pearson correlations. The wrapper removes all factors and searches for possible ordinal variabes. A variable is classified as ordinal if it is either \code{ordered} or if it consist of at most 7 unique integer values. After computing the correlations an additional check will be performed to see if the correlation matrix is positive definite.
 }
 \usage{
-cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, forcePD = TRUE)
+cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, 
+          forcePD = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

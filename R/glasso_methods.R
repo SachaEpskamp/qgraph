@@ -19,8 +19,13 @@ EBICglasso <- function(
   nlambda = 100,
   lambda.min.ratio = 0.1,
   returnAllResults = FALSE, # If true, returns a list
+  checkPD = TRUE, # Checks if matrix is positive definite and stops if not
   ... # glasso arguments
 ) {
+  
+  if (checkPD){
+    if (any(eigen(S) < 0)) stop("'S' is not positive definite")
+  }
   
   # Standardize cov matrix:
   S <- cov2cor(S)

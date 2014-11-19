@@ -60,8 +60,8 @@ qgraphD3 <- function(
   nodesLine <- grep("var nodes =", lines)  
   
   # Replace links and ndoes with proper links:
-  lines[linksLine] <- paste("var links =", d3Network:::toJSONarray(Links), "; \n")
-  lines[nodesLine] <- paste("var nodes =", d3Network:::toJSONarray(Nodes), "; \n")
+  lines[linksLine] <- paste("var links =", toJSONarray(Links), "; \n")
+  lines[nodesLine] <- paste("var nodes =", toJSONarray(Nodes), "; \n")
   
   # Find var link:
   linkAttrLine <- grep('LINKREPLACEDUMMY', lines)

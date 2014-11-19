@@ -10,7 +10,8 @@ This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie an
 
 
 \usage{
-EBICglasso(S, n, gamma = 0, forcePD = TRUE, ...)
+EBICglasso(S, n, gamma = 0.5, penalize.diagonal = FALSE, nlambda = 100, 
+            lambda.min.ratio = 0.1, returnAllResults = FALSE, checkPD = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +24,21 @@ Sample size used in computing \code{S}
   \item{gamma}{
 EBIC tuning parameter. 0.5 is generally a good choice. Setting to zero will cause regular BIC to be used.
 }
+  \item{penalize.diagonal}{
+Should the diagonal be penalized? 
+}
+  \item{nlambda}{
+Number of lambda values to test.
+}
+  \item{lambda.min.ratio}{
+Ratio of lowest lambda value compared to maximal lambda
+}
+  \item{returnAllResults}{
+  If \code{TRUE} this function does not return a network but the results of the entire glasso path.
+  }
+  \code{checkPD}{
+  If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that can not be a covariance matrix and (b) glasso can hang if the input is not positive definite.
+  }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}
 }

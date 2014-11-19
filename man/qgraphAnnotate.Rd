@@ -5,10 +5,12 @@
 Annotates a qgraph object with mouseover tooltips in a HTML file
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+This function creates a HTML file based on the result from a \code{\link{qgraph}} call. The HTML file is made using \code{\link[sendplot]{sendplot}}
 }
 \usage{
-qgraphAnnotate(graph, ..., fromqgraph = c("labels", "nodeNames", "tooltips", "groups"), filename = "qgraph", image.size = "600x600", window.size = image.size, legend = FALSE)
+qgraphAnnotate(graph, ..., fromqgraph = c("labels", "nodeNames", "tooltips", "groups"), 
+                filename = "qgraph", image.size = "600x600", window.size = image.size, 
+                legend = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

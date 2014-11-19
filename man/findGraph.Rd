@@ -8,7 +8,8 @@ Search for optimal correlation or partial correlation network
 This function can be used to find an optimal correlation or partial correlation network according to extended BIC (EBIC; Foygel and Drton, 2010). The functions \code{\link[ggm]{fitCovGraph}} and \code{\link[ggm]{fitConGraph}} from the ggm package are used in computing these networks (Marchetti, Drton and Sadeghi, 2014).
 }
 \usage{
-findGraph(S, n, type = "cor", gamma = 0.5, method = c("brute", "stepup", "stepdown"), reverseSteps = TRUE, startSig = TRUE)
+findGraph(S, n, type = "cor", gamma = 0.5, method = c("brute", "stepup", "stepdown"), 
+          reverseSteps = TRUE, startSig = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

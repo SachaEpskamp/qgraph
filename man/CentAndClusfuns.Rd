@@ -12,9 +12,11 @@ These functions can be used to facilitate interpreting centrality and clustering
 }
 \usage{
 centralityPlot(..., labels, standardized = TRUE, relative = FALSE, include)
-clusteringPlot(..., labels,  standardized = TRUE, relative = FALSE,  include, signed = FALSE)
+clusteringPlot(..., labels,  standardized = TRUE, relative = FALSE,  include, 
+                signed = FALSE)
 centralityTable(..., labels, standardized = TRUE,  relative = FALSE)
-clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, signed = FALSE)
+clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
+                signed = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,11 +26,11 @@ Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and
   \item{labels}{
 A vector overwriting the labels used
 }
-  \item{relative}{
+  \item{standardized}{
 Logical, should all measures be standardized?
 }
   \item{relative}{
-Logical, should all measures be divided by the largest measure?
+Logical, should all measures be scaled relative to the largest value?
 }
   \item{include}{
 A vector of measures to include. if missing all measures available will be included.

@@ -9,7 +9,8 @@ This function is meant to facilitate the creation of animations based on growing
 }
 \usage{
 qgraph.animate(input, ind = NULL, ..., constraint = 10, growth = "order", 
-  titles = NULL, sleep = 0, smooth = TRUE, plotGraphs = TRUE, progress = TRUE)
+  titles = NULL, sleep = 0, smooth = TRUE, plotGraphs = TRUE, progress = TRUE,
+  initLayout)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -43,6 +44,7 @@ Logical. If set to \code{FALSE} graphs are not plotted.
   \item{progress}{
 Logical. If set to \code{TRUE} progress bars are included.
 }
+  \item{initLayout}{An optional n by 2 matrix containing the initial placement of nodes in the animation.}
 }
 \details{
 Let n be the number of nodes in total in the graph.
