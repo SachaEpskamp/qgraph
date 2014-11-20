@@ -2,7 +2,7 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
 {
   
   Wmats <- getWmat(list(...))
-  
+
 
   # Fix names:
   names(Wmats) <- fixnames(Wmats,"graph ")
@@ -83,7 +83,10 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
           {
             CentAuto[[i]][['node.centrality']][,j] <- CentAuto[[i]][['node.centrality']][,j] /  mx
           }  
-        } 
+        }
+        
+        # Remove attributes:
+        attributes(CentAuto[[i]][['node.centrality']][,j]) <- NULL
         
       } 
     }

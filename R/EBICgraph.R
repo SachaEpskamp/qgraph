@@ -4,8 +4,6 @@ EBICgraph <- function(
   n, # Sample size
   gamma = 0.5)
 {
-  stopifnot(require('glasso'))
-  stopifnot(require('Matrix'))
   stopifnot(isSymmetric(adj))
   
   # Check for positive definite:
@@ -23,7 +21,7 @@ EBICgraph <- function(
   zeroes <- which(adj==0,arr.ind=TRUE)
   
   # Fit network:
-  if (nrow(zeroes)>0)  res <- glasso(S, 0, zero=zeroes) else res <- glasso(S, 0)
+  if (nrow(zeroes)>0)  res <- glasso::glasso(S, 0, zero=zeroes) else res <- glasso(S, 0)
 
   # Compute EBIC:
   C <- res$wi

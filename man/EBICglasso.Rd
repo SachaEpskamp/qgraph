@@ -36,7 +36,7 @@ Ratio of lowest lambda value compared to maximal lambda
   \item{returnAllResults}{
   If \code{TRUE} this function does not return a network but the results of the entire glasso path.
   }
-  \code{checkPD}{
+  \item{checkPD}{
   If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that can not be a covariance matrix and (b) glasso can hang if the input is not positive definite.
   }
   \item{\dots}{

@@ -96,3 +96,6 @@ importFrom(sendplot, "xy.send")
 export(qgraphAnnotate)
 
 importFrom(d3Network, "d3ForceNetwork")
+
+importFrom(gtools, mixedorder)
+importFrom(gtools, mixedsort)

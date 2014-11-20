@@ -18,6 +18,7 @@ A correlation or partial correlation matrix
   \item{cutoff}{
   The cutoff value to use. The edges of which the value of the first element of \code{method} are higher than the cutoff are removed. Thus, by default, edges with a local false discovery rate of higher than 0.1 are removed from the graph.
 }
+  \item{method}{The method to use with the cutoff. Can be \code{'lfdr'} for the local false discobvery rate, \code{'pval'} for the p-value of \code{'qval'} for the q-value.}
 }
 \details{
 \code{method = 'lfdr'} could result in a very sparse network, so also looking at other values is advisable.
@@ -43,7 +44,23 @@ CorMat_FDR <- FDRnetwork(CorMat)
 
 # Number of edges remaining:
 mean(CorMat_FDR[upper.tri(CorMat_FDR,diag=FALSE)]!=0)
-# All of them!
+
+# None, so might use different criterion:
+CorMat_FDR <- FDRnetwork(CorMat, method = "pval")
+
+
+# Compare:
+L <- averageLayout(CorMat, CorMat_FDR)
+
+layout(t(1:2))
+qgraph(CorMat, layout = L, title = "Correlation network", 
+       maximum = 1, cut = 0.1, minimum = 0, esize = 20)
+qgraph(CorMat_FDR, layout = L, title = "Local FDR correlation network", 
+       maximum = 1, cut = 0.1, minimum = 0, esize = 20)
+
+# Centrality:
+centralityPlot(list(cor=CorMat, fdr = CorMat_FDR))
+
 
 ### PARTIAL CORRELATIONS ###
 # Partial correlation matrix:
@@ -51,11 +68,10 @@ library("parcor")
 PCorMat <- cor2pcor(CorMat)
 
 # Run local FDR:
-PCorMat_FDR <- FDRnetwork(PCorMat, cutoff = 0.9, method = "pval")
+PCorMat_FDR <- FDRnetwork(PCorMat, cutoff = 0.1, method = "pval")
 
 # Number of edges remaining:
 mean(PCorMat_FDR[upper.tri(PCorMat_FDR,diag=FALSE)]!=0)
-# NOT all of them!
 
 # Compare:
 L <- averageLayout(PCorMat, PCorMat_FDR)
@@ -68,6 +84,5 @@ qgraph(PCorMat_FDR, layout = L, title = "Local FDR partial correlation network",
 
 # Centrality:
 centralityPlot(list(cor=PCorMat, fdr = PCorMat_FDR))
-
 }
 }

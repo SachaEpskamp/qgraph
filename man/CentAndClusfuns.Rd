@@ -11,9 +11,10 @@ Centrality and Clustering plots and tables
 These functions can be used to facilitate interpreting centrality and clustering coefficients. The plot functions use ggplot2 (Wickham, 2009). The table functions create a long format table which can easilly be plotted in ggplot2.
 }
 \usage{
-centralityPlot(..., labels, standardized = TRUE, relative = FALSE, include)
+centralityPlot(..., labels, standardized = TRUE, relative = FALSE, include, 
+                theme_bw = TRUE, print = TRUE)
 clusteringPlot(..., labels,  standardized = TRUE, relative = FALSE,  include, 
-                signed = FALSE)
+                signed = FALSE, theme_bw = TRUE, print = TRUE)
 centralityTable(..., labels, standardized = TRUE,  relative = FALSE)
 clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
                 signed = FALSE)
@@ -37,6 +38,12 @@ A vector of measures to include. if missing all measures available will be inclu
 }
 \item{signed}{
 Logical indicating if signed clustering coefficients should be plotted.
+}
+\item{theme_bw}{
+Adds the ggplot2 black and white theme to the plot
+}
+\item{print}{
+  If \code{TRUE}, the plot is sent to the print command and returned invisible, if \code{FALSE} the plot is returned normally. Needed to include plots in e.g., pdf files.
 }
 }
 

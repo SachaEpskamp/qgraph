@@ -32,7 +32,7 @@ qgraph( input, ... )
   \code{"default"} will check if the matrix is a correlation or covariance matrix; if the matrix is not positive definite \code{\link[Matrix]{nearPD}} from the Matrix package will be used. Options are:
   \describe{
   \item{"association" or "cor"}{Plots a correlation network. Runs \code{\link[stats]{cov2cor}} if input is detected to be a covariance matrix and plots the input as is}
-  \item{"concentration" or "pcor"}{Plots a partial correlation network, using \code{\link[parcor]{cor2pcor}} from the parcor package (Kraemer, Schaefer and Boulesteix, 2009) on the input matrix}
+  \item{"concentration" or "pcor"}{Plots a partial correlation network, using \code{cor2pcor} from the parcor package (Kraemer, Schaefer and Boulesteix, 2009) on the input matrix}
       \item{"glasso"}{Will run \code{\link{EBICglasso}} to obtain an optimal sparse estimate of the partial correlation matrix using the glasso package (Friedman, Hastie and Tibshirani, 2011)}
   }
   Outdated and limited supported options are \code{"factorial"}, which will create a graph based on an exploratory factor analysis, and \code{"sig"} will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2014) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}

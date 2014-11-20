@@ -122,6 +122,10 @@ clusteringTable <- function(..., labels,standardized=TRUE,  relative = FALSE, si
             ClustAuto[[i]][,j] <- ClustAuto[[i]][,j] / mx  
           }
         }
+        
+        # Remove attributes:
+        attributes(ClustAuto[[i]][,j]) <- NULL
+        
 
         
       } 
