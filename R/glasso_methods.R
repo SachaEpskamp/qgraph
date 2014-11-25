@@ -24,7 +24,7 @@ EBICglasso <- function(
 ) {
   
   if (checkPD){
-    if (any(eigen(S) < 0)) stop("'S' is not positive definite")
+    if (any(eigen(S)$values < 0)) stop("'S' is not positive definite")
   }
   
   # Standardize cov matrix:
