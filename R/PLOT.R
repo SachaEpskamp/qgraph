@@ -156,6 +156,8 @@ x$plotOptions$legend.mode -> legend.mode
   x$plotOptions$postExpression -> postExpression
   x$plotOptions$usePCH -> usePCH
   x$plotOptions$node.resolution -> node.resolution
+
+  x$plotOptions$noPar -> noPar
   
   rm(x)
   
@@ -229,14 +231,16 @@ x$plotOptions$legend.mode -> legend.mode
     }
   }  
   
-  
+
   ### START PLOT:
   marOrig <- par("mar")
   bgOrig <- par("bg")
   if (plot)
   {
-    par(mar=c(0,0,0,0), bg=background)
+    if (!noPar) par(mar=c(0,0,0,0), bg=background)
+    
     plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))|(filetype=="svg")) * (2+mar[2]+mar[4])/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
+    
     
     #         plot(1, ann = FALSE, axes = FALSE, xlim = c(-1 - mar[2], 1 + mar[4] + (((legend&is.null(scores))) * 2.4/GLratio)), ylim = c(-1 - mar[1] ,1 + mar[3]),type = "n", xaxs = "i", yaxs = "i")
   }
@@ -876,7 +880,7 @@ x$plotOptions$legend.mode -> legend.mode
           if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width[i])
         } else {
           drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide,
-                   usePCH = usePCH, resolution = node.resolution)
+                   usePCH = usePCH, resolution = node.resolution, noPar = noPar)
         }
       }      
     } else {
@@ -964,8 +968,8 @@ x$plotOptions$legend.mode -> legend.mode
     # Rescale labels:
     if (label.scale)
     {
-      VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList),SIMPLIFY=FALSE),'[',1) * 2
-      VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0,polygonList=polygonList),SIMPLIFY=FALSE),'[',2) * 2          
+      VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList, noPar = noPar),SIMPLIFY=FALSE),'[',1) * 2
+      VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0,polygonList=polygonList, noPar = noPar),SIMPLIFY=FALSE),'[',2) * 2          
       LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
       LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
       
@@ -1180,6 +1184,6 @@ x$plotOptions$legend.mode -> legend.mode
     message(paste("Output stored in ",getwd(),"/",filename,".",filetype,sep=""))
     dev.off()
   }
-  par(mar=marOrig, bg=bgOrig)
+  if (!noPar) par(mar=marOrig, bg=bgOrig)
   
 }

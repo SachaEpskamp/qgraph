@@ -69,7 +69,7 @@ findGraph <- function(
   n, # Number of observations
   type = "cor", # or pcor
   gamma = 0.5, # EBIC tuning parameter
-  method = c('brute','stepup','stepdown'), # Method, pick first one
+  method = c('stepup','stepdown','brute'), # Method, pick first one
   reverseSteps = TRUE, # Try reversing steps in stepup and stepdown.
   startSig = TRUE # If stepup or stepdown, start with significant edges only according to Holm adjustment?
 )
@@ -79,6 +79,12 @@ findGraph <- function(
   if (is.data.frame(S))
   {
     S <- cor_auto(S)
+  }
+  
+  S <- cov2cor(S)
+  
+  if (type == "pcor"){
+    S <- corpcor::cor2pcor(S)
   }
   
   # Check method:

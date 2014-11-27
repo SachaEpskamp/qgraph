@@ -1,4 +1,5 @@
 Changes in Version 1.3
+  o Added 'noPar' argument
   o Checks for positive definiteness are now built into qgraph(), cor_auto() and EBICglasso(). The nearPD function of Matrix will be used when appropriate.
   o The default for the 'graph' argument is now "default" rather than "association". "association" now checks if the input is a correlation matrix, and will run cov2cor. This means that covariance matrices can now be used for "association", "concentration" and "glasso" graphs.
   o The 'minimum' argument can now be set to "sig" when graph = "association" (correlation network) or graph = "concentration" (partial correlation network). This will set minimum to the value from which correlations become significant. Use 'alpha' and 'bonf' arguments to control significance level. Note that this value is just as arbitrary as any other value for 'minimum'. Also, as usual with the 'minimum' argument the result is only graphical; edges are not omitted but merely not shown. This is important in calculating centrality measures.

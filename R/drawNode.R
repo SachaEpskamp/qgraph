@@ -1,9 +1,10 @@
 
 drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
-                     usePCH = TRUE, resolution = 100)
+                     usePCH = TRUE, resolution = 100, noPar = FALSE)
 {
   if (shape %in% c("circle","square","triangle","diamond"))
   {
+
     if (usePCH | shape %in% c("triangle","diamond"))
     {
       if (shape=="circle")
@@ -35,8 +36,8 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     } else {
       if (shape == "square")
       {
-          xOff <- Cent2Edge(x,y,pi/2,cex1,cex1,shape)[1] - x
-          yOff <- Cent2Edge(x,y,0,cex1,cex1,shape)[2] - y
+          xOff <- Cent2Edge(x,y,pi/2,cex1,cex1,shape, noPar = noPar)[1] - x
+          yOff <- Cent2Edge(x,y,0,cex1,cex1,shape, noPar = noPar)[2] - y
           
           # Plot background:
           rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA)
@@ -45,7 +46,8 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
             rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor,lwd=border.width)
           }  
       } else {
-        Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape))
+        
+        Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape, noPar = noPar))
         
         
         xs <- sapply(Coord,'[[',1)
@@ -61,8 +63,8 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     
   } 
   else if (shape == "rectangle")  {
-    xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,shape)[1] - x
-    yOff <- Cent2Edge(x,y,0,cex1,cex2,shape)[2] - y
+    xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,shape, noPar = noPar)[1] - x
+    yOff <- Cent2Edge(x,y,0,cex1,cex2,shape, noPar = noPar)[2] - y
     
     # Plot background:
     rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA)
@@ -72,8 +74,8 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     }              
   } else if (shape %in% names(polygonList))
   {
-    xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,"rectangle")[1] - x
-    yOff <- Cent2Edge(x,y,0,cex1,cex2,"rectangle")[2] - y
+    xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,"rectangle", noPar = noPar)[1] - x
+    yOff <- Cent2Edge(x,y,0,cex1,cex2,"rectangle", noPar = noPar)[2] - y
     
     if (border) bord <- bcolor else bord <- NA
     

@@ -360,11 +360,13 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
   
   if(is.null(qgraphObject$Arguments[['subplots']])) subplots <- NULL else subplots <- qgraphObject$Arguments[['subplots']]
-  if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- NULL else subpars <- qgraphObject$Arguments[['subpars']]
+  if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- list(mar=c(0,0,0,0)) else subpars <- qgraphObject$Arguments[['subpars']]
   
   if(is.null(qgraphObject$Arguments[['subplotbg']])) subplotbg <- NULL else subplotbg <- qgraphObject$Arguments[['subplotbg']]
   
   if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
+
+if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgraphObject$Arguments[['noPar']]
   
   # Knots:
   if(is.null(qgraphObject$Arguments[['knots']])) knots <- list() else knots <- qgraphObject$Arguments[['knots']]
@@ -2351,7 +2353,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   qgraphObject$plotOptions$subplotbg <- subplotbg
   qgraphObject$plotOptions$usePCH <- usePCH
   qgraphObject$plotOptions$node.resolution <- node.resolution
-  
+  qgraphObject$plotOptions$noPar <- noPar
+
   
   if (!DoNotPlot)
   {

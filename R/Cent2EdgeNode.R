@@ -1,6 +1,6 @@
 ### CONVERTS CENTER COORDINATES TO EDGE OF NODE ###:
 
-Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
+Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList, noPar = FALSE)
 {
   r <- r%%(2*pi)
   
@@ -27,10 +27,10 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
     
     return(c(x+(cex+offset)/cex*(xNew-x),y+(cex+offset)/cex*(yNew-y)))
   } else {
-    
+
     # Set mar:
     marOrig <- par("mar")
-    par(mar=c(0,0,0,0))
+    if (!noPar) par(mar=c(0,0,0,0))
     
     r <- r%%(2*pi)
     
@@ -42,6 +42,8 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
     
     xin <- par("pin")[1]
     yin <- par("pin")[2]
+    
+
     
     #   if (shape == "circle")
     #   {
@@ -62,7 +64,7 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
       yNew <- y + min(abs(widthX/dx),abs(widthY/dy)) * dy    
       
       # Restore mar:
-      par(mar=marOrig)
+      if (!noPar) par(mar=marOrig)
       return(c(x+(cex+offset)/cex*(xNew-x),y+(cex+offset)/cex*(yNew-y)))
     } else if (shape == "rectangle")
     {
@@ -76,11 +78,11 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList)
       yNew <- y + min(abs(widthX/dx),abs(widthY/dy)) * dy    
       
       # Restore mar:
-      par(mar=marOrig)
+      if (!noPar) par(mar=marOrig)
       return(c(x+(cex+offset)/cex*(xNew-x),y+(cex2+offset)/cex2*(yNew-y)))
     } else  {
       # Restore mar:
-      par(mar=marOrig)
+      if (!noPar) par(mar=marOrig)
       return(c(xNew,yNew)) 
     }
   }

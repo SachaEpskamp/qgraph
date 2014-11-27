@@ -80,6 +80,7 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
           \item{subplotbg}{Background to be used in the sublots. If missing inherits from 'background' argument.}
         \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
 }
+  \item{noPar}{Set to \code{TRUE} to not have qgraph run the \code{par} function. Useful when sending qgraph plots as sublots using \code{subplots}.}
 \item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
 \item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
 \item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}

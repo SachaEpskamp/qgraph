@@ -31,12 +31,18 @@ cor_auto <- function(
     data <- data[,!Factors]
   }
   
+  # Remove columns with all NA:
+  data <- data[,sapply(data,function(x)mean(is.na(x)))!=1]
+
+  
   # Detect ordinal:
   Numerics <- which(sapply(data,is,"numeric") | sapply(data,is,"integer"))
+  
   if (detectOrdinal & length(Numerics) > 0)
   {
+    
     isOrd <- sapply(Numerics, function(i) {
-      isInt <- is.integer(data[,i]) | all(data[,i] %% 1 == 0)
+      isInt <- is.integer(data[,i]) | all(data[,i] %% 1 == 0, na.rm=TRUE)
       nLevel <- length(unique(data[,i]))
       return(isInt & nLevel <= ordinalLevelMax)
     } )
@@ -63,6 +69,7 @@ cor_auto <- function(
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
     CorMat <- huge.npn(data, "skeptic")
   } else {
+    
     CorMat <- lavaan::lavCor(data)
     class(CorMat) <- "matrix"
   }
