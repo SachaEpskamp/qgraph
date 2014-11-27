@@ -7,7 +7,8 @@ cor_auto <- function(
   detectOrdinal = TRUE, # Detect ordinal variables
   ordinalLevelMax = 7, # Maximum amount of levels to be classified as ordinal
   npn.SKEPTIC = FALSE, # If TRUE, will compute nonparanormal SKEPTIC on fully continous data
-  forcePD = TRUE # Forces the result to be positive definite using nearPD from Matrix
+  forcePD = TRUE, # Forces the result to be positive definite using nearPD from Matrix
+  missing = "pairwise"
   )
 {
   
@@ -69,11 +70,10 @@ cor_auto <- function(
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
     CorMat <- huge.npn(data, "skeptic")
   } else {
-    
-    CorMat <- lavaan::lavCor(data)
+    CorMat <- lavaan::lavCor(data, missing = missing)
     class(CorMat) <- "matrix"
   }
-  
+
 
   # Check for positive definite:
   if(forcePD & !all(eigen(CorMat)$values > 0))  {
