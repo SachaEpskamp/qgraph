@@ -73,7 +73,7 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
       {
         if (standardized) {
           # Standardize:
-          CentAuto[[i]][['node.centrality']][,j]  <- scale(CentAuto[[i]][['node.centrality']][,j] ,TRUE, TRUE)
+          CentAuto[[i]][['node.centrality']][,j]  <- scale2(CentAuto[[i]][['node.centrality']][,j])
         }
         
         if (relative)

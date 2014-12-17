@@ -5,9 +5,10 @@ clusteringPlot <- function(..., labels,standardized=TRUE,  relative = FALSE, inc
   value <- NULL
   node <- NULL
   type <- NULL
-  
+
   
   Long <- clusteringTable(..., labels=labels, standardized=standardized, relative=relative, signed=signed)
+  Long$value[!is.finite(Long$value)] <- 0
   
   # If not missing, include only include vars:
   if (!missing(include))

@@ -110,7 +110,7 @@ clusteringTable <- function(..., labels,standardized=TRUE,  relative = FALSE, si
       {
         if (standardized)
         {
-          ClustAuto[[i]][,j] <- scale(ClustAuto[[i]][,j], TRUE, TRUE)
+          ClustAuto[[i]][,j] <- scale2(ClustAuto[[i]][,j])
         }
         
         
