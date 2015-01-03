@@ -192,9 +192,9 @@ x$plotOptions$legend.mode -> legend.mode
     if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
     if (filetype=="svg")
     {
-      if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
-      require("RSVGTipsDevice")
-      devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
+#       if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
+      if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
+      RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
     }
     if (filetype=="tex")
     {
@@ -997,11 +997,11 @@ x$plotOptions$legend.mode -> legend.mode
     {
       if (!is.na(tooltips[i]))
       {
-        if (filetype=='svg') setSVGShapeToolTip(desc=tooltips[i])
+        if (filetype=='svg') RSVGTipsDevice::setSVGShapeToolTip(desc=tooltips[i])
       }
       if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
       {
-        setSVGShapeToolTip(desc=SVGtooltips[i])
+        RSVGTipsDevice::setSVGShapeToolTip(desc=SVGtooltips[i])
       }       
       NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],offset=0,polygonList))
       polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
