@@ -1,3 +1,6 @@
+Changes in Version 1.3.1
+  o 'sendplot' package moved from imports to suggests list.
+
 Changes in Version 1.3
   o Added 'noPar' argument
   o Checks for positive definiteness are now built into qgraph(), cor_auto() and EBICglasso(). The nearPD function of Matrix will be used when appropriate.

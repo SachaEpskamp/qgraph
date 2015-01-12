@@ -9,6 +9,8 @@ qgraphAnnotate <- function(
   legend = FALSE # Overwries legend plotting
   )
 {
+  if(!require("sendplot")) stop("'sendplot' package needs to be installed.")
+  
   # List containing the labels:
   TooltipContents <- list(...)
 
