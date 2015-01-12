@@ -28,9 +28,10 @@ if (filetype=='png') png(paste(filename,".png",sep=""),units='in',res=res,height
 if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height*2,width=width*2)
 if (filetype=="svg")
 {
-	if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
-	require("RSVGTipsDevice")
-	devSVGTips(paste(filename,".svg",sep=""),width=width*2,height=height*2,title=filename)
+# 	if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
+# 	require("RSVGTipsDevice")
+  if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
+  RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width*2,height=height*2,title=filename)
 }
 if (filetype=="tex") stop("Tex is not yet supported in qgraph.panel")
 

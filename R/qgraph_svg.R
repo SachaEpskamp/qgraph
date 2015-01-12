@@ -11,7 +11,7 @@ qgraph.svg=function( input,
 	... )
 {
 
-if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
+#if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
 
 fn=unlist(strsplit(filename,"/"))
 filename <- fn[length(fn)]
@@ -23,7 +23,7 @@ stopifnot(cont==1)
 
 cat("This function may take a while to run \n\n")
 
-require("RSVGTipsDevice")
+if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
 
 arguments=list(...)
 
@@ -57,7 +57,7 @@ for (G in graph)
 		{
 			for (c in cut)
 			{
-				devSVGTips(paste(folder,ifelse(folder=="","","/"),filename,G,l,g,c,".svg",sep=""),width=16,height=10,title=filename)
+			  RSVGTipsDevice::devSVGTips(paste(folder,ifelse(folder=="","","/"),filename,G,l,g,c,".svg",sep=""),width=16,height=10,title=filename)
 				
 				layout.mat=matrix(0,ncol=14,nrow=10,byrow=T)
 				
@@ -82,7 +82,7 @@ for (G in graph)
 
 					for (i in 1:length(groups))
 					{
-						setSVGShapeToolTip(desc=names(groups)[i])
+					  RSVGTipsDevice::setSVGShapeToolTip(desc=names(groups)[i])
 						points(legendsequence[i],0,cex=4,pch=15,col=color[i])
 					}
 				}
@@ -108,7 +108,7 @@ for (G in graph)
 						text(-0.7,y,graph[i],cex=4,col="gray",pos=4)
 					} else 
 					{
-						setSVGShapeURL(paste(filename,graph[i],l,g,c,".svg",sep=""))
+					  RSVGTipsDevice::setSVGShapeURL(paste(filename,graph[i],l,g,c,".svg",sep=""))
 						text(-0.7,y,graph[i],cex=4,pos=4)
 					}
 					
@@ -123,7 +123,7 @@ for (G in graph)
 						text(-0.7,y,layout[i],cex=4,col="gray",pos=4)
 					} else 
 					{
-						setSVGShapeURL(paste(filename,G,layout[i],g,c,".svg",sep=""))
+					  RSVGTipsDevice::setSVGShapeURL(paste(filename,G,layout[i],g,c,".svg",sep=""))
 						text(-0.7,y,layout[i],cex=4,pos=4)
 					}
 					
@@ -138,7 +138,7 @@ for (G in graph)
 						text(-0.7,y,graph[i],cex=4,col="gray",pos=4)
 					} else 
 					{
-						setSVGShapeURL(paste(filename,G,l,graph[i],c,".svg",sep=""))
+					  RSVGTipsDevice::setSVGShapeURL(paste(filename,G,l,graph[i],c,".svg",sep=""))
 						text(-0.7,y,graph[i],cex=4,pos=4)
 					}
 					
@@ -153,7 +153,7 @@ for (G in graph)
 						text(-0.7,y,cut[i],cex=4,col="gray",pos=4)
 					} else 
 					{
-						setSVGShapeURL(paste(filename,G,l,g,cut[i],".svg",sep=""))
+					  RSVGTipsDevice::setSVGShapeURL(paste(filename,G,l,g,cut[i],".svg",sep=""))
 						text(-0.7,y,cut[i],cex=4,pos=4)
 					}
 					
