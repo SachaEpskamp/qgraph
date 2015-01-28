@@ -329,7 +329,15 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   # Settings for the edgelist
   if(is.null(qgraphObject$Arguments$edgelist)) 
   {
-    if (nrow(input)!=ncol(input)) edgelist=TRUE else edgelist=FALSE 
+    if (nrow(input)!=ncol(input)) {
+      # Check if it is an edgelist or break:
+      if (ncol(input) %in% c(2,3) && ((is.character(input[,1]) || is.factor(input[,1])) || all(input[,1] %% 1 == 0)) &&
+            ((is.character(input[,2]) || is.factor(input[,2])) || all(input[,2] %% 1 == 0))){
+        edgelist <- TRUE
+      } else {
+        stop("Input is not a weights matrix or an edgelist.")
+      }
+    }
   } else edgelist=qgraphObject$Arguments$edgelist
   
   if(is.null(qgraphObject$Arguments[['edgeConnectPoints']])) edgeConnectPoints <- NULL else edgeConnectPoints <- qgraphObject$Arguments[['edgeConnectPoints']]
