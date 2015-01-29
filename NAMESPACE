@@ -99,3 +99,5 @@ importFrom(d3Network, "d3ForceNetwork")
 
 importFrom(gtools, mixedorder)
 importFrom(gtools, mixedsort)
+
+export(qgraphMixed)

@@ -20,6 +20,7 @@ EBICglasso <- function(
   lambda.min.ratio = 0.1,
   returnAllResults = FALSE, # If true, returns a list
   checkPD = TRUE, # Checks if matrix is positive definite and stops if not
+  penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
   ... # glasso arguments
 ) {
   
@@ -30,14 +31,28 @@ EBICglasso <- function(
   # Standardize cov matrix:
   S <- cov2cor(S)
 
-  
   # Compute lambda sequence (code taken from huge package):
     lambda.max = max(max(S - diag(nrow(S))), -min(S - diag(nrow(S))))
 lambda.min = lambda.min.ratio*lambda.max
     lambda = exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
   
   # Run glasso path:
-  glas_path <- glassopath(S, lambda, trace = 0, penalize.diagonal=penalize.diagonal)
+  if (missing(penalizeMatrix)){
+    glas_path <- glassopath(S, lambda, trace = 0, penalize.diagonal=penalize.diagonal, ...)
+  }else{
+    glas_path <- list(
+        w = array(0, c(ncol(S), ncol(S), length(lambda))),
+        wi = array(0, c(ncol(S), ncol(S), length(lambda))),
+        rholist = lambda
+      )
+    
+    for (i in 1:100){
+      res <- glasso(S, penalizeMatrix * lambda[i], trace = 0, penalize.diagonal=penalize.diagonal, ...)
+      glas_path$w[,,i] <- res$w
+      glas_path$wi[,,i] <- res$wi
+    }
+  }
+  
 
     # Compute EBICs:
 #     EBICs <- apply(glas_path$wi,3,function(C){

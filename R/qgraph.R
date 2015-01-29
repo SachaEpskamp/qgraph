@@ -337,7 +337,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
       } else {
         stop("Input is not a weights matrix or an edgelist.")
       }
-    }
+    } else edgelist <- FALSE
   } else edgelist=qgraphObject$Arguments$edgelist
   
   if(is.null(qgraphObject$Arguments[['edgeConnectPoints']])) edgeConnectPoints <- NULL else edgeConnectPoints <- qgraphObject$Arguments[['edgeConnectPoints']]

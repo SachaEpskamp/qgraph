@@ -142,6 +142,7 @@ These arguments control the curvature of edges.  Most of them can be assigned a 
         \item{curvePivotShape}{The shape of the curve around the pivots, as used in \code{xspline}. Defaults to \code{0.25}.}
         \item{parallelEdge}{Logical, set to \code{TRUE} to draw parallel straight edges rather than curved edges when there are multiple edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
          \item{parallelAngle}{The distance in radians an edge is shifted if \code{parallel=TRUE}. Can be set to \code{NA} (default) to determine based on number of edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
+         \item{parallelAngleDefault}{The default value for parallelAngle, indicating the angle of the edge furthest from the center. Defaults to \code{pi/6}}
 }
 }
 
