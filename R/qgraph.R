@@ -350,7 +350,11 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     {
       #       if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
       #       {
-      labels <- abbreviate(colnames(input),3)
+      labels <- iconv(abbreviate(colnames(input),3))
+      if (any(is.na(labels))){
+        warning("Some labels where not abbreviatable.")
+        labels <- ifelse(is.na(labels), colnames(input), labels)
+      }
       #       }
     }
   } else labels <- qgraphObject$Arguments$labels
