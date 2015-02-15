@@ -41,7 +41,7 @@ centrality <- function(graph,alpha=1,posfun=abs)
   # Remove diagonal:
   if (any(diag(W)!=0))
   {
-    message("Self-loops are not included in centrality analysis.")
+#     message("Self-loops are not included in centrality analysis.")
     diag(W) <- 0 
   }
   

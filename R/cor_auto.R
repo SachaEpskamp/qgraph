@@ -8,7 +8,8 @@ cor_auto <- function(
   ordinalLevelMax = 7, # Maximum amount of levels to be classified as ordinal
   npn.SKEPTIC = FALSE, # If TRUE, will compute nonparanormal SKEPTIC on fully continous data
   forcePD = TRUE, # Forces the result to be positive definite using nearPD from Matrix
-  missing = "pairwise"
+  missing = "pairwise",
+  verbose=TRUE
   )
 {
   
@@ -28,7 +29,10 @@ cor_auto <- function(
   Factors <- sapply(data,is,"factor") & !sapply(data,is,"ordered")
   if (any(Factors))
   {
-    message(paste("Removing factor variables:",paste(names(data)[Factors], collapse = "; ")))
+    if (verbose){
+      message(paste("Removing factor variables:",paste(names(data)[Factors], collapse = "; ")))      
+    }
+
     data <- data[,!Factors]
   }
   
@@ -50,7 +54,9 @@ cor_auto <- function(
     
     if (any(isOrd))
     {
-      message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd], collapse = "; ")))
+      if (verbose){
+        message(paste("Variables detected as ordinal:",paste(names(data)[Numerics][isOrd], collapse = "; ")))        
+      }
       
       for (i in Numerics[isOrd])
       {
