@@ -667,7 +667,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   {
     if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
   }
-  if(is.null(qgraphObject$Arguments[['fade']])) fade <- TRUE else fade <- FALSE
+  if(is.null(qgraphObject$Arguments[['fade']])) fade <- TRUE else fade <- qgraphObject$Arguments[['fade']]
   if(is.null(qgraphObject$Arguments[['loop']])) loop=1 else loop=qgraphObject$Arguments[['loop']]
   if(is.null(qgraphObject$Arguments[['loopRotation']]))
   {
