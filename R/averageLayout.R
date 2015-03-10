@@ -25,9 +25,13 @@ averageWmat <- function(...)
   
 }
 
-averageLayout <- function(..., layout = "spring", layout.par = list())
+averageLayout <- function(..., layout = "spring", repulsion = 1, layout.par)
 {
   avgWmat <- averageWmat(...)
+  
+  if (missing(layout.par)){
+    layout.par <- list(repulse.rad = ncol(avgWmat)^(repulsion * 3))
+  }
   
   Q <- qgraph(avgWmat, DoNotPlot = TRUE, layout = layout, layout.par = layout.par)
   
