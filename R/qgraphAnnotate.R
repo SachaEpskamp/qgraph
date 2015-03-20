@@ -9,7 +9,7 @@ qgraphAnnotate <- function(
   legend = FALSE # Overwries legend plotting
   )
 {
-  if(!require("sendplot")) stop("'sendplot' package needs to be installed.")
+  if(!requireNamespace("sendplot")) stop("'sendplot' package needs to be installed.")
   
   # List containing the labels:
   TooltipContents <- list(...)
@@ -49,7 +49,7 @@ qgraphAnnotate <- function(
 
   if (NROW(TooltipContents) > 0)
   {
-    xy.send(paste0("load('",gObj,"');qgraph:::plot.qgraph(graph)"),
+    sendplot::xy.send(paste0("load('",gObj,"');qgraph:::plot.qgraph(graph)"),
             x.pos = graph$layout[,1],
             y.pos = graph$layout[,2],
             xy.labels = TooltipContents,
@@ -58,7 +58,7 @@ qgraphAnnotate <- function(
             image.size = image.size,
             window.size = window.size)
   } else {
-    xy.send(paste0("load('",gObj,"');qgraph:::plot.qgraph(graph)"),
+    sendplot::xy.send(paste0("load('",gObj,"');qgraph:::plot.qgraph(graph)"),
             x.pos = -100,
             y.pos = -100,
             xy.labels = data.frame(` ` = ''),

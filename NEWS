@@ -1,6 +1,11 @@
 Changes in Version 1.3.1
   o 'sendplot' package moved from imports to suggests list.
   o Added the function 'qgraphMixed' which is designed to plot graphs that contain both undirected and directed edges.
+  o Added the 'repulsion' argument to averageLayout
+  o Added the 'verbose' argument to cor_auto
+  o Added the 'penalizeMatrix' argument to EBICglasso
+  o Fixed a bug with non-ACSII labels
+  o Fixed bug in clusterinPlot when sd = 0
 
 Changes in Version 1.3
 o New Features

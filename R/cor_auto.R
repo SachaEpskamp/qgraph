@@ -12,7 +12,7 @@ cor_auto <- function(
   verbose=TRUE
   )
 {
-  
+
   # Check for data frame:
   if (!is.data.frame(data))
   {
@@ -66,7 +66,6 @@ cor_auto <- function(
     
   }
   
-
   ### START COMPUTING CORRELATIONS ###
   # IF ALL NUMERIC OR INTEGER, NONPARANORMAL SKEPTIC:
   if (all(sapply(data,is,"numeric") | sapply(data,is,"integer") ) & npn.SKEPTIC)
@@ -79,7 +78,6 @@ cor_auto <- function(
     CorMat <- lavaan::lavCor(data, missing = missing)
     class(CorMat) <- "matrix"
   }
-
 
   # Check for positive definite:
   if(forcePD & !all(eigen(CorMat)$values > 0))  {

@@ -9,7 +9,7 @@ This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Ro
 }
 \usage{
 cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, 
-          forcePD = TRUE, missing = "pairwise")
+          forcePD = TRUE, missing = "pairwise", verbose = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +33,7 @@ If \code{TRUE} the function checks if the correlation matrix is positive definit
 \code{\link[Matrix]{nearPD}} from the Matrix package will be used  (Bates and Maechler, 2014).
 }
 \item{missing}{Corresponds to the \code{missing} argument in \code{\link[lavaan]{lavCor}}}
+\item{verbose}{Logical, should information be printed to the console?}
 }
 
 

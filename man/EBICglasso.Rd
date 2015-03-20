@@ -11,7 +11,8 @@ This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie an
 
 \usage{
 EBICglasso(S, n, gamma = 0.5, penalize.diagonal = FALSE, nlambda = 100, 
-            lambda.min.ratio = 0.1, returnAllResults = FALSE, checkPD = TRUE, ...)
+            lambda.min.ratio = 0.1, returnAllResults = FALSE, checkPD = TRUE, 
+            penalizeMatrix, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,6 +39,9 @@ Ratio of lowest lambda value compared to maximal lambda
   }
   \item{checkPD}{
   If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that can not be a covariance matrix and (b) glasso can hang if the input is not positive definite.
+  }
+  \item{penalizeMatrix}{
+  Optional logical matrix to indicate which elements are penalized
   }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}
