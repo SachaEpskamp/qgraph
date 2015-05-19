@@ -847,7 +847,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   
   # Specify background:
   background <- par("bg")
-  if (background == "transparent") background <- "white"
+  #if (background == "transparent") background <- "white"
   if (isColor(bg)) background <- bg
   # Remove alpha:
   background <- col2rgb(background, alpha = TRUE)
