@@ -348,7 +348,7 @@ x$plotOptions$legend.mode -> legend.mode
           colarray2[C,i,j]=min(c(1,max(colarray[i,j,]*(col2rgb(color)[C,]/255))))  }
         
         polygon(c(seq[i],seq[i+1],seq[i+1],seq[i]),c(seq[j],seq[j],seq[j+1],seq[j+1]),
-                col=rgb(colarray2[1,i,j],colarray2[2,i,j],colarray2[3,i,j]),border=NA)
+                col=rgb(colarray2[1,i,j],colarray2[2,i,j],colarray2[3,i,j]),border=rgb(colarray2[1,i,j],colarray2[2,i,j],colarray2[3,i,j]))
         
       } }
     

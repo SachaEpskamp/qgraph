@@ -139,7 +139,7 @@ clusteringTable <- function(..., labels,standardized=TRUE,  relative = FALSE, si
 
 
   # LONG FORMAT:
-  LongCent <- melt(WideCent, variable.name = "measure", id.var = c("graph","type", "node"))
+  LongCent <- reshape2::melt(WideCent, variable.name = "measure", id.var = c("graph","type", "node"))
   
   return(LongCent)  
   

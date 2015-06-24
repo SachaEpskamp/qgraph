@@ -98,7 +98,7 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
   if (is.null(WideCent$type)) WideCent$type <- NA
   
   # LONG FORMAT:
-  LongCent <- melt(WideCent, variable.name = "measure", id.var = c("graph","type", "node"))
+  LongCent <- reshape2::melt(WideCent, variable.name = "measure", id.var = c("graph","type", "node"))
   
   if (any(is.nan(LongCent$value))){
     warning("NaN detected in centrality measures. Try relative = FALSE")
