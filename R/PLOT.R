@@ -35,6 +35,21 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Nodes$barColor -> barColor
   x$graphAttributes$Nodes$barLength -> barLength
   
+  # for BW only
+  bw <- FALSE
+  if(!is.null(x$graphAttributes$Nodes$density))
+  {
+    x$graphAttributes$Nodes$density -> density
+    bw <- TRUE
+  } else density <- rep(NA, length(shape))
+    
+  if(!is.null(x$graphAttributes$Nodes$angle))
+  {
+    x$graphAttributes$Nodes$angle -> angle
+  }  else angle <- rep(0, length(shape))
+    
+  
+  
   # Edges:
   x$graphAttributes$Edges$curve -> curve
   x$graphAttributes$Edges$color -> edge.color
@@ -880,7 +895,7 @@ x$plotOptions$legend.mode -> legend.mode
           if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width[i])
         } else {
           drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide,
-                   usePCH = usePCH, resolution = node.resolution, noPar = noPar)
+                   usePCH = usePCH, resolution = node.resolution, noPar = noPar, bw = bw, density = density[i], angle = angle[i])
         }
       }      
     } else {

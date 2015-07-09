@@ -101,3 +101,7 @@ importFrom(gtools, mixedorder)
 importFrom(gtools, mixedsort)
 
 export(qgraphMixed)
+
+
+# exports for the BW function
+export(makeBW)

@@ -1,6 +1,6 @@
 
 drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
-                     usePCH = TRUE, resolution = 100, noPar = FALSE)
+                     usePCH = TRUE, resolution = 100, noPar = FALSE, bw = FALSE, density = NULL, angle = NULL)
 {
   if (shape %in% c("circle","square","triangle","diamond"))
   {
@@ -39,8 +39,13 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
           xOff <- Cent2Edge(x,y,pi/2,cex1,cex1,shape, noPar = noPar)[1] - x
           yOff <- Cent2Edge(x,y,0,cex1,cex1,shape, noPar = noPar)[2] - y
           
+          if(bw)
+          # Plot a white background behind each node to avoid transparency due to density in the next line
+          {
+            rect(x-xOff,y-yOff,x+xOff,y+yOff,col="white",border=NA)
+          }
           # Plot background:
-          rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA)
+          rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA, density = density, angle = angle)
           if (border)
           {
             rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor,lwd=border.width)
@@ -55,7 +60,13 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
         
         if (border) bord <- bcolor else bord <- NA
         
-        polygon(xs, ys, lwd=border.width, border = bord, col = vcolor)
+        if(bw)
+          # Plot a white background behind each node to avoid transparency due to density in the next line
+        {
+          polygon(xs, ys, lwd=border.width, border = bord, col = "white")
+        }
+        
+        polygon(xs, ys, lwd=border.width, border = bord, col = vcolor, density = density, angle = angle)
         
       }
 
@@ -66,8 +77,15 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     xOff <- Cent2Edge(x,y,pi/2,cex1,cex2,shape, noPar = noPar)[1] - x
     yOff <- Cent2Edge(x,y,0,cex1,cex2,shape, noPar = noPar)[2] - y
     
+    
+    if(bw)
+    {
+      # Plot a white background behind each node to avoid transparency due to density in the next line
+      rect(x-xOff,y-yOff,x+xOff,y+yOff,col="white",border=NA)
+    }
+    
     # Plot background:
-    rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA)
+    rect(x-xOff,y-yOff,x+xOff,y+yOff,col=vcolor,border=NA, density = density, angle = angle)
     if (border)
     {
       rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor,lwd=border.width)
@@ -79,7 +97,13 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     
     if (border) bord <- bcolor else bord <- NA
     
-    polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor)
+    if(bw)
+    {
+      # Plot a white background behind each node to avoid transparency due to density in the next line
+      polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = "white")
+    }
+    
+    polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor, density = density, angle = angle)
 
   } else stop(paste("Shape",shape,"is not supported or included in 'polygonList'."))
   
@@ -98,3 +122,4 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
   
   
 }
+
