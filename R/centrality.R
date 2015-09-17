@@ -1,5 +1,5 @@
 
-centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"))
+centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE)
 {
   pkg <- match.arg(pkg)
   # Check for correct class:
@@ -60,34 +60,36 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"))
   
   DistMat <- 1/(ifelse(posfun(W)==0,0,posfun(W)^alpha))
   if (pkg=="igraph"){
-    igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = ifelse(any(graph$Edgelist$directed),"directed","undirected"))
+    igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "directed")
     Closeness <- igraph::closeness(igraphObject)
-    Betweenness <-  ifelse(any(graph$Edgelist$directed),1,2) * igraph::betweenness(igraphObject)
+    Betweenness <-  igraph::betweenness(igraphObject)
     ShortestPaths <- igraph::shortest.paths(igraphObject)
-  
+    
     
     ls <- vector("list",n^2)
     Paths <- structure( ls, .Dim = c(n, n))
-
-
-    for (i in 1:n)
-    {
-      allPaths <- lapply(igraph::all_shortest_paths(igraphObject,i,V(igraphObject))$res,as.numeric)
-      last <- sapply(allPaths,function(x)x[length(x)])
-      
-      for (j in 1:n)
+    
+    if (all.shortest.paths){
+      for (i in 1:n)
       {
-        if (i==j){
-          Paths[[i,j]] <- list()
-        } else {
-          Paths[[i,j]] <-  allPaths[last==j]
+        allPaths <- lapply(igraph::all_shortest_paths(igraphObject,i,V(igraphObject))$res,as.numeric)
+        last <- sapply(allPaths,function(x)x[length(x)])
+        
+        for (j in 1:n)
+        {
+          if (i==j){
+            Paths[[i,j]] <- list()
+          } else {
+            Paths[[i,j]] <-  allPaths[last==j]
+          }
         }
       }
     }
+    
   } else {
     # Compute shortest distance using Dijkstra (code based on pseudo code on Wikipedia)
     # Setup:
-
+    
     ShortestPaths <- matrix(Inf,n,n)
     ls <- list()
     for (i in 1:n^2) ls[[i]] <- numeric(0)
@@ -170,8 +172,8 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"))
     }
     return(x)
   }
-  Labels <- graph$graphAttributes$Nodes$labels
-
+  Labels <- colnames(W)
+  
   ### RETURN VALUES:
   retval <- list(
     OutDegree = lab(CombinedDegreesOut,Labels),
