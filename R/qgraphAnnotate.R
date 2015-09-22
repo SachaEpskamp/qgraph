@@ -46,6 +46,9 @@ qgraphAnnotate <- function(
   # Create plot:
 #   xy.send(paste0("qgraph:::plot.qgraph(",dput(graph),")"),
   save(graph, file = tempfile(fileext = ".RData") -> gObj)
+  if (grepl("(windows)|(ming)",R.Version()$os,ignore.case=TRUE)){
+    gObj <- gsub("\\\\","\\\\\\\\",gObj)
+  }
 
   if (NROW(TooltipContents) > 0)
   {
