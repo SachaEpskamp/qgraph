@@ -1,7 +1,7 @@
 
-centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE)
+centrality <- function(graph,alpha=1,posfun=abs,pkg,all.shortest.paths=FALSE)
 {
-  pkg <- match.arg(pkg)
+
   # Check for correct class:
   #   if (class(graph) != "qgraph") stop("Must be a 'qgraph' object")
   
@@ -31,6 +31,10 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   
   W <- getWmat(graph)
   
+  if (missing(pkg)){
+    pkg <- ifelse(all(W==t(W)),"igraph","qgraph")
+    
+  }
   # If is list, compute for all:
   if (is.list(W))
   {
