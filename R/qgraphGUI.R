@@ -2,7 +2,7 @@
 qgraph.gui <- function(input,corMat,...)
 {
   
-  stop("This function has been removed due to CRAN policies. Please contact me (mail@sachaepskamp.com) to obtain this function.")
+  stop("This function has been removed in favor of our Shiny app: https://jolandakos.shinyapps.io/NetworkApp/")
 #   
 # 	if (!require("rpanel")) stop("Package 'rpanel' is required to use GUI functionality")
 # 
