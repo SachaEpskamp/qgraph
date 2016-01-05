@@ -75,7 +75,7 @@ cor_auto <- function(
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
     CorMat <- huge.npn(data, "skeptic")
   } else {
-    CorMat <- lavaan::lavCor(data, missing = missing)
+    CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing) )
     class(CorMat) <- "matrix"
   }
 
