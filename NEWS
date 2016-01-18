@@ -1,6 +1,12 @@
 Changes in Version 1.3.2
   o Solved an issue with bg = TRUE resulting in small white borders around background pixels
   o centralityTable and clusteringTable now appropriatly call melt from the reshape2 namespace
+  o cor_auto now surpresses warnings
+  o Added 'background' argument to qgraph()
+  o qgraphGUI now links to shiny app
+  o centrality() can now use igraph for faster computations
+  o qgraphAnnotate now works on Windows
+  o Added the makeBW function to plot a network that can be understood also in black and white or grayscale. Thanks to Giulio Costantini!
 
 Changes in Version 1.3.1
   o 'sendplot' package moved from imports to suggests list.

@@ -7,7 +7,7 @@ A qgraph plot can be understood in black and white
 Plot a qgraph network that can be understood also in black and white or grayscale. Positive lines are full and negative ones are dashed. Nodes colors are associated to unique motifs. Up to 12 different motifs are supported at the moment.  
 }
 \usage{
-makeBW(x, colorlist = NA)
+makeBW(x, colorlist = NA,  plot = TRUE)
 }
 \arguments{
   \item{x}{
@@ -17,7 +17,7 @@ A qgraph object
 Optional: a vector of colors. See details. 
 }
   \item{plot}{
-logicqal: if FALSE, the network is not plotted. 
+logical: if FALSE, the network is not plotted. 
 }
 }
 \details{

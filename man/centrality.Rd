@@ -11,7 +11,7 @@ This function can be used on the output of \code{\link{qgraph}} to compute the n
 PLEASE USE \code{\link{centrality_auto}} FOR A MORE USER FRIENDLY VERSION!
 }
 \usage{
-centrality(graph, alpha = 1, posfun = abs)
+centrality(graph, alpha = 1, posfun = abs, pkg, all.shortest.paths=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +22,12 @@ The tuning parameter. Defaults to 1.
 }
   \item{posfun}{
 A function that converts positive and negative values to only positive. Defaults to the absolute value.
+}
+\item{pkg}{
+ Package to use. Either \code{"qgraph"} or \code{"igraph"}. Defaults to \code{"qgraph"} for directed networks and  \code{"igraph"} for undirected networks.
+}
+\item{all.shortest.paths}{
+ Logical if all shortest paths should be returned. Defaults to \code{FALSE}. Setting this to true can greatly increase computing time if \code{pkg = "igraph"}.
 }
 }
 \details{
