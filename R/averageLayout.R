@@ -16,7 +16,9 @@ averageWmat <- function(...)
     {
       Wmats[[i]] <- do.call(averageWmat,Wmats[[i]])
     }
-    Wmats[[i]] <- abs(Wmats[[i]]/max(Wmats[[i]]))
+    if (!all(Wmats[[i]]==0)){
+      Wmats[[i]] <- abs(Wmats[[i]]/max(abs(Wmats[[i]])))
+    } else  Wmats[[i]][] <- 0
   }
   
   if (!(length(unique(sapply(Wmats,nrow))) == 1 | length(unique(sapply(Wmats,ncol))) == 1 )) stop("Graphs of different dimensions")
