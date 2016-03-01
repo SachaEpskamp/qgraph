@@ -1134,7 +1134,25 @@ x$plotOptions$legend.mode -> legend.mode
         }
       } else
       {
-        if (legend.mode == "names")
+
+        if (legend.mode == "full"){
+          # Generate names in list:
+          LEGENDgroups <- lapply(groups,function(x)paste0(labels[x],": ",nodeNames[x]))
+          LEGENDstr <- character(0)
+          LEGENDcol <- character(0)
+          LEGENDpch <- numeric(0)
+          LEGENDtextfont <- numeric(0)
+          for (GR in seq_along(groups)){
+            LEGENDstr <- c(LEGENDstr,names(groups)[GR],LEGENDgroups[[GR]])
+            LEGENDcol <- c(LEGENDcol,rep(color[GR],length(LEGENDgroups[[GR]])+1))
+            LEGENDpch <- c(LEGENDpch,16,rep(1,length(LEGENDgroups[[GR]])))
+            LEGENDtextfont <- c(LEGENDtextfont,2,rep(1,length(LEGENDgroups[[GR]])))
+          }
+          
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          
+          
+        } else if (legend.mode == "names")
         {
           text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
         } else 

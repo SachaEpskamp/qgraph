@@ -694,7 +694,9 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   if(is.null(qgraphObject$Arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=qgraphObject$Arguments[['legend.cex']]
   if(is.null(qgraphObject$Arguments[['legend.mode']]))
   {
-    if (!is.null(nodeNames)) legend.mode <- "names" else legend.mode <- "groups"
+    if (!is.null(nodeNames) && !is.null(groups)){
+      legend.mode <- "full"
+    } else if (!is.null(nodeNames)) legend.mode <- "names" else legend.mode <- "groups"
   }  else legend.mode=qgraphObject$Arguments[['legend.mode']]
   
   if(is.null(qgraphObject$Arguments$borders)) borders=TRUE else borders=qgraphObject$Arguments$borders

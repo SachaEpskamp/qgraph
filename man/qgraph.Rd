@@ -175,7 +175,7 @@ Arguments to control the legend placed on the right side of the graph.
 \describe{
   \item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
-  \item{legend.mode}{Character, either \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object.}
+  \item{legend.mode}{Character, \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object. Alternatively, \code{"full"} to base legend on both groups and names.}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
       \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
     \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
