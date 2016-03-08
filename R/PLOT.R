@@ -1135,7 +1135,7 @@ x$plotOptions$legend.mode -> legend.mode
       } else
       {
 
-        if (legend.mode == "full"){
+        if (legend.mode == "style2"){
           # Generate names in list:
           LEGENDgroups <- lapply(groups,function(x)paste0(labels[x],": ",nodeNames[x]))
           LEGENDstr <- character(0)
@@ -1150,6 +1150,27 @@ x$plotOptions$legend.mode -> legend.mode
           }
           
           legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          
+          
+        } else if (legend.mode == "style1"){
+
+          # Generate names in list:
+          LEGENDgroups <- lapply(groups,function(x)paste0(labels[x],": ",nodeNames[x]))
+          LEGENDstr <- character(0)
+          LEGENDcol <- character(0)
+          LEGENDbord <- character(0)
+          LEGENDpch <- numeric(0)
+          LEGENDtextfont <- numeric(0)
+          for (GR in seq_along(groups)){
+            LEGENDstr <- c(LEGENDstr,names(groups)[GR],LEGENDgroups[[GR]],"")
+            LEGENDcol <- c(LEGENDcol,NA,rep(color[GR],length(LEGENDgroups[[GR]])),NA)
+            LEGENDbord <- c(LEGENDbord,NA,rep(bcolor[GR],length(LEGENDgroups[[GR]])),NA)
+            # LEGENDpch <- c(LEGENDpch,NA,rep(16,length(LEGENDgroups[[GR]])),NA)
+            LEGENDtextfont <- c(LEGENDtextfont,2,rep(1,length(LEGENDgroups[[GR]])),NA)
+          }
+          
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = 16, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = 1, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           
           
         } else if (legend.mode == "names")

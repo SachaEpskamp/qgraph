@@ -695,7 +695,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   if(is.null(qgraphObject$Arguments[['legend.mode']]))
   {
     if (!is.null(nodeNames) && !is.null(groups)){
-      legend.mode <- "full"
+      legend.mode <- "style1" # or style2
     } else if (!is.null(nodeNames)) legend.mode <- "names" else legend.mode <- "groups"
   }  else legend.mode=qgraphObject$Arguments[['legend.mode']]
   
