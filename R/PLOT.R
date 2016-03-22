@@ -1161,16 +1161,30 @@ x$plotOptions$legend.mode -> legend.mode
           LEGENDbord <- character(0)
           LEGENDpch <- numeric(0)
           LEGENDtextfont <- numeric(0)
+
+          getShape <- function(x, border=FALSE){
+            sapply(x,function(xx){
+              if (xx == "circle"){
+                return(16)
+              } else if (xx == "square"){
+                return(15)
+              } else if (xx == "triangle"){
+                return(17)
+              } else return(16)
+            })
+          }
+            
+            
           for (GR in seq_along(groups)){
             LEGENDstr <- c(LEGENDstr,names(groups)[GR],LEGENDgroups[[GR]],"")
             LEGENDcol <- c(LEGENDcol,NA,rep(color[GR],length(LEGENDgroups[[GR]])),NA)
-            LEGENDbord <- c(LEGENDbord,NA,rep(bcolor[GR],length(LEGENDgroups[[GR]])),NA)
-            # LEGENDpch <- c(LEGENDpch,NA,rep(16,length(LEGENDgroups[[GR]])),NA)
+            LEGENDbord <- c(LEGENDbord,NA,bcolor[groups[[GR]]],NA)
+            LEGENDpch <- c(LEGENDpch,NA,getShape(shape[groups[[GR]]]),NA)
             LEGENDtextfont <- c(LEGENDtextfont,2,rep(1,length(LEGENDgroups[[GR]])),NA)
           }
           
-          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = 16, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = 1, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = LEGENDpch-15, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           
           
         } else if (legend.mode == "names")
