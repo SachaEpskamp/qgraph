@@ -1,6 +1,7 @@
 
 drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
-                     usePCH = TRUE, resolution = 100, noPar = FALSE, bw = FALSE, density = NULL, angle = NULL)
+                     usePCH = TRUE, resolution = 100, noPar = FALSE, bw = FALSE, density = NULL, angle = NULL,
+                     mean, SD, meanRange)
 {
   if (shape %in% c("circle","square","triangle","diamond"))
   {
@@ -118,6 +119,24 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     {
       IntInNode(t(c(x,y)),cex1,cex2,shape,bars[i],width=barLength,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
     }
+  }
+
+  ### Add means in same way:
+  if (!is.na(mean)){
+    meanScaled <- (mean - meanRange[1]) / (meanRange[2] - meanRange[1])
+    endScaled <- (mean + 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1])
+    startScaled <- (mean - 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1])
+    
+    # Draw mean:
+    IntInNode(t(c(x,y)),cex1,cex2,shape,meanScaled,width=0.5,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+    
+    # Draw SD ends:
+    IntInNode(t(c(x,y)),cex1,cex2,shape,startScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+    IntInNode(t(c(x,y)),cex1,cex2,shape,endScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+  
+    # Draw horizontal bar:
+    IntInNode(t(c(x,y)),cex1,cex2,shape,meanScaled,width=endScaled - startScaled,triangles=FALSE,col=barColor,2,!barsAtSide) 
+    
   }
   
   

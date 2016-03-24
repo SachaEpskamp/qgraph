@@ -687,6 +687,14 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   if(is.null(qgraphObject$Arguments[['barColor']])) barColor <- 'border' else barColor <- qgraphObject$Arguments[['barColor']]
   if(is.null(qgraphObject$Arguments[['barsAtSide']])) barsAtSide <- FALSE else barsAtSide <- qgraphObject$Arguments[['barsAtSide']]
   
+  # Means and SDs:
+  if(is.null(qgraphObject$Arguments[['means']])) means <- NA else means <- qgraphObject$Arguments[['means']]
+  if(is.null(qgraphObject$Arguments[['SDs']])) SDs <- NA else SDs <- qgraphObject$Arguments[['SDs']]
+  if(is.null(qgraphObject$Arguments[['meanRange']])) {
+      if (all(is.na(means))) meanRange <- c(NA,NA) else meanRange <- range(means,na.rm=TRUE) 
+    }else meanRange <- qgraphObject$Arguments[['meanRange']]
+  
+  
   if (!is.list(bars)) bars <- as.list(bars)
   
   if(is.null(qgraphObject$Arguments[['CircleEdgeEnd']])) CircleEdgeEnd=FALSE else CircleEdgeEnd=qgraphObject$Arguments[['CircleEdgeEnd']]
@@ -2126,6 +2134,11 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   
   # Vertex shapes:
   if (length(shape)==1) shape=rep(shape,nNodes)
+  
+  # means:
+  if (length(means)==1) means <- rep(means,nNodes)
+  if (length(SDs)==1) SDs <- rep(SDs, nNodes)
+  
   #     
   #     pch1=numeric(0)
   #     pch2=numeric(0)
@@ -2276,6 +2289,8 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   qgraphObject$graphAttributes$Nodes$barSide <- barSide
   qgraphObject$graphAttributes$Nodes$barColor <- barColor
   qgraphObject$graphAttributes$Nodes$barLength <- barLength
+  qgraphObject$graphAttributes$Nodes$means <- means
+  qgraphObject$graphAttributes$Nodes$SDs <- SDs
   
   # Edges:
   qgraphObject$graphAttributes$Edges$curve <- curve
@@ -2371,6 +2386,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   qgraphObject$plotOptions$usePCH <- usePCH
   qgraphObject$plotOptions$node.resolution <- node.resolution
   qgraphObject$plotOptions$noPar <- noPar
+  qgraphObject$plotOptions$meanRange <- meanRange
 
   
   if (!DoNotPlot)

@@ -34,6 +34,8 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Nodes$barSide -> barSide
   x$graphAttributes$Nodes$barColor -> barColor
   x$graphAttributes$Nodes$barLength -> barLength
+  x$graphAttributes$Nodes$means -> means
+  x$graphAttributes$Nodes$SDs -> SDs
   
   # for BW only
   bw <- FALSE
@@ -173,6 +175,7 @@ x$plotOptions$legend.mode -> legend.mode
   x$plotOptions$node.resolution -> node.resolution
 
   x$plotOptions$noPar -> noPar
+  x$plotOptions$meanRange -> meanRange
   
   rm(x)
   
@@ -865,7 +868,8 @@ x$plotOptions$legend.mode -> legend.mode
   if (!XKCD)
   {
     # Check if nodes need to be plotted in for loop:
-    if (!usePCH || !is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0))
+    if (!usePCH || !is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0) & 
+        !all(is.na(means)) & !all(is.na(SDs)))
     {
       # Get which nodes become a subplot:
       #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
@@ -894,8 +898,10 @@ x$plotOptions$legend.mode -> legend.mode
           # Plot border:
           if (borders[i]) rect(x-xOff,y-yOff,x+xOff,y+yOff,border=bcolor[i],lwd=border.width[i])
         } else {
+
           drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide,
-                   usePCH = usePCH, resolution = node.resolution, noPar = noPar, bw = bw, density = density[i], angle = angle[i])
+                   usePCH = usePCH, resolution = node.resolution, noPar = noPar, bw = bw, density = density[i], angle = angle[i],
+                   mean=means[i],SD=SDs[i],meanRange=meanRange)
         }
       }      
     } else {

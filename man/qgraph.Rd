@@ -249,6 +249,15 @@ These arguments control the background of the plot
 
 \section{Arguments for bars}{
 \describe{
+  \item{means}{
+       A vector with means for every node or \code{NA}. Will plot a vertical bar at the location of the mean between \code{meanRange} values. \code{NA} omits a bar.
+  }
+  \item{SDs}{
+       A vector with SDs for every node or \code{NA}. Will plot an error bar of 2 times this value around the \code{means} location. \code{NA} to omit.
+  }
+  \item{meanRange}{
+    The range of the \code{means} argument. Default to \code{range(means,na.rm=TRUE)}
+  }
   \item{bars}{A list with for each node containing either NULL or a vector with values between 0 and 1 indicating where bars should be placed inside the node.}
   \item{barSide}{Integer for each node indicating at which side the bars should be drawn. 1, 2, 3 or 4 indicating at bottom, left, top or right respectively.}  
   \item{barColor}{A vector with for each node indicating the color of bars. Defaults to the border color of the node.}  
