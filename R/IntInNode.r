@@ -1,4 +1,5 @@
-IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="black",side=1,inside=TRUE)
+IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="black",side=1,inside=TRUE,
+                      flip=FALSE)
 {
   N <- nrow(layout)
   if (length(cex)==1) cex <- rep(cex,N)
@@ -10,6 +11,8 @@ IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="blac
   # m is vector of margins to plot lines, NA indicates no line
   # side: 1. bottom, 2. left, 3. top, 4. right.
   # inside: if TRUE thresholds are plotted in the node, filling from top to bottom, if FALSE they are plotted at the side.
+  
+  flip <- rep(flip,length=length(m))
   
   for (i in seq_along(m))
   {
@@ -54,7 +57,12 @@ IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="blac
         {
           for (j in 1:length(m[[i]]))
           {
-            lines(c(x-xran+m[[i]][j]*xran*2,x-xran+m[[i]][j]*xran*2),c(y-width*yran,y+width*yran),col=col[i])
+            if (!flip){
+              lines(c(x-xran+m[[i]][j]*xran*2,x-xran+m[[i]][j]*xran*2),c(y-width*yran,y+width*yran),col=col[i])              
+            } else {
+              lines(c(x-xran+m[[i]][j]*xran*2-width*xran,x-xran+m[[i]][j]*xran*2+width*xran),c(y,y),col=col[i])
+            }
+
           }
         } else if (side[i]==2)
         {

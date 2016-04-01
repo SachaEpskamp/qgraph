@@ -123,19 +123,25 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
 
   ### Add means in same way:
   if (!is.na(mean)){
+  
     meanScaled <- (mean - meanRange[1]) / (meanRange[2] - meanRange[1])
-    endScaled <- (mean + 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1])
-    startScaled <- (mean - 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1])
+    endScaled <- min(1,(mean + 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1]))
+    startScaled <- max(0,(mean - 2*SD - meanRange[1]) / (meanRange[2] - meanRange[1]))
     
     # Draw mean:
     IntInNode(t(c(x,y)),cex1,cex2,shape,meanScaled,width=0.5,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
-    
+
     # Draw SD ends:
-    IntInNode(t(c(x,y)),cex1,cex2,shape,startScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
-    IntInNode(t(c(x,y)),cex1,cex2,shape,endScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
-  
+    if (endScaled < 1){
+      IntInNode(t(c(x,y)),cex1,cex2,shape,endScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+    }
+    
+    if (startScaled > 0){
+      IntInNode(t(c(x,y)),cex1,cex2,shape,startScaled,width=0.25,triangles=FALSE,col=barColor,barSide,!barsAtSide) 
+    }
+    
     # Draw horizontal bar:
-    IntInNode(t(c(x,y)),cex1,cex2,shape,meanScaled,width=endScaled - startScaled,triangles=FALSE,col=barColor,2,!barsAtSide) 
+    IntInNode(t(c(x,y)),cex1,cex2,shape,mean(c(startScaled,endScaled)),width=endScaled - startScaled,triangles=FALSE,col=barColor,barSide,!barsAtSide, flip=TRUE) 
     
   }
   
