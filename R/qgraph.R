@@ -475,6 +475,13 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   {
     sampleSize <- NULL
   } else sampleSize <- qgraphObject$Arguments[['sampleSize']]
+  
+  if(is.null(qgraphObject$Arguments[['countDiagonal']]))
+  {
+    countDiagonal <- FALSE
+  } else countDiagonal <- qgraphObject$Arguments[['countDiagonal']]
+  
+  
 
   # SET DEFAULT qgraphObject$Arguments:
   # General qgraphObject$Arguments:

@@ -17,12 +17,12 @@ logGaus <- function(S,K,n)
 }
 
 # Computes the EBIC:
-EBIC <- function(S,K,n,gamma = 0.5,E)
+EBIC <- function(S,K,n,gamma = 0.5,E,countDiagonal=FALSE)
 {
 #   browser()
   L <- logGaus(S, K, n)
   if (missing(E)){
-    E <- sum(K[lower.tri(K,diag=FALSE)] != 0)
+    E <- sum(K[lower.tri(K,diag=countDiagonal)] != 0)
   }
   p <- nrow(K)
   
