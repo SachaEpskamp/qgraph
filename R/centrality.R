@@ -1,5 +1,5 @@
 
-centrality <- function(graph,alpha=1,posfun=abs,pkg = c("qgraph","igraph"),all.shortest.paths=FALSE)
+centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE)
 {
 
   # Check for correct class:
