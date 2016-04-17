@@ -11,8 +11,8 @@ This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie an
 
 \usage{
 EBICglasso(S, n, gamma = 0.5, penalize.diagonal = FALSE, nlambda = 100, 
-            lambda.min.ratio = 0.1, returnAllResults = FALSE, checkPD = TRUE, 
-            penalizeMatrix, ...)
+            lambda.min.ratio = 0.01, returnAllResults = FALSE, checkPD = TRUE, 
+            penalizeMatrix, countDiagonal = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -42,6 +42,9 @@ Ratio of lowest lambda value compared to maximal lambda
   }
   \item{penalizeMatrix}{
   Optional logical matrix to indicate which elements are penalized
+  }
+  \item{countDiagonal}{
+    Should diagonal be counted in EBIC computation? Defaults to \code{FALSE}. Set to \code{TRUE} to mimic qgraph < 1.3 behavior (not recommended!).
   }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}
