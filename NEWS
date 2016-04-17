@@ -1,7 +1,14 @@
+Changes in Version 1.3.3
+  o The 'lambda.min.ratio' of 'EBICglasso' now defaults to 0.01 instead of 0.1, similar to earlier versions of qgraph. This will cause EBICglasso and qgraph(..., graph = "glasso") to potentially return less sparse models!
+  o Added 'countDiagonal' argument to qgraph, EBICglasso and EBIC, so that behavior of older versions of qgraph can be mimicked.
+  o Fixed a bug when computing average weights matrix with network that only has negative edges
+  o Added 'means', 'SDs' and 'meanRange' arguments to qgraph(). These can be used to plot bars inside nodes indicating the means and variances of the nodes.
+  o Added two new options for the 'legend.mode' argument in qgraph(): "style1" (default) and "style2", which use information from both the 'groups' and the 'nodeNames' arguments to plot the legend.
+
 Changes in Version 1.3.2
   o Solved an issue with bg = TRUE resulting in small white borders around background pixels
-  o centralityTable and clusteringTable now appropriatly call melt from the reshape2 namespace
-  o cor_auto now surpresses warnings
+  o centralityTable and clusteringTable now appropriately call melt from the reshape2 namespace
+  o cor_auto now suppresses warnings
   o Added 'background' argument to qgraph()
   o qgraphGUI now links to shiny app
   o centrality() can now use igraph for faster computations
@@ -26,7 +33,7 @@ o New Features
   o Added qgraphAnnotate function to create a HTML file with tooltips.
 
 o Major changes
-  o The EBIC-glasso method no longer penalizes the diagonal of the precision matrix nor does it include these diagonal values in the number of nonzero parameters used in the EBIC. This results in DIFFERENT graphs, that are overal sparser.
+  o The EBIC-glasso method no longer penalizes the diagonal of the precision matrix nor does it include these diagonal values in the number of nonzero parameters used in the EBIC. This results in DIFFERENT graphs, that are overall sparser.
   o The default for the 'graph' argument is now "default" rather than "association". "association" now checks if the input is a correlation matrix, and will run cov2cor. This means that covariance matrices can now be used for "association", "concentration" and "glasso" graphs.
   o The 'graph' argument can now be assigned "cor" or "pcor" as alternatives to "association" and "concentration" respectively.
   o Checks for positive definiteness are now built into qgraph(), cor_auto() and EBICglasso(). The nearPD function of Matrix will be used when appropriate.
@@ -36,7 +43,7 @@ o Major changes
   o EBICglasso gamma now defaults to 0.5 to be in line with qgraph(..., graph = "glasso")
 
 o Minor changes / bug fixes:
-  o Added 'noPar' argument, which disables the internal par() call. This is needed when usinng qgraph in the subplot functionality.
+  o Added 'noPar' argument, which disables the internal par() call. This is needed when using qgraph in the subplot functionality.
   o Fixed a bug causing tooltips to be unusable with filetype = "svg"
   o Fixed a bug using an expression for labels.
   o 'cut' can now be set to NA to mimic cut=0
@@ -92,9 +99,9 @@ New features:
 
 Changes:
   o Added internal function 'drawEdge' which draws the edge. This function can be used similary to arrows() in any plot.
-  o Edges repressenting p-values of exactly 0 in mode="sig" graphs are now repressented by the strongest possible positive edge.
+  o Edges representing p-values of exactly 0 in mode="sig" graphs are now represented by the strongest possible positive edge.
   o The functionality of using * in labels to plot the label in symbol font has been removed as this is now possible by using either an expression as label or by setting the font manually to 5.
-  o Graphical arguments in the qgraph help page have been grouped in subcatagories.
+  o Graphical arguments in the qgraph help page have been grouped in subcategories.
   o The midpoint of curved edges is now based on the centers of nodes
   o qgraph.animate now returns a list of graph objects
   o qgraph.animate now smoothes layout position per frame by default
@@ -142,7 +149,7 @@ Changes in Version 1.2.2
   o New features
     o Added functionality to draw bars inside nodes (e.g., how semPlot shows thresholds). Note that this is not intended to be used as shading lines, which will be added in a future version. See the qgraph help page for a description of the new arguments 'bars', 'barLength', 'barColor', 'barSide' and 'barsAtSide'.
     o Added 'curveScale' argument: Logical, should curve scale with distance between nodes. Defaults to TRUE. If FALSE, the curve can be exactly determined. Recommended to set to TRUE for graphs and FALSE for diagrams.
-    o Using a matrix with relative positioning of nodes (grid layout) can now also be assigned characters of the node labels. e.g., assinging matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right. Use NA rather than 0 in all other positions.
+    o Using a matrix with relative positioning of nodes (grid layout) can now also be assigned characters of the node labels. e.g., assigning matrix(LETTERS[1:4],2,2) to 'layout' will place node labeled "A" at top left and "D" at bottom right. Use NA rather than 0 in all other positions.
     o Added 'pastel' argument for pastel colors
     o Added 'rainbowStart' argument to control the start of rainbow functions
     o Added 'nodeNames' argument, which can be used to make a legend based on node labels for every node.
@@ -152,7 +159,7 @@ Changes in Version 1.2.2
 
   o Major changes
     o INTERNAL CHANGE IN QGRAPH
-      o A change has been made to the qgraph internal repressentation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
+      o A change has been made to the qgraph internal representation. First, qgraph() computed quite some parameters for the graph, then used them to plot and finally created an output model containing the arguments that allowed the plot to be plotted again. Now, qgraph() creates a model, and plot.qgraph() plots it (by default, plot.qgraph is now called at the end of qgraph()).
       o Because of this, every aspect of a graph can now be manually changed between running qgraph and plotting the output (use DoNotPlot to ignore plotting the first run).
       o Currently this is implemented simply by storing all values in qgraph() that are used in plot.qgraph, in a future function some of the arguments from qgraph will be moved to plot.qgraph to make a more natural distinction between plotting arguments (such as filetype) and arguments that control the graph.
 
@@ -168,11 +175,11 @@ Changes in Version 1.2.2
   o Bugfixes
     o Fixed a bug where tooltips could not be plotted with filetype='svg'. Tooltips now no longer require labels as well.
     o Using the filetype argument in combination with a legend (or filetype='svg') will now once again create a larger plotting window such that the graph is plotted in a square window.
-    o Legens are now also plotted when plotting a graph of significance values with no groups specified.
+    o Legends are now also plotted when plotting a graph of significance values with no groups specified.
 
 
 Changes in Version 1.2.1
-  o Curved edges can now be displayed as mostly straigth edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
+  o Curved edges can now be displayed as mostly straight edges what run parallel. This can be done using the new argument 'curvePivot'. See documentation of 'qgraph' for more information.
   o Shape of curved edges can now be controlled with 'curveShape' and 'curvePivotShape'.
   o The start of edges is now also reset to the edge of nodes if the destination of the edge is also reset. This will cause that bidirectional edges now look the same as directed edges.
   o Fixed a bug where graphs with a single edge were unable to plot edge labels.
@@ -186,11 +193,11 @@ Changes in Version 1.2
     o Added knots, knot.size, knot.color, knot.borders, knot.border.color and knot.border.width arguments that allow tying edges together at their center.
 	o igraph support added:
 	  o the as.igraph function converts a qgraph object to an igraph object	
-	  o igraph layout functions can now be assigned to the layout argument in qgraph(). The layout.par functon can be used to specify arguments to the function.
+	  o igraph layout functions can now be assigned to the layout argument in qgraph(). The layout.par function can be used to specify arguments to the function.
 	o Edge color specification
 	  o Added argument for controlling default positive edge color: posCol
       o Added argument for controlling default negative edge color: negCol
-	  o Added argument for controlling default unweigted edge color: unCol
+	  o Added argument for controlling default unweighted edge color: unCol
    	  o Custom colors now fade to the background color if fade=TRUE.
       o Edge colors can now be overwritten for specific edges. If edge.color is a vector, NA indicate the edge color is determined by default
     o Defaults added. The options "qgraph" can be assigned a list with default arguments for qgraph().
@@ -212,7 +219,7 @@ Changes in Version 1.2
 	o Several change to how curves work in qgraph:
 	  o the midpoint of curved edges is now set using the inner function PerpMid. This function now consistently finds a midpoint perpendicular to the edge regardless of shape of the plot in inches.
 	  o Added 'curveDefault' argument and some changes to 'curve' argument. 'curveDefault' now controls the default curvature (1 by default). If 'curve' is NA the default curvature is used (curved edges if there are multiple edges between two nodes). If 'curve' is of length 1 it overwrites 'curveDefault' for backward compatibility.
-	  o 'curveAll' argument added. This argument controls if all edges should be curved or only edges of nodes with multiple edges between tem.
+	  o 'curveAll' argument added. This argument controls if all edges should be curved or only edges of nodes with multiple edges between them.
       o Multiple edges between nodes are now curved uniquely for each edge by default.  
 	  o The 'curve' argument now scales the distance between the midpoint of an edge and the midpoint of the curved edge proportional 2.5% of the diagonal size of the plot in inches.
 	o For more consistency in argument names 'border.colors' has been renamed to 'border.color' and 'lcolor' has been renamed to 'label.color'
@@ -250,7 +257,7 @@ Changes in Version 1.1.0
     o Selfloops have been reworked through the internal function SelfLoop() and should now look much better. Can now be rotated using the loopRotation argument. The loop argument for controlling the size is currently defunct.  
     o Method for moving beginning and end of edge to the edge of nodes has been reworked through the internal function Cent2Edge(). This should now be much more stable, and no longer be bugged if a graph is plotted with margins.
   o MINOR CHANGES
-    o Some internal changes to facilitate the upcomming semPlot package (https://github.com/SachaEpskamp/semPlot)
+    o Some internal changes to facilitate the upcoming semPlot package (https://github.com/SachaEpskamp/semPlot)
     o Added 'residScale' and 'residEdge' arguments to qgraph()
     o Added 'residuals' argument to qgraph(). If TRUE, selfloops are plotted as residuals with no origin.
     o Fixed issues with margins when plot=FALSE

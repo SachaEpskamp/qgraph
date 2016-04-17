@@ -40,6 +40,9 @@ qgraph( input, ... )
   
   \item{sampleSize}{The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
     \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
+     \item{countDiagonal}{
+    Should diagonal be counted in EBIC computation? Defaults to \code{FALSE}. Set to \code{TRUE} to mimic qgraph < 1.3 behavior (not recommended!).
+  }
     \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}.}
 	  \item{bonf}{Logical indicating if a bonferonni correction should be applied if \code{minimum = "sig"}.}
     \item{FDRcutoff}{Cutoff used in which partial correlations should be included if \code{graph = "fdr"}. Defaults to 0.9}
@@ -175,7 +178,7 @@ Arguments to control the legend placed on the right side of the graph.
 \describe{
   \item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
-  \item{legend.mode}{Character, \code{"groups"} indicating the legend should be based on the \code{groups} object, or \code{"names"} indicating the legend should be based on the \code{nodeNames} object. Alternatively, \code{"full"} to base legend on both groups and names.}
+  \item{legend.mode}{Character string indicating the type of legend to be drawn. \code{"groups"} indicates the legend should be based on the \code{groups} object, \code{"names"} indicates the legend should be based on the \code{nodeNames} object, and \code{style1} and \code{style2} indicate the legend should be based on both. Defaults to \code{"style1"} if both \code{"groups"} and \code{"nodeNames"} arguments are used.}
 	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
       \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
     \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
