@@ -746,6 +746,9 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   
   if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=TRUE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
   
+  if(is.null(qgraphObject$Arguments$label.fill.horizontal)) label.fill.horizontal<-1 else label.fill.horizontal <- qgraphObject$Arguments$label.fill.horizontal
+  if(is.null(qgraphObject$Arguments$label.fill.vertical)) label.fill.vertical<-1 else label.fill.vertical <- qgraphObject$Arguments$label.fill.vertical
+  
   
   
   if(is.null(qgraphObject$Arguments$scores)) scores=NULL else scores=qgraphObject$Arguments$scores
@@ -2381,6 +2384,8 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   qgraphObject$plotOptions$curvePivotShape <- curvePivotShape
   qgraphObject$plotOptions$label.scale <- label.scale
   qgraphObject$plotOptions$label.scale.equal <- label.scale.equal
+  qgraphObject$plotOptions$label.fill.vertical <- label.fill.vertical
+  qgraphObject$plotOptions$label.fill.horizontal <- label.fill.horizontal
   qgraphObject$plotOptions$label.prop <- label.prop
   qgraphObject$plotOptions$label.norm <- label.norm
   qgraphObject$plotOptions$overlay <- overlay
