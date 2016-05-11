@@ -734,7 +734,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
     polygonList[[i]]$y <- (polygonList[[i]]$y - min(polygonList[[i]]$y)) / (max(polygonList[[i]]$y) - min(polygonList[[i]]$y)) * 2 - 1
   }
   
-  if(is.null(qgraphObject$Arguments$label.scale)) label.scale=TRUE else label.scale=qgraphObject$Arguments$label.scale
+  if(is.null(qgraphObject$Arguments[['label.scale']])) label.scale=TRUE else label.scale=qgraphObject$Arguments[['label.scale']]
   
   if(is.null(qgraphObject$Arguments[['label.cex']])){ 
       if (label.scale){
@@ -744,7 +744,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
       }
     } else label.cex <- qgraphObject$Arguments[['label.cex']]
   
-  if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=FALSE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
+  if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=TRUE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
   
   
   

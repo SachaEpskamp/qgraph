@@ -988,6 +988,7 @@ x$plotOptions$legend.mode -> legend.mode
     
     if (is.null(label.cex)) label.cex <- pmax(1,vsize)
     # Rescale labels:
+
     if (label.scale)
     {
       VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList, noPar = noPar),SIMPLIFY=FALSE),'[',1) * 2
@@ -999,8 +1000,11 @@ x$plotOptions$legend.mode -> legend.mode
       #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
       
       # Equalize:
-      if (label.scale.equal){
-        label.cex[] <- min(label.cex) 
+      if (!identical(label.scale.equal,FALSE)){
+        if (isTRUE(label.scale.equal)){
+          label.scale.equal <- rep(1,length(label.cex))
+        }
+        label.cex[] <- ave(label.cex,label.scale.equal,FUN=min)
       }
     }
     
