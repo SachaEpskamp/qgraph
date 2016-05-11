@@ -141,6 +141,7 @@ x$plotOptions$curveShape -> curveShape
 x$plotOptions$curveScale -> curveScale
 x$plotOptions$curvePivotShape -> curvePivotShape
 x$plotOptions$label.scale -> label.scale
+x$plotOptions$label.scale.equal -> label.scale.equal
 x$plotOptions$label.norm -> label.norm
 x$plotOptions$label.prop -> label.prop
 x$plotOptions$overlay -> overlay
@@ -996,6 +997,11 @@ x$plotOptions$legend.mode -> legend.mode
       
       label.cex <- label.cex * label.prop * pmin(VWidths/LWidths,VHeights/LHeights)
       #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
+      
+      # Equalize:
+      if (label.scale.equal){
+        label.cex[] <- min(label.cex) 
+      }
     }
     
     # Plot labels:

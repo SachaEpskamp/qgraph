@@ -25,7 +25,7 @@ clusteringTable(..., labels,  standardized = TRUE, relative = FALSE,
 Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and weights matrices. Can also be lists containing these objects. Graphs in a list will be plotted in the same panel as different lines and graphs in seperate arguments will be plotted in seperate panels.
 }
   \item{labels}{
-A vector overwriting the labels used
+A vector overwriting the labels used. Can be missing.
 }
   \item{standardized}{
 Logical, should all measures be standardized?
