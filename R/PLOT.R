@@ -998,7 +998,7 @@ x$plotOptions$legend.mode -> legend.mode
       LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
       LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
       
-      label.cex <- label.cex * label.prop * pmin((VWidths*label.fill.horizontal)/LWidths,(VHeights**label.fill.vertical)/LHeights)
+      label.cex <- label.cex * label.prop * pmin((VWidths*label.fill.horizontal)/LWidths,(VHeights*label.fill.vertical)/LHeights)
       #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
       
       # Equalize:
