@@ -744,7 +744,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
       }
     } else label.cex <- qgraphObject$Arguments[['label.cex']]
   
-  if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=TRUE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
+  if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=FALSE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
   
   if(is.null(qgraphObject$Arguments$label.fill.horizontal)) label.fill.horizontal<-1 else label.fill.horizontal <- qgraphObject$Arguments$label.fill.horizontal
   if(is.null(qgraphObject$Arguments$label.fill.vertical)) label.fill.vertical<-1 else label.fill.vertical <- qgraphObject$Arguments$label.fill.vertical

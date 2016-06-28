@@ -66,9 +66,25 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   DistMat <- 1/(ifelse(posfun(W)==0,0,posfun(W)^alpha))
   if (pkg=="igraph"){
     igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "directed")
+    
+#     E <- cbind(c(row(W)),c(col(W)),c(W))
+#     E <- E[E[,3] != 0]
+#     E[,3] <- 1/E[,3]
+#     igraphObject <- igraph::graph_from_edgelist(E[,1:2],directed=TRUE)
+#     E(igraphObject)$weight <- E[,3]
+    
     Closeness <- igraph::closeness(igraphObject)
+
+    E <- cbind(c(row(W)),c(col(W)),c(posfun(W)))
+    E <- E[E[,3] != 0, ]
+    E[,3] <- 1/E[,3]
+    igraphObject <- igraph::graph_from_edgelist(E[,1:2],directed=TRUE)
+    E(igraphObject)$weight <- E[,3]
+
+    
     Betweenness <-  igraph::estimate_betweenness(igraphObject,cutoff = 1/1e-10)
-    ShortestPaths <- igraph::shortest.paths(igraphObject)
+    
+    ShortestPaths <- igraph::shortest.paths(igraphObject, mode = "out")
     
     
     ls <- vector("list",n^2)
