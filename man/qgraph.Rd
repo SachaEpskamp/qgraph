@@ -108,6 +108,7 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
   9.}
     \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
     \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
+    \item{label.scale.equal}{Logical, set to \code{TRUE} to make make the font size of all labels equal}
 \item{label.font}{Integer specifying the label font of nodes. Can be a vector with value for each node}
 }
 }

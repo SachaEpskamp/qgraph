@@ -76,11 +76,14 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     Closeness <- igraph::closeness(igraphObject)
 
     E <- cbind(c(row(W)),c(col(W)),c(posfun(W)))
-    E <- E[E[,3] != 0, ]
-    E[,3] <- 1/E[,3]
+    # E <- E[E[,3] != 0, ]
+    # E[,3] <- 1/E[,3]
     igraphObject <- igraph::graph_from_edgelist(E[,1:2],directed=TRUE)
-    E(igraphObject)$weight <- E[,3]
-
+    
+    
+    
+    E(igraphObject)$weight <- 1/E[,3]
+    igraphObject <- igraph::delete_edges(igraphObject, which(E(igraphObject)$weight == Inf))
     
     Betweenness <-  igraph::estimate_betweenness(igraphObject,cutoff = 1/1e-10)
     
