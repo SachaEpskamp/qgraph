@@ -2,7 +2,7 @@ Changes in Version 1.3.4
   o The label.cex argument now defaults to 1 if label.scale = FALSE
   o The label.scale.equal argument now can be set to TRUE to make all labels scale equally to the largest cex such that the longest label fits.
      o Can alternatively be a factor or numeric vector indicating which groups of nodes whould have the same label shape
-     o Defaults to TRUE!
+  o Fixed a bug with betweenness computation using pkg = "igraph" argument in centrality()
 
 Changes in Version 1.3.3
   o The 'lambda.min.ratio' of 'EBICglasso' now defaults to 0.01 instead of 0.1, similar to earlier versions of qgraph. This will cause EBICglasso and qgraph(..., graph = "glasso") to potentially return less sparse models!

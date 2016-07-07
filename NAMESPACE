@@ -1,4 +1,5 @@
 useDynLib(qgraph)
+export(smallWorldIndex)
 export(clusteringTable)
 export(clusteringPlot)
 export(centralityTable)
