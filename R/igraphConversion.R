@@ -6,11 +6,11 @@ as.igraph.qgraph <- function(object,attributes=TRUE)
   {
     stop("Input must be qgraph object")
   }
-  
+
   # Extract graph:
   edgesort <- object$graphAttributes$Graph$edgesort
   E <- as.matrix(as.data.frame(object$Edgelist[c("from","to")]))
-  E <- E[edgesort,]
+  E <- E[edgesort,,drop=FALSE]
   srt <- cbind(pmin(E[,1],E[,2]),pmax(E[,1],E[,2]))
   Dir <- object$Edgelist$directed[edgesort]
   Bi <-  object$Edgelist$bidirectional[edgesort]
