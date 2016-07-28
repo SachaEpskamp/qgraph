@@ -1,4 +1,4 @@
-clusteringPlot <- function(..., labels,standardized=TRUE,  relative = FALSE, include , signed = FALSE, theme_bw = TRUE, print = TRUE)
+clusteringPlot <- function(..., labels,standardized=FALSE,  relative = FALSE, include , signed = FALSE, theme_bw = TRUE, print = TRUE)
 {
   # Some dummies to get rid of NOTES:
   measure <- NULL

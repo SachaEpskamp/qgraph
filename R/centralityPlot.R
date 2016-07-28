@@ -1,4 +1,4 @@
-centralityPlot <- function(..., labels, standardized = TRUE, relative = FALSE, include, theme_bw = TRUE, print = TRUE)
+centralityPlot <- function(..., labels, standardized = FALSE, relative = FALSE, include, theme_bw = TRUE, print = TRUE)
 {
   # Some dummies to get rid of NOTES:
   measure <- NULL
