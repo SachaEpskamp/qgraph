@@ -47,6 +47,8 @@ S3method(getWmat, data.frame)
 S3method(getWmat, igraph)
 S3method(getWmat, qgraph)
 S3method(getWmat, list)
+S3method(getWmat, bootnetResult)
+
 
 importFrom(reshape2, "melt")
 import(ggplot2)

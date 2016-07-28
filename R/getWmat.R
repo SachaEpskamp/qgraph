@@ -214,3 +214,8 @@ getWmat.qgraph <- function(x, directed,...)
   return(mat)
 }
 
+
+getWmat.bootnetResult <- function(x, ...){
+  x$graph
+}
+
