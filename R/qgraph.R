@@ -381,6 +381,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
 
 if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgraphObject$Arguments[['noPar']]
   
+ 
+  
   # Knots:
   if(is.null(qgraphObject$Arguments[['knots']])) knots <- list() else knots <- qgraphObject$Arguments[['knots']]
   if(is.null(qgraphObject$Arguments[['knot.size']])) knot.size <- 1 else knot.size <- qgraphObject$Arguments[['knot.size']]
@@ -409,6 +411,19 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
     } else nNodes=nrow(input)
   } else nNodes=qgraphObject$Arguments$nNodes
   
+  if(is.null(qgraphObject$Arguments$shape)) {
+    shape <- rep("circle",nNodes) 
+    if (!is.null(subplots))
+    {
+      # Get which nodes become a subplot:
+      whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+      
+      shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
+    }
+  }else shape=qgraphObject$Arguments$shape
+  
+  
+
   
   if(is.null(qgraphObject$Arguments[['usePCH']])) 
   {
@@ -715,8 +730,7 @@ if(is.null(qgraphObject$Arguments[['noPar']])) noPar <- FALSE else noPar <- qgra
   }  else legend.mode=qgraphObject$Arguments[['legend.mode']]
   
   if(is.null(qgraphObject$Arguments$borders)) borders=TRUE else borders=qgraphObject$Arguments$borders
-  if(is.null(qgraphObject$Arguments$shape)) shape="circle" else shape=qgraphObject$Arguments$shape
-  
+
   
   ### Polygon lookup list:
   polygonList = list(

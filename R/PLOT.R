@@ -434,13 +434,13 @@ x$plotOptions$legend.mode -> legend.mode
   }
   
   # Set non-rectangular/square dge shapes with subplots to square:
-  if (!is.null(subplots))
-  {
-    # Get which nodes become a subplot:
-    whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
-    
-    shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
-  }
+#   if (!is.null(subplots))
+#   {
+#     # Get which nodes become a subplot:
+#     whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+#     
+#     shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
+#   }
   
   # Plot edges: 
   if (length(curve)==1) curve=rep(curve,length(edgesort))
