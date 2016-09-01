@@ -11,10 +11,12 @@ Centrality and Clustering plots and tables
 These functions can be used to facilitate interpreting centrality and clustering coefficients. The plot functions use ggplot2 (Wickham, 2009). The table functions create a long format table which can easilly be plotted in ggplot2.
 }
 \usage{
-centralityPlot(..., labels, standardized = TRUE, relative = FALSE, include, 
-                theme_bw = TRUE, print = TRUE)
-clusteringPlot(..., labels,  standardized = TRUE, relative = FALSE,  include, 
-                signed = FALSE, theme_bw = TRUE, print = TRUE)
+centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
+                 include, theme_bw = TRUE, print = TRUE,
+                 verbose = TRUE, standardized, relative)
+clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
+                  include , signed = FALSE, theme_bw = TRUE, print = TRUE,
+                  verbose = TRUE, standardized, relative)
 centralityTable(..., labels, standardized = TRUE,  relative = FALSE)
 clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
                 signed = FALSE)
@@ -24,14 +26,9 @@ clusteringTable(..., labels,  standardized = TRUE, relative = FALSE,
   \item{\dots}{
 Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and weights matrices. Can also be lists containing these objects. Graphs in a list will be plotted in the same panel as different lines and graphs in seperate arguments will be plotted in seperate panels.
 }
+\item{scale}{Scale of the x-axis. \code{"z-scores"} to plot standardized coefficients, \code{"raw"} to plot raw coefficients, \code{"raw0"} to plot raw coefficients while including 0 on the x-axis and  \code{"relative"} to show values on a relative scale from 0 (lowest) to 1 (highest).}
   \item{labels}{
 A vector overwriting the labels used. Can be missing.
-}
-  \item{standardized}{
-Logical, should all measures be standardized?
-}
-  \item{relative}{
-Logical, should all measures be scaled relative to the largest value?
 }
   \item{include}{
 A vector of measures to include. if missing all measures available will be included.
@@ -45,6 +42,19 @@ Adds the ggplot2 black and white theme to the plot
 \item{print}{
   If \code{TRUE}, the plot is sent to the print command and returned invisible, if \code{FALSE} the plot is returned normally. Needed to include plots in e.g., pdf files.
 }
+\item{verbose}{
+Should messages be printed to the console?
+}
+  \item{standardized}{
+Logical, should all measures be standardized? Argument is deprecated and will be removed.
+}
+  \item{relative}{
+Logical, should all measures be scaled relative to the largest value? Argument is deprecated and will be removed.
+}
+}
+
+\details{
+Note that under default setting the plot functions show the standardized centrality indices. That is, z-scores instead of raw centrality indices. This is done to allow easier comparison of multiple networks.
 }
 
 \references{

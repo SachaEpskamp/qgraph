@@ -1,9 +1,15 @@
-Changes in Version 1.3.4
+Changes in Version 1.3.5
   o The label.cex argument now defaults to 1 if label.scale = FALSE
   o The label.scale.equal argument now can be set to TRUE to make all labels scale equally to the largest cex such that the longest label fits.
      o Can alternatively be a factor or numeric vector indicating which groups of nodes whould have the same label shape
   o Fixed a bug with betweenness computation using pkg = "igraph" argument in centrality()
-  o Due to feedback, the default of the 'standardized' argument in 'centralityPlot' and 'clusteringPlot' is now set to FALSE.
+  o The 'centralityPlot' and 'clusteringPlot' now use an argument 'scale' to set the scale of the x-axis, and print a message when this scale is z-scores or relative.
+  o The 'shape' argument can now be used with subplots
+  o getWmat now supports 'bootnetResult' objects
+  o Fixed a bug with as.igraph not working if there is only 1 edge
+  o Added 'smallWorldIndex' function to compute smallworldness of unweighted graph
+  o Added arguments 'label.fill.vertical' and 'label.fill.horizontal' to 'qgraph'
+  o Apparently  skipped over version 1.3.4
 
 Changes in Version 1.3.3
   o The 'lambda.min.ratio' of 'EBICglasso' now defaults to 0.01 instead of 0.1, similar to earlier versions of qgraph. This will cause EBICglasso and qgraph(..., graph = "glasso") to potentially return less sparse models!

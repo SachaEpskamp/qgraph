@@ -110,6 +110,13 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
     \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
     \item{label.scale.equal}{Logical, set to \code{TRUE} to make make the font size of all labels equal}
 \item{label.font}{Integer specifying the label font of nodes. Can be a vector with value for each node}
+   \item{label.fill.vertical}{
+      Scalar (0 - 1) indicating the maximum proportion a label may fill a node vertically.
+   }
+\item{label.fill.horizontal}{
+      Scalar (0 - 1) indicating the maximum proportion a label may fill a node horizontally.
+   }
+   
 }
 }
 

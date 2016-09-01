@@ -1,5 +1,27 @@
-clusteringPlot <- function(..., labels,standardized=FALSE,  relative = FALSE, include , signed = FALSE, theme_bw = TRUE, print = TRUE)
+clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"), labels, include , signed = FALSE, theme_bw = TRUE, print = TRUE,
+                           verbose = TRUE, standardized, relative)
 {
+  scale <- match.arg(scale)
+  
+  if (!missing(standardized)){
+    warning("'standardized' argument is deprecated and will be removed.")
+  } else {
+    standardized <- scale == "z-scores"
+  }
+  
+  if (!missing(relative)){
+    warning("'relative' argument is deprecated and will be removed.")    
+  } else {
+    relative <- scale == "relative"
+  }
+  
+  if (scale == "z-scores"){
+    message("Note: z-scores are shown on x-axis rather than raw centrality indices.")
+  }
+  if (scale == "relative"){
+    message("Note: relative centrality indices are shown on x-axis rather than raw centrality indices.")
+  }
+  
   # Some dummies to get rid of NOTES:
   measure <- NULL
   value <- NULL
@@ -45,6 +67,9 @@ clusteringPlot <- function(..., labels,standardized=FALSE,  relative = FALSE, in
     g <- g + theme_bw()
   }
   
+  if (scale == "raw0"){
+    g <-g + xlim(0,NA)
+  }
   
   if (print){
     print(g)

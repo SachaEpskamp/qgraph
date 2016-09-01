@@ -23,9 +23,6 @@ APLr <- function(x){
 
 
 smallworldIndex <- function(x){
-  library("igraph")
-  library("qgraph")
-  
   if ("qgraph"%in%class(x)) x <- as.igraph(x)
   if (!all(E(x)$weight==1)) {
     warning("Edge weights removed")
@@ -33,12 +30,12 @@ smallworldIndex <- function(x){
   }
   
   list(
-    transitivity =   transitivity(x),
+    transitivity =   igraph::transitivity(x),
     transitivity_random = Cr(x),
-    APL = average.path.length(x),
+    APL = igraph::average.path.length(x),
     APL_random = APLr(x),
-    index =  (transitivity(x) / Cr(x)) / 
-      (average.path.length(x) / APLr(x))
+    index =  (igraph::transitivity(x) / Cr(x)) / 
+      (igraph::average.path.length(x) / APLr(x))
   )
 }
 
