@@ -295,6 +295,10 @@ qgraph <- function( input, ... )
     graph <- "fdr.cor"
   }
   
+  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","fdr","factorial")){
+    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso', 'fdr' or 'factorial'")
+  }
+  
   # Reset graph for replotting:
   qgraphObject$Arguments[['graph']] <- NULL
   
