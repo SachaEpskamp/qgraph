@@ -414,7 +414,7 @@ x$plotOptions$legend.mode -> legend.mode
   if (drawPies){
     # Parse expressions:
     subplots <- mapply(width = border.width, bg = vertex.colors, x = pie, R = pieRadius, bord = pieBorder, col1 = pieColor, col2 = pieColor2, FUN = function(width, bg, x, R, bord, col1, col2){
-      parse(text=paste0('pie2(x=',x,', label="", radius=',R ,', pie.bord=',bord,', pie.col = "',col1,'", pie.col2 = "',col2,'",
+      parse(text=paste0('qgraph::pie2(x=',x,', label="", radius=',R ,', pie.bord=',bord,', pie.col = "',col1,'", pie.col2 = "',col2,'",
                         bg =  "',bg,'", border.width = ',width,')'))
     }, SIMPLIFY = FALSE)
     
