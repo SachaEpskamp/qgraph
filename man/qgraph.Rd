@@ -277,6 +277,22 @@ These arguments control the background of the plot
   
 }}
 
+\section{Arguments for pies}{
+\describe{
+  \item{pie}{
+       A vector with values between 0 and 1 for each node. Supplying this argument will make the border of nodes a pie chart.
+  }
+    \item{pieBorder}{
+      The size of the pie chart in the border, between 0 and 1. Defaults to \code{0.15}. Set to 1 to make the whole node a pie chart. Can be a vector with a value for each node.
+  }
+      \item{pieColor}{
+       First color of the pie chart. Defaults to \code{'gray'}. Can be a vector with a value for each node.
+  }
+      \item{pieColor2}{
+      Second color of the pie chart. Defaults to \code{'white'}. Can be a vector with a value for each node.
+  }
+}
+
 %\section{Arguments that support the BDgraph package}{  
 %\describe{
   %\item{BDgraph}{A character vector containing \code{"phat"} for plotting posterior probabilities of each edge, \code{"Khat"} for plotting mean posterior partial correlations or both. The order matters as the layout of the second plot is based on the layout of the first plot. Defaults to \code{c("phat","Khat")}}

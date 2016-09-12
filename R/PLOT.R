@@ -37,6 +37,12 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Nodes$means -> means
   x$graphAttributes$Nodes$SDs -> SDs
   
+  # Pies:
+  x$graphAttributes$Nodes$pieColor -> pieColor
+  x$graphAttributes$Nodes$pieColor2 -> pieColor2
+  x$graphAttributes$Nodes$pieBorder -> pieBorder
+  x$graphAttributes$Nodes$pie -> pie
+  
   # for BW only
   bw <- FALSE
   if(!is.null(x$graphAttributes$Nodes$density))
@@ -179,6 +185,9 @@ x$plotOptions$legend.mode -> legend.mode
 
   x$plotOptions$noPar -> noPar
   x$plotOptions$meanRange -> meanRange
+  
+  x$plotOptions$drawPies -> drawPies
+  x$plotOptions$pieRadius -> pieRadius
   
   rm(x)
   
@@ -400,6 +409,16 @@ x$plotOptions$legend.mode -> legend.mode
     EdgeLenghts <- sqrt((layout[E$to,1] - layout[E$from,1])^2 + (layout[E$to,2] - layout[E$from,2])^2)
     curve <- curve * EdgeLenghts /AverageLength
   }
+  
+  ##### MAKE SUBPLOTS FOR PIE CHARTS #####
+  if (drawPies){
+    # Parse expressions:
+    subplots <- mapply(width = border.width, bg = vertex.colors, x = pie, R = pieRadius, bord = pieBorder, col1 = pieColor, col2 = pieColor2, FUN = function(width, bg, x, R, bord, col1, col2){
+      parse(text=paste0('pie2(x=',x,', label="", radius=',R ,', pie.bord=',bord,', pie.col = "',col1,'", pie.col2 = "',col2,'",
+                        bg =  "',bg,'", border.width = ',width,')'))
+    }, SIMPLIFY = FALSE)
+    
+    }
   
   # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
   if (any(bidirectional))
