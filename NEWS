@@ -2,6 +2,7 @@ Changes in Version 1.3.6
   o Added functionality to draw pie graphs as node shape.
       o New arguments: 'pie', 'pieColor', 'pieColor2', and 'pieBorder'
       o Courtesy of Jonas Haslbeck
+      o The label.cex argument can now be used in combination with label.scale = FALSE
 
 Changes in Version 1.3.5
   o The label.cex argument now defaults to 1 if label.scale = FALSE

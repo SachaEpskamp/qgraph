@@ -1012,14 +1012,18 @@ x$plotOptions$legend.mode -> legend.mode
 
     if (label.scale)
     {
+      ones <- rep(1, nNodes)
       VWidths <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=pi/2,polygonList=polygonList, noPar = noPar),SIMPLIFY=FALSE),'[',1) * 2
       VHeights <- sapply(mapply(Cent2Edge,cex=vsize,cex2=vsize2,shape=shape,MoreArgs=list(x=0,y=0,r=0,polygonList=polygonList, noPar = noPar),SIMPLIFY=FALSE),'[',2) * 2          
-      LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
-      LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
+#       LWidths <- pmax(sapply(label.cex,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=label.cex))
+#       LHeights <- pmax(sapply(label.cex,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=label.cex))
+#       
+      LWidths <- pmax(sapply(ones,function(x)strwidth(label.norm,cex=x)),mapply(strwidth, s=labels, cex=ones))
+      LHeights <- pmax(sapply(ones,function(x)strheight(label.norm,cex=x)),mapply(strheight, s=labels, cex=ones))
       
       label.cex <- label.cex * label.prop * pmin((VWidths*label.fill.horizontal)/LWidths,(VHeights*label.fill.vertical)/LHeights)
       #           label.cex[nchar(labels)>1]=label.cex[nchar(labels)>1]*2/nchar(labels[nchar(labels)>1],"width")
-      
+ 
       # Equalize:
       if (!identical(label.scale.equal,FALSE)){
         if (isTRUE(label.scale.equal)){
