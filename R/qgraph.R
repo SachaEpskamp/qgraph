@@ -481,7 +481,16 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if (is.expression(labels)) labels <- as.list(labels)
   
   if(is.null(qgraphObject$Arguments[['background']])) background <- NULL else background <- qgraphObject$Arguments[['background']]
-  if(is.null(qgraphObject$Arguments[['label.prop']])) label.prop <- 0.9 else label.prop <- qgraphObject$Arguments[['label.prop']]
+  if(is.null(qgraphObject$Arguments[['label.prop']])){
+    if (drawPies && pieBorder < 0.5){
+      label.prop <- 0.9*(1-pieBorder)
+    } else {
+      label.prop <- 0.9       
+    }
+  } else {
+    label.prop <- qgraphObject$Arguments[['label.prop']]
+  }
+  
   if(is.null(qgraphObject$Arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- qgraphObject$Arguments[['label.norm']]
   #   if(is.null(qgraphObject$Arguments[['label.cex']])) label.cex <- NULL else label.cex <- qgraphObject$Arguments[['label.cex']]
   #   

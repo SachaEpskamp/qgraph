@@ -868,11 +868,11 @@ x$plotOptions$legend.mode -> legend.mode
     if (!is.list(edge.labels))
     {
       text(midX[edgesort2],midY[edgesort2],edge.labels[edgesort2],cex=edge.label.cex[edgesort2],col=ELcolor[edgesort2],
-           font = edge.label.font[edgesort2])
+           font = edge.label.font[edgesort2], adj = c(0.5, 0.5))
     } else {
       for (i in edgesort2)
       {
-        text(midX[i],midY[i],edge.labels[[i]],font=edge.label.font[i],cex=edge.label.cex[i],col=ELcolor[i])
+        text(midX[i],midY[i],edge.labels[[i]],font=edge.label.font[i],cex=edge.label.cex[i],col=ELcolor[i], adj = c(0.5, 0.5))
       }
     }
   }			
@@ -1036,12 +1036,12 @@ x$plotOptions$legend.mode -> legend.mode
     # Plot labels:
     if (!is.list(labels))
     {
-      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=label.font)
+      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=label.font, adj = c(0.5, 0.5))
     } else {
       lcolor <- rep(lcolor,length=nNodes)
       for (i in seq_along(labels))
       {
-        text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=label.font[i])
+        text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=label.font[i], adj = c(0.5, 0.5))
       }
     }
   }
