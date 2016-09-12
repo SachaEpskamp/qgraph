@@ -894,7 +894,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments[['label.cex']])){ 
       if (label.scale){
-        label.cex <- NULL  
+        label.cex <- 1  
       } else {
         label.cex <- 1
       }
