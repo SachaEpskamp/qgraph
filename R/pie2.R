@@ -1,6 +1,12 @@
 # Copied from base R with some changes
 
-pie2 <- function (x, label = "", radius = 0.8, pie.bord=.1, pie.col='grey', pie.col2 = 'white', bg = 'white', border.width = 1) 
+pie2 <- function (x, label = "", 
+                  radius = 0.8, 
+                  pie.bord=.1, 
+                  pie.col='grey', 
+                  pie.col2 = 'white', 
+                  bg = 'white', 
+                  border.width = 1) 
   
 {
   
