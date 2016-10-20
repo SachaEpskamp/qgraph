@@ -3,14 +3,14 @@
 pie2 <- function (x, label = "", 
                   radius = 0.8, 
                   pie.bord=.1, 
-                  pie.col='grey', 
-                  pie.col2 = 'white', 
+                  pie.col='white', 
+                  pie.col2 = 'grey', 
                   bg = 'white', 
                   border.width = 1) 
   
 {
   
-  x <- c(x, 1-x)
+  x <- c(1-x, x)
   
   # aux functions
   t2xy <- function(t, radius) {
@@ -26,7 +26,7 @@ pie2 <- function (x, label = "",
   density = c(NULL, NULL)
   lty = c(NULL, NULL)
   clockwise = FALSE
-  col = c(pie.col, pie.col2)
+  col = c(pie.col2, pie.col)
   border = c(TRUE, TRUE)
   radius2 <- radius - radius*pie.bord
   
