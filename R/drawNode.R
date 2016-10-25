@@ -12,7 +12,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
                      mean, SD, meanRange, pie, pieColor = NA, pieColor2 = "white", pieBorder = 0.15, pieStart = 0,
                      pieDarken = 0.25, pastel = FALSE,rainbowStart=0)
 {
-  if (!is.null(pie) &&  !shape %in% c("circle", "square")){
+  if (!is.null(pie) &&  !shape %in% c("circle", "square",names(polygonList))){
     stop("Pie charts only supported for shape = 'circle' or shape = 'square'")
   }
   if (shape %in% c("circle","square","triangle","diamond"))
@@ -177,6 +177,72 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     }
     
     polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor, density = density, angle = angle)
+    
+    
+    # Draw the pie diagram:
+    if (!is.null(pie)){
+      if (pieStart != 0){
+        stop("'pieStart' argument not supported when using shape = 'heart', shape = 'star' or shape = 'ellipse'")
+      }
+      # If any element not in (0,1),stop:
+      if(any(pie < 0 | pie > 1)) stop("All elements in 'pie' must be between 0 and 1.")
+      
+      # Check sum:
+      if (sum(pie) > 1){
+        stop("Sum of 'pie' argument may not be greater than 1 for any node.")
+      }
+      
+      # Rep arguments:
+      if (length(pie) != length(pieColor)){
+        pieColor <- rep(pieColor,length=length(pie))
+      }
+      
+      # Add NA colors:
+      if (any(is.na(pieColor))){
+        # if length = 1, inherit from node color but 50% darker:
+        if (length(pie) == 1){
+          pieColor <- darken(vcolor,pieDarken)
+        } else {
+          if (!pastel){
+            pieColor[is.na(pieColor)] <- rainbow(sum(is.na(pieColor)))
+          } else {
+            pieColor[is.na(pieColor)] <- rainbow_hcl(sum(is.na(pieColor)), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(sum(is.na(pieColor))-1)/sum(is.na(pieColor))))
+          }
+        }
+      }
+      
+      
+      # Add sum != 1, add one part and white color:
+      if (sum(pie)!=1){
+        pie <- c(pie,1-sum(pie))
+        pieColor <- c(pieColor,pieColor2)
+      }
+      
+      nPie <- length(pie)
+      pie <- c(0,cumsum(pie))
+      pie <- pieStart + pie # Shift pie diagram
+      
+      Inds <- 1 + round(pie * (length(polygonList[[shape]]$x)-1))
+
+      for (i in seq_len(nPie)){
+        # Step 1: compute first pie part:
+        innerXs <- x + polygonList[[shape]]$x[Inds[i]:Inds[i+1]] * xOff * (1-pieBorder)
+        innerYs <- y + polygonList[[shape]]$y[Inds[i]:Inds[i+1]] * yOff * (1-pieBorder)
+        
+        outerXs <- x + polygonList[[shape]]$x[Inds[i]:Inds[i+1]] * xOff
+        outerYs <- y + polygonList[[shape]]$y[Inds[i]:Inds[i+1]] * yOff
+        
+        pie1Xs <- c(outerXs,rev(innerXs))
+        pie1Ys <- c(outerYs,rev(innerYs))
+        
+        # Plot first pie part:
+        polygon(pie1Xs, pie1Ys, lwd=border.width, border = bord, col = pieColor[i])
+      }
+      
+      
+    } 
+    
+    
     
   } else stop(paste("Shape",shape,"is not supported or included in 'polygonList'."))
   
