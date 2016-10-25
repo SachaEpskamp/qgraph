@@ -408,8 +408,27 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     pieBorder <- qgraphObject$Arguments[['pieBorder']]
   }
   
+  if(is.null(qgraphObject$Arguments[['pieStart']])){
+    pieStart <- 0
+    if (any(pieStart < 0 | pieStart > 1)){
+      stop("Values in the 'pieStart' argument must be within [0,1]")
+    }
+  } else {
+    pieStart <- qgraphObject$Arguments[['pieStart']]
+  }
+  
+  if(is.null(qgraphObject$Arguments[['pieDarken']])){
+    pieDarken <- 0.25
+    if (any(pieDarken < 0 | pieDarken > 1)){
+      stop("Values in the 'pieDarken' argument must be within [0,1]")
+    }
+  } else {
+    pieDarken <- qgraphObject$Arguments[['pieDarken']]
+  }
+  
   if(is.null(qgraphObject$Arguments[['pieColor']])){
-    pieColor <- 'grey'
+    # pieColor <- 'grey'
+    pieColor <- NA
   } else {
     pieColor <- qgraphObject$Arguments[['pieColor']]
   }
@@ -443,9 +462,23 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     stop("Length of 'pieBorder' argument must be 1 or number of nodes")
   }
   
+  if (length(pieStart) == 1){
+    pieStart <- rep(pieStart,length=nNodes)
+  }
+  if (length(pieStart) != nNodes){
+    stop("Length of 'pieStart' argument must be 1 or number of nodes")
+  }
+  
+  if (length(pieDarken) == 1){
+    pieDarken <- rep(pieDarken,length=nNodes)
+  }
+  if (length(pieDarken) != nNodes){
+    stop("Length of 'pieDarken' argument must be 1 or number of nodes")
+  }
   
   if(is.null(qgraphObject$Arguments[['pie']])){
     drawPies <- FALSE
+    pie <- NULL
   } else {
     # Obtain pie values:
     pie <- qgraphObject$Arguments[['pie']]
@@ -454,22 +487,22 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     if (length(pie) != nNodes){
       stop("Length of 'pie' argument must be equal to number of nodes.")
     }
-    if (any(pie < 0 | pie > 1)){
-      stop("Values in the 'pie' argument must be within [0,1]")
-    }
+#     if (any(pie < 0 | pie > 1)){
+#       stop("Values in the 'pie' argument must be within [0,1]")
+#     }
     
 
     # Dummy subplots (to be filed later)
-    subplots <- vector("list", nNodes)
+    # subplots <- vector("list", nNodes)
 
     # Overwrite subplotbg to NA:
-    subplotbg <- NA
+    # subplotbg <- NA
     
     # Overwrite borders to FALSE:
-    borders <- FALSE
+    # borders <- FALSE
     
     # Overwrite shape to circle:
-    shape <- "circle"
+    # shape <- "circle"
     
     # Logical:
     drawPies <- TRUE
@@ -482,11 +515,9 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments[['background']])) background <- NULL else background <- qgraphObject$Arguments[['background']]
   if(is.null(qgraphObject$Arguments[['label.prop']])){
-    if (drawPies && pieBorder < 0.5){
-      label.prop <- 0.9*(1-pieBorder)
-    } else {
-      label.prop <- 0.9       
-    }
+
+      label.prop <- 0.9*(1-ifelse(pieBorder < 0.5,pieBorder,0))
+
   } else {
     label.prop <- qgraphObject$Arguments[['label.prop']]
   }
@@ -501,29 +532,29 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
   
   if(is.null(qgraphObject$Arguments[['subplots']])) {
-    if (!drawPies){
+    # if (!drawPies){
       subplots <- NULL       
-    }
+    # }
     } else {
-      if (drawPies){
-        warning("'subplots' argument ignored if 'pie' argument is used.")     
-      } else {
+#       if (drawPies){
+#         warning("'subplots' argument ignored if 'pie' argument is used.")     
+#       } else {
         subplots <- qgraphObject$Arguments[['subplots']]        
-      }
+      # }
     }
   if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- list(mar=c(0,0,0,0)) else subpars <- qgraphObject$Arguments[['subpars']]
   
   
   if(is.null(qgraphObject$Arguments[['subplotbg']])) {
-    if (!drawPies){
+    # if (!drawPies){
       subplotbg <- NULL       
-    }
+    # }
     } else {
-      if (drawPies){
-        warning("'subplotbg' argument ignored if 'pie' argument is used.")
-      } else {
+#       if (drawPies){
+#         warning("'subplotbg' argument ignored if 'pie' argument is used.")
+#       } else {
         subplotbg <- qgraphObject$Arguments[['subplotbg']]        
-      }
+      # }
     }
   
   if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
@@ -547,7 +578,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   
   if(is.null(qgraphObject$Arguments$shape))  {
-    if (!drawPies){
+    # if (!drawPies){
       shape <- rep("circle",nNodes) 
       if (!is.null(subplots))
       {
@@ -556,13 +587,13 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
         
         shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
       }      
-    }
+    # }
   } else {
-    if (drawPies){
-      warning("'shape' argument ignored if 'pie' argument is used.")
-    } else {
+#     if (drawPies){
+#       warning("'shape' argument ignored if 'pie' argument is used.")
+#     } else {
       shape <- qgraphObject$Arguments[['shape']]        
-    }
+    # }
   }
     
   
@@ -822,6 +853,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if (gray) posCol <- negCol <- c("gray10","black")
   
   if(is.null(qgraphObject$Arguments[['pastel']])) pastel <- FALSE else pastel <- qgraphObject$Arguments[['pastel']]
+  if(is.null(qgraphObject$Arguments[['piePastel']])) piePastel <- FALSE else piePastel <- qgraphObject$Arguments[['piePastel']]
   if(is.null(qgraphObject$Arguments[['rainbowStart']])) rainbowStart <- 0 else rainbowStart <- qgraphObject$Arguments[['rainbowStart']]
   
   if(is.null(qgraphObject$Arguments$bgcontrol)) bgcontrol=6 else bgcontrol=qgraphObject$Arguments$bgcontrol
@@ -871,15 +903,15 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   }  else legend.mode=qgraphObject$Arguments[['legend.mode']]
   
   if(is.null(qgraphObject$Arguments$borders)){
-    if (!drawPies){
+    # if (!drawPies){
       borders <- TRUE       
-    }
+    # }
   } else {
-    if (drawPies){
-      warning("'borders' argument ignored if 'pie' argument is used.")     
-    } else {
+#     if (drawPies){
+#       warning("'borders' argument ignored if 'pie' argument is used.")     
+#     } else {
       borders <- qgraphObject$Arguments[['borders']]        
-    }
+    # }
   }
   
   
@@ -2487,6 +2519,9 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   qgraphObject$graphAttributes$Nodes$pieColor2 <- pieColor2
   qgraphObject$graphAttributes$Nodes$pieBorder <- pieBorder
   qgraphObject$graphAttributes$Nodes$pie <- pie
+  qgraphObject$graphAttributes$Nodes$pieStart <- pieStart
+  qgraphObject$graphAttributes$Nodes$pieDarken <- pieDarken
+  
   
   
   # Edges:
@@ -2589,7 +2624,11 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   qgraphObject$plotOptions$meanRange <- meanRange
   qgraphObject$plotOptions$drawPies <- drawPies
   qgraphObject$plotOptions$pieRadius <- pieRadius
-
+  qgraphObject$plotOptions$pastel <- pastel
+  qgraphObject$plotOptions$piePastel <- piePastel
+  
+  qgraphObject$plotOptions$rainbowStart <- rainbowStart
+  
   
   if (!DoNotPlot)
   {

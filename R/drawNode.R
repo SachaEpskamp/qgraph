@@ -1,12 +1,24 @@
+darken <- function(x, dark = 0.25){
+  sapply(x,function(xx){
+    col <- c(col2rgb(xx))/255
+    col <- (1-dark)*col
+    rgb(col[1],col[2],col[3])      
+  })
+
+}
 
 drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
                      usePCH = TRUE, resolution = 100, noPar = FALSE, bw = FALSE, density = NULL, angle = NULL,
-                     mean, SD, meanRange)
+                     mean, SD, meanRange, pie, pieColor = NA, pieColor2 = "white", pieBorder = 0.15, pieStart = 0,
+                     pieDarken = 0.25, pastel = FALSE,rainbowStart=0)
 {
+  if (!is.null(pie) &&  shape != "circle"){
+    stop("Pie charts only supported for shape = 'circle'")
+  }
   if (shape %in% c("circle","square","triangle","diamond"))
   {
 
-    if (usePCH | shape %in% c("triangle","diamond"))
+    if (is.null(pie) && (usePCH | shape %in% c("triangle","diamond")))
     {
       if (shape=="circle")
       {
@@ -54,8 +66,6 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
       } else {
         
         Coord <- lapply(seq(0,2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape, noPar = noPar))
-        
-        
         xs <- sapply(Coord,'[[',1)
         ys <- sapply(Coord,'[[',2)
         
@@ -67,7 +77,69 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
           polygon(xs, ys, lwd=border.width, border = bord, col = "white")
         }
         
+        # Draw the node:
         polygon(xs, ys, lwd=border.width, border = bord, col = vcolor, density = density, angle = angle)
+ 
+        # Draw the pie diagram:
+        if (!is.null(pie)){
+          # If any element not in (0,1),stop:
+          if(any(pie < 0 | pie > 1)) stop("All elements in 'pie' must be between 0 and 1.")
+          
+          # Check sum:
+          if (sum(pie) > 1){
+            stop("Sum of 'pie' argument may not be greater than 1 for any node.")
+          }
+          
+          # Rep arguments:
+          if (length(pie) != length(pieColor)){
+            pieColor <- rep(pieColor,length=length(pie))
+          }
+
+          # Add NA colors:
+          if (any(is.na(pieColor))){
+            # if length = 1, inherit from node color but 50% darker:
+            if (length(pie) == 1){
+              pieColor <- darken(vcolor,pieDarken)
+            } else {
+              if (!pastel){
+                pieColor[is.na(pieColor)] <- rainbow(sum(is.na(pieColor)))
+              } else {
+                pieColor[is.na(pieColor)] <- rainbow_hcl(sum(is.na(pieColor)), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(sum(is.na(pieColor))-1)/sum(is.na(pieColor))))
+              }
+            }
+          }
+
+          
+          # Add sum != 1, add one part and white color:
+          if (sum(pie)!=1){
+            pie <- c(pie,1-sum(pie))
+            pieColor <- c(pieColor,pieColor2)
+          }
+        
+          nPie <- length(pie)
+          pie <- c(0,cumsum(pie))
+          pie <- pieStart + pie # Shift pie diagram
+          
+          for (i in seq_len(nPie)){
+            # Step 1: compute first pie part:
+            innerCoord <- lapply(seq(pie[i]*2*pi,pie[i+1]*2*pi,length=resolution),function(r)Cent2Edge(x,y,r,(1-pieBorder) * cex1,(1-pieBorder) * cex2,shape, noPar = noPar))
+            innerXs <- sapply(innerCoord,'[[',1)
+            innerYs <- sapply(innerCoord,'[[',2)
+            
+            outerCoord <- lapply(seq(pie[i]*2*pi,pie[i+1]*2*pi,length=resolution),function(r)Cent2Edge(x,y,r,cex1,cex2,shape, noPar = noPar))
+            outerXs <- sapply(outerCoord,'[[',1)
+            outerYs <- sapply(outerCoord,'[[',2)
+            
+            pie1Xs <- c(outerXs,rev(innerXs))
+            pie1Ys <- c(outerYs,rev(innerYs))
+            
+            # Plot first pie part:
+            polygon(pie1Xs, pie1Ys, lwd=border.width, border = bord, col = pieColor[i])
+          }
+
+          
+        } 
+        
         
       }
 
@@ -105,7 +177,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     }
     
     polygon(x + polygonList[[shape]]$x * xOff, y + polygonList[[shape]]$y * yOff, lwd=border.width, border = bord, col = vcolor, density = density, angle = angle)
-
+    
   } else stop(paste("Shape",shape,"is not supported or included in 'polygonList'."))
   
   ### ADD BARS ####

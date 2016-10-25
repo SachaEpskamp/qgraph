@@ -41,7 +41,9 @@ plot.qgraph <- function(x, ...)
   x$graphAttributes$Nodes$pieColor -> pieColor
   x$graphAttributes$Nodes$pieColor2 -> pieColor2
   x$graphAttributes$Nodes$pieBorder -> pieBorder
+  x$graphAttributes$Nodes$pieStart -> pieStart
   x$graphAttributes$Nodes$pie -> pie
+  x$graphAttributes$Nodes$pieDarken -> pieDarken
   
   # for BW only
   bw <- FALSE
@@ -188,6 +190,9 @@ x$plotOptions$legend.mode -> legend.mode
   
   x$plotOptions$drawPies -> drawPies
   x$plotOptions$pieRadius -> pieRadius
+  x$plotOptions$pastel -> pastel
+  x$plotOptions$rainbowStart -> rainbowStart
+  x$plotOptions$piePastel -> piePastel
   
   rm(x)
   
@@ -411,14 +416,14 @@ x$plotOptions$legend.mode -> legend.mode
   }
   
   ##### MAKE SUBPLOTS FOR PIE CHARTS #####
-  if (drawPies){
-    # Parse expressions:
-    subplots <- mapply(width = border.width, bg = vertex.colors, x = pie, R = pieRadius, bord = pieBorder, col1 = pieColor, col2 = pieColor2, FUN = function(width, bg, x, R, bord, col1, col2){
-      parse(text=paste0('qgraph:::pie2(x=',x,', label="", radius=',R ,', pie.bord=',bord,', pie.col = "',col1,'", pie.col2 = "',col2,'",
-                        bg =  "',bg,'", border.width = ',width,')'))
-    }, SIMPLIFY = FALSE)
-    
-    }
+#   if (drawPies){
+#     # Parse expressions:
+#     subplots <- mapply(width = border.width, bg = vertex.colors, x = pie, R = pieRadius, bord = pieBorder, col1 = pieColor, col2 = pieColor2, FUN = function(width, bg, x, R, bord, col1, col2){
+#       parse(text=paste0('qgraph:::pie2(x=',x,', label="", radius=',R ,', pie.bord=',bord,', pie.col = "',col1,'", pie.col2 = "',col2,'",
+#                         bg =  "',bg,'", border.width = ',width,')'))
+#     }, SIMPLIFY = FALSE)
+#     
+#     }
   
   # Create 'omitEdge' vector to make sure bidirectional edges are not plotted.
   if (any(bidirectional))
@@ -923,7 +928,9 @@ x$plotOptions$legend.mode -> legend.mode
 
           drawNode(x, y, shape[i], vsize[i], vsize2[i], borders[i], vertex.colors[i], bcolor[i], border.width[i], polygonList, bars[[i]], barSide[i], barColor[i], barLength[i], barsAtSide,
                    usePCH = usePCH, resolution = node.resolution, noPar = noPar, bw = bw, density = density[i], angle = angle[i],
-                   mean=means[i],SD=SDs[i],meanRange=meanRange)
+                   mean=means[i],SD=SDs[i],meanRange=meanRange,pie=pie[[i]],pieColor=pieColor[[i]],pieColor2=pieColor2[[i]],
+                   pieBorder=pieBorder[[i]],pieStart=pieStart[[i]],pieDarken=pieDarken[[i]],pastel=piePastel,
+                   rainbowStart=rainbowStart)
         }
       }      
     } else {

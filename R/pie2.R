@@ -46,7 +46,7 @@ pie2 <- function (x, label = "",
   plot.window(xlim, ylim, "", asp = 1)
   par("fg")
   
-  
+  # browser()
   # plot pie chart
   for (i in 1L:nx) {
     P <- t2xy(seq.int(x[i], x[i + 1], length.out = n), radius)

@@ -280,15 +280,24 @@ These arguments control the background of the plot
 \section{Arguments for pies}{
 \describe{
   \item{pie}{
-       A vector with values between 0 and 1 for each node. Supplying this argument will make the border of nodes a pie chart.}
+       A vector with values between 0 and 1 for each node (or one value for all nodes). Supplying this argument will make the border of nodes a pie chart. Can also be a list with vectors to make pie charts of multiple parts.}
     \item{pieBorder}{
       The size of the pie chart in the border, between 0 and 1. Defaults to \code{0.15}. Set to 1 to make the whole node a pie chart. Can be a vector with a value for each node.
   }
       \item{pieColor}{
-       First color of the pie chart. Defaults to \code{'gray'}. Can be a vector with a value for each node.
+       Colors of the pie plot parts. Can be a vector with a value for each node, or a list with multiple values if there are more parts.
   }
       \item{pieColor2}{
-      Second color of the pie chart. Defaults to \code{'white'}. Can be a vector with a value for each node.
+      Final color of the pie chart. Only added if the values in the 'pie' argument do not add up to 1. Defaults to \code{'white'}. Can be a vector with a value for each node.
+  }
+  \item{pieStart}{
+      A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the starting point of the pie chart. 
+  }
+  \item{pieDarken}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating how much darker the pie border color is made than the node color in the default coloring scheme.
+  }
+    \item{piePastel}{
+    Should pastel colors be used to fill pie chart parts when more than 2 blocks are used?
   }
 }
 }
