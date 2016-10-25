@@ -12,8 +12,8 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
                      mean, SD, meanRange, pie, pieColor = NA, pieColor2 = "white", pieBorder = 0.15, pieStart = 0,
                      pieDarken = 0.25, pastel = FALSE,rainbowStart=0)
 {
-  if (!is.null(pie) &&  shape != "circle"){
-    stop("Pie charts only supported for shape = 'circle'")
+  if (!is.null(pie) &&  !shape %in% c("circle", "square")){
+    stop("Pie charts only supported for shape = 'circle' or shape = 'square'")
   }
   if (shape %in% c("circle","square","triangle","diamond"))
   {
@@ -47,7 +47,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
         points(x, y, ,cex=cex1,col=bcolor,lwd=border.width,pch=pch2)
       }
     } else {
-      if (shape == "square")
+      if (is.null(pie) && shape == "square")
       {
           xOff <- Cent2Edge(x,y,pi/2,cex1,cex1,shape, noPar = noPar)[1] - x
           yOff <- Cent2Edge(x,y,0,cex1,cex1,shape, noPar = noPar)[2] - y
