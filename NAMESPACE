@@ -1,3 +1,4 @@
+export(pathways)
 useDynLib(qgraph)
 export(smallworldIndex)
 export(clusteringTable)
