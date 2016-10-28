@@ -38,7 +38,13 @@ pathways <- function(
   for (i in seq_len(nrow(pathList))){
     highlight[i] <- which(graph$Edgelist$from %in% pathList[i,] & graph$Edgelist$to %in% pathList[i,])
   }
-  graph$graphAttributes$Edges$color <- qgraph:::Fade(graph$graphAttributes$Edges$color, ifelse(seq_along(graph$Edgelist$from) %in% highlight, 1, fading))
+  graph$graphAttributes$Edges$color <- Fade(graph$graphAttributes$Edges$color, ifelse(seq_along(graph$Edgelist$from) %in% highlight, 1, fading))
   graph$graphAttributes$Edges$lty <- ifelse(seq_along(graph$Edgelist$from) %in% highlight, 1, lty)
+
+  # Change edgesort to plot changed edges first:
+  graph$graphAttributes$Graph$edgesort <- c(
+    graph$graphAttributes$Graph$edgesort[!seq_along(graph$Edgelist$from) %in% highlight],
+    graph$graphAttributes$Graph$edgesort[seq_along(graph$Edgelist$from) %in% highlight]
+  )
   plot(graph)
 }

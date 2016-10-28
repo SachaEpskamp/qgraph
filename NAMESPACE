@@ -124,3 +124,4 @@ importFrom("stats", "BIC", "ave", "coef", "cor", "cov", "cov2cor",
              "rnorm", "sd", "weighted.mean")
 importFrom("utils", "browseURL", "combn", "menu", "setTxtProgressBar",
              "txtProgressBar")
+importFrom("graphics", "plot.new", "plot.window")

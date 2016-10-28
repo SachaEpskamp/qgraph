@@ -5,7 +5,7 @@
 Highlight shortest pathways in a network
 }
 \description{
-This function highlights the shortest paths between nodes in a network made by \link{\code{qgraph}}. Based on Isvoranu et al. (2016).
+This function highlights the shortest paths between nodes in a network made by \code{\link{qgraph}}. Based on Isvoranu et al. (2016).
 }
 \usage{
 pathways(graph, from, to, fading = 0.25, lty = 3)
@@ -13,7 +13,7 @@ pathways(graph, from, to, fading = 0.25, lty = 3)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{graph}{
-Output from \link{\code{qgraph}}.
+Output from \code{\link{qgraph}}.
 }
   \item{from}{
 A vector indicating the first set of nodes between which pathways should be highlighted. Can be numeric or characters corresponding to node labels.
