@@ -1,10 +1,16 @@
+Changes in Version 1.4.1
+  o Added 'curveScaleNodeCorrection' argument
+
 Changes in Version 1.4.0
-  o Added the 'pathways' function to highlight shortest paths between sets of noddes.
+  o Added the 'pathways' function to highlight shortest paths between sets of nodes
+        o In collaboration with Adela M. Isvoranu
   o Added functionality to draw pie graphs as node shape.
       o New arguments: 'pie', 'pieColor', 'pieColor2', and 'pieBorder'
-      o Courtesy of Jonas Haslbeck
+      o In collaboration with Jonas Haslbeck
   o The label.cex argument can now be used in combination with label.scale = FALSE
-  o Edge and node labels are now properly centered.
+  o Edge and node labels are now properly centered
+  o EBICglasso now acts as alias for graph argument
+  o The 'graph' argument in 'qgraph' now gives an error if it is assigned with an unsupported option
 
 Changes in Version 1.3.5
   o The label.cex argument now defaults to 1 if label.scale = FALSE

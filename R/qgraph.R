@@ -968,6 +968,12 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- qgraphObject$Arguments[['curvePivotShape']]
   if(is.null(qgraphObject$Arguments[['curveScale']])) curveScale <- TRUE else curveScale <- qgraphObject$Arguments[['curveScale']]
   
+  if(is.null(qgraphObject$Arguments[['curveScaleNodeCorrection']])) curveScaleNodeCorrection <- FALSE else curveScaleNodeCorrection <- qgraphObject$Arguments[['curveScaleNodeCorrection']]
+  
+  
+  
+  
+  
   if(is.null(qgraphObject$Arguments[['parallelEdge']])) parallelEdge <- FALSE else parallelEdge <- qgraphObject$Arguments[['parallelEdge']]
   
   if(is.null(qgraphObject$Arguments[['parallelAngle']])) parallelAngle <- NA else parallelAngle <- qgraphObject$Arguments[['parallelAngle']]
@@ -2590,6 +2596,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   qgraphObject$plotOptions$curvePivot <- curvePivot
   qgraphObject$plotOptions$curveShape <- curveShape
   qgraphObject$plotOptions$curveScale <- curveScale
+  qgraphObject$plotOptions$curveScaleNodeCorrection <- curveScaleNodeCorrection
   qgraphObject$plotOptions$curvePivotShape <- curvePivotShape
   qgraphObject$plotOptions$label.scale <- label.scale
   qgraphObject$plotOptions$label.scale.equal <- label.scale.equal

@@ -147,6 +147,7 @@ x$plotOptions$open -> open
 x$plotOptions$curvePivot -> curvePivot
 x$plotOptions$curveShape -> curveShape
 x$plotOptions$curveScale -> curveScale
+x$plotOptions$curveScaleNodeCorrection -> curveScaleNodeCorrection
 x$plotOptions$curvePivotShape -> curvePivotShape
 x$plotOptions$label.scale -> label.scale
 x$plotOptions$label.scale.equal -> label.scale.equal
@@ -409,8 +410,11 @@ x$plotOptions$legend.mode -> legend.mode
   ## Normalize curve (linear to half of diagonal in user coordinates):
   if (isTRUE(curveScale))
   {
+    if (isTRUE(curveScaleNodeCorrection)){
+      curveScaleNodeCorrection <- nNodes
+    } else curveScaleNodeCorrection <- 1
     usr <- par("usr")
-    AverageLength <- sqrt(((usr[2]-usr[1]) * (usr[4]-usr[3])) / nNodes)
+    AverageLength <- sqrt(((usr[2]-usr[1]) * (usr[4]-usr[3])) / curveScaleNodeCorrection)
     EdgeLenghts <- sqrt((layout[E$to,1] - layout[E$from,1])^2 + (layout[E$to,2] - layout[E$from,2])^2)
     curve <- curve * EdgeLenghts /AverageLength
   }
