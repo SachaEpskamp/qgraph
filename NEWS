@@ -1,5 +1,8 @@
 Changes in Version 1.4.1
   o Added 'curveScaleNodeCorrection' argument
+  o Added 'palette' and 'theme' functions
+      o Colorblind mode is now supported with theme = "colorblind"
+  o label.color can now be `NA`, which will make the label white if the average of RGB colors of the node is less than 0.25 * 255
 
 Changes in Version 1.4.0
   o Added the 'pathways' function to highlight shortest paths between sets of nodes

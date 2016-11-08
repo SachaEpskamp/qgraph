@@ -312,34 +312,34 @@ qgraph <- function( input, ... )
   }
   if (graph %in% c("sig","significance"))
   {
-#     if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?") 
+    #     if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?") 
     qgraphObject$Arguments[['mode']] <- "sig"
   }
   
-### SIGNIFICANCE GRAPH ARGUMENTS ###
+  ### SIGNIFICANCE GRAPH ARGUMENTS ###
   if(is.null(qgraphObject$Arguments[['mode']])) mode <- "strength" else mode <- qgraphObject$Arguments[['mode']]
   if(is.null(qgraphObject$Arguments$sigScale)) sigScale <- function(x)0.7*(1-x)^(log(0.4/0.7,1-0.05)) else sigScale <- qgraphObject$Arguments$sigScale
   if (!mode%in%c("strength","sig","direct")) stop("Mode must be 'direct', 'sig' or 'strength'")	
   if(is.null(qgraphObject$Arguments$bonf)) bonf=FALSE else bonf=qgraphObject$Arguments$bonf
   if(is.null(qgraphObject$Arguments$OmitInsig)) OmitInsig=FALSE else OmitInsig <- qgraphObject$Arguments$OmitInsig
-if(is.null(qgraphObject$Arguments[['alpha']]))
-{
-  if (mode != "sig")
+  if(is.null(qgraphObject$Arguments[['alpha']]))
   {
-    alpha <- 0.05
-  } else alpha <- c(0.0001,0.001,0.01,0.05) 
-} else alpha <- qgraphObject$Arguments[['alpha']]
-if (length(alpha) > 4) stop("`alpha' can not have length > 4")
-
-
-#####
+    if (mode != "sig")
+    {
+      alpha <- 0.05
+    } else alpha <- c(0.0001,0.001,0.01,0.05) 
+  } else alpha <- qgraphObject$Arguments[['alpha']]
+  if (length(alpha) > 4) stop("`alpha' can not have length > 4")
+  
+  
+  #####
   # Settings for the edgelist
   if(is.null(qgraphObject$Arguments$edgelist)) 
   {
     if (nrow(input)!=ncol(input)) {
       # Check if it is an edgelist or break:
       if (ncol(input) %in% c(2,3) && ((is.character(input[,1]) || is.factor(input[,1])) || all(input[,1] %% 1 == 0)) &&
-            ((is.character(input[,2]) || is.factor(input[,2])) || all(input[,2] %% 1 == 0))){
+          ((is.character(input[,2]) || is.factor(input[,2])) || all(input[,2] %% 1 == 0))){
         edgelist <- TRUE
       } else {
         stop("Input is not a weights matrix or an edgelist.")
@@ -487,14 +487,14 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     if (length(pie) != nNodes){
       stop("Length of 'pie' argument must be equal to number of nodes.")
     }
-#     if (any(pie < 0 | pie > 1)){
-#       stop("Values in the 'pie' argument must be within [0,1]")
-#     }
+    #     if (any(pie < 0 | pie > 1)){
+    #       stop("Values in the 'pie' argument must be within [0,1]")
+    #     }
     
-
+    
     # Dummy subplots (to be filed later)
     # subplots <- vector("list", nNodes)
-
+    
     # Overwrite subplotbg to NA:
     # subplotbg <- NA
     
@@ -515,9 +515,9 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments[['background']])) background <- NULL else background <- qgraphObject$Arguments[['background']]
   if(is.null(qgraphObject$Arguments[['label.prop']])){
-
-      label.prop <- 0.9*(1-ifelse(pieBorder < 0.5,pieBorder,0))
-
+    
+    label.prop <- 0.9*(1-ifelse(pieBorder < 0.5,pieBorder,0))
+    
   } else {
     label.prop <- qgraphObject$Arguments[['label.prop']]
   }
@@ -533,29 +533,29 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments[['subplots']])) {
     # if (!drawPies){
-      subplots <- NULL       
+    subplots <- NULL       
     # }
-    } else {
-#       if (drawPies){
-#         warning("'subplots' argument ignored if 'pie' argument is used.")     
-#       } else {
-        subplots <- qgraphObject$Arguments[['subplots']]        
-      # }
-    }
+  } else {
+    #       if (drawPies){
+    #         warning("'subplots' argument ignored if 'pie' argument is used.")     
+    #       } else {
+    subplots <- qgraphObject$Arguments[['subplots']]        
+    # }
+  }
   if(is.null(qgraphObject$Arguments[['subpars']])) subpars <- list(mar=c(0,0,0,0)) else subpars <- qgraphObject$Arguments[['subpars']]
   
   
   if(is.null(qgraphObject$Arguments[['subplotbg']])) {
     # if (!drawPies){
-      subplotbg <- NULL       
+    subplotbg <- NULL       
     # }
-    } else {
-#       if (drawPies){
-#         warning("'subplotbg' argument ignored if 'pie' argument is used.")
-#       } else {
-        subplotbg <- qgraphObject$Arguments[['subplotbg']]        
-      # }
-    }
+  } else {
+    #       if (drawPies){
+    #         warning("'subplotbg' argument ignored if 'pie' argument is used.")
+    #       } else {
+    subplotbg <- qgraphObject$Arguments[['subplotbg']]        
+    # }
+  }
   
   if(is.null(qgraphObject$Arguments[['images']])) images <- NULL else images <- qgraphObject$Arguments[['images']]
   
@@ -579,23 +579,23 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments$shape))  {
     # if (!drawPies){
-      shape <- rep("circle",nNodes) 
-      if (!is.null(subplots))
-      {
-        # Get which nodes become a subplot:
-        whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
-        
-        shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
-      }      
+    shape <- rep("circle",nNodes) 
+    if (!is.null(subplots))
+    {
+      # Get which nodes become a subplot:
+      whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
+      
+      shape[whichsub][!shape[whichsub]%in%c("square","rectangle")] <- "square"
+    }      
     # }
   } else {
-#     if (drawPies){
-#       warning("'shape' argument ignored if 'pie' argument is used.")
-#     } else {
-      shape <- qgraphObject$Arguments[['shape']]        
+    #     if (drawPies){
+    #       warning("'shape' argument ignored if 'pie' argument is used.")
+    #     } else {
+    shape <- qgraphObject$Arguments[['shape']]        
     # }
   }
-    
+  
   
   if(is.null(qgraphObject$Arguments[['usePCH']])) 
   {
@@ -629,7 +629,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if (is.factor(groups) | is.character(groups)) groups <- tapply(1:length(groups),groups,function(x)x)
   
   
-
+  
   
   
   # Factorial graph:
@@ -669,7 +669,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   } else countDiagonal <- qgraphObject$Arguments[['countDiagonal']]
   
   
-
+  
   # SET DEFAULT qgraphObject$Arguments:
   # General qgraphObject$Arguments:
   if(is.null(qgraphObject$Arguments$DoNotPlot)) DoNotPlot=FALSE else DoNotPlot=qgraphObject$Arguments$DoNotPlot
@@ -677,8 +677,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments$maximum)) maximum=0 else maximum=qgraphObject$Arguments$maximum
   if(is.null(qgraphObject$Arguments$minimum))
   {
-#     if (nNodes<50)  minimum=0
-#     if (nNodes>=50)  minimum=0.1
+    #     if (nNodes<50)  minimum=0
+    #     if (nNodes>=50)  minimum=0.1
     minimum <- 0
     if (mode=="sig") minimum <- ifelse(length(alpha)>1,sigScale(alpha[length(alpha)]),0)
   } else 
@@ -723,7 +723,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     warning("'minimum' set to absolute value")
     minimum <- abs(minimum)
   }
-
+  
   # Threshold argument removes edges from network:
   if(is.null(qgraphObject$Arguments[['threshold']]))
   {
@@ -731,7 +731,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   } else {
     threshold <- qgraphObject$Arguments[['threshold']]
   }
-
+  
   if(is.null(qgraphObject$Arguments$weighted)) weighted=NULL else weighted=qgraphObject$Arguments$weighted
   if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
   if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
@@ -739,11 +739,70 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=qgraphObject$Arguments[['edge.label.bg']]
   if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
   
-  if(is.null(qgraphObject$Arguments[['posCol']])) posCol <- c("#009900","darkgreen") else posCol <- qgraphObject$Arguments[['posCol']]
+  ### Themes ###
+  # Default theme:
+  posCol <- c("#009900","darkgreen")
+  negCol <- c("#BF0000","red")
+  bcolor <- NULL
+  bg <- FALSE
+  # if (length(groups) < 8){
+  #   palette <- "colorblind"
+  # } else {
+    palette <- "rainbow"
+  # }
+  
+  if(!is.null(qgraphObject$Arguments[['theme']])){
+    theme <- qgraphObject$Arguments[['theme']]
+    if (length(theme) > 1) stop("'theme' must be of lenght 1")
+    if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
+                      "Borkulo","colorblind")){
+      stop(paste0("Theme '",theme,"' is not supported."))
+    }
+    
+    # Themes:
+    if (theme == "classic"){
+      posCol <- c("#009900","darkgreen")
+      negCol <- c("#BF0000","red")
+    } else if (theme == "Leuven"){
+      dots <- list(...)
+      dots$DoNotPlot <- TRUE
+      dots$theme <- "classic"
+      dots$input <- input
+      return(getWmat(do.call(qgraph,dots )))
+    } else if (theme == "Hollywood"){
+      negCol <- "#FFA500"
+      posCol <- "#005AFF"
+    } else if (theme == "Reddit"){
+      posCol <- "#CCCCFF"
+      negCol <- "#FF4500"
+    } else if (theme == "TeamFortress"){
+      negCol <- "#B8383B"
+      posCol <- "#5885A2"
+    } else if (theme == "Fried"){
+      posCol <- "black"
+      negCol <- "black"
+      bg <- "gray"
+      palette <- "gray"
+    } else if (theme == "Borkulo"){
+      posCol <- "darkblue"
+      negCol <- "red"
+      bcolor <- "darkblue"
+    } else if (theme == "colorblind"){
+      posCol <- c("#0000D5","darkblue")
+      negCol <- c("#BF0000","red")
+      palette <- "colorblind"
+    } else if (theme == "gray" | theme == "grey"){
+      posCol <- negCol <- c("gray10","black")
+      palette <- "gray"
+    }
+  }
+  
+  # Overwrite:
+  if(!is.null(qgraphObject$Arguments[['posCol']])) posCol <- qgraphObject$Arguments[['posCol']]
+  if(!is.null(qgraphObject$Arguments[['negCol']])) negCol <- qgraphObject$Arguments[['negCol']]
+  
   if (length(posCol)==1) posCol <- rep(posCol,2)
   if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
-  
-  if(is.null(qgraphObject$Arguments[['negCol']])) negCol <- c("#BF0000","red") else negCol <- qgraphObject$Arguments[['negCol']]
   if (length(negCol)==1) negCol <- rep(negCol,2)
   if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
   
@@ -756,6 +815,37 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     }
   }
   
+  # border color:
+  if(!is.null(qgraphObject$Arguments[['border.color']])) {
+    bcolor <- qgraphObject$Arguments[['border.color']]
+  }
+  # Alias?
+  if(!is.null(qgraphObject$Arguments[['border.colors']])) {
+    bcolor <- qgraphObject$Arguments[['border.colors']]
+  }
+  
+  # BG:
+  if(!is.null(qgraphObject$Arguments$bg)) bg <- qgraphObject$Arguments$bg
+  
+  # Palette:
+  
+  # PALETTE either one of the defaults or a function
+  if(!is.null(qgraphObject$Arguments[['palette']])){
+    palette <- qgraphObject$Arguments[['palette']]
+  }
+  
+  # Check palette:
+  if (!is.function(palette)){
+    if (length(palette) != 1 && !is.character(palette)){
+      stop("'palette' must be a single string.")
+    }
+    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel")){
+      stop(paste0("Palette '",palette,"' is not supported."))
+    }
+  }
+  
+  
+  ###
   
   if(is.null(qgraphObject$Arguments[['unCol']])) unCol <- "#808080" else unCol <- qgraphObject$Arguments[['unCol']] 
   
@@ -786,7 +876,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['repulsion']])) repulsion=1 else repulsion=qgraphObject$Arguments[['repulsion']]
   if(is.null(qgraphObject$Arguments[['layout.par']])) {
     if (is.null(layout) || identical(layout,"spring")) layout.par <- list(repulse.rad = nNodes^(repulsion * 3))  else layout.par <- list()
-    } else layout.par=qgraphObject$Arguments[['layout.par']]
+  } else layout.par=qgraphObject$Arguments[['layout.par']]
   if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
   if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
   if(is.null(qgraphObject$Arguments$preExpression)) preExpression <- NULL else preExpression <- qgraphObject$Arguments$preExpression
@@ -794,13 +884,10 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   
   # Output qgraphObject$Arguments:
-  if(is.null(qgraphObject$Arguments$bg)) bg <- FALSE else bg <- qgraphObject$Arguments$bg
   
   if(is.null(qgraphObject$Arguments[['edge.label.color']])) ELcolor <- NULL else ELcolor <- qgraphObject$Arguments[['edge.label.color']]
   
-  if(is.null(qgraphObject$Arguments[['border.color']])) {
-    if(is.null(qgraphObject$Arguments[['border.colors']])) bcolor <- NULL else bcolor <- qgraphObject$Arguments[['border.colors']]
-  } else bcolor <- qgraphObject$Arguments[['border.color']]
+  
   
   if(is.null(qgraphObject$Arguments[['border.width']])) border.width <- 1 else border.width <- qgraphObject$Arguments[['border.width']]
   #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
@@ -850,9 +937,21 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments[['gray']])) gray <- FALSE else gray <- qgraphObject$Arguments[['gray']]
   
-  if (gray) posCol <- negCol <- c("gray10","black")
+  if (gray) {
+    posCol <- negCol <- c("gray10","black")
+    warning("The 'gray' argument is deprecated, please use theme = 'gray' instead.")
+  }
   
-  if(is.null(qgraphObject$Arguments[['pastel']])) pastel <- FALSE else pastel <- qgraphObject$Arguments[['pastel']]
+  if(is.null(qgraphObject$Arguments[['pastel']])){
+    pastel <- FALSE 
+  } else {
+    warning("The 'pastel' argument is deprecated, please use palette = 'pastel' instead.")
+    palette <- "pastel"
+    pastel <- qgraphObject$Arguments[['pastel']]
+  }
+  
+  
+  
   if(is.null(qgraphObject$Arguments[['piePastel']])) piePastel <- FALSE else piePastel <- qgraphObject$Arguments[['piePastel']]
   if(is.null(qgraphObject$Arguments[['rainbowStart']])) rainbowStart <- 0 else rainbowStart <- qgraphObject$Arguments[['rainbowStart']]
   
@@ -886,8 +985,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['means']])) means <- NA else means <- qgraphObject$Arguments[['means']]
   if(is.null(qgraphObject$Arguments[['SDs']])) SDs <- NA else SDs <- qgraphObject$Arguments[['SDs']]
   if(is.null(qgraphObject$Arguments[['meanRange']])) {
-      if (all(is.na(means))) meanRange <- c(NA,NA) else meanRange <- range(means,na.rm=TRUE) 
-    }else meanRange <- qgraphObject$Arguments[['meanRange']]
+    if (all(is.na(means))) meanRange <- c(NA,NA) else meanRange <- range(means,na.rm=TRUE) 
+  }else meanRange <- qgraphObject$Arguments[['meanRange']]
   
   
   if (!is.list(bars)) bars <- as.list(bars)
@@ -904,13 +1003,13 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if(is.null(qgraphObject$Arguments$borders)){
     # if (!drawPies){
-      borders <- TRUE       
+    borders <- TRUE       
     # }
   } else {
-#     if (drawPies){
-#       warning("'borders' argument ignored if 'pie' argument is used.")     
-#     } else {
-      borders <- qgraphObject$Arguments[['borders']]        
+    #     if (drawPies){
+    #       warning("'borders' argument ignored if 'pie' argument is used.")     
+    #     } else {
+    borders <- qgraphObject$Arguments[['borders']]        
     # }
   }
   
@@ -934,12 +1033,12 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if(is.null(qgraphObject$Arguments[['label.scale']])) label.scale=TRUE else label.scale=qgraphObject$Arguments[['label.scale']]
   
   if(is.null(qgraphObject$Arguments[['label.cex']])){ 
-      if (label.scale){
-        label.cex <- 1  
-      } else {
-        label.cex <- 1
-      }
-    } else label.cex <- qgraphObject$Arguments[['label.cex']]
+    if (label.scale){
+      label.cex <- 1  
+    } else {
+      label.cex <- 1
+    }
+  } else label.cex <- qgraphObject$Arguments[['label.cex']]
   
   if(is.null(qgraphObject$Arguments$label.scale.equal)) label.scale.equal=FALSE else label.scale.equal=qgraphObject$Arguments$label.scale.equal
   
@@ -1096,7 +1195,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   if (isTRUE(edge.label.bg)) edge.label.bg <- background
   if(is.null(qgraphObject$Arguments[['label.color']])) {
-    if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- qgraphObject$Arguments$lcolor
+    # if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- qgraphObject$Arguments$lcolor
+    if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- NA else lcolor <- qgraphObject$Arguments$lcolor
   } else lcolor <- qgraphObject$Arguments[['label.color']]
   
   # Legend setting 2
@@ -1167,7 +1267,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     arrowAngle <- qgraphObject$Arguments[["arrowAngle"]]
   }
   
-
+  
   ########### GRAPHICAL MODEL SELECTION #######
   
   if (graph == "assosciation") {
@@ -1218,32 +1318,32 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
       colnames(input) <- coln
     } 
     
-#     # FDR:
-#     if (tolower(graph)=="fdr.cor") 
-#     {
-#       if (!all(diag(input) == 1)){
-#         input <- cov2cor(input)
-#       }
-#       input <- FDRnetwork(input, FDRcutoff)
-#     } 
-#     
-#     if (tolower(graph)=="fdr.pcor") 
-#     {
-#       input <- cor2pcor(input)
-#       input <- FDRnetwork(input, FDRcutoff)
-#     } 
-#     
-#     if (tolower(graph) == "fdr")
-#     {
-#       input <- cor2pcor(input)
-#       testResult <- GeneNet::ggm.test.edges(input, fdr = TRUE, plot = FALSE)
-#       net <- GeneNet::extract.network(testResult)
-#       input <- matrix(0, nrow(input), ncol(input))
-#       for (i in seq_len(nrow(net)))
-#       {
-#         input[net$node1[i],net$node2[i]] <- input[net$node2[i],net$node1[i]] <- net$pcor[i]
-#       }
-#     }
+    #     # FDR:
+    #     if (tolower(graph)=="fdr.cor") 
+    #     {
+    #       if (!all(diag(input) == 1)){
+    #         input <- cov2cor(input)
+    #       }
+    #       input <- FDRnetwork(input, FDRcutoff)
+    #     } 
+    #     
+    #     if (tolower(graph)=="fdr.pcor") 
+    #     {
+    #       input <- cor2pcor(input)
+    #       input <- FDRnetwork(input, FDRcutoff)
+    #     } 
+    #     
+    #     if (tolower(graph) == "fdr")
+    #     {
+    #       input <- cor2pcor(input)
+    #       testResult <- GeneNet::ggm.test.edges(input, fdr = TRUE, plot = FALSE)
+    #       net <- GeneNet::extract.network(testResult)
+    #       input <- matrix(0, nrow(input), ncol(input))
+    #       for (i in seq_len(nrow(net)))
+    #       {
+    #         input[net$node1[i],net$node2[i]] <- input[net$node2[i],net$node1[i]] <- net$pcor[i]
+    #       }
+    #     }
     
     # Glasso graph:
     if (graph == "glasso")
@@ -1256,7 +1356,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     diag(input) <- 1
     input <- as.matrix(forceSymmetric(input))
   }
-
+  
   
   ## Thresholding ####
   if (is.character(threshold))
@@ -1296,7 +1396,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
       {
         threshold <- "none"
       }
-
+      
       if (is.null(sampleSize))
       {
         stop("'sampleSize' argument is needed for all thresholding with significance except 'locfdr'")
@@ -1327,8 +1427,8 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   }
   
   
-#######################3
-
+  #######################3
+  
   ## diag default:
   if(is.null(qgraphObject$Arguments[['diag']])) 
   {
@@ -1406,7 +1506,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     }
     if (OmitInsig)
     {
-#       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
+      #       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
       if (mode != "sig") Pvals <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       E$weight[abs(Pvals) > alpha[length(alpha)]] <- 0
     }
@@ -1485,7 +1585,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     
     if (OmitInsig)
     {
-#       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
+      #       if (!require("fdrtool")) stop("`fdrtool' package not found, is it installed?")
       if (mode != "sig") Pvals <- fdrtool(E$weight,"correlation",plot=FALSE, color.figure=FALSE, verbose=FALSE)$pval
       E$weight[abs(Pvals) > alpha[length(alpha)]] <- 0
     }	
@@ -1506,64 +1606,64 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     if (is.matrix(knots))
     {
       knots <- knots[c(incl)]
-#       knots <- knots[E$weight!=0]
+      #       knots <- knots[E$weight!=0]
     }
     if (is.matrix(curve))
     {
       curve <- curve[c(incl)]
-#       curve <- curve[E$weight!=0]
+      #       curve <- curve[E$weight!=0]
     }
     if (is.matrix(parallelEdge))
     {
       parallelEdge <- parallelEdge[c(incl)]
-#       parallelEdge <- parallelEdge[E$weight!=0]
+      #       parallelEdge <- parallelEdge[E$weight!=0]
     }
     if (is.matrix(parallelAngle))
     {
       parallelAngle <- parallelAngle[c(incl)]
-#       parallelAngle <- parallelAngle[E$weight!=0]
+      #       parallelAngle <- parallelAngle[E$weight!=0]
     }
     if (is.matrix(bidirectional))
     {
       bidirectional <- bidirectional[c(incl)]
-#       bidirectional <- bidirectional[E$weight!=0]
+      #       bidirectional <- bidirectional[E$weight!=0]
     }
     if (is.matrix(residEdge))
     {
       residEdge <- residEdge[c(incl)]
-#       residEdge <- residEdge[E$weight!=0]
+      #       residEdge <- residEdge[E$weight!=0]
     }
     if (is.matrix(CircleEdgeEnd))
     {
       CircleEdgeEnd <- CircleEdgeEnd[c(incl)]
-#       CircleEdgeEnd <- CircleEdgeEnd[E$weight!=0]
+      #       CircleEdgeEnd <- CircleEdgeEnd[E$weight!=0]
     }      
     if (is.matrix(edge.labels))
     {
       edge.labels <- edge.labels[c(incl)]
-#       edge.labels <- edge.labels[E$weight!=0]
+      #       edge.labels <- edge.labels[E$weight!=0]
     }
     if (is.matrix(edge.color))
     {
       edge.color <- edge.color[c(incl)]
-#       edge.color <- edge.color[E$weight!=0]
+      #       edge.color <- edge.color[E$weight!=0]
     }
     if (is.matrix(edge.label.bg))
     {
       edge.label.bg <- edge.label.bg[c(incl)]
-#       edge.label.bg <- edge.label.bg[E$weight!=0]
+      #       edge.label.bg <- edge.label.bg[E$weight!=0]
     }
     if (is.matrix(edge.label.font))
     {
       edge.label.font <- edge.label.font[c(incl)]
-#       edge.label.font <- edge.label.font[E$weight!=0]
+      #       edge.label.font <- edge.label.font[E$weight!=0]
     }
     if (!is.null(ELcolor))
     {
       if (is.matrix(ELcolor))
       {
         ELcolor <- ELcolor[c(incl)]
-#         ELcolor <- ELcolor[E$weight!=0]
+        #         ELcolor <- ELcolor[E$weight!=0]
       }      
     }
     
@@ -1572,7 +1672,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
     if (is.matrix(lty))
     {
       lty <- lty[c(incl)]
-#       lty <- lty[E$weight!=0]
+      #       lty <- lty[E$weight!=0]
     }
     
     if (!is.null(edgeConnectPoints))
@@ -1580,20 +1680,20 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
       if (is.array(edgeConnectPoints) && isTRUE(dim(edgeConnectPoints)[3]==2))
       {
         edgeConnectPoints <- matrix(edgeConnectPoints[c(incl,incl)],,2)
-#         edgeConnectPoints <- edgeConnectPoints[E$weight!=0,,drop=FALSE]
+        #         edgeConnectPoints <- edgeConnectPoints[E$weight!=0,,drop=FALSE]
       }
     }
     
     if (is.matrix(edge.label.position))
     {
       edge.label.position <- edge.label.position[c(incl)]
-#       edge.label.position <- edge.label.position[E$weight!=0]
+      #       edge.label.position <- edge.label.position[E$weight!=0]
     }
   }	
-
+  
   keep <- abs(E$weight)>threshold
-
- ######
+  
+  ######
   
   if (length(loopRotation)==1) loopRotation <- rep(loopRotation,nNodes)
   
@@ -2232,20 +2332,43 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   
   
   # Vertex color:
+  # if (is.null(color) & !is.null(groups))
+  # {
+  #   if (!gray) 
+  #   {
+  #     if (pastel)
+  #     {
+  #       color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
+  #     } else {
+  #       color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
+  #     }
+  #   }
+  #   if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
+  # }
   if (is.null(color) & !is.null(groups))
   {
-    if (!gray) 
-    {
-      if (pastel)
-      {
-        color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
-      } else {
-        color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
-      }
-    }
-    if (gray) color <- sapply(seq(0.2,0.8,length=length(groups)),function(x)rgb(x,x,x))
+    if (is.function(palette)){
+      color <- palette(length(groups))
+    } else if (palette == "rainbow"){
+      color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
+    } else if (palette == "gray" | palette == "grey"){
+      color <- shadesOfGrey(length(groups))
+    } else  if (palette == "colorblind"){
+      color <- colorblind(length(groups))
+    } else if (palette == "R"){
+      color <- seq_len(length(groups))
+    } else if (palette == "ggplot2"){
+      color <- ggplot_palette(length(groups))
+    } else if (palette == "pastel"){
+      color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
+    } else stop(paste0("Palette '",palette,"' is not supported."))
   }
+  
+  # Default color:
   if (is.null(color))	color <- "background"  
+  
+
+
   vertex.colors <- rep(color, length=nNodes)
   if (!is.null(groups)) 
   {
@@ -2257,6 +2380,17 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   {
     vertex.colors[vertex.colors=="background"] <- "white"
   } else  vertex.colors[vertex.colors=="background"] <- background
+  
+  # Label color:
+  if (length(lcolor) != nNodes){
+    lcolor <- rep(lcolor,nNodes)
+  }
+  if (any(is.na(lcolor))){
+    lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
+                                    ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
+                                    ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.25,"black","white")
+    )
+  }
   
   # Dummy groups list:
   if (is.null(groups)) 
@@ -2365,7 +2499,7 @@ if (length(alpha) > 4) stop("`alpha' can not have length > 4")
   if (length(means)==1) means <- rep(means,nNodes)
   if (length(SDs)==1) SDs <- rep(SDs, nNodes)
   
-
+  
   
   #     
   #     pch1=numeric(0)
