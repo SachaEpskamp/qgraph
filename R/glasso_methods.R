@@ -22,6 +22,7 @@ EBICglasso <- function(
   checkPD = TRUE, # Checks if matrix is positive definite and stops if not
   penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
+  refit = FALSE, # If TRUE, network structure is taken and non-penalized version is computed.
   ... # glasso arguments
 ) {
   
@@ -74,6 +75,16 @@ lambda.min = lambda.min.ratio*lambda.max
   # Return network:
   net <- as.matrix(forceSymmetric(wi2net(glas_path$wi[,,opt])))
   colnames(net) <- rownames(net) <- colnames(S)
+  
+  # Refit network:
+  # Refit:
+  if (refit){
+    message("Refitting network without LASSO regularization")
+    glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0, arr.ind=TRUE)))
+    
+    net <- as.matrix(forceSymmetric(wi2net(glassoRes$wi)))
+    colnames(net) <- rownames(net) <- colnames(S)
+  }
 
   # Return 
   if (returnAllResults){

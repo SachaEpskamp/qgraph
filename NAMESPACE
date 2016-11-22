@@ -1,3 +1,7 @@
+importFrom("grDevices", "hcl")
+S3method(print, ggmFit)
+S3method(plot, ggmFit)
+export(ggmFit)
 export(pathways)
 useDynLib(qgraph)
 export(smallworldIndex)
@@ -125,3 +129,4 @@ importFrom("stats", "BIC", "ave", "coef", "cor", "cov", "cov2cor",
 importFrom("utils", "browseURL", "combn", "menu", "setTxtProgressBar",
              "txtProgressBar")
 importFrom("graphics", "plot.new", "plot.window")
+importFrom("stats", "uniroot")

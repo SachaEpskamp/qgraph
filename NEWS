@@ -3,6 +3,8 @@ Changes in Version 1.4.1
   o Added 'palette' and 'theme' functions
       o Colorblind mode is now supported with theme = "colorblind"
   o label.color can now be `NA`, which will make the label white if the average of RGB colors of the node is less than 0.25 * 255
+  o Added ggmFit function (moved from lvnet), which computes fit measures of a GGM network based on Lavaan. Results are comparable to lavaan if lavaan results are estimated on a covariance matrix.
+  o Added 'refit' argument to 'EBICglasso' and 'qgraph'. If set to TRUE the optimal EBIC glasso network is refitted without LASSO regularization
 
 Changes in Version 1.4.0
   o Added the 'pathways' function to highlight shortest paths between sets of nodes

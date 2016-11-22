@@ -255,6 +255,13 @@ qgraph <- function( input, ... )
     tuning <- 0.5
   } else tuning <- qgraphObject$Arguments[['tuning']]  
   
+  # Refit:
+  if(is.null(qgraphObject$Arguments[['refit']]))
+  {
+    refit <- FALSE
+  } else refit <- qgraphObject$Arguments[['refit']]  
+  
+  
   
   if(is.null(qgraphObject$Arguments[['FDRcutoff']]))
   {
@@ -1350,7 +1357,7 @@ qgraph <- function( input, ... )
     {
       if (edgelist) stop("Concentration graph requires correlation matrix")
       if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
-      input <- EBICglasso(input, sampleSize, gamma = tuning)
+      input <- EBICglasso(input, sampleSize, gamma = tuning,refit=refit)
     }
     
     diag(input) <- 1

@@ -12,7 +12,7 @@ This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie an
 \usage{
 EBICglasso(S, n, gamma = 0.5, penalize.diagonal = FALSE, nlambda = 100, 
             lambda.min.ratio = 0.01, returnAllResults = FALSE, checkPD = TRUE, 
-            penalizeMatrix, countDiagonal = FALSE, ...)
+            penalizeMatrix, countDiagonal = FALSE, refit = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,6 +45,9 @@ Ratio of lowest lambda value compared to maximal lambda
   }
   \item{countDiagonal}{
     Should diagonal be counted in EBIC computation? Defaults to \code{FALSE}. Set to \code{TRUE} to mimic qgraph < 1.3 behavior (not recommended!).
+  }
+  \item{refit}{
+    Logical, should the optimal graph be refitted without LASSO regularization? Defaults to \code{FALSE}.
   }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}

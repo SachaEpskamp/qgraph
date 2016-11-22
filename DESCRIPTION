@@ -8,7 +8,7 @@ Depends: R (>= 3.0.0)
 Suggests: RSVGTipsDevice, sendplot
 Imports:  methods, grDevices, psych, ellipse, lavaan, sem, plyr, Hmisc, igraph, jpeg, png, colorspace, Matrix, sna, corpcor, reshape2, ggplot2, glasso, huge, fdrtool, d3Network, ggm, gtools
 ByteCompile: yes
-Description:  The qgraph package can be used to visualize data as networks as well as provides an interface for visualizing weighted graphical models.
+Description:  Can be used to visualize data as networks as well as provides an interface for visualizing weighted graphical models.
 URL: http://sachaepskamp.com/qgraph
 License: GPL-2
 LazyLoad: yes
