@@ -763,7 +763,7 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","blackwhite")){
+                      "Borkulo","colorblind","gray")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
     
@@ -802,12 +802,8 @@ qgraph <- function( input, ... )
     } else if (theme == "gray" | theme == "grey"){
       posCol <- negCol <- c("gray10","black")
       palette <- "gray"
-    } else if (theme == "blackwhite"){
-      posCol <- "black"
-      negCol <- "black"
-      palette <- "gray"
       negDashed <- TRUE
-    }
+    } 
   }
   
   # Overwrite:

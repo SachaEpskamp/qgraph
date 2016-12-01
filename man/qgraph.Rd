@@ -23,7 +23,7 @@ qgraph( input, ... )
 
 \item{threshold}{A numeric value that defaults to 0. Edges with absolute weight that are not above this value are REMOVED from the network. This differs from \code{minimum} which simply changes the scaling of width and color so that edges with absolute weight under minimum are not plotted/invisible. Setting a threshold influences the spring layout and centrality measures obtained with the graph whereass setting a minimum does not. In the case of correlation (\code{graph = "association"}) or partial correlation (\code{graph = "concentration"}) networks this argument can also be given a string to omit insignificant edges. See description of this argumet in the next section (Additional options for correlation/covariance matrices).}
 \item{palette}{The palette used for coloring nodes when the \code{groups} argument is used. Can be one of \code{"rainbow"} (default), \code{"colorblind"} (making use of http://jfly.iam.u-tokyo.ac.jp/color/), \code{"pastel"}, \code{"gray"}, \code{"R"} and \code{"ggplot2"}.}
-\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"blackwhite"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
+\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"gray"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
 }
 }
 
