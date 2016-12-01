@@ -2,7 +2,6 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
                            verbose = TRUE, standardized, relative)
 {
   scale <- match.arg(scale)
-  
   if (!missing(standardized)){
     warning("'standardized' argument is deprecated and will be removed.")
   } else {
@@ -43,7 +42,6 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
   # Ordereing by node name to make nice paths:
   Long <- Long[gtools::mixedorder(Long$node),] 
   Long$node <- factor(as.character(Long$node), levels = unique(gtools::mixedsort(as.character(Long$node))))
-  
   
   # PLOT:
   if (length(unique(Long$type)) > 1)

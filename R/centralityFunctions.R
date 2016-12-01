@@ -58,7 +58,7 @@ centrality_auto<-function(x)
   {
     return(lapply(x, centrality_auto))
   }
-  
+
   if(!is.matrix(x)) stop("the input network must be an adjacency or weights matrix")  
   
   diag(x)<-0 # loops are not included in centrality analysis
@@ -79,7 +79,9 @@ centrality_auto<-function(x)
   row.names(centr1)<-colnames(x)
   
   # if the largest component is smaller than the network, closeness is recomputed only on the largest component
-  largcomp<-component.largest(x, connected="strong") # select only the largest component
+  log <- capture.output({
+    largcomp<-component.largest(x, connected="strong") # select only the largest component
+  })
   if(sum(largcomp)<ncol(x))
   {
     x2<-x[largcomp,largcomp]

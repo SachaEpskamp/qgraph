@@ -23,7 +23,7 @@ qgraph( input, ... )
 
 \item{threshold}{A numeric value that defaults to 0. Edges with absolute weight that are not above this value are REMOVED from the network. This differs from \code{minimum} which simply changes the scaling of width and color so that edges with absolute weight under minimum are not plotted/invisible. Setting a threshold influences the spring layout and centrality measures obtained with the graph whereass setting a minimum does not. In the case of correlation (\code{graph = "association"}) or partial correlation (\code{graph = "concentration"}) networks this argument can also be given a string to omit insignificant edges. See description of this argumet in the next section (Additional options for correlation/covariance matrices).}
 \item{palette}{The palette used for coloring nodes when the \code{groups} argument is used. Can be one of \code{"rainbow"} (default), \code{"colorblind"} (making use of http://jfly.iam.u-tokyo.ac.jp/color/), \code{"pastel"}, \code{"gray"}, \code{"R"} and \code{"ggplot2"}.}
-\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
+\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"blackwhite"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
 }
 }
 
@@ -136,6 +136,7 @@ These arguments influence the plotting of edges qgraph. Most of them can be assi
 \item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
 \item{unCol}{Color to indicate the default edge color of unweighted graphs. Defaults to "#808080".}
         \item{probCol}{Color of the probability edges. Defaults to \code{"blue"}. Only used when \code{probabilityEdges = TRUE}}
+\item{negDashed}{Logical, set to \code{TRUE} to make negative edges dashed (overwrites \code{lty}).}
         \item{probabilityEdges}{Logical, do edges indicate probabilities? If this is set to \code{TRUE} \code{posCol} is overwritten by \code{probCol}. Mainly implemented for automatic generation of graphs}
 \item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
   \item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}

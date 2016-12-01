@@ -752,6 +752,7 @@ qgraph <- function( input, ... )
   negCol <- c("#BF0000","red")
   bcolor <- NULL
   bg <- FALSE
+  negDashed <- FALSE
   # if (length(groups) < 8){
   #   palette <- "colorblind"
   # } else {
@@ -762,7 +763,7 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind")){
+                      "Borkulo","colorblind","blackwhite")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
     
@@ -801,10 +802,16 @@ qgraph <- function( input, ... )
     } else if (theme == "gray" | theme == "grey"){
       posCol <- negCol <- c("gray10","black")
       palette <- "gray"
+    } else if (theme == "blackwhite"){
+      posCol <- "black"
+      negCol <- "black"
+      palette <- "gray"
+      negDashed <- TRUE
     }
   }
   
   # Overwrite:
+  if(!is.null(qgraphObject$Arguments[['negDashed']])) negDashed <- qgraphObject$Arguments[['negDashed']]
   if(!is.null(qgraphObject$Arguments[['posCol']])) posCol <- qgraphObject$Arguments[['posCol']]
   if(!is.null(qgraphObject$Arguments[['negCol']])) negCol <- qgraphObject$Arguments[['negCol']]
   
@@ -2625,6 +2632,11 @@ qgraph <- function( input, ... )
   # Node argument setup:
   borders <- rep(borders,length=nNodes)
   label.font <- rep(label.font,length=nNodes)
+  
+  # Make negative dashed:
+  if (negDashed){
+    lty[] <- ifelse(E$weight < 0, 2, 1)
+  }
   
   ########### SPLIT HERE ###########
   
