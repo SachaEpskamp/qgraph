@@ -935,6 +935,7 @@ x$plotOptions$legend.mode -> legend.mode
                    mean=means[i],SD=SDs[i],meanRange=meanRange,pie=pie[[i]],pieColor=pieColor[[i]],pieColor2=pieColor2[[i]],
                    pieBorder=pieBorder[[i]],pieStart=pieStart[[i]],pieDarken=pieDarken[[i]],pastel=piePastel,
                    rainbowStart=rainbowStart)
+        
         }
       }      
     } else {

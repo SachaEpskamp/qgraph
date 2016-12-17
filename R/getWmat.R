@@ -216,6 +216,16 @@ getWmat.qgraph <- function(x, directed,...)
 
 
 getWmat.bootnetResult <- function(x, ...){
-  x$graph
+  wMat <- x$graph
+  if (!isTRUE(x$weighted)){
+    wMat <- sign(wMat)
+  }
+  
+  if (!isTRUE(x$signed)){
+    wMat <- abs(wMat)
+  }
+  
+  return(wMat)
+  
 }
 
