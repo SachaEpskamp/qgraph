@@ -1,5 +1,5 @@
 centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","relative"), include, theme_bw = TRUE, print = TRUE,
-                           verbose = TRUE, standardized, relative)
+                           verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE)
 {
   scale <- match.arg(scale)
   if (!missing(standardized)){
@@ -30,7 +30,7 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
   ## I realize I should have used a more appropriate programmatic way of doing this. My
   ## programming is bad and I fo feel bad.
   
-  Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative)
+  Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative, weighted = weighted, signed = signed)
 
   # If not missing, include only include vars:
   if (!missing(include))

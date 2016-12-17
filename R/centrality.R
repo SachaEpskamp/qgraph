@@ -1,5 +1,6 @@
 
-centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE)
+centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE,
+                       weighted = TRUE, signed = TRUE)
 {
 
   # Check for correct class:
@@ -30,6 +31,13 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   #   }
   
   W <- getWmat(graph)
+  if (!isTRUE(weighted)){
+    W <- sign(W)
+  }
+  
+  if (!isTRUE(signed)){
+    W <- abs(W)
+  }
   
   pkg <- match.arg(pkg)
 #   if (missing(pkg)){

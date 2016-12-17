@@ -1,4 +1,5 @@
-centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
+centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE, 
+                            weighted = TRUE, signed = TRUE)
 {
   
   Wmats <- getWmat(list(...))
@@ -7,7 +8,7 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE)
   # Fix names:
   names(Wmats) <- fixnames(Wmats,"graph ")
   
-  CentAuto <- lapply(Wmats, centrality_auto)
+  CentAuto <- lapply(Wmats, centrality_auto, weighted = weighted, signed = signed)
   
   # Fix tables:
   for (g in seq_along(CentAuto))

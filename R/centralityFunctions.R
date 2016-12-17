@@ -21,7 +21,7 @@ mat2vec<-function(x, diag=FALSE, tol=1e-10)
 }
 
 # Exported:
-centrality_auto<-function(x)
+centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
 {
   # This function recognizes whether a network is weighted, directed and
   # whether there are disconnected nodes.
@@ -52,12 +52,22 @@ centrality_auto<-function(x)
   
   # Compute weights matrix:
   x <- getWmat(x)
-  
   # If list of matrices, return list of output:
   if (is.list(x))
   {
-    return(lapply(x, centrality_auto))
+    return(lapply(x, centrality_auto, weighted = weighted, signed = signed))
   }
+  
+  # Make unweighted or unsigned:
+  if (!isTRUE(weighted)){
+    x <- sign(x)
+  }
+  
+  if (!isTRUE(signed)){
+    x <- abs(x)
+  }
+  
+
 
   if(!is.matrix(x)) stop("the input network must be an adjacency or weights matrix")  
   

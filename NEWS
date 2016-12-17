@@ -3,6 +3,7 @@ Changes in Version 1.4.2
   o Added theme option "blackwhite"
   o Added 'negDashed' argument to make negative edges dashed.
   o bootnet getWmat method now takes signed and weighted into account
+  o Centrality functions now have arguments weighted and signed to compute centrality based on the signed or unweighted graph.
 
 Changes in Version 1.4.1
   o Added 'curveScaleNodeCorrection' argument
