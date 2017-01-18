@@ -80,8 +80,7 @@ lambda.min = lambda.min.ratio*lambda.max
   # Refit:
   if (refit){
     message("Refitting network without LASSO regularization")
-    glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0, arr.ind=TRUE)))
-    
+    glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0 & upper.tri(net), arr.ind=TRUE), trace = 0, penalize.diagonal=penalize.diagonal, ...))
     net <- as.matrix(forceSymmetric(wi2net(glassoRes$wi)))
     colnames(net) <- rownames(net) <- colnames(S)
   }
