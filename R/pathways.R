@@ -43,8 +43,8 @@ pathways <- function(
 
   # Change edgesort to plot changed edges first:
   graph$graphAttributes$Graph$edgesort <- c(
-    graph$graphAttributes$Graph$edgesort[!seq_along(graph$Edgelist$from) %in% highlight],
-    graph$graphAttributes$Graph$edgesort[seq_along(graph$Edgelist$from) %in% highlight]
+    graph$graphAttributes$Graph$edgesort[!graph$graphAttributes$Graph$edgesort %in% highlight],
+    graph$graphAttributes$Graph$edgesort[graph$graphAttributes$Graph$edgesort %in% highlight]
   )
   plot(graph)
 }
