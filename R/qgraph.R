@@ -1077,7 +1077,7 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['curvePivotShape']])) curvePivotShape <- 0.25 else curvePivotShape <- qgraphObject$Arguments[['curvePivotShape']]
   if(is.null(qgraphObject$Arguments[['curveScale']])) curveScale <- TRUE else curveScale <- qgraphObject$Arguments[['curveScale']]
   
-  if(is.null(qgraphObject$Arguments[['curveScaleNodeCorrection']])) curveScaleNodeCorrection <- FALSE else curveScaleNodeCorrection <- qgraphObject$Arguments[['curveScaleNodeCorrection']]
+  if(is.null(qgraphObject$Arguments[['curveScaleNodeCorrection']])) curveScaleNodeCorrection <- TRUE else curveScaleNodeCorrection <- qgraphObject$Arguments[['curveScaleNodeCorrection']]
   
   
   

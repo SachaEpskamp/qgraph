@@ -13,11 +13,13 @@ These functions can be used to facilitate interpreting centrality and clustering
 \usage{
 centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
                  include, theme_bw = TRUE, print = TRUE,
-                 verbose = TRUE, standardized, relative)
+                 verbose = TRUE, standardized, relative, weighted =
+                 TRUE, signed = TRUE)
 clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
                   verbose = TRUE, standardized, relative)
-centralityTable(..., labels, standardized = TRUE,  relative = FALSE)
+centralityTable(..., labels, standardized = TRUE,  relative = FALSE, weighted =
+                 TRUE, signed = TRUE)
 clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
                 signed = FALSE)
 }
@@ -32,9 +34,6 @@ A vector overwriting the labels used. Can be missing.
 }
   \item{include}{
 A vector of measures to include. if missing all measures available will be included.
-}
-\item{signed}{
-Logical indicating if signed clustering coefficients should be plotted.
 }
 \item{theme_bw}{
 Adds the ggplot2 black and white theme to the plot
@@ -51,6 +50,8 @@ Logical, should all measures be standardized? Argument is deprecated and will be
   \item{relative}{
 Logical, should all measures be scaled relative to the largest value? Argument is deprecated and will be removed.
 }
+\item{weighted}{Logical, set to \code{FALSE} to set all edge weights to 1 or -1}
+\item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
 }
 
 \details{

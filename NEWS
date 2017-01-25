@@ -1,9 +1,13 @@
+Changes in Version 1.4.3
+  o Fixed a bug in which 'curveScaleNodeCorrection' defaulted to FALSE instead of TRUE
+
 Changes in Version 1.4.2
-  o centrality_auto no longer outputs igraph messages to the console.
-  o Added theme option "blackwhite"
-  o Added 'negDashed' argument to make negative edges dashed.
+  o centrality_auto no longer outputs igraph messages to the console
+  o Added theme option "gray" for grayscale figures
+    o Automatically makes negative edges dashed
+  o Added 'negDashed' argument to make negative edges dashed
   o bootnet getWmat method now takes signed and weighted into account
-  o Centrality functions now have arguments weighted and signed to compute centrality based on the signed or unweighted graph.
+  o Centrality functions now have arguments weighted and signed to compute centrality based on the signed or unweighted graph
   o Fixed a bug with refit = TRUE
 
 Changes in Version 1.4.1

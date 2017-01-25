@@ -9,13 +9,15 @@ Automatic centrality statistics of graphs
 This function can be used on several kinds of graphs to compute several node centrality statistics and the edge-betweenness centrality. The input graph can be an adjacency matrix, a weight matrix, an edgelist (weighted or unweighted), a \code{\link{qgraph}} object or an \code{\link[igraph]{igraph}} object.
 }
 \usage{
-centrality_auto(x)
+centrality_auto(x, weighted = TRUE, signed = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
 A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.
 }
+\item{weighted}{Logical, set to \code{FALSE} to set all edge weights to 1 or -1}
+\item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
 }
 \details{
 The function recognizes whether the network is unweighted vs. weighted, undirected vs. directed, and connected vs. disconnected and computes a set of centrality indices that is best suited for that particular kind of network. Edge signs are always disregarded, while edge weights and directions, if present, are considered in the computation of the indices. If the network is disconnected, closeness centrality is computed only considering the largest component (notice that this is different from what function \code{\link{centrality}} does).
