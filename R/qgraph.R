@@ -606,7 +606,7 @@ qgraph <- function( input, ... )
   
   if(is.null(qgraphObject$Arguments[['usePCH']])) 
   {
-    if (nNodes > 50) usePCH <- TRUE else usePCH <- NULL 
+    if (nNodes > 50 && !drawPies) usePCH <- TRUE else usePCH <- NULL 
   } else usePCH <- qgraphObject$Arguments[['usePCH']]
   
   if(is.null(qgraphObject$Arguments[['node.resolution']])) node.resolution <- 100 else node.resolution <- qgraphObject$Arguments[['node.resolution']]
