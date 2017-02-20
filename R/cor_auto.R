@@ -14,10 +14,10 @@ cor_auto <- function(
 {
 
   # Check for data frame:
-  if (!is.data.frame(data))
-  {
+  # if (!is.data.frame(data))
+  # {
     data <- as.data.frame(data)
-  }
+  # }
   
   # Select columns:
   if (!missing(select))
