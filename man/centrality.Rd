@@ -7,8 +7,6 @@ Centrality statistics of graphs
 }
 \description{
 This function can be used on the output of \code{\link{qgraph}} to compute the node centrality statistics for weighted graphs proposed by Opsahl, Agneessens and Skvoretz (2010).
-
-PLEASE USE \code{\link{centrality_auto}} FOR A MORE USER FRIENDLY VERSION!
 }
 \usage{
 centrality(graph, alpha = 1, posfun = abs, pkg, all.shortest.paths = FALSE, 
@@ -36,7 +34,7 @@ A function that converts positive and negative values to only positive. Defaults
 \details{
 This function computes and returns the in and out degrees, closeness and betweenness as well as the shortest path lengths and shortest paths between all pairs of nodes in the graph. For more information on these statistics, see Opsahl, Agneessens and Skvoretz (2010).
 
-These statistics are only defined for positive edge weights, and thus negative edge weights need to be transformed into positive edge weights. By default, this is done by taking the absolute value.
+Self-loops are ignored in computing centrality indices. These statistics are only defined for positive edge weights, and thus negative edge weights need to be transformed into positive edge weights. By default, this is done by taking the absolute value.
 
 The algorithm used for computing the shortest paths is the well known "Dijkstra’s algorithm" (Dijkstra, 1959). The algorithm has been implemented in R, which can make this function take several minutes to run for large graphs (over 100 nodes). A future version of qgraph will include a compiled version to greatly speed up this function.
 }
