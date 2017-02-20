@@ -245,6 +245,46 @@ qgraph <- function( input, ... )
     input <- wi2net(input$wi)
   }
   
+  
+  ### Check arguments list:
+  allArgs <- c("input", "layout", "groups", "minimum", "maximum", "cut", "details", 
+               "threshold", "palette", "theme", "graph", "threshold", "sampleSize", 
+               "tuning", "refit", "countDiagonal", "alpha", "bonf", "FDRcutoff", 
+               "mar", "filetype", "filename", "width", "height", "normalize", 
+               "DoNotPlot", "plot", "rescale", "standAlone", "color", "vsize", 
+               "vsize2", "node.width", "node.height", "borders", "border.color", 
+               "border.width", "shape", "polygonList", "vTrans", "subplots", 
+               "subpars", "subplotbg", "images", "noPar", "pastel", "rainbowStart", 
+               "usePCH", "node.resolution", "title", "preExpression", "postExpression", 
+               "diag", "labels", "label.cex", "label.color", "label.prop", "label.norm", 
+               "label.scale", "label.scale.equal", "label.font", "label.fill.vertical", 
+               "label.fill.horizontal", "esize", "edge.width", "edge.color", 
+               "posCol", "negCol", "unCol", "probCol", "negDashed", "probabilityEdges", 
+               "colFactor", "trans", "fade", "loop", "lty", "edgeConnectPoints", 
+               "curve", "curveAll", "curveDefault", "curveShape", "curveScale", 
+               "curveScaleNodeCorrection", "curvePivot", "curvePivotShape", 
+               "parallelEdge", "parallelAngle", "parallelAngleDefault", "edge.labels", 
+               "edge.label.cex", "edge.label.bg", "edge.label.position", "edge.label.font", 
+               "repulsion", "layout.par", "layout.control", "aspect", "rotation", 
+               "legend", "legend.cex", "legend.mode", "GLratio", "layoutScale", 
+               "layoutOffset", "nodeNames", "bg", "bgcontrol", "bgres", "pty", 
+               "gray", "tooltips", "overlay", "overlaySize", "font", "directed", 
+               "arrows", "arrowAngle", "asize", "open", "bidirectional", "mode", 
+               "alpha", "sigScale", "bonf", "scores", "scores.range", "mode", 
+               "edge.color", "knots", "knot.size", "knot.color", "knot.borders", 
+               "knot.border.color", "knot.border.width", "means", "SDs", "meanRange", 
+               "bars", "barSide", "barColor", "barLength", "barsAtSide", "pie", 
+               "pieBorder", "pieColor", "pieColor2", "pieStart", "pieDarken", 
+               "piePastel", "BDgraph", "BDtitles", "edgelist", "weighted", "nNodes", 
+               "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
+               "layout", "layout.orig")
+  
+  if (any(!names(qgraphObject$Arguments) %in% allArgs)){
+    wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
+    warning(paste0("The following arguments are not documented and likely not arguments of qgraph and thus ignored: ",paste(wrongArgs,collapse = "; ")))
+  }
+  
+  ## Extract arguments
   if(is.null(qgraphObject$Arguments[['verbose']]))
   {
     verbose <- FALSE
