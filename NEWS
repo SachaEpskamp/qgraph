@@ -1,6 +1,9 @@
 Changes in Version 1.4.3
   o Fixed a bug in which 'curveScaleNodeCorrection' defaulted to FALSE instead of TRUE
   o qgraph() now gives a warning if the user uses a not-documentated argument.
+  o Fixed a bug in computing baseline DF of ggmFit
+  o ggmFit now has an argument for number of parameters
+  o Fixed a bug in computing baseline chi-square of ggmFit
 
 Changes in Version 1.4.2
   o centrality_auto no longer outputs igraph messages to the console

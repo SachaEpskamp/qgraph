@@ -14,9 +14,10 @@ ggmFit <- function(
   pcor, # pcor matrix or qgraph object
   covMat, # sample variance-covariance matrix
   sampleSize, # Sample sample-size
-  invSigma, # inverse variance covariance matrix instead of pcor
   refit = TRUE, # Refit the model in glasso without LASSO?
-  ebicTuning = 0.5
+  ebicTuning = 0.5,
+  nPar, # Number of parameters, used for more general fit
+  invSigma # inverse variance covariance matrix instead of pcor, used for more general fit
 ){
   mimic <- "lavaan"
   
@@ -85,16 +86,20 @@ ggmFit <- function(
   fitMeasures <- list()
   
   # Number of variables:
-  fitMeasures$nVar <- nVar <- ncol(covMat)
+  fitMeasures$nvar <- nVar <- ncol(covMat)
   
   # Number of observations:
-  fitMeasures$nObs <- nVar * (nVar+1) / 2
+  fitMeasures$nobs <- nVar * (nVar+1) / 2
   
   # Number of parameters:
-  fitMeasures$npar <- sum(invSigma[upper.tri(invSigma,diag=FALSE)] != 0)
+  if (missing(nPar)){
+    fitMeasures$npar <- sum(invSigma[upper.tri(invSigma,diag=FALSE)] != 0)
+  } else {
+    fitMeasures$npar <- nPar
+  }
   
   # Degrees of freedom:
-  fitMeasures$df <- fitMeasures$nObs - fitMeasures$npar
+  fitMeasures$df <- fitMeasures$nobs - fitMeasures$npar
   
   # Compute Fmin:
   fitMeasures$fmin <- (sum(diag(covMat %*% corpcor::pseudoinverse(Sigma)))- log(det(covMat %*% corpcor::pseudoinverse(Sigma))) - nVar)/2
@@ -107,8 +112,8 @@ ggmFit <- function(
   invSigma_baseline <- glassoRes_baseline$wi
   Sigma_baseline <- glassoRes_baseline$w
   
-  fitMeasures$baseline.chisq <- Ncons * (sum(diag(covMat %*% Sigma_baseline))- log(det(covMat %*% Sigma_baseline)) - nVar)
-  fitMeasures$baseline.df <- nVar
+  fitMeasures$baseline.chisq <- Ncons * (sum(diag(covMat %*% invSigma_baseline))- log(det(covMat %*% invSigma_baseline)) - nVar)
+  fitMeasures$baseline.df <- fitMeasures$nobs - nVar
   fitMeasures$baseline.pvalue <- pchisq(fitMeasures$baseline.chisq, fitMeasures$baseline.df, lower.tail = FALSE)
   
   # Incremental Fit Indices
@@ -117,7 +122,7 @@ ggmFit <- function(
   
   dfb <- fitMeasures$baseline.df
   dfm <- fitMeasures$df
-  
+
   fitMeasures$nfi <- (Tb - Tm) / Tb
   fitMeasures$tli <-  (Tb/dfb - Tm/dfm) / (Tb/dfb - 1) 
   fitMeasures$rfi <-  (Tb/dfb - Tm/dfm) / (Tb/dfb ) 
@@ -206,7 +211,7 @@ ggmFit <- function(
   
   # Add extended bic:
   fitMeasures$ebic <-  -2*LL + fitMeasures$npar * log(sampleSize) + 4 *  fitMeasures$npar * ebicTuning * log(sampleSize)  
-  
+  fitMeasures$ebicTuning <- ebicTuning
   
   # Results object:
   Results <- list(
