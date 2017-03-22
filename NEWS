@@ -5,6 +5,7 @@ Changes in Version 1.4.3
   o ggmFit now has an argument for number of parameters
   o Fixed a bug in computing baseline chi-square of ggmFit
   o ggmFit now scales pcor matrix to match diagonal of var-cov matrix rather than diagonal of inverse var-cov matrix
+  o Using EBICglasso with returnAllResults now returns 'optwi' as well
 
 Changes in Version 1.4.2
   o centrality_auto no longer outputs igraph messages to the console

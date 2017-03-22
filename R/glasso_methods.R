@@ -83,6 +83,9 @@ lambda.min = lambda.min.ratio*lambda.max
     glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0 & upper.tri(net), arr.ind=TRUE), trace = 0, penalize.diagonal=penalize.diagonal, ...))
     net <- as.matrix(forceSymmetric(wi2net(glassoRes$wi)))
     colnames(net) <- rownames(net) <- colnames(S)
+    optwi <- glassoRes$wi
+  } else {
+    optwi <- glas_path$wi[,,opt]
   }
 
   # Return 
@@ -92,7 +95,8 @@ lambda.min = lambda.min.ratio*lambda.max
       ebic = EBICs,
       loglik = lik,
       optnet = net,
-      lambda = lambda
+      lambda = lambda,
+      optwi = optwi
       ))
   } else return(net)
 }
