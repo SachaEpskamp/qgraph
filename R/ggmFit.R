@@ -17,7 +17,8 @@ ggmFit <- function(
   refit = TRUE, # Refit the model in glasso without LASSO?
   ebicTuning = 0.5,
   nPar, # Number of parameters, used for more general fit
-  invSigma # inverse variance covariance matrix instead of pcor, used for more general fit
+  invSigma, # inverse variance covariance matrix instead of pcor, used for more general fit
+  tol = 1e-10
 ){
   mimic <- "lavaan"
   
@@ -56,19 +57,21 @@ ggmFit <- function(
     }
     
     # Sample inverse variance-covariance matrix:
-    try <- try(sampleInverse <- corpcor::pseudoinverse(covMat))
-    if (is(try,"try-error")){
-      stop("Cannot compute pseudoinverse from sample variance-covariance matrix.")
-    }
+    # try <- try(sampleInverse <- corpcor::pseudoinverse(covMat))
+    # if (is(try,"try-error")){
+    #   stop("Cannot compute pseudoinverse from sample variance-covariance matrix.")
+    # }
     
     # Remove diagonal:
     diag(pcor) <- 0
     
     # Compute delta scaling matrices:
-    Delta <- diag(sqrt(diag(sampleInverse)))
+    # Delta <- diag(sqrt(diag(sampleInverse)))
+    Delta <- diag(sqrt(diag(covMat)))
     
     # Compute inverse:
-    invSigma <- Delta %*% (diag(ncol(pcor)) - pcor) %*% Delta
+    invSigma <- corpcor::pseudoinverse(Delta %*% cov2cor(corpcor::pseudoinverse(diag(ncol(pcor)) - pcor)) %*% Delta)
+    invSigma[abs(invSigma) < tol] <- 0
   }
   
   # Refit:
