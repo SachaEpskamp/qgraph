@@ -277,7 +277,8 @@ qgraph <- function( input, ... )
                "pieBorder", "pieColor", "pieColor2", "pieStart", "pieDarken", 
                "piePastel", "BDgraph", "BDtitles", "edgelist", "weighted", "nNodes", 
                "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
-               "layout", "layout.orig")
+               "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
+               "crossloadings")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
