@@ -55,10 +55,10 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
   
   if (length(unique(Long$graph)) > 1)
   {
-    g <- g + facet_grid(graph ~ measure, scales = "free") 
+    g <- g + facet_grid(graph ~ variable, scales = "free") 
   } else 
   {
-    g <- g + facet_grid( ~ measure, scales = "free") 
+    g <- g + facet_grid( ~ variable, scales = "free") 
   }
   
   if (theme_bw){
