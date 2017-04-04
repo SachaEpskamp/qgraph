@@ -56,10 +56,10 @@ clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"),
   
   if (length(unique(Long$graph)) > 1)
   {
-    g <- g + facet_grid(graph ~ measure, scales = "free") 
+    g <- g + facet_grid(graph ~ variable, scales = "free") 
   } else 
   {
-    g <- g + facet_grid( ~ measure, scales = "free") 
+    g <- g + facet_grid( ~ variable, scales = "free") 
   }
   
   
