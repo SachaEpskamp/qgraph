@@ -42,6 +42,8 @@ qgraph( input, ... )
   
   \item{sampleSize}{The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
     \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
+        \item{lambda.min.ratio}{The minimal lambda ratio used in \code{\link{EBICGlasso}}, defaults to 0.01.}
+    \item{gamma}{Alias for tuning (overwrites the tuning argument).}
       \item{refit}{
     Logical, should the optimal graph be refitted without LASSO regularization? Defaults to \code{FALSE} and only used if \code{graph = "glasso"}.
   }

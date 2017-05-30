@@ -48,7 +48,7 @@ lambda.min = lambda.min.ratio*lambda.max
         rholist = lambda
       )
     
-    for (i in 1:100){
+    for (i in 1:nlambda){
       res <- glasso(S, penalizeMatrix * lambda[i], trace = 0, penalize.diagonal=penalize.diagonal, ...)
       glas_path$w[,,i] <- res$w
       glas_path$wi[,,i] <- res$wi
@@ -72,9 +72,19 @@ lambda.min = lambda.min.ratio*lambda.max
   # Smallest EBIC:
   opt <- which.min(EBICs)
   
+  # Check if rho is smallest:
+  if (opt == 1){
+    warning("Network with lowest lambda selected as best network. Try setting 'lambda.min.ratio' lower.")
+  }
+  
   # Return network:
   net <- as.matrix(forceSymmetric(wi2net(glas_path$wi[,,opt])))
   colnames(net) <- rownames(net) <- colnames(S)
+  
+  # Check empty network:
+  if (all(net == 0)){
+    message("An empty network was selected to be the best fitting network. Possibly set 'lambda.min.ratio' higher to search more sparse networks. You can also change the 'gamma' parameter to improve sensitivity (at the cost of specificity).")
+  }
   
   # Refit network:
   # Refit:

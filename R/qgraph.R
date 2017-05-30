@@ -278,7 +278,7 @@ qgraph <- function( input, ... )
                "piePastel", "BDgraph", "BDtitles", "edgelist", "weighted", "nNodes", 
                "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
-               "crossloadings")
+               "crossloadings","gamma","lambda.min.ratio")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -295,6 +295,16 @@ qgraph <- function( input, ... )
   {
     tuning <- 0.5
   } else tuning <- qgraphObject$Arguments[['tuning']]  
+  
+  if(!is.null(qgraphObject$Arguments[['gamma']]))
+  {
+    tuning <- qgraphObject$Arguments[['gamma']]
+  }
+  
+  if(is.null(qgraphObject$Arguments[['lambda.min.ratio']]))
+  {
+    lambda.min.ratio <- 0.01
+  } else lambda.min.ratio <- qgraphObject$Arguments[['lambda.min.ratio']]  
   
   # Refit:
   if(is.null(qgraphObject$Arguments[['refit']]))
@@ -1401,7 +1411,8 @@ qgraph <- function( input, ... )
     {
       if (edgelist) stop("Concentration graph requires correlation matrix")
       if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
-      input <- EBICglasso(input, sampleSize, gamma = tuning,refit=refit)
+      input <- EBICglasso(input, sampleSize, gamma = tuning,
+                          refit=refit, lambda.min.ratio = lambda.min.ratio)
     }
     
     diag(input) <- 1

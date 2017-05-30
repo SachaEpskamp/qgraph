@@ -1,3 +1,10 @@
+Changes in Version 1.4.4
+  o Fixed a bug in EBICglasso in which only nLambda = 100 was supported
+  o EBICglasso now gives a warning if the densest (lowest lambda) network is selected
+  o EBICglasso now gives a message if the empty network is selected
+  o qgraph() now supports 'gamma' as alias for 'tuning'
+  o qgraph() now has a lambda.min.ratio argument to control the same argument in EBICglasso
+
 Changes in Version 1.4.3
   o Fixed a bug in which 'curveScaleNodeCorrection' defaulted to FALSE instead of TRUE
   o qgraph() now gives a warning if the user uses a not-documented argument.
