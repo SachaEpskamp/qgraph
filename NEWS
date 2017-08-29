@@ -4,6 +4,8 @@ Changes in Version 1.4.4
   o EBICglasso now gives a message if the empty network is selected
   o qgraph() now supports 'gamma' as alias for 'tuning'
   o qgraph() now has a lambda.min.ratio argument to control the same argument in EBICglasso
+  o Fixed a bug in which pie charts were not drawn with > 50 nodes
+  o Re-enabled support for BDgraph
 
 Changes in Version 1.4.3
   o Fixed a bug in which 'curveScaleNodeCorrection' defaulted to FALSE instead of TRUE
