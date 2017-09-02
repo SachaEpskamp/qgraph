@@ -143,6 +143,7 @@ These arguments influence the plotting of edges qgraph. Most of them can be assi
 \item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
   \item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}
     \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparency will be added to edges that are not transparent (or for which no transparency has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
+    \item{loopRotation}{A vector with an element for each node with either \code{NA} to let qgraph choose the rotation of the loop, or the rotation of the loop per node in radian}
 	\item{loop}{If diag=TRUE, this can be used to scale the size of the loop. defaults to 1.}
 	\item{lty}{Line type, see 'par'}
       \item{edgeConnectPoints}{This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
