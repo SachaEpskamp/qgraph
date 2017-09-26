@@ -1,3 +1,4 @@
+export(flow)
 importFrom("utils", "capture.output")
 importFrom("grDevices", "hcl")
 S3method(print, ggmFit)
