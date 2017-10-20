@@ -1031,6 +1031,13 @@ qgraph <- function( input, ... )
     if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
   }
   if(is.null(qgraphObject$Arguments[['fade']])) fade <- TRUE else fade <- qgraphObject$Arguments[['fade']]
+  
+  # Automatic fading?
+  autoFade <- isTRUE(fade)
+  if (identical(fade,FALSE)){
+    fade <- 1
+  }
+  
   if(is.null(qgraphObject$Arguments[['loop']])) loop=1 else loop=qgraphObject$Arguments[['loop']]
   if(is.null(qgraphObject$Arguments[['loopRotation']]))
   {
@@ -1727,6 +1734,11 @@ qgraph <- function( input, ... )
       edge.label.font <- edge.label.font[c(incl)]
       #       edge.label.font <- edge.label.font[E$weight!=0]
     }
+    if (is.matrix(fade))
+    {
+      fade <- fade[c(incl)]
+      #       edge.color <- edge.color[E$weight!=0]
+    }
     if (!is.null(ELcolor))
     {
       if (is.matrix(ELcolor))
@@ -1805,6 +1817,11 @@ qgraph <- function( input, ... )
   if (length(lty) == 1) lty <- rep(lty,length(E$from))
   if (length(lty) != length(keep) & length(lty) != sum(keep)) stop("'lty' is wrong length")
   if (length(lty)==length(keep)) lty <- lty[keep]
+  
+  if (length(fade) == 1) fade <- rep(fade,length(E$from))
+  if (length(fade) != length(keep) & length(fade) != sum(keep)) stop("'fade' is wrong length")
+  if (length(fade)==length(keep)) fade <- fade[keep]
+  
   
   if (!is.null(edgeConnectPoints))
   {
@@ -2280,7 +2297,7 @@ qgraph <- function( input, ... )
   
   
   # Set edge colors:
-  if (is.null(edge.color) || (any(is.na(edge.color)) || fade))
+  if (is.null(edge.color) || (any(is.na(edge.color)) || autoFade || any(fade != 1)))
   {
     if (!is.null(edge.color))
     {
@@ -2312,7 +2329,7 @@ qgraph <- function( input, ... )
         col <- col^colFactor      
         
         # Set edges between minimum and cut:
-        if (fade)
+        if (autoFade)
         {
           if (isTRUE(transparency))
           {
@@ -2323,8 +2340,17 @@ qgraph <- function( input, ... )
             edge.color[E$weight < -1*minimum] <- Fade(negCol[1],col[E$weight < -1*minimum], background)
           }
         } else {
-          edge.color[E$weight > minimum] <- posCol[1]
-          edge.color[E$weight < -1*minimum] <- negCol[1]
+          if (isTRUE(transparency))
+          {
+            edge.color[E$weight > minimum] <- addTrans(posCol[1],round(fade[E$weight > minimum]*255))
+            edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(fade[E$weight < -1*minimum]*255))
+          } else {
+            edge.color[E$weight > minimum] <- Fade(posCol[1],fade[E$weight > minimum], background)
+            edge.color[E$weight < -1*minimum] <- Fade(negCol[1],fade[E$weight < -1*minimum], background)
+          }
+          
+          # edge.color[E$weight > minimum] <- posCol[1]
+          # edge.color[E$weight < -1*minimum] <- negCol[1]
         }
         
         # Set colors over cutoff if cut != 0:
@@ -2380,7 +2406,7 @@ qgraph <- function( input, ... )
     if (repECs)
     {
       ## Add trans:
-      if (fade & any(!is.na(ectemp)))
+      if (autoFade & any(!is.na(ectemp)))
       {
         if (!is.logical(transparency)) col <- rep(transparency,length(col))
         if (isTRUE(transparency))
@@ -2748,6 +2774,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$label.color <- ELcolor
   qgraphObject$graphAttributes$Edges$width <- edge.width
   qgraphObject$graphAttributes$Edges$lty <- lty
+  qgraphObject$graphAttributes$Edges$fade <- fade
   qgraphObject$graphAttributes$Edges$edge.label.position <- edge.label.position
   qgraphObject$graphAttributes$Edges$residEdge <- residEdge
   qgraphObject$graphAttributes$Edges$CircleEdgeEnd <- CircleEdgeEnd
