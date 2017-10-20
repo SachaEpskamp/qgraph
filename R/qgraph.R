@@ -201,7 +201,7 @@ qgraph <- function( input, ... )
         if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
         {
           # phat:
-          W <- as.matrix(plinks(input))
+          W <- as.matrix(BDgraph::plinks(input))
           W <- W + t(W)
           Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
           L <- Res[["phat"]]$layout
