@@ -1,3 +1,4 @@
+export(vein)
 export(flow)
 importFrom("utils", "capture.output")
 importFrom("grDevices", "hcl")

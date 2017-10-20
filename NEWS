@@ -1,5 +1,6 @@
 Changes in Verson 1.4.5
   o Added the 'flow' function to make flow plots
+  o Added the 'vein' function to make vein plots
   o Fade now accepts numeric values, setting the exact fading (per edge)
 
 Changes in Version 1.4.4
