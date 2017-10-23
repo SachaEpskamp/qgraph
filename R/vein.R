@@ -5,6 +5,8 @@ vein <- function(
   equalize = TRUE,
   minCurve = 1,
   maxCurve = 4,
+  unfadeFirst = FALSE,
+  fade = TRUE,
   # sizeOrig = 10,
   # sizeCon = 3,
   # sizeDiscon = 1,
@@ -105,8 +107,11 @@ vein <- function(
     ECP[Curve!=0,] <- pi/2
   }
   
+  if (unfadeFirst){
+    fade <- ifelse(E[,1] %in% from | E[,2] %in% from, FALSE, NA)
+  }
   
   
   # Plot:
-  qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE, ...)
+  qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE,fade=fade, ...)
 }

@@ -1030,10 +1030,18 @@ qgraph <- function( input, ... )
   {
     if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
   }
-  if(is.null(qgraphObject$Arguments[['fade']])) fade <- TRUE else fade <- qgraphObject$Arguments[['fade']]
+  if(is.null(qgraphObject$Arguments[['fade']])) fade <- NA else fade <- qgraphObject$Arguments[['fade']]
   
   # Automatic fading?
-  autoFade <- isTRUE(fade)
+  # autoFade <- isTRUE(fade)
+  # if (isTRUE(fade)){
+  #   fade <- NA
+  # }
+  # 
+  if (is.logical(fade)){
+    fade <- ifelse(fade,NA,1)
+  }
+  
   if (identical(fade,FALSE)){
     fade <- 1
   }
@@ -2297,7 +2305,7 @@ qgraph <- function( input, ... )
   
   
   # Set edge colors:
-  if (is.null(edge.color) || (any(is.na(edge.color)) || autoFade || any(fade != 1)))
+  if (is.null(edge.color) || (any(is.na(edge.color)) || any(is.na(fade)) || any(fade != 1)))
   {
     if (!is.null(edge.color))
     {
@@ -2329,29 +2337,31 @@ qgraph <- function( input, ... )
         col <- col^colFactor      
         
         # Set edges between minimum and cut:
-        if (autoFade)
-        {
+
+        # if (autoFade)
+        # {
           if (isTRUE(transparency))
           {
-            edge.color[E$weight > minimum] <- addTrans(posCol[1],round(col[E$weight > minimum]*255))
-            edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(col[E$weight < -1*minimum]*255))
+            edge.color[E$weight > minimum] <- addTrans(posCol[1],round(ifelse(is.na(fade),col,fade)[E$weight > minimum]*255))
+            edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(ifelse(is.na(fade),col,fade)[E$weight < -1*minimum]*255))
           } else {
-            edge.color[E$weight > minimum] <- Fade(posCol[1],col[E$weight > minimum], background)
-            edge.color[E$weight < -1*minimum] <- Fade(negCol[1],col[E$weight < -1*minimum], background)
+            edge.color[E$weight > minimum] <- Fade(posCol[1],ifelse(is.na(fade),col,fade)[E$weight > minimum], background)
+            edge.color[E$weight < -1*minimum] <- Fade(negCol[1],ifelse(is.na(fade),col,fade)[E$weight < -1*minimum], background)
           }
-        } else {
-          if (isTRUE(transparency))
-          {
-            edge.color[E$weight > minimum] <- addTrans(posCol[1],round(fade[E$weight > minimum]*255))
-            edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(fade[E$weight < -1*minimum]*255))
-          } else {
-            edge.color[E$weight > minimum] <- Fade(posCol[1],fade[E$weight > minimum], background)
-            edge.color[E$weight < -1*minimum] <- Fade(negCol[1],fade[E$weight < -1*minimum], background)
-          }
+        # }
+      # else {
+      #     if (isTRUE(transparency))
+      #     {
+      #       edge.color[E$weight > minimum] <- addTrans(posCol[1],round(fade[E$weight > minimum]*255))
+      #       edge.color[E$weight < -1*minimum] <- addTrans(negCol[1],round(fade[E$weight < -1*minimum]*255))
+      #     } else {
+      #       edge.color[E$weight > minimum] <- Fade(posCol[1],fade[E$weight > minimum], background)
+      #       edge.color[E$weight < -1*minimum] <- Fade(negCol[1],fade[E$weight < -1*minimum], background)
+      #     }
           
           # edge.color[E$weight > minimum] <- posCol[1]
           # edge.color[E$weight < -1*minimum] <- negCol[1]
-        }
+        # }
         
         # Set colors over cutoff if cut != 0:
         if (cut!=0)
@@ -2406,7 +2416,7 @@ qgraph <- function( input, ... )
     if (repECs)
     {
       ## Add trans:
-      if (autoFade & any(!is.na(ectemp)))
+      if (any(is.na(fade)) & any(!is.na(ectemp)))
       {
         if (!is.logical(transparency)) col <- rep(transparency,length(col))
         if (isTRUE(transparency))
