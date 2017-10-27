@@ -3,9 +3,10 @@
 pathways <- function(
   graph,# Qgraph object
   from, # Vector of from indices
-  to, # vector of to indices
+  to, # vector of to indices, if missing to all nodes.
   fading = 0.25,
-  lty = 3
+  lty = 3,
+  layout = c("old","center")
 ){
   stopifnot(is(graph,"qgraph"))
   
@@ -15,6 +16,10 @@ pathways <- function(
       stop("Node label in 'from' argument does not exist")
     }
     from <- match(from,  graph$graphAttributes$Nodes$labels)
+  }
+  
+  if (missing(to)){
+    browser()
   }
   
   if (is.character(to)){
