@@ -183,6 +183,7 @@ Arguments concerning the placement of nodes, in combination with 'layout'.
 \describe{
   \item{repulsion}{Scalar on the default repulse radius in the spring layout. Defaults to 1. Setting this argument to lower values (e.g., 0.5) will cause nodes in the spring layout to repulse eachother less. This is especially useful if a few unconnected nodes cause the giant component to visually be clustered too much in the same place.}
   \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when \code{layout = "spring"} or to an igraph function when such a function is assigned to 'layout'. Defaults to \code{ list(repulse.rad = nNodes^(repulsion * 3))} if \code{layout = "spring"} and \code{list()} otherwise.}
+  \item{layoutRound}{Logical, should weights be rounded (default 10 digits) before computing layouts? This will hopefully make sure different machines result in the same layout. Defaults to \code{TRUE}}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
   \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
   \item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}

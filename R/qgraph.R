@@ -945,6 +945,14 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['layout.par']])) {
     if (is.null(layout) || identical(layout,"spring")) layout.par <- list(repulse.rad = nNodes^(repulsion * 3))  else layout.par <- list()
   } else layout.par=qgraphObject$Arguments[['layout.par']]
+  
+  if(is.null(qgraphObject$Arguments[['layoutRound']])){
+    layoutRound <- TRUE
+  } else { 
+    layoutRound <- qgraphObject$Arguments[['layoutRound']]
+  }
+  layout.par$round <- layoutRound
+  
   if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
   if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
   if(is.null(qgraphObject$Arguments$preExpression)) preExpression <- NULL else preExpression <- qgraphObject$Arguments$preExpression
