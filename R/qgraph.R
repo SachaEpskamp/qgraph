@@ -811,6 +811,8 @@ qgraph <- function( input, ... )
   bcolor <- NULL
   bg <- FALSE
   negDashed <- FALSE
+  parallelEdge <- FALSE
+  fade <- NA 
   # if (length(groups) < 8){
   #   palette <- "colorblind"
   # } else {
@@ -821,10 +823,10 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","gray")){
+                      "Borkulo","colorblind","gray","gimme","GIMME")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
-    
+ 
     # Themes:
     if (theme == "classic"){
       posCol <- c("#009900","darkgreen")
@@ -861,10 +863,19 @@ qgraph <- function( input, ... )
       posCol <- negCol <- c("gray10","black")
       palette <- "gray"
       negDashed <- TRUE
+    } else if (theme == "gimme" | theme == "GIMME"){
+      posCol <- "red"
+      negCol <- "blue"
+      parallelEdge <- TRUE
+      fade <- FALSE
     } 
   }
   
   # Overwrite:
+    if(!is.null(qgraphObject$Arguments[['parallelEdge']]))  parallelEdge <- qgraphObject$Arguments[['parallelEdge']]
+    
+    if(!is.null(qgraphObject$Arguments[['fade']])) fade <- qgraphObject$Arguments[['fade']]
+    
   if(!is.null(qgraphObject$Arguments[['negDashed']])) negDashed <- qgraphObject$Arguments[['negDashed']]
   if(!is.null(qgraphObject$Arguments[['posCol']])) posCol <- qgraphObject$Arguments[['posCol']]
   if(!is.null(qgraphObject$Arguments[['negCol']])) negCol <- qgraphObject$Arguments[['negCol']]
@@ -1038,7 +1049,7 @@ qgraph <- function( input, ... )
   {
     if (isTRUE(bg)) transparency <- TRUE else transparency <- FALSE
   }
-  if(is.null(qgraphObject$Arguments[['fade']])) fade <- NA else fade <- qgraphObject$Arguments[['fade']]
+
   
   # Automatic fading?
   # autoFade <- isTRUE(fade)
@@ -1164,7 +1175,7 @@ qgraph <- function( input, ... )
   
   
   
-  if(is.null(qgraphObject$Arguments[['parallelEdge']])) parallelEdge <- FALSE else parallelEdge <- qgraphObject$Arguments[['parallelEdge']]
+
   
   if(is.null(qgraphObject$Arguments[['parallelAngle']])) parallelAngle <- NA else parallelAngle <- qgraphObject$Arguments[['parallelAngle']]
   
