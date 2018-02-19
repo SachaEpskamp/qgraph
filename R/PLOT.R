@@ -181,6 +181,7 @@ x$plotOptions$legend.mode -> legend.mode
   x$plotOptions$subpars -> subpars
   x$plotOptions$subplotbg -> subplotbg
   x$plotOptions$title -> title
+  x$plotOptions$title.cex -> title.cex
   x$plotOptions$preExpression -> preExpression
   x$plotOptions$postExpression -> postExpression
   x$plotOptions$usePCH -> usePCH
@@ -1291,7 +1292,7 @@ x$plotOptions$legend.mode -> legend.mode
   # plot title:
   if (!is.null(title))
   {
-    addTitle(title)
+    addTitle(title,cex = title.cex)
   }
   
   # Run postExpression

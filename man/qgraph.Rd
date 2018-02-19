@@ -96,6 +96,7 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
 \item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
 \item{node.resolution}{Resolution of the nodes if \code{usePCH=FALSE}. Defaults to 100}
 \item{title}{String with a title to be drawn in the topleft of the plot.}
+\item{title.cex}{Size of the title, defaults to 1.}
 
 \item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
 

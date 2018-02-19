@@ -966,6 +966,9 @@ qgraph <- function( input, ... )
   
   if(is.null(qgraphObject$Arguments$details)) details=FALSE else details=qgraphObject$Arguments$details
   if(is.null(qgraphObject$Arguments$title)) title <- NULL else title <- qgraphObject$Arguments$title
+  
+  if(is.null(qgraphObject$Arguments[['title.cex']])) title.cex <- NULL else title.cex <- qgraphObject$Arguments[['title.cex']]
+  
   if(is.null(qgraphObject$Arguments$preExpression)) preExpression <- NULL else preExpression <- qgraphObject$Arguments$preExpression
   if(is.null(qgraphObject$Arguments$postExpression)) postExpression <- NULL else postExpression <- qgraphObject$Arguments$postExpression
   
@@ -2871,6 +2874,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$overlay <- overlay
   qgraphObject$plotOptions$details <- details
   qgraphObject$plotOptions$title <- title
+  qgraphObject$plotOptions$title.cex <- title.cex
   qgraphObject$plotOptions$preExpression <- preExpression
   qgraphObject$plotOptions$postExpression <- postExpression
   qgraphObject$plotOptions$legend.mode <- legend.mode
