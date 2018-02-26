@@ -1,4 +1,5 @@
-centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","relative"), include, theme_bw = TRUE, print = TRUE,
+centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","relative"), 
+                           include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength","Closeness","Betweenness"), theme_bw = TRUE, print = TRUE,
                            verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE)
 {
   scale <- match.arg(scale)

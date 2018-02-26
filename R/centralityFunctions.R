@@ -81,10 +81,10 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
   centr<-centrality(net_qg)
   
   # betweenness should be divided by two if the network is undirected
-  if(directed.gr & !weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness, "Closeness"=centr$Closeness, "InDegree"=centr$InDegree, "OutDegree"=centr$OutDegree))
-  if(directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness, "Closeness"=centr$Closeness, "InStrength"=centr$InDegree, "OutStrength"=centr$OutDegree))
-  if(!directed.gr & !weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Degree"=centr$OutDegree))
-  if(!directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Strength"=centr$OutDegree))
+  if(directed.gr & !weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness, "Closeness"=centr$Closeness, "InDegree"=centr$InDegree, "OutDegree"=centr$OutDegree, "OutExpectedInfluence" = centr$OutExpectedInfluence, "InExpectedInfluence" = centr$InExpectedInfluence ))
+  if(directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness, "Closeness"=centr$Closeness, "InStrength"=centr$InDegree, "OutStrength"=centr$OutDegree, "OutExpectedInfluence" = centr$OutExpectedInfluence, "InExpectedInfluence" = centr$InExpectedInfluence))
+  if(!directed.gr & !weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Degree"=centr$OutDegree, "ExpectedInfluence" = centr$OutExpectedInfluence))
+  if(!directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Strength"=centr$OutDegree, "ExpectedInfluence" = centr$OutExpectedInfluence))
   
   row.names(centr1)<-colnames(x)
   

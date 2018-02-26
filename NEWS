@@ -4,7 +4,7 @@ Changes in Verson 1.4.5
   o Fade now accepts numeric values, setting the exact fading (per edge)
   o Added theme = "gimme", defaulting to posCol = "red", negCol = "blue", parallelEdge = TRUE and fade = FALSE
   o Added argument title.cex
-  o centrality() now also returns ExpectedInfluenceIn and ExpectedInfluenceOut
+  o centrality() now also returns InExpectedInfluence and OutExpectedInfluence
 
 Changes in Version 1.4.4
   o Fixed a bug in EBICglasso in which only nLambda = 100 was supported
