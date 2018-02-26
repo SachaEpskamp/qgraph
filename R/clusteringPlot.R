@@ -36,6 +36,7 @@ clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"),
   if (!missing(include))
   {
     Long <- subset(Long, measure %in% include)
+    Long$measure <- factor(Long$measure,levels = include)
   }
   
   # Ordereing by node name to make nice paths:

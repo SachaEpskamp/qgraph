@@ -39,6 +39,8 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
     Long <- subset(Long, measure %in% include)
   # }
   
+    # Re-order:
+    Long$measure <- factor(Long$measure,levels = include)
 
   # Ordereing by node name to make nice paths:
   Long <- Long[gtools::mixedorder(Long$node),] 
