@@ -46,7 +46,7 @@ mutualInformation <- function(
     } else {
       to2 <- to
     }
-    if (identical(f,to2)) return(NA)
+    if (any(f == to2)) return(NA)
     all <- unique(c(f,to2))
     1/2 * log((det(corMat[f,f,drop=FALSE]) * det(corMat[to2,to2,drop=FALSE]) / det(corMat[all,all,drop=FALSE]))   ,2)
   })
