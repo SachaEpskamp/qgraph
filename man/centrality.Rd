@@ -44,6 +44,8 @@ A list containing:
 \item{InDegree }{A vector containing the inward degree of each node.}
 \item{Closeness }{A vector containing the closeness of each node.}
 \item{Betweenness }{A vector containing the betweenness of each node}
+\item{ExpectedInfluenceIn}{Expected incoming influence - sum of incomming edge weights connected to a node (not made absolute)}
+\item{ExpectedInfluenceOun}{Expected outgoing influence - sum of outgoing edge weights connected to a node (not made absolute)}
 \item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
 \item{ShortestPaths }{A matrix of lists containing all shortest path lengths between all pairs of nodes. Use double square brackets to index. E.g., if the list is called 'res', res$ShortestPaths[[i,j]] gives a list containing all shortest paths between node i and j.}
 }

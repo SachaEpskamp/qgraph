@@ -71,6 +71,10 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   WeightedDegreesIn <- colSums(posfun(W))
   CombinedDegreesIn <- UnweightedDegreesIn^(1-alpha) * WeightedDegreesIn^alpha
   
+  # Expected Influence
+  ExpectedInfluenceIn <- colSums(W)
+  ExpectedInfluenceOut <- rowSums(W)
+  
   DistMat <- 1/(ifelse(posfun(W)==0,0,posfun(W)^alpha))
   if (pkg=="igraph"){
     igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "directed")
@@ -212,6 +216,8 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     InDegree = lab(CombinedDegreesIn,Labels),
     Closeness = lab(Closeness,Labels),
     Betweenness = lab(Betweenness,Labels),
+    ExpectedInfluenceIn = ExpectedInfluenceIn,
+    ExpectedInfluenceOut = ExpectedInfluenceOut,
     ShortestPathLengths = lab(ShortestPaths,Labels),
     ShortestPaths = lab(Paths,Labels))
   
