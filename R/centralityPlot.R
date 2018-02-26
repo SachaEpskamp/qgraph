@@ -34,10 +34,10 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
   Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative, weighted = weighted, signed = signed)
 
   # If not missing, include only include vars:
-  if (!missing(include))
-  {
+  # if (!missing(include))
+  # {
     Long <- subset(Long, measure %in% include)
-  }
+  # }
   
 
   # Ordereing by node name to make nice paths:
