@@ -75,6 +75,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   InExpectedInfluence <- colSums(W)
   OutExpectedInfluence <- rowSums(W)
   
+  
   DistMat <- 1/(ifelse(posfun(W)==0,0,posfun(W)^alpha))
   if (pkg=="igraph"){
     igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "directed")

@@ -1,3 +1,4 @@
+export(mutualInformation)
 export(vein)
 export(flow)
 importFrom("utils", "capture.output")
