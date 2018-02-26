@@ -1,4 +1,4 @@
-qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL){
+qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL,round = TRUE, digits = 10){
   
   Ef<-edgelist[,1]-1
   Et<-edgelist[,2]-1
@@ -43,6 +43,11 @@ if (is.null(constraints))
 
 x[Cx]=constraints[Cx,1]
 y[Cy]=constraints[Cy,2]
+
+# Round:
+if (round){
+  weights <- round(weights, digits)
+}
 
   #Symmetrize the graph, just in case
   #d<-symmetrize(d,rule="weak",return.as.edgelist=TRUE) 

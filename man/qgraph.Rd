@@ -18,12 +18,12 @@ qgraph( input, ... )
 \item{groups}{An object that indicates which nodes belong together. Can be a list in which each element is a vector of integers identifying the numbers of the nodes that belong together, or a factor.}
 \item{minimum}{Edges with absolute weights under this value are not shown (but not omitted). Defaults to 0. Can also be set to \code{"sig"} to only show significant edges for \code{graph = "association"} and \code{graph = "concentration"}).  Significance level is controlled by \code{alpha} and \code{bonf} arguments}
 \item{maximum}{qgraph regards the highest of the maximum or highest absolute edge weight as the highest weight to scale the edge widths too. To compare several graphs, set this argument to a higher value than any edge weight in the graphs (typically 1 for correlations).}
-\item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to \code{NULL}, no cutoff is used and all edges vary in width and color. Defaults to NULL for graphs with less then 20 nodes. For larger graphs the \code{cut} value is automatically chosen to be equal to the maximum of the 75th quantile of absolute edge strengths or the edge strength corresponding to 2n-th edge strength (n being the number of nodes.)}
+\item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to \code{0}, no cutoff is used and all edges vary in width and color. Defaults to 0 for graphs with less then 20 nodes. For larger graphs the \code{cut} value is automatically chosen to be equal to the maximum of the 75th quantile of absolute edge strengths or the edge strength corresponding to 2n-th edge strength (n being the number of nodes.)}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
 
 \item{threshold}{A numeric value that defaults to 0. Edges with absolute weight that are not above this value are REMOVED from the network. This differs from \code{minimum} which simply changes the scaling of width and color so that edges with absolute weight under minimum are not plotted/invisible. Setting a threshold influences the spring layout and centrality measures obtained with the graph whereass setting a minimum does not. In the case of correlation (\code{graph = "association"}) or partial correlation (\code{graph = "concentration"}) networks this argument can also be given a string to omit insignificant edges. See description of this argumet in the next section (Additional options for correlation/covariance matrices).}
 \item{palette}{The palette used for coloring nodes when the \code{groups} argument is used. Can be one of \code{"rainbow"} (default), \code{"colorblind"} (making use of http://jfly.iam.u-tokyo.ac.jp/color/), \code{"pastel"}, \code{"gray"}, \code{"R"} and \code{"ggplot2"}.}
-\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"gray"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
+\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"gray"}, \code{"Hollywood"}, \code{"Borkulo"}, \code{"gimme"}, \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"} or \code{"Fried"}.}
 }
 }
 
@@ -42,7 +42,7 @@ qgraph( input, ... )
   
   \item{sampleSize}{The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
     \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
-        \item{lambda.min.ratio}{The minimal lambda ratio used in \code{\link{EBICGlasso}}, defaults to 0.01.}
+        \item{lambda.min.ratio}{The minimal lambda ratio used in \code{\link{EBICglasso}}, defaults to 0.01.}
     \item{gamma}{Alias for tuning (overwrites the tuning argument).}
       \item{refit}{
     Logical, should the optimal graph be refitted without LASSO regularization? Defaults to \code{FALSE} and only used if \code{graph = "glasso"}.
@@ -96,6 +96,7 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
 \item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
 \item{node.resolution}{Resolution of the nodes if \code{usePCH=FALSE}. Defaults to 100}
 \item{title}{String with a title to be drawn in the topleft of the plot.}
+\item{title.cex}{Size of the title, defaults to 1.}
 
 \item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
 
@@ -183,6 +184,7 @@ Arguments concerning the placement of nodes, in combination with 'layout'.
 \describe{
   \item{repulsion}{Scalar on the default repulse radius in the spring layout. Defaults to 1. Setting this argument to lower values (e.g., 0.5) will cause nodes in the spring layout to repulse eachother less. This is especially useful if a few unconnected nodes cause the giant component to visually be clustered too much in the same place.}
   \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when \code{layout = "spring"} or to an igraph function when such a function is assigned to 'layout'. Defaults to \code{ list(repulse.rad = nNodes^(repulsion * 3))} if \code{layout = "spring"} and \code{list()} otherwise.}
+  \item{layoutRound}{Logical, should weights be rounded (default 10 digits) before computing layouts? This will hopefully make sure different machines result in the same layout. Defaults to \code{TRUE}}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
   \item{aspect}{Should the original aspect ratio be maintained if rescale = TRUE? Defaults to FALSE. Set this to TRUE to keep the aspect ratio of the original layout (e.g. result from layout="spring").}
   \item{rotation}{A vector that can be used to rotate the circles created with the circular layout. Must contain the rotation in radian for each group of nodes. Defaults to zero for each group.}
