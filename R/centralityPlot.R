@@ -49,7 +49,7 @@ centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","rel
   if (orderBy == "default"){
     nodeLevels <- unique(gtools::mixedsort(as.character(Long$node), decreasing = decreasing))
   } else {
-    nodeLevels <- Long$node[Long$measure == orderBy][order(Long$value[Long$measure == orderBy], decreasing = decreasing)]
+    nodeLevels <- unique(Long$node[Long$measure == orderBy][order(Long$value[Long$measure == orderBy], decreasing = decreasing)])
   }
   Long$node <- factor(as.character(Long$node), levels = nodeLevels)
   Long <- Long[gtools::mixedorder(Long$node),]
