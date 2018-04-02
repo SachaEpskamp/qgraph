@@ -6,6 +6,7 @@ Changes in Verson 1.4.5
   o Added argument title.cex
   o centrality() now also returns InExpectedInfluence and OutExpectedInfluence
   o The 'include' argument in centralityPlot and clusteringPlot can now also be used to re-order the facets of the plot.
+  o Added the orderBy argument to centralityPlot()
 
 Changes in Version 1.4.4
   o Fixed a bug in EBICglasso in which only nLambda = 100 was supported

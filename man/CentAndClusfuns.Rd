@@ -17,7 +17,8 @@ centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
                  verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE)
 clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
-                  verbose = TRUE, standardized, relative)
+                  verbose = TRUE, standardized, relative,orderBy = "default", 
+                  decreasing = FALSE)
 centralityTable(..., labels, standardized = TRUE,  relative = FALSE, weighted =
                  TRUE, signed = TRUE)
 clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
@@ -52,6 +53,8 @@ Logical, should all measures be scaled relative to the largest value? Argument i
 }
 \item{weighted}{Logical, set to \code{FALSE} to set all edge weights to 1 or -1}
 \item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
+\item{orderBy}{String indicating which measure to order by. Can be default (alphabetical), or one of the measures plotted (e.g., \code{"Strength"})}
+\item{decreasing}{Logical indicating if the nodes should be ordered increasing or decreasing}
 }
 
 \details{
