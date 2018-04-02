@@ -12,8 +12,10 @@
 logGaus <- function(S,K,n)
 {
     KS = K %*% S
+    # SK = S %*% K
     tr = function(A) sum(diag(A))
     return(n/2 * (log(det(K)) - tr(KS))  )
+    # return(n/2 * (log(det(K)) - tr(SK))  )
 }
 
 # Computes the EBIC:
@@ -23,6 +25,7 @@ EBIC <- function(S,K,n,gamma = 0.5,E,countDiagonal=FALSE)
   L <- logGaus(S, K, n)
   if (missing(E)){
     E <- sum(K[lower.tri(K,diag=countDiagonal)] != 0)
+    # E <- sum(abs(K[lower.tri(K,diag=countDiagonal)]) > sqrt(.Machine$double.eps))
   }
   p <- nrow(K)
   

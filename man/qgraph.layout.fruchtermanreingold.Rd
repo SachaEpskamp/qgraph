@@ -11,7 +11,8 @@ using constraints in this layout.}
 \usage{
 qgraph.layout.fruchtermanreingold(edgelist, weights=NULL, vcount=NULL,
 	niter=NULL, max.delta=NULL, area=NULL, cool.exp=NULL, repulse.rad=NULL,
-	init=NULL, groups=NULL, rotation=NULL, layout.control=0.5, constraints=NULL)
+	init=NULL, groups=NULL, rotation=NULL, layout.control=0.5, constraints=NULL, 
+	round = TRUE, digits = 10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,6 +29,8 @@ qgraph.layout.fruchtermanreingold(edgelist, weights=NULL, vcount=NULL,
   \item{rotation}{See \code{\link{qgraph}}}
   \item{layout.control}{See \code{\link{qgraph}}}
   \item{constraints}{A constraints matrix with two columns and a row for each node containing a NA if the node is free or a fixed value for one of the coordinates.}
+   \item{round}{Logical indicating if the initial input should be rounded}
+   \item{digits}{Number of digits to round initial input to}
 }
 \details{
 All arguments for this function can be passed from \code{\link{qgraph}} to this function by using the 'layout.par' argument, 
@@ -57,7 +60,7 @@ Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
 
 Carter T. Butts <buttsc@uci.edu> (2010). sna: Tools for Social Network Analysis. R package version 2.2-0. http://CRAN.R-project.org/package=sna
 
-Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129–1164.
+Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129?1164.
 }
 \author{
 Sacha Epskamp (mail@sachaepskamp.com)

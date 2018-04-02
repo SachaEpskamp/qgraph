@@ -362,9 +362,12 @@ qgraph <- function( input, ... )
   if (graph == "EBICglasso"){
     graph <- "glasso"
   }
+  if (graph == "EBICglasso2"){
+    graph <- "glasso2"
+  }
   
-  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","factorial")){
-    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso' or 'factorial'")
+  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","glasso2","factorial")){
+    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso', 'glasso2', or 'factorial'")
   }
   
   # Reset graph for replotting:
@@ -1457,6 +1460,14 @@ qgraph <- function( input, ... )
       if (edgelist) stop("Concentration graph requires correlation matrix")
       if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
       input <- EBICglasso(input, sampleSize, gamma = tuning,
+                          refit=refit, lambda.min.ratio = lambda.min.ratio)
+    }
+    
+    if (graph == "glasso2")
+    {
+      if (edgelist) stop("Concentration graph requires correlation matrix")
+      if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
+      input <- EBICglasso2(input, sampleSize, gamma = tuning,
                           refit=refit, lambda.min.ratio = lambda.min.ratio)
     }
     

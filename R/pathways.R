@@ -5,8 +5,8 @@ pathways <- function(
   from, # Vector of from indices
   to, # vector of to indices, if missing to all nodes.
   fading = 0.25,
-  lty = 3,
-  layout = c("old","center")
+  lty = 3
+  # layout = c("old","center")
 ){
   stopifnot(is(graph,"qgraph"))
   

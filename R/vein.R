@@ -66,7 +66,7 @@ vein <- function(
   }
   
   # Now run through Reingold_Tilford:
-  iG <- igraph:::graph_from_edgelist(as.matrix(VeinEdgelist[,1:2]),directed = FALSE)
+  iG <- igraph::graph_from_edgelist(as.matrix(VeinEdgelist[,1:2]),directed = FALSE)
   Layout <- igraph::layout_as_tree(iG, root = from, mode = "all")
   
   # Equalize levels if needed:

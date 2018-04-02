@@ -18,7 +18,8 @@ ggmFit <- function(
   ebicTuning = 0.5,
   nPar, # Number of parameters, used for more general fit
   invSigma, # inverse variance covariance matrix instead of pcor, used for more general fit
-  tol = 1e-10
+  tol = 1e-10,
+  verbose = TRUE
 ){
   mimic <- "lavaan"
   
@@ -76,7 +77,7 @@ ggmFit <- function(
   
   # Refit:
   if (refit){
-    message("Refitting network without LASSO regularization")
+    if (verbose) message("Refitting network without LASSO regularization")
     glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(invSigma == 0, arr.ind=TRUE)))
     invSigma <- glassoRes$wi
     Sigma <- glassoRes$w
@@ -219,6 +220,7 @@ ggmFit <- function(
   # Results object:
   Results <- list(
     network = qgraph::wi2net(invSigma),
+    invSigma=invSigma,
     fitMeasures = fitMeasures
   )
   class(Results) <- "ggmFit"
