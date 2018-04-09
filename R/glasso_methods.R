@@ -25,6 +25,7 @@ EBICglassoCore <- function(
   refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
   ebicMethod = c("new","old"),
   ebicRefit = TRUE,
+  threshold = FALSE,
   ... # glasso arguments
 ) {
   ebicMethod <- match.arg(ebicMethod)
@@ -57,6 +58,19 @@ lambda.min = lambda.min.ratio*lambda.max
       glas_path$wi[,,i] <- res$wi
     }
   }
+    
+    # Threshold:
+    if (threshold){
+      for (i in 1:nlambda){
+        # Degree:
+        p <- ncol(glas_path$wi[,,i])
+        # D <- max(centrality(ifelse( glas_path$wi[,,i] != 0,1, 0))$OutDegree)
+        threshold <- (log(p*(p-1)/2)) / sqrt(n)
+        glas_path$wi[,,i] <- ifelse(abs(glas_path$wi[,,i]) < threshold,0,glas_path$wi[,,i])
+        
+      }
+    }
+    
   
 
     # Compute EBICs:
@@ -152,6 +166,7 @@ EBICglasso <- function(
   penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
   refit = FALSE, # If TRUE, network structure is taken and non-penalized version is computed.
+  threshold = FALSE,
   # ebicMethod = c("new","old"),
   # ebicRefit = FALSE,
   ... # glasso arguments
@@ -169,6 +184,7 @@ EBICglasso <- function(
                 refit = refit, # If TRUE, network structure is taken and non-penalized version is computed.
                 ebicMethod = "old",
                 ebicRefit = FALSE,
+                threshold=threshold,
                 ...)
 }
 
@@ -188,6 +204,7 @@ EBICglasso2 <- function(
   refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
   # ebicMethod = c("new","old"),
   # ebicRefit = FALSE,
+  threshold = FALSE,
   ... # glasso arguments
 ) {
   EBICglassoCore(S=S, # Sample covariance matrix
@@ -203,6 +220,7 @@ EBICglasso2 <- function(
                  refit = refit, # If TRUE, network structure is taken and non-penalized version is computed.
                  ebicMethod = "new",
                  ebicRefit = TRUE,
+                 threshold=threshold,
                  ...)
 }
 

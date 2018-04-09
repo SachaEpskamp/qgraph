@@ -1460,7 +1460,8 @@ qgraph <- function( input, ... )
       if (edgelist) stop("Concentration graph requires correlation matrix")
       if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
       input <- EBICglasso(input, sampleSize, gamma = tuning,
-                          refit=refit, lambda.min.ratio = lambda.min.ratio)
+                          refit=refit, lambda.min.ratio = lambda.min.ratio,
+                          threshold = isTRUE(threshold))
     }
     
     if (graph == "glasso2")
@@ -1468,7 +1469,8 @@ qgraph <- function( input, ... )
       if (edgelist) stop("Concentration graph requires correlation matrix")
       if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
       input <- EBICglasso2(input, sampleSize, gamma = tuning,
-                          refit=refit, lambda.min.ratio = lambda.min.ratio)
+                          refit=refit, lambda.min.ratio = lambda.min.ratio,
+                          threshold = isTRUE(threshold))
     }
     
     diag(input) <- 1
@@ -1477,6 +1479,12 @@ qgraph <- function( input, ... )
   
   
   ## Thresholding ####
+  # If threshold is TRUE and graph = "glasso" or "glasso2", set to FALSE:
+  if (isTRUE(threshold) && (graph == "glasso" || graph == "glasso2")){
+    threshold <- 0
+  }
+    
+    
   if (is.character(threshold))
   {    
     if (graph == "default")
