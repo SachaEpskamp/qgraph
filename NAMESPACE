@@ -84,6 +84,7 @@ export(mat2vec)
 export(wi2net)
 export(EBICglasso)
 export(EBICglasso2)
+export(EBICglassoCluster)
 importFrom(Matrix, forceSymmetric)
 import(glasso)
 
@@ -135,3 +136,9 @@ importFrom("utils", "browseURL", "combn", "menu", "setTxtProgressBar",
              "txtProgressBar")
 importFrom("graphics", "plot.new", "plot.window")
 importFrom("stats", "uniroot")
+
+
+# Parallel:
+import(parallel)
+importFrom("pbapply","pblapply")
+importFrom("abind","abind")

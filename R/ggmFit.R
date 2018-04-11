@@ -78,7 +78,12 @@ ggmFit <- function(
   # Refit:
   if (refit){
     if (verbose) message("Refitting network without LASSO regularization")
-    glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(invSigma == 0, arr.ind=TRUE)))
+    if (!all(invSigma[upper.tri(invSigma)]!=0)){
+      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(invSigma == 0, arr.ind=TRUE)))      
+    } else {
+      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0))
+    }
+
     invSigma <- glassoRes$wi
     Sigma <- glassoRes$w
   } else {
