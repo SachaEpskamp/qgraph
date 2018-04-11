@@ -113,7 +113,7 @@ EBICglassoCluster <- function(
       if (ebicMethod == "old"){
         res$EBIC <- EBIC(S, res$wi, n, gamma, countDiagonal=countDiagonal)
       } else {
-          fit <- ggmFit(wi2net(res$wi), S, n, ebicTuning = gamma,refit = FALSE, verbose = FALSE)
+          fit <- ggmFit(invSigma = res$wi, covMat = S, sampleSize = n, ebicTuning = gamma,refit = FALSE, verbose = FALSE)
           res$EBIC <- fit$fitMeasures$ebic
       }
       

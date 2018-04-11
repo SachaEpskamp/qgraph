@@ -31,7 +31,7 @@ nextcomb <- function(x)
   } 
 }
 
-# Innfer function to compute all possible stepups or stepdowns:
+# Inner function to compute all possible stepups or stepdowns:
 stepGraphs <- function(x, step = "up")
 {
   inds <- which(x==as.integer(step=="down"))
@@ -74,6 +74,8 @@ findGraph <- function(
   startSig = TRUE # If stepup or stepdown, start with significant edges only according to Holm adjustment?
 )
 {
+  warning("The function 'findGraph' is deprecated. Please use 'ggmModSelect' instead.")
+  
   stopifnot(!missing(S)|!missing(n))
   
   if (is.data.frame(S))

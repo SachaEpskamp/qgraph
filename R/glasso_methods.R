@@ -24,8 +24,9 @@ EBICglassoCore <- function(
   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
   refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
   ebicMethod = c("new","old"),
-  ebicRefit = TRUE,
+  regularized = TRUE,
   threshold = FALSE,
+  verbose = TRUE,
   ... # glasso arguments
 ) {
   ebicMethod <- match.arg(ebicMethod)
@@ -76,7 +77,7 @@ lambda.min = lambda.min.ratio*lambda.max
     # Compute EBICs:
     if (ebicMethod == "old"){
       EBICs <- sapply(seq_along(lambda),function(i){
-        if (ebicRefit){
+        if (!regularized){
           invSigma <- ggmFit(wi2net(glas_path$wi[,,i]), S, sampleSize = n, ebicTuning = gamma, refit = TRUE,verbose = FALSE)$invSigma
         } else {
           invSigma <- glas_path$wi[,,i]
@@ -85,7 +86,7 @@ lambda.min = lambda.min.ratio*lambda.max
       })     
     } else {
       EBICs <- sapply(seq_along(lambda),function(i){
-          fit <- ggmFit(wi2net(glas_path$wi[,,i]), S, n, ebicTuning = gamma,refit = ebicRefit, verbose = FALSE)
+          fit <- ggmFit(wi2net(glas_path$wi[,,i]), S, n, ebicTuning = gamma,refit = !regularized, verbose = FALSE)
           # print(fit$fitMeasures$ebic)
           # browser()
           fit$fitMeasures$ebic
@@ -129,8 +130,12 @@ lambda.min = lambda.min.ratio*lambda.max
   # Refit network:
   # Refit:
   if (refit){
-    message("Refitting network without LASSO regularization")
-    glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0 & upper.tri(net), arr.ind=TRUE), trace = 0, penalize.diagonal=penalize.diagonal, ...))
+    if (verbose) message("Refitting network without LASSO regularization")
+    if (!all(net[upper.tri(net)]!=0)){
+      glassoRes <- suppressWarnings(glasso::glasso(S, 0, zero = which(net == 0 & upper.tri(net), arr.ind=TRUE), trace = 0, penalize.diagonal=penalize.diagonal, ...))      
+    } else {
+      glassoRes <- suppressWarnings(glasso::glasso(S, 0, trace = 0, penalize.diagonal=penalize.diagonal, ...))
+    }
     net <- as.matrix(forceSymmetric(wi2net(glassoRes$wi)))
     colnames(net) <- rownames(net) <- colnames(S)
     optwi <- glassoRes$wi
@@ -167,6 +172,7 @@ EBICglasso <- function(
   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
   refit = FALSE, # If TRUE, network structure is taken and non-penalized version is computed.
   threshold = FALSE,
+  verbose = TRUE,
   # ebicMethod = c("new","old"),
   # ebicRefit = FALSE,
   ... # glasso arguments
@@ -183,45 +189,46 @@ EBICglasso <- function(
                 countDiagonal = countDiagonal, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
                 refit = refit, # If TRUE, network structure is taken and non-penalized version is computed.
                 ebicMethod = "old",
-                ebicRefit = FALSE,
+                regularized = TRUE,
                 threshold=threshold,
+                verbose=verbose,
                 ...)
 }
-
-
-# Computes optimal glasso network based on EBIC:
-EBICglasso2 <- function(
-  S, # Sample covariance matrix
-  n, # Sample size
-  gamma = 0.5,
-  penalize.diagonal = FALSE, # Penalize diagonal?
-  nlambda = 100,
-  lambda.min.ratio = 0.01,
-  returnAllResults = FALSE, # If true, returns a list
-  checkPD = TRUE, # Checks if matrix is positive definite and stops if not
-  penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
-  countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
-  refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
-  # ebicMethod = c("new","old"),
-  # ebicRefit = FALSE,
-  threshold = FALSE,
-  ... # glasso arguments
-) {
-  EBICglassoCore(S=S, # Sample covariance matrix
-                 n=n, # Sample size
-                 gamma = gamma,
-                 penalize.diagonal = penalize.diagonal, # Penalize diagonal?
-                 nlambda = nlambda,
-                 lambda.min.ratio = lambda.min.ratio,
-                 returnAllResults = returnAllResults, # If true, returns a list
-                 checkPD = checkPD, # Checks if matrix is positive definite and stops if not
-                 penalizeMatrix = penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
-                 countDiagonal = countDiagonal, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
-                 refit = refit, # If TRUE, network structure is taken and non-penalized version is computed.
-                 ebicMethod = "new",
-                 ebicRefit = TRUE,
-                 threshold=threshold,
-                 ...)
-}
+# 
+# 
+# # Computes optimal glasso network based on EBIC:
+# EBICglasso2 <- function(
+#   S, # Sample covariance matrix
+#   n, # Sample size
+#   gamma = 0.5,
+#   penalize.diagonal = FALSE, # Penalize diagonal?
+#   nlambda = 100,
+#   lambda.min.ratio = 0.01,
+#   returnAllResults = FALSE, # If true, returns a list
+#   checkPD = TRUE, # Checks if matrix is positive definite and stops if not
+#   penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
+#   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
+#   refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
+#   # ebicMethod = c("new","old"),
+#   # ebicRefit = FALSE,
+#   threshold = FALSE,
+#   ... # glasso arguments
+# ) {
+#   EBICglassoCore(S=S, # Sample covariance matrix
+#                  n=n, # Sample size
+#                  gamma = gamma,
+#                  penalize.diagonal = penalize.diagonal, # Penalize diagonal?
+#                  nlambda = nlambda,
+#                  lambda.min.ratio = lambda.min.ratio,
+#                  returnAllResults = returnAllResults, # If true, returns a list
+#                  checkPD = checkPD, # Checks if matrix is positive definite and stops if not
+#                  penalizeMatrix = penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
+#                  countDiagonal = countDiagonal, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
+#                  refit = refit, # If TRUE, network structure is taken and non-penalized version is computed.
+#                  ebicMethod = "new",
+#                  regularized = TRUE,
+#                  threshold=threshold,
+#                  ...)
+# }
 
 
