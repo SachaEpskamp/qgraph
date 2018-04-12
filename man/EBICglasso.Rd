@@ -5,14 +5,15 @@
 Compute Gaussian graphical model using graphical lasso based on extended BIC criterium.
 }
 \description{
-This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie and Tibshirani, 2011) to compute a sparse gaussian graphical model with the graphical lasso (Friedman, Hastie \& Tibshirani, 2008). The tuning parameter is chosen using the Extended Bayesian Information criterium  (EBIC) described by Foygel \& Drton (2010). 
+This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie and Tibshirani, 2011) to compute a sparse gaussian graphical model with the graphical lasso (Friedman, Hastie \& Tibshirani, 2008). The tuning parameter is chosen using the Extended Bayesian Information criterium  (EBIC). 
 }
 
 
 \usage{
 EBICglasso(S, n, gamma = 0.5, penalize.diagonal = FALSE, nlambda = 100, 
             lambda.min.ratio = 0.01, returnAllResults = FALSE, checkPD = TRUE, 
-            penalizeMatrix, countDiagonal = FALSE, refit = FALSE, ...)
+            penalizeMatrix, countDiagonal = FALSE, refit = FALSE, threshold = FALSE,
+            verbose = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,12 +50,18 @@ Ratio of lowest lambda value compared to maximal lambda
   \item{refit}{
     Logical, should the optimal graph be refitted without LASSO regularization? Defaults to \code{FALSE}.
   }
+ \item{threshold}{
+    Logical, should elements of the precision matrix that are below (log(p*(p-1)/2)) / sqrt(n) be removed (both before EBIC computation and in final model)? Set to \code{TRUE} to ensure high specificity.
+  }
+  \item{verbose}{
+    Logical, should progress output be printed to the console?
+  }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}
 }
 }
 \details{
-The glasso is run for 100 values of the tuning parameter logarithmically spaced between the maximal value of the tuning parameter at which all edges are zero, lamba_max, and lambda_max/100. For each of these graphs the EBIC is computed and the graph with the best EBIC is selected. The partial correlation matrix is computed using \code{\link{wi2net}} and returned.
+The glasso is run for 100 values of the tuning parameter logarithmically spaced between the maximal value of the tuning parameter at which all edges are zero, lamba_max, and lambda_max/100. For each of these graphs the EBIC is computed and the graph with the best EBIC is selected. The partial correlation matrix is computed using \code{\link{wi2net}} and returned. When \code{threshold = TRUE}, elements of the inverse variance-covariance matrix are first thresholded using the theoretical bound (Jankova and van de Geer, 2018).
 }
 \value{
 A partial correlation matrix
@@ -73,8 +80,10 @@ Revelle, W. (2014) psych: Procedures for Personality and Psychological Research,
 Northwestern University, Evanston, Illinois, USA,
 http://CRAN.R-project.org/package=psych Version = 1.4.4.
 
-Douglas Bates and Martin Maechler (2014). Matrix: Sparse and Dense Matrix Classes and
+ Bates, D., and Maechler, M. (2014). Matrix: Sparse and Dense Matrix Classes and
 Methods. R package version 1.1-3. http://CRAN.R-project.org/package=Matrix
+
+Jankova, J., and van de Geer, S. (2018) Inference for high-dimensional graphical models. In: Handbook of graphical models (editors: Drton, M., Maathuis, M., Lauritzen, S., and Wainwright, M.). CRC Press: Boca Raton, Florida, USA.
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>
@@ -89,10 +98,10 @@ data(bfi)
 CorMat <- cor_auto(bfi[,1:25])
 
 # Compute graph with tuning = 0 (BIC):
-BICgraph <- EBICglasso(CorMat, nrow(bfi), 0)
+BICgraph <- EBICglasso(CorMat, nrow(bfi), 0, threshold = TRUE)
 
 # Compute graph with tuning = 0.5 (EBIC)
-EBICgraph <- EBICglasso(CorMat, nrow(bfi), 0.5)
+EBICgraph <- EBICglasso(CorMat, nrow(bfi), 0.5, threshold = TRUE)
 
 # Plot both:
 layout(t(1:2))

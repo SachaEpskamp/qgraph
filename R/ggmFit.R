@@ -18,7 +18,7 @@ ggmFit <- function(
   ebicTuning = 0.5,
   nPar, # Number of parameters, used for more general fit
   invSigma, # inverse variance covariance matrix instead of pcor, used for more general fit
-  tol = 1e-10,
+  tol = sqrt(.Machine$double.eps),
   verbose = TRUE
 ){
   mimic <- "lavaan"

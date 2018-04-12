@@ -1,12 +1,13 @@
-vein <- function(
+flow <- function(
   object, # qgraph object
   from, # Node of origin
-  horizontal = FALSE,
+  horizontal = TRUE,
   equalize = TRUE,
   minCurve = 1,
   maxCurve = 4,
   unfadeFirst = FALSE,
   fade = TRUE,
+  labels, # Same as qgraph
   # sizeOrig = 10,
   # sizeCon = 3,
   # sizeDiscon = 1,
@@ -24,6 +25,10 @@ vein <- function(
     stop("'from' must be of length 1")
   }
   
+  if (missing(labels)){
+    labels <- object$graphAttributes$Nodes$labels
+  }
+  
   # Obtain edgelist:
   E <- as.data.frame(object$Edgelist)
   
@@ -38,6 +43,13 @@ vein <- function(
   
   
   # Subset the edgelist as to retain only the simple vein-strucure outward of a node. Recursively, outward from the target node, add edges connected to the current nodes to nodes that are not currently in the vein graph
+  
+  
+  # From as character:
+  if (is.character(from)){
+    if (missing(labels) || !is.character(labels)) stop("No labels supplied")
+    from <- which(labels == from)
+  }
   
   # First part:
   part1 <- E[E[,1] == from,c("from","to","weight","id")]
@@ -111,7 +123,6 @@ vein <- function(
     fade <- ifelse(E[,1] %in% from | E[,2] %in% from, FALSE, NA)
   }
   
-  
   # Plot:
-  qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE,fade=fade, ...)
+  qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE,fade=fade,labels=labels, ...)
 }

@@ -66,8 +66,8 @@ lambda.min = lambda.min.ratio*lambda.max
         # Degree:
         p <- ncol(glas_path$wi[,,i])
         # D <- max(centrality(ifelse( glas_path$wi[,,i] != 0,1, 0))$OutDegree)
-        threshold <- (log(p*(p-1)/2)) / sqrt(n)
-        glas_path$wi[,,i] <- ifelse(abs(glas_path$wi[,,i]) < threshold,0,glas_path$wi[,,i])
+        thresh <- (log(p*(p-1)/2)) / sqrt(n)
+        glas_path$wi[,,i] <- ifelse(abs(glas_path$wi[,,i]) < thresh,0,glas_path$wi[,,i])
         
       }
     }
@@ -144,7 +144,7 @@ lambda.min = lambda.min.ratio*lambda.max
   }
 
   # If regularized and low lambda was selected, give warning:
-  if (regularized && lambda[opt] < 0.1 * lambda.max){
+  if (regularized && lambda[opt] < 0.1 * lambda.max && !isTRUE(threshold)){
     warning("A dense regularized network was selected (lambda < 0.1 * lambda.max). Recent work indicates a possible drop in specificity. Interpret the presence of the smallest edges with care. Setting threshold = TRUE will enforce high specificity, at the cost of sensitivity.")
   }
   

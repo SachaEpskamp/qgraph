@@ -312,6 +312,7 @@ qgraph <- function( input, ... )
   {
     lambda.min.ratio <- 0.01
   } else lambda.min.ratio <- qgraphObject$Arguments[['lambda.min.ratio']]  
+ 
   
   # Refit:
   if(is.null(qgraphObject$Arguments[['refit']]))
@@ -362,12 +363,12 @@ qgraph <- function( input, ... )
   if (graph == "EBICglasso"){
     graph <- "glasso"
   }
-  if (graph == "EBICglasso2"){
-    graph <- "glasso2"
+  if (graph == "ggmModSelect"){
+    graph <- "ggmModSelect"
   }
   
-  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","glasso2","factorial")){
-    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso', 'glasso2', or 'factorial'")
+  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","ggmModSelect","factorial")){
+    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso', 'ggmModSelect', or 'factorial'")
   }
   
   # Reset graph for replotting:
@@ -1464,13 +1465,11 @@ qgraph <- function( input, ... )
                           threshold = isTRUE(threshold))
     }
     
-    if (graph == "glasso2")
+    if (graph == "ggmModSelect")
     {
       if (edgelist) stop("Concentration graph requires correlation matrix")
-      if (is.null(sampleSize)) stop("'sampleSize' argument is needed for glasso estimation")
-      input <- EBICglasso2(input, sampleSize, gamma = tuning,
-                          refit=refit, lambda.min.ratio = lambda.min.ratio,
-                          threshold = isTRUE(threshold))
+      if (is.null(sampleSize)) stop("'sampleSize' argument is needed for ggmModSelect estimation")
+      input <- ggmModSelect(input, sampleSize, gamma = tuning, lambda.min.ratio = lambda.min.ratio)$graph
     }
     
     diag(input) <- 1
@@ -1479,9 +1478,9 @@ qgraph <- function( input, ... )
   
   
   ## Thresholding ####
-  # If threshold is TRUE and graph = "glasso" or "glasso2", set to FALSE:
-  if (isTRUE(threshold) && (graph == "glasso" || graph == "glasso2")){
-    threshold <- 0
+  # If threshold is TRUE and graph = "glasso" or "ggmModSelect", set to FALSE:
+  if (isTRUE(threshold) && (graph == "glasso" || graph == "ggmModSelect")){
+    threshold <- qgraphObject$Arguments[['threshold']] <- 0
   }
     
     

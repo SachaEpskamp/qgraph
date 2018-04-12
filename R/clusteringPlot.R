@@ -1,5 +1,7 @@
 clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"), labels, include , signed = FALSE, theme_bw = TRUE, print = TRUE,
-                           verbose = TRUE, standardized, relative)
+                           verbose = TRUE, standardized, relative,
+                           orderBy = "default", # Can also be one of the measures
+                           decreasing = FALSE)
 {
   scale <- match.arg(scale)
   
@@ -40,8 +42,15 @@ clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"),
   }
   
   # Ordereing by node name to make nice paths:
-  Long <- Long[gtools::mixedorder(Long$node),] 
-  Long$node <- factor(as.character(Long$node), levels = unique(gtools::mixedsort(as.character(Long$node))))
+  # Long <- Long[gtools::mixedorder(Long$node),] 
+  # Long$node <- factor(as.character(Long$node), levels = unique(gtools::mixedsort(as.character(Long$node))))
+  if (orderBy == "default"){
+    nodeLevels <- unique(gtools::mixedsort(as.character(Long$node), decreasing = decreasing))
+  } else {
+    nodeLevels <- names(sort(tapply(Long$value[Long$measure == orderBy],Long$node[Long$measure == orderBy],mean), decreasing=decreasing))
+  }
+  Long$node <- factor(as.character(Long$node), levels = nodeLevels)
+  Long <- Long[gtools::mixedorder(Long$node),]
   
   
   

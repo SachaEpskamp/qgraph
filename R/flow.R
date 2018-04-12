@@ -1,4 +1,4 @@
-flow <- function(
+flow2 <- function(
   object, # qgraph object
   from, # Node of origin
   horizontal = TRUE,

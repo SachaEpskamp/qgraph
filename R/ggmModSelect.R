@@ -2,7 +2,7 @@
 ggmModSelect <- function(
   S, # Sample covariance matrix
   n, # Sample size
-  gamma = 0.5, # EBIC parameter, set to 0 for BIC selection
+  gamma = 0, # EBIC parameter, set to 0 for BIC selection
   start = c("glasso","empty","full"),
   stepwise = TRUE,
   considerPerStep = c("subset","all"), # Subset will only consider changing edges that previously would improve EBIC. When no edge improves. All edges are tested again.

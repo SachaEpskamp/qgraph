@@ -14,7 +14,8 @@ These functions can be used to facilitate interpreting centrality and clustering
 centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
                  include = c("Degree","Strength","OutDegree","InDegree","OutStrength",
                  "InStrength", "Closeness","Betweenness"), theme_bw = TRUE, print = TRUE, 
-                 verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE)
+                 verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE, 
+                 orderBy = "default", decreasing = FALSE)
 clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
                   verbose = TRUE, standardized, relative,orderBy = "default", 
