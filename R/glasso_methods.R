@@ -143,6 +143,11 @@ lambda.min = lambda.min.ratio*lambda.max
     optwi <- glas_path$wi[,,opt]
   }
 
+  # If regularized and low lambda was selected, give warning:
+  if (regularized && lambda[opt] < 0.1 * lambda.max){
+    warning("A dense regularized network was selected (lambda < 0.1 * lambda.max). Recent work indicates a possible drop in specificity. Interpret the presence of the smallest edges with care. Setting threshold = TRUE will enforce high specificity, at the cost of sensitivity.")
+  }
+  
   # Return 
   if (returnAllResults){
     return(list(
