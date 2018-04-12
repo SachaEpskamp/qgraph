@@ -11,8 +11,8 @@ EBICglassoCluster <- function(
   checkPD = TRUE, # Checks if matrix is positive definite and stops if not
   penalizeMatrix, # Optional logical matrix to indicate which elements are penalized
   countDiagonal = FALSE, # Set to TRUE to get old qgraph behavior: conting diagonal elements as parameters in EBIC computation. This is not correct, but is included to replicate older analyses
-  refit = TRUE, # If TRUE, network structure is taken and non-penalized version is computed.
-  ebicMethod = c("new","old"),
+  refit = FALSE, # If TRUE, network structure is taken and non-penalized version is computed.
+  ebicMethod = c("old","new"),
   regularized = TRUE, # If FALSE: refit all networks
   threshold = FALSE,
   verbose = TRUE,

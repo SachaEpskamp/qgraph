@@ -11,8 +11,14 @@ ggmModSelect <- function(
   checkPD = TRUE,
   ... # EBICglasso arguments for starting point
 ) {
-  # Start:
-  start <- match.arg(start)
+  if (is.character(start)){
+    # Start:
+    start <- match.arg(start)
+  } else {
+    startMat <- start
+    start <- "manual"
+  }
+
   
   # Number of variables:
   nVar <- ncol(S)
@@ -48,6 +54,10 @@ ggmModSelect <- function(
   } else if (start == "full"){
     curGraph <- corpcor::cor2pcor(cov2cor(S))
     fit <- ggmFit(curGraph, S, n, verbose = FALSE, ebicTuning = gamma)
+    curEBIC <- fit$fitMeasures$ebic
+  } else if (start == "manual"){
+    curGraph <- startMat
+    fit <- ggmFit(startMat, S, n, verbose = FALSE, ebicTuning = gamma, refit = TRUE)
     curEBIC <- fit$fitMeasures$ebic
   }
   
@@ -148,6 +158,10 @@ ggmModSelect <- function(
   # stop cluster:
   if (nCores > 1){
     parallel::stopCluster(cl)
+  }
+  
+  if (!is.null(colnames(S))){
+    rownames(curGraph) <- colnames(curGraph) <- colnames(S)
   }
   
   return(list(
