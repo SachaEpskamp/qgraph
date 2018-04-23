@@ -23,6 +23,11 @@ ggmModSelect <- function(
   # Number of variables:
   nVar <- ncol(S)
   
+  # Warning if there are many variables:
+  if (nVar > 30 && stepwise && verbose){
+    message("'ggmModSelect' using stepwise = TRUE may be very slow in large graphs (> 30 nodes). Consider setting stepwise = FALSE")
+  }
+  
   if (checkPD){
     if (any(eigen(S)$values < 0)) stop("'S' is not positive definite")
   }

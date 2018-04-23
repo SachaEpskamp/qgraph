@@ -9,7 +9,7 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE,
   names(Wmats) <- fixnames(Wmats,"graph ")
   
   CentAuto <- lapply(Wmats, centrality_auto, weighted = weighted, signed = signed)
-  
+
   # Fix tables:
   for (g in seq_along(CentAuto))
   {

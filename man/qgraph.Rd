@@ -582,18 +582,6 @@ big5Graph <- qgraph(cor(big5),minimum=0.25,groups=big5groups,
   # Plot:
   qgraph(bfi_glasso, layout = "spring")
   
-  
-  ## Huge (glasso):
-  library("huge")
-  bfi_huge <- huge(huge.npn(bfi[,1:25]), method="glasso")
-  
-  # Auto select optimal and plot:
-  qgraph(bfi_huge, layout = "spring")
-  
-  # Manual select and plot:
-  sel <- huge.select(bfi_huge)
-  qgraph(sel, layout = "spring")
-  
 }
 
 }

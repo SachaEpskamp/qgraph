@@ -10,6 +10,7 @@ Changes in Verson 1.5
       o EBICglasso will now return a warning for when a dense network is selected
   o Added the 'ggmModSelect' function, which can be used for unregularized GGM model search
   o ggmFit now treats absolute edges under sqrt(.Machine$double.eps) as zeroes
+  o Fixed a bug where graph = "pcor" with threshold = "sig" required column/row names for the input correlation matrix
 
 Changes in Version 1.4.4
   o Fixed a bug in EBICglasso in which only nLambda = 100 was supported

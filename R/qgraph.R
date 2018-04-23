@@ -1531,7 +1531,16 @@ qgraph <- function( input, ... )
       {
         nadj <- nadj - (nNodes - 2)
       }
+
+      # Fix for col/row names bugs:
+      if (is.null(colnames(input))){
+        colnames(input) <- paste0("V",seq_len(ncol(input)))
+      }
+      if (is.null(rownames(input))){
+        rownames(input) <- paste0("V",seq_len(ncol(input)))
+      }
       
+      # Compute p-values:
       if (all(diag(input)==1)) 
       {
         pvals <- psych::corr.p(input,n = nadj, adjust = threshold, alpha = max(alpha))$p

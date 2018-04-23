@@ -60,7 +60,7 @@ corMat <- cor_auto(bfi[,1:25])
 
 # Glasso network:
 g2 <- qgraph(corMat,  cut = 0, graph = "glasso", sampleSize = nrow(bfi),
-             threshold = TRUE, layout = L)
+             threshold = TRUE)
 
 # Flow from A2:
 flow(g2, "A2", horizontal = TRUE)

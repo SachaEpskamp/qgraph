@@ -72,7 +72,7 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
   if(!is.matrix(x)) stop("the input network must be an adjacency or weights matrix")  
   
   diag(x)<-0 # loops are not included in centrality analysis
-  x<-abs(x) # signs are not included in centrality analysis
+  # x<-abs(x) # signs are not included in centrality analysis
   directed.gr<-ifelse(isSymmetric.matrix(object=x, tol=1e-12), FALSE, TRUE) # detect whether the graph is directed
   weighted.gr<-ifelse(all(mat2vec(x)%in%c(0,1)), FALSE, TRUE) # detect whether the graph is weighted
   
@@ -85,7 +85,7 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
   if(directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness, "Closeness"=centr$Closeness, "InStrength"=centr$InDegree, "OutStrength"=centr$OutDegree, "OutExpectedInfluence" = centr$OutExpectedInfluence, "InExpectedInfluence" = centr$InExpectedInfluence))
   if(!directed.gr & !weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Degree"=centr$OutDegree, "ExpectedInfluence" = centr$OutExpectedInfluence))
   if(!directed.gr & weighted.gr) centr1<-data.frame(cbind("Betweenness"=centr$Betweenness/2, "Closeness"=centr$Closeness, "Strength"=centr$OutDegree, "ExpectedInfluence" = centr$OutExpectedInfluence))
-  
+
   row.names(centr1)<-colnames(x)
   
   # if the largest component is smaller than the network, closeness is recomputed only on the largest component
