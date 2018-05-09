@@ -9,7 +9,8 @@ This function will search for an optimal Gaussian graphical model by minimizing 
 }
 \usage{
 ggmModSelect(S, n, gamma = 0, start = c("glasso", "empty", "full"), stepwise = TRUE, 
-  considerPerStep = c("subset", "all"), verbose = TRUE, nCores = 1, checkPD = TRUE, ...)
+  considerPerStep = c("subset", "all"), verbose = TRUE, nCores = 1, checkPD = TRUE, 
+  criterion = 'ebic', ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,6 +40,9 @@ The number of cores to use in testing models.
 }
   \item{checkPD}{
 If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that can not be a covariance matrix and (b) glasso can hang if the input is not positive definite.
+}
+\item{criterion}{
+String indicating an output of \code{\link{ggmFit}} to be minimized
 }
   \item{\dots}{
 Arguments sent to \code{\link[glasso]{glasso}}

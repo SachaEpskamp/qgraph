@@ -1,3 +1,6 @@
+Changes in Verson 1.5.1
+  o Added a criterion argument to ggmModSelect to allow for other criteria to be used.
+
 Changes in Verson 1.5
   o Added the 'flow' function to make flow plots
   o Fade now accepts numeric values, setting the exact fading (per edge)

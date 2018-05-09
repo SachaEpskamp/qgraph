@@ -9,6 +9,7 @@ ggmModSelect <- function(
   verbose = TRUE,
   nCores = 1,
   checkPD = TRUE,
+  criterion = "ebic",
   ... # EBICglasso arguments for starting point
 ) {
   if (is.character(start)){
@@ -48,29 +49,30 @@ ggmModSelect <- function(
       regularized = FALSE,
       threshold = FALSE,
       verbose = FALSE,
-      returnAllResults = TRUE)
+      returnAllResults = TRUE,
+      criterion = criterion)
     
     curGraph <- glassores$optnet
     curEBIC <- min(glassores$ebic)
   } else if (start == "empty"){
     curGraph <- matrix(0, nVar, nVar)
     fit <- ggmFit(curGraph, S, n, verbose = FALSE, ebicTuning = gamma)
-    curEBIC <- fit$fitMeasures$ebic
+    curEBIC <- fit$fitMeasures[[criterion]]
   } else if (start == "full"){
     curGraph <- corpcor::cor2pcor(cov2cor(S))
     fit <- ggmFit(curGraph, S, n, verbose = FALSE, ebicTuning = gamma)
-    curEBIC <- fit$fitMeasures$ebic
+    curEBIC <- fit$fitMeasures[[criterion]]
   } else if (start == "manual"){
     curGraph <- startMat
     fit <- ggmFit(startMat, S, n, verbose = FALSE, ebicTuning = gamma, refit = TRUE)
-    curEBIC <- fit$fitMeasures$ebic
+    curEBIC <- fit$fitMeasures[[criterion]]
   }
   
   # If not stepwise model search, stop here:
   if (!stepwise){
     Results <- list(
       graph = curGraph,
-      EBIC = curEBIC
+      criterion = curEBIC
     )
     return(Results)
   }
@@ -122,12 +124,12 @@ ggmModSelect <- function(
       
       return(list(
         graph = wi2net(glassores_test$wi),
-        EBIC = fit$fitMeasures$ebic
+        criterion = fit$fitMeasures[[criterion]]
       ))
     }, cl = cl)
     
     # All EBICs:
-    EBICs <- sapply(Results,"[[","EBIC")
+    EBICs <- sapply(Results,"[[","criterion")
     
     # Test if any smaller:
     if (any(EBICs < curEBIC)){
@@ -137,7 +139,7 @@ ggmModSelect <- function(
       # Find optimal network:
       optnet <- which.min(EBICs)
       curGraph <- Results[[optnet]]$graph
-      curEBIC <- Results[[optnet]]$EBIC
+      curEBIC <- Results[[optnet]]$criterion
       curConsider[optnet] <- FALSE
       if (verbose) message("Changed one edge...")
       
@@ -171,6 +173,6 @@ ggmModSelect <- function(
   
   return(list(
     graph = as.matrix(curGraph),
-    EBIC = curEBIC
+    criterion = curEBIC
   ))
 }
