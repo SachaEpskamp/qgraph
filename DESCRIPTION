@@ -6,7 +6,7 @@ Author: Sacha Epskamp, Giulio Costantini, Jonas Haslbeck, Angelique O. J. Cramer
 Maintainer: Sacha Epskamp <mail@sachaepskamp.com>
 Depends: R (>= 3.0.0)
 Suggests: RSVGTipsDevice, sendplot
-Imports:  methods, grDevices, psych, ellipse, lavaan, sem, plyr, Hmisc, igraph, jpeg, png, colorspace, Matrix, sna, corpcor, reshape2, ggplot2, glasso, huge, fdrtool, d3Network, ggm, gtools, BDgraph, parallel, pbapply, abind
+Imports:  methods, grDevices, psych, ellipse, lavaan, sem, plyr, Hmisc, igraph, jpeg, png, colorspace, Matrix, sna, corpcor, reshape2, ggplot2, glasso, huge, fdrtool, d3Network, ggm, gtools, BDgraph, parallel, pbapply, abind, NetworkToolbox
 ByteCompile: yes
 Description:  Weighted network visualization and analysis, as well as Gaussian graphical model computation. See Epskamp et al. (2012) <doi:10.18637/jss.v048.i04>.
 URL: http://sachaepskamp.com/qgraph
