@@ -27,6 +27,7 @@ EBICglassoCore <- function(
   regularized = TRUE,
   threshold = FALSE,
   verbose = TRUE,
+  criterion = "ebic",
   ... # glasso arguments
 ) {
   ebicMethod <- match.arg(ebicMethod)
@@ -76,6 +77,7 @@ lambda.min = lambda.min.ratio*lambda.max
 
     # Compute EBICs:
     if (ebicMethod == "old"){
+      if (criterion != "ebic") stop("criterion must be 'ebic' when ebicMethod = 'old'")
       EBICs <- sapply(seq_along(lambda),function(i){
         if (!regularized){
           invSigma <- ggmFit(wi2net(glas_path$wi[,,i]), S, sampleSize = n, ebicTuning = gamma, refit = TRUE,verbose = FALSE)$invSigma
@@ -89,7 +91,7 @@ lambda.min = lambda.min.ratio*lambda.max
           fit <- ggmFit(wi2net(glas_path$wi[,,i]), S, n, ebicTuning = gamma,refit = !regularized, verbose = FALSE)
           # print(fit$fitMeasures$ebic)
           # browser()
-          fit$fitMeasures$ebic
+          fit$fitMeasures[[criterion]]
         })
     }
 
