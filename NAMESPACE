@@ -1,5 +1,6 @@
 export(mutualInformation) 
 # export(vein)
+import(NetworkToolbox)
 export(flow)
 importFrom("utils", "capture.output")
 importFrom("grDevices", "hcl")
@@ -143,3 +144,4 @@ importFrom("stats", "uniroot")
 import(parallel)
 importFrom("pbapply","pblapply")
 importFrom("abind","abind")
+
