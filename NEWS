@@ -1,5 +1,6 @@
 Changes in Verson 1.5.1
   o Added a criterion argument to ggmModSelect to allow for other criteria to be used.
+  o The centrality help page now correctly describes "InExpectedInfluence" and "OutExpectedInfluence"
 
 Changes in Verson 1.5
   o Added the 'flow' function to make flow plots
