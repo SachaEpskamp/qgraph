@@ -44,6 +44,8 @@ A list containing:
 \item{InDegree}{A vector containing the inward degree of each node.}
 \item{Closeness}{A vector containing the closeness of each node.}
 \item{Betweenness}{A vector containing the betweenness of each node}
+%\item{rspbc}{Randomized Shortest Paths Betweenness Centrality as implemented in \code{\link[NetworkToolbox]}{rspbc}
+%\item{hybrid}{Hybrid centrality as implemented in \code{\link[NetworkToolbox]}{hybrid}
 \item{InExpectedInfluence}{Expected incoming influence - sum of incomming edge weights connected to a node (not made absolute)}
 \item{OutExpectedInfluence}{Expected outgoing influence - sum of outgoing edge weights connected to a node (not made absolute)}
 \item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
