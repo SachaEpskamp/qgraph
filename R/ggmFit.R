@@ -22,7 +22,7 @@ ggmFit <- function(
   verbose = TRUE
 ){
   mimic <- "lavaan"
-  
+ 
   if (missing(covMat)){
     stop("Argument 'covMat' may not be missing.")
   }
@@ -53,12 +53,13 @@ ggmFit <- function(
   if (missing(pcor)){
     pcor <- qgraph::wi2net(invSigma)
   }
+  pcor <- as.matrix(pcor)
   
   # Refit:
   if (refit){
     if (verbose) message("Refitting network")
     if (!all(pcor[upper.tri(pcor)]!=0)){
-      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(pcor == 0, arr.ind=TRUE)))      
+      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(as.matrix(pcor) == 0 & diag(nrow(pcor)) != 1, arr.ind=TRUE)))      
     } else {
       glassoRes <- suppressWarnings(glasso::glasso(covMat, 0))
     }
