@@ -45,46 +45,61 @@ ggmFit <- function(
   }
   
   # If both pcor and invSigma not missing, stop:
-  if (!missing(pcor) & !missing(invSigma)){
+  if (missing(pcor) & missing(invSigma)){
     stop("'pcor' and 'invSigma' arguments can not both be missing.")
   }
   
-  # If missing invSigma, compute from pcor:
-  if (missing(invSigma)){
-    # If qgraph object, extract:
-    if (is(pcor,"qgraph")){
-      pcor <- qgraph::getWmat(pcor)
-      diag(pcor) <- 1
-    }
-    
-    # Sample inverse variance-covariance matrix:
-    # try <- try(sampleInverse <- corpcor::pseudoinverse(covMat))
-    # if (is(try,"try-error")){
-    #   stop("Cannot compute pseudoinverse from sample variance-covariance matrix.")
-    # }
-    
-    # Remove diagonal:
-    diag(pcor) <- 0
-    
-    # Compute delta scaling matrices:
-    # Delta <- diag(sqrt(diag(sampleInverse)))
-    Delta <- diag(sqrt(diag(covMat)))
-    
-    # Compute inverse:
-    invSigma <- corpcor::pseudoinverse(Delta %*% cov2cor(corpcor::pseudoinverse(diag(ncol(pcor)) - pcor)) %*% Delta)
-    invSigma[abs(invSigma) < tol] <- 0
+  # If pcor missing, compute from invSigma:
+  if (missing(pcor)){
+    pcor <- qgraph::wi2net(invSigma)
   }
   
   # Refit:
   if (refit){
-    if (verbose) message("Refitting network without LASSO regularization")
-    if (!all(invSigma[upper.tri(invSigma)]!=0)){
-      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(invSigma == 0, arr.ind=TRUE)))      
+    if (verbose) message("Refitting network")
+    if (!all(pcor[upper.tri(pcor)]!=0)){
+      glassoRes <- suppressWarnings(glasso::glasso(covMat, 0, zero = which(pcor == 0, arr.ind=TRUE)))      
     } else {
       glassoRes <- suppressWarnings(glasso::glasso(covMat, 0))
     }
-
+    
+    if (!missing(invSigma)){
+      warning("'invSigma' is ignored when refit = TRUE")
+    }
     invSigma <- glassoRes$wi
+    
+  } else {
+    
+    # If missing invSigma, compute from pcor:
+    if (missing(invSigma)){
+      # If qgraph object, extract:
+      if (is(pcor,"qgraph")){
+        pcor <- qgraph::getWmat(pcor)
+        diag(pcor) <- 1
+      }
+      
+      # Sample inverse variance-covariance matrix:
+      # try <- try(sampleInverse <- corpcor::pseudoinverse(covMat))
+      # if (is(try,"try-error")){
+      #   stop("Cannot compute pseudoinverse from sample variance-covariance matrix.")
+      # }
+      
+      # Remove diagonal:
+      diag(pcor) <- 0
+      
+      # Compute delta scaling matrices:
+      # Delta <- diag(sqrt(diag(sampleInverse)))
+      Delta <- diag(sqrt(diag(covMat)))
+      
+      # Compute inverse:
+      invSigma <- corpcor::pseudoinverse(Delta %*% cov2cor(corpcor::pseudoinverse(diag(ncol(pcor)) - pcor)) %*% Delta)
+      invSigma[abs(invSigma) < tol] <- 0
+    }
+  }
+  
+  # Refit:
+  if (refit){
+    
     Sigma <- glassoRes$w
   } else {
     # Implied variance-covariance matrix:
@@ -131,7 +146,7 @@ ggmFit <- function(
   
   dfb <- fitMeasures$baseline.df
   dfm <- fitMeasures$df
-
+  
   fitMeasures$nfi <- (Tb - Tm) / Tb
   fitMeasures$tli <-  (Tb/dfb - Tm/dfm) / (Tb/dfb - 1) 
   fitMeasures$rfi <-  (Tb/dfb - Tm/dfm) / (Tb/dfb ) 
