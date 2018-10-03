@@ -271,7 +271,7 @@ qgraph <- function( input, ... )
                "curve", "curveAll", "curveDefault", "curveShape", "curveScale", 
                "curveScaleNodeCorrection", "curvePivot", "curvePivotShape", 
                "parallelEdge", "parallelAngle", "parallelAngleDefault", "edge.labels", 
-               "edge.label.cex", "edge.label.bg", "edge.label.position", "edge.label.font", 
+               "edge.label.cex", "edge.label.bg", "edge.label.position", "edge.label.font", "edge.label.color",
                "repulsion", "layout.par", "layout.control", "aspect", "rotation", 
                "legend", "legend.cex", "legend.mode", "GLratio", "layoutScale", 
                "layoutOffset", "nodeNames", "bg", "bgcontrol", "bgres", "pty", 
