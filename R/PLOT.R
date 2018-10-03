@@ -36,7 +36,9 @@ plot.qgraph <- function(x, ...)
   barLength <- x$graphAttributes$Nodes$barLength
   means <- x$graphAttributes$Nodes$means
   SDs <- x$graphAttributes$Nodes$SDs
-  
+  node.label.offset <- x$graphAttributes$Nodes$node.label.offset
+  node.label.position <- x$graphAttributes$Nodes$node.label.position
+
   # Pies:
   pieColor <- x$graphAttributes$Nodes$pieColor
   pieColor2 <- x$graphAttributes$Nodes$pieColor2
@@ -1045,16 +1047,18 @@ legend.mode <- x$plotOptions$legend.mode
         label.cex[] <- ave(label.cex,label.scale.equal,FUN=min)
       }
     }
-    
+
     # Plot labels:
     if (!is.list(labels))
     {
-      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=label.font, adj = c(0.5, 0.5))
+      # text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=label.font, adj = c(0.5, 0.5))
+      text(layout[,1],layout[,2],labels,cex=label.cex,col=lcolor,font=label.font, adj=node.label.offset, pos=node.label.position)
     } else {
       lcolor <- rep(lcolor,length=nNodes)
       for (i in seq_along(labels))
       {
-        text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=label.font[i], adj = c(0.5, 0.5))
+        # text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=label.font[i], adj = c(0.5, 0.5))
+        text(layout[i,1],layout[i,2],labels[[i]],cex=label.cex[i],col=lcolor[i],font=label.font[i], adj=node.label.offset, pos=node.label.position)
       }
     }
   }

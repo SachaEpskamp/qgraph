@@ -124,6 +124,12 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 \item{label.fill.horizontal}{
       Scalar (0 - 1) indicating the maximum proportion a label may fill a node horizontally.
    }
+\item{node.label.offset}{
+      A vector of length two with the x and y offset coordinates of the node label (e.g., \code{c(0.5, 0.5)} is the default and centers the label with respect to the node area). The vector is passed to the \code{adj} argument of \code{graphics::text} function.
+}
+\item{node.label.position}{
+      Either a numeric vector of length 1 (i.e., it gets recycled) or of length equal to the number of nodes in the network, used to set the positions of the node labels. Takes values between 1 and 4 as follows: 1 - bottom; 2 - left; 3 - top; 4 - right. Overrides the \code{node.label.offset} argument and values are passed to the \code{pos} argument of \code{graphics::text} function. Defaults to \code{NULL}. 
+}
    
 }
 }

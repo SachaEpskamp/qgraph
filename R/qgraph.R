@@ -285,7 +285,8 @@ qgraph <- function( input, ... )
                "piePastel", "BDgraph", "BDtitles", "edgelist", "weighted", "nNodes", 
                "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
-               "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex")
+               "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex",  
+               "node.label.offset", "node.label.position")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -1154,6 +1155,8 @@ qgraph <- function( input, ... )
   
   if(is.null(qgraphObject$Arguments$label.fill.horizontal)) label.fill.horizontal<-1 else label.fill.horizontal <- qgraphObject$Arguments$label.fill.horizontal
   if(is.null(qgraphObject$Arguments$label.fill.vertical)) label.fill.vertical<-1 else label.fill.vertical <- qgraphObject$Arguments$label.fill.vertical
+  if(is.null(qgraphObject$Arguments$node.label.offset)) node.label.offset<-c(0.5, 0.5) else node.label.offset <- qgraphObject$Arguments$node.label.offset
+  if(is.null(qgraphObject$Arguments$node.label.position)) node.label.position<-NULL else node.label.position <- qgraphObject$Arguments$node.label.position
   
   
   
@@ -2813,6 +2816,9 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$barLength <- barLength
   qgraphObject$graphAttributes$Nodes$means <- means
   qgraphObject$graphAttributes$Nodes$SDs <- SDs
+  qgraphObject$graphAttributes$Nodes$node.label.offset <- node.label.offset
+  qgraphObject$graphAttributes$Nodes$node.label.position <- node.label.position
+
   
   # Pies:
   qgraphObject$graphAttributes$Nodes$pieColor <- pieColor
