@@ -6,195 +6,195 @@ plot.qgraph <- function(x, ...)
   
   ## Edgelist:
   E <- list()
-  x$Edgelist$from -> E$from
-  x$Edgelist$to -> E$to
-  x$Edgelist$weight -> E$weight
-  x$Edgelist$directed -> directed
-  x$Edgelist$bidirectional -> bidirectional
+  E$from <- x$Edgelist$from
+  E$to <- x$Edgelist$to
+  E$weight <- x$Edgelist$weight
+  directed <- x$Edgelist$directed
+  bidirectional <- x$Edgelist$bidirectional
   
   # Nodes:
-  x$graphAttributes$Nodes$border.color -> bcolor
-  x$graphAttributes$Nodes$borders -> borders
-  x$graphAttributes$Nodes$border.width -> border.width
-  x$graphAttributes$Nodes$label.cex -> label.cex
-  x$graphAttributes$Nodes$label.font -> label.font
-  x$graphAttributes$Nodes$label.color -> lcolor
-  x$graphAttributes$Nodes$labels -> labels
-  x$graphAttributes$Nodes$names -> nodeNames
-  x$graphAttributes$Nodes$loopRotation -> loopRotation
-  x$graphAttributes$Nodes$shape -> shape
-  x$graphAttributes$Nodes$color -> vertex.colors
-  x$graphAttributes$Nodes$width -> vsize
-  x$graphAttributes$Nodes$height -> vsize2
-  x$graphAttributes$Nodes$subplots -> subplots
-  x$graphAttributes$Nodes$images -> images
-  x$graphAttributes$Nodes$tooltips -> tooltips
-  x$graphAttributes$Nodes$SVGtooltips -> SVGtooltips
-  x$graphAttributes$Nodes$bars -> bars
-  x$graphAttributes$Nodes$barSide -> barSide
-  x$graphAttributes$Nodes$barColor -> barColor
-  x$graphAttributes$Nodes$barLength -> barLength
-  x$graphAttributes$Nodes$means -> means
-  x$graphAttributes$Nodes$SDs -> SDs
+  bcolor <- x$graphAttributes$Nodes$border.color
+  borders <- x$graphAttributes$Nodes$borders
+  border.width <- x$graphAttributes$Nodes$border.width
+  label.cex <- x$graphAttributes$Nodes$label.cex
+  label.font <- x$graphAttributes$Nodes$label.font
+  lcolor <- x$graphAttributes$Nodes$label.color
+  labels <- x$graphAttributes$Nodes$labels
+  nodeNames <- x$graphAttributes$Nodes$names
+  loopRotation <- x$graphAttributes$Nodes$loopRotation
+  shape <- x$graphAttributes$Nodes$shape
+  vertex.colors <- x$graphAttributes$Nodes$color
+  vsize <- x$graphAttributes$Nodes$width
+  vsize2 <- x$graphAttributes$Nodes$height
+  subplots <- x$graphAttributes$Nodes$subplots
+  images <- x$graphAttributes$Nodes$images
+  tooltips <- x$graphAttributes$Nodes$tooltips
+  SVGtooltips <- x$graphAttributes$Nodes$SVGtooltips
+  bars <- x$graphAttributes$Nodes$bars
+  barSide <- x$graphAttributes$Nodes$barSide
+  barColor <- x$graphAttributes$Nodes$barColor
+  barLength <- x$graphAttributes$Nodes$barLength
+  means <- x$graphAttributes$Nodes$means
+  SDs <- x$graphAttributes$Nodes$SDs
   
   # Pies:
-  x$graphAttributes$Nodes$pieColor -> pieColor
-  x$graphAttributes$Nodes$pieColor2 -> pieColor2
-  x$graphAttributes$Nodes$pieBorder -> pieBorder
-  x$graphAttributes$Nodes$pieStart -> pieStart
-  x$graphAttributes$Nodes$pie -> pie
-  x$graphAttributes$Nodes$pieDarken -> pieDarken
+  pieColor <- x$graphAttributes$Nodes$pieColor
+  pieColor2 <- x$graphAttributes$Nodes$pieColor2
+  pieBorder <- x$graphAttributes$Nodes$pieBorder
+  pieStart <- x$graphAttributes$Nodes$pieStart
+  pie <- x$graphAttributes$Nodes$pie
+  pieDarken <- x$graphAttributes$Nodes$pieDarken
   
   # for BW only
   bw <- FALSE
   if(!is.null(x$graphAttributes$Nodes$density))
   {
-    x$graphAttributes$Nodes$density -> density
+    density <- x$graphAttributes$Nodes$density
     bw <- TRUE
   } else density <- rep(NA, length(shape))
     
   if(!is.null(x$graphAttributes$Nodes$angle))
   {
-    x$graphAttributes$Nodes$angle -> angle
+    angle <- x$graphAttributes$Nodes$angle
   }  else angle <- rep(0, length(shape))
     
   
   
   # Edges:
-  x$graphAttributes$Edges$curve -> curve
-  x$graphAttributes$Edges$color -> edge.color
-  x$graphAttributes$Edges$labels -> edge.labels
-  x$graphAttributes$Edges$label.cex -> edge.label.cex
-  x$graphAttributes$Edges$label.bg -> edge.label.bg
-  x$graphAttributes$Edges$label.font -> edge.label.font
-  x$graphAttributes$Edges$label.color -> ELcolor
-  x$graphAttributes$Edges$width -> edge.width
-  x$graphAttributes$Edges$lty -> lty
-  x$graphAttributes$Edges$edge.label.position -> edge.label.position
-  x$graphAttributes$Edges$asize -> asize
-  x$graphAttributes$Edges$residEdge -> residEdge
-  x$graphAttributes$Edges$CircleEdgeEnd -> CircleEdgeEnd
-  x$graphAttributes$Edges$Pvals -> Pvals
-  x$graphAttributes$Edges$parallelEdge -> parallelEdge
-  x$graphAttributes$Edges$parallelAngle -> parallelAngle
-  x$graphAttributes$Edges$edgeConnectPoints -> edgeConnectPoints
+  curve <- x$graphAttributes$Edges$curve
+  edge.color <- x$graphAttributes$Edges$color
+  edge.labels <- x$graphAttributes$Edges$labels
+  edge.label.cex <- x$graphAttributes$Edges$label.cex
+  edge.label.bg <- x$graphAttributes$Edges$label.bg
+  edge.label.font <- x$graphAttributes$Edges$label.font
+  ELcolor <- x$graphAttributes$Edges$label.color
+  edge.width <- x$graphAttributes$Edges$width
+  lty <- x$graphAttributes$Edges$lty
+  edge.label.position <- x$graphAttributes$Edges$edge.label.position
+  asize <- x$graphAttributes$Edges$asize
+  residEdge <- x$graphAttributes$Edges$residEdge
+  CircleEdgeEnd <- x$graphAttributes$Edges$CircleEdgeEnd
+  Pvals <- x$graphAttributes$Edges$Pvals
+  parallelEdge <- x$graphAttributes$Edges$parallelEdge
+  parallelAngle <- x$graphAttributes$Edges$parallelAngle
+  edgeConnectPoints <- x$graphAttributes$Edges$edgeConnectPoints
   
   # Knots:
-  x$graphAttributes$Knots$knots -> knots
-  x$graphAttributes$Knots$knot.size -> knot.size
-  x$graphAttributes$Knots$knot.color -> knot.color
-  x$graphAttributes$Knots$knot.borders -> knot.borders
-  x$graphAttributes$Knots$knot.border.color -> knot.border.color
-  x$graphAttributes$Knots$knot.border.width -> knot.border.width
+  knots <- x$graphAttributes$Knots$knots
+  knot.size <- x$graphAttributes$Knots$knot.size
+  knot.color <- x$graphAttributes$Knots$knot.color
+  knot.borders <- x$graphAttributes$Knots$knot.borders
+  knot.border.color <- x$graphAttributes$Knots$knot.border.color
+  knot.border.width <- x$graphAttributes$Knots$knot.border.width
   
   # Graph:
-  x$graphAttributes$Graph$nNodes -> nNodes
-  x$graphAttributes$Graph$weighted -> weighted
-  x$graphAttributes$Graph$edgesort -> edgesort
-  x$graphAttributes$Graph$scores -> scores
-  x$graphAttributes$Graph$scores.range -> scores.range
-  x$graphAttributes$Graph$groups -> groups
-  x$graphAttributes$Graph$minimum -> minimum
-  x$graphAttributes$Graph$maximum -> maximum
-  x$graphAttributes$Graph$cut -> cut
-  x$graphAttributes$Graph$polygonList -> polygonList
-  x$graphAttributes$Graph$mode -> mode
-  x$graphAttributes$Graph$color -> color
+  nNodes <- x$graphAttributes$Graph$nNodes
+  weighted <- x$graphAttributes$Graph$weighted
+  edgesort <- x$graphAttributes$Graph$edgesort
+  scores <- x$graphAttributes$Graph$scores
+  scores.range <- x$graphAttributes$Graph$scores.range
+  groups <- x$graphAttributes$Graph$groups
+  minimum <- x$graphAttributes$Graph$minimum
+  maximum <- x$graphAttributes$Graph$maximum
+  cut <- x$graphAttributes$Graph$cut
+  polygonList <- x$graphAttributes$Graph$polygonList
+  mode <- x$graphAttributes$Graph$mode
+  color <- x$graphAttributes$Graph$color
   
   # Layout:
-  x$layout -> layout
-  x$layout.orig -> original.layout
+  layout <- x$layout
+  original.layout <- x$layout.orig
   
   # Plot options:
-#   x$plotOptions$filetype -> filetype
-#   if (missing(filetype)) x$plotOptions$filetype -> filetype
-#   if (missing(filename)) x$plotOptions$filename -> filename
-#   if (missing(normalize)) x$plotOptions$normalize -> normalize
-#   if (missing(plot)) x$plotOptions$plot -> plot
-#   if (missing(mar)) x$plotOptions$mar -> mar
-#   if (missing(GLratio)) x$plotOptions$GLratio -> GLratio
-#   if (missing(legend)) x$plotOptions$legend -> legend
-#   if (missing(legend.cex)) x$plotOptions$legend.cex -> legend.cex
-#   if (missing(pty)) x$plotOptions$pty -> pty
-#   if (missing(XKCD)) x$plotOptions$XKCD -> XKCD
-#   if (missing(arrows)) x$plotOptions$arrows -> arrows
-#   if (missing(arrowAngle)) x$plotOptions$arrowAngle -> arrowAngle
-#   if (missing(open)) x$plotOptions$open -> open
-#   if (missing(curvePivot)) x$plotOptions$curvePivot -> curvePivot
-#   if (missing(curveShape)) x$plotOptions$curveShape -> curveShape
-#   if (missing(curveScale)) x$plotOptions$curveScale -> curveScale
-#   if (missing(curvePivotShape)) x$plotOptions$curvePivotShape -> curvePivotShape
-#   if (missing(label.scale)) x$plotOptions$label.scale -> label.scale
-#   if (missing(label.norm)) x$plotOptions$label.norm -> label.norm
-#   if (missing(label.prop)) x$plotOptions$label.prop -> label.prop
-#   if (missing(overlay)) x$plotOptions$overlay -> overlay
-#   if (missing(details)) x$plotOptions$details -> details
-#   if (missing(legend.mode)) x$plotOptions$legend.mode -> legend.mode
+#   filetype <- x$plotOptions$filetype
+#   filetype <- if (missing(filetype)) x$plotOptions$filetype
+#   filename <- if (missing(filename)) x$plotOptions$filename
+#   normalize <- if (missing(normalize)) x$plotOptions$normalize
+#   plot <- if (missing(plot)) x$plotOptions$plot
+#   mar <- if (missing(mar)) x$plotOptions$mar
+#   GLratio <- if (missing(GLratio)) x$plotOptions$GLratio
+#   legend <- if (missing(legend)) x$plotOptions$legend
+#   legend.cex <- if (missing(legend.cex)) x$plotOptions$legend.cex
+#   pty <- if (missing(pty)) x$plotOptions$pty
+#   XKCD <- if (missing(XKCD)) x$plotOptions$XKCD
+#   arrows <- if (missing(arrows)) x$plotOptions$arrows
+#   arrowAngle <- if (missing(arrowAngle)) x$plotOptions$arrowAngle
+#   open <- if (missing(open)) x$plotOptions$open
+#   curvePivot <- if (missing(curvePivot)) x$plotOptions$curvePivot
+#   curveShape <- if (missing(curveShape)) x$plotOptions$curveShape
+#   curveScale <- if (missing(curveScale)) x$plotOptions$curveScale
+#   curvePivotShape <- if (missing(curvePivotShape)) x$plotOptions$curvePivotShape
+#   label.scale <- if (missing(label.scale)) x$plotOptions$label.scale
+#   label.norm <- if (missing(label.norm)) x$plotOptions$label.norm
+#   label.prop <- if (missing(label.prop)) x$plotOptions$label.prop
+#   overlay <- if (missing(overlay)) x$plotOptions$overlay
+#   details <- if (missing(details)) x$plotOptions$details
+#   legend.mode <- if (missing(legend.mode)) x$plotOptions$legend.mode
 
-x$plotOptions$filetype -> filetype
-x$plotOptions$filename -> filename
-x$plotOptions$normalize -> normalize
-x$plotOptions$plot -> plot
-x$plotOptions$mar -> mar
-x$plotOptions$GLratio -> GLratio
-x$plotOptions$legend -> legend
-x$plotOptions$legend.cex -> legend.cex
-x$plotOptions$pty -> pty
-x$plotOptions$XKCD -> XKCD
-x$plotOptions$arrows -> arrows
-x$plotOptions$arrowAngle -> arrowAngle
-x$plotOptions$open -> open
-x$plotOptions$curvePivot -> curvePivot
-x$plotOptions$curveShape -> curveShape
-x$plotOptions$curveScale -> curveScale
-x$plotOptions$curveScaleNodeCorrection -> curveScaleNodeCorrection
-x$plotOptions$curvePivotShape -> curvePivotShape
-x$plotOptions$label.scale -> label.scale
-x$plotOptions$label.scale.equal -> label.scale.equal
-x$plotOptions$label.fill.vertical -> label.fill.vertical
-x$plotOptions$label.fill.horizontal -> label.fill.horizontal
-x$plotOptions$label.norm -> label.norm
-x$plotOptions$label.prop -> label.prop
-x$plotOptions$overlay -> overlay
-x$plotOptions$details -> details
-x$plotOptions$legend.mode -> legend.mode
+filetype <- x$plotOptions$filetype
+filename <- x$plotOptions$filename
+normalize <- x$plotOptions$normalize
+plot <- x$plotOptions$plot
+mar <- x$plotOptions$mar
+GLratio <- x$plotOptions$GLratio
+legend <- x$plotOptions$legend
+legend.cex <- x$plotOptions$legend.cex
+pty <- x$plotOptions$pty
+XKCD <- x$plotOptions$XKCD
+arrows <- x$plotOptions$arrows
+arrowAngle <- x$plotOptions$arrowAngle
+open <- x$plotOptions$open
+curvePivot <- x$plotOptions$curvePivot
+curveShape <- x$plotOptions$curveShape
+curveScale <- x$plotOptions$curveScale
+curveScaleNodeCorrection <- x$plotOptions$curveScaleNodeCorrection
+curvePivotShape <- x$plotOptions$curvePivotShape
+label.scale <- x$plotOptions$label.scale
+label.scale.equal <- x$plotOptions$label.scale.equal
+label.fill.vertical <- x$plotOptions$label.fill.vertical
+label.fill.horizontal <- x$plotOptions$label.fill.horizontal
+label.norm <- x$plotOptions$label.norm
+label.prop <- x$plotOptions$label.prop
+overlay <- x$plotOptions$overlay
+details <- x$plotOptions$details
+legend.mode <- x$plotOptions$legend.mode
 
-  x$plotOptions$background -> background
-  x$plotOptions$bg -> bg
-  x$plotOptions$residuals -> residuals
-  x$plotOptions$residScale -> residScale
+  background <- x$plotOptions$background
+  bg <- x$plotOptions$bg
+  residuals <- x$plotOptions$residuals
+  residScale <- x$plotOptions$residScale
 
 
-  x$plotOptions$srt -> srt
-  x$plotOptions$gray -> gray
-  x$plotOptions$overlaySize -> overlaySize
-  x$plotOptions$plotELBG -> plotELBG
-  x$plotOptions$alpha -> alpha
-  x$plotOptions$width -> width
-  x$plotOptions$height -> height
-  x$plotOptions$aspect -> aspect
-  x$plotOptions$rescale -> rescale
-  x$plotOptions$barsAtSide -> barsAtSide
-  x$plotOptions$bgres -> bgres
-  x$plotOptions$bgcontrol -> bgcontrol
-  x$plotOptions$resolution -> res
-  x$plotOptions$subpars -> subpars
-  x$plotOptions$subplotbg -> subplotbg
-  x$plotOptions$title -> title
-  x$plotOptions$title.cex -> title.cex
-  x$plotOptions$preExpression -> preExpression
-  x$plotOptions$postExpression -> postExpression
-  x$plotOptions$usePCH -> usePCH
-  x$plotOptions$node.resolution -> node.resolution
+  srt <- x$plotOptions$srt
+  gray <- x$plotOptions$gray
+  overlaySize <- x$plotOptions$overlaySize
+  plotELBG <- x$plotOptions$plotELBG
+  alpha <- x$plotOptions$alpha
+  width <- x$plotOptions$width
+  height <- x$plotOptions$height
+  aspect <- x$plotOptions$aspect
+  rescale <- x$plotOptions$rescale
+  barsAtSide <- x$plotOptions$barsAtSide
+  bgres <- x$plotOptions$bgres
+  bgcontrol <- x$plotOptions$bgcontrol
+  res <- x$plotOptions$resolution
+  subpars <- x$plotOptions$subpars
+  subplotbg <- x$plotOptions$subplotbg
+  title <- x$plotOptions$title
+  title.cex <- x$plotOptions$title.cex
+  preExpression <- x$plotOptions$preExpression
+  postExpression <- x$plotOptions$postExpression
+  usePCH <- x$plotOptions$usePCH
+  node.resolution <- x$plotOptions$node.resolution
 
-  x$plotOptions$noPar -> noPar
-  x$plotOptions$meanRange -> meanRange
+  noPar <- x$plotOptions$noPar
+  meanRange <- x$plotOptions$meanRange
   
-  x$plotOptions$drawPies -> drawPies
-  x$plotOptions$pieRadius -> pieRadius
-  x$plotOptions$pastel -> pastel
-  x$plotOptions$rainbowStart -> rainbowStart
-  x$plotOptions$piePastel -> piePastel
+  drawPies <- x$plotOptions$drawPies
+  pieRadius <- x$plotOptions$pieRadius
+  pastel <- x$plotOptions$pastel
+  rainbowStart <- x$plotOptions$rainbowStart
+  piePastel <- x$plotOptions$piePastel
   
   rm(x)
   
