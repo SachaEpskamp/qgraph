@@ -257,7 +257,7 @@ qgraph <- function( input, ... )
   allArgs <- c("input", "layout", "groups", "minimum", "maximum", "cut", "details", 
                "threshold", "palette", "theme", "graph", "threshold", "sampleSize", 
                "tuning", "refit", "countDiagonal", "alpha", "bonf", "FDRcutoff", 
-               "mar", "filetype", "filename", "width", "height", "normalize", 
+               "mar", "filetype", "filename", "width", "height", "normalize", "res",
                "DoNotPlot", "plot", "rescale", "standAlone", "color", "vsize", 
                "vsize2", "node.width", "node.height", "borders", "border.color", 
                "border.width", "shape", "polygonList", "vTrans", "subplots", 
