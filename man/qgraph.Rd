@@ -114,7 +114,7 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
     \item{label.color}{Character containing the color of the labels, defaults to "black"}
   \item{label.prop}{Controls the proportion of the width of the node that the label rescales to. Defaults to 0.
   9.}
-    \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same fontsize.}
+    \item{label.norm}{A single string that is used to normalize label size. If the width of the label is lower than the width of the hypothetical label given by this argument the width of label given by this argument is used instead. Defaults to "OOO" so that every label up to three characters has the same font size.}
     \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}
     \item{label.scale.equal}{Logical, set to \code{TRUE} to make make the font size of all labels equal}
 \item{label.font}{Integer specifying the label font of nodes. Can be a vector with value for each node}
@@ -124,6 +124,12 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 \item{label.fill.horizontal}{
       Scalar (0 - 1) indicating the maximum proportion a label may fill a node horizontally.
    }
+\item{node.label.offset}{
+      A vector of length two with the x and y offset coordinates of the node label (e.g., \code{c(0.5, 0.5)} is the default and centers the label with respect to the node area). The vector is passed to the \code{adj} argument of \code{graphics::text} function.
+}
+\item{node.label.position}{
+      Either a numeric vector of length 1 (i.e., it gets recycled) or of length equal to the number of nodes in the network, used to set the positions of the node labels. Takes values between 1 and 4 as follows: 1 - bottom; 2 - left; 3 - top; 4 - right. Overrides the \code{node.label.offset} argument and values are passed to the \code{pos} argument of \code{graphics::text} function. Defaults to \code{NULL}. 
+}
    
 }
 }
@@ -169,20 +175,21 @@ These arguments control the curvature of edges.  Most of them can be assigned a 
 }
 
 \subsection{Edge Labels}{
-These arguments influence the plotting of edge labels qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
+These arguments influence the plotting of edge labels qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a weights matrix is used as input.
 \describe{
   \item{edge.labels}{If FALSE, no edge labels are plotted. If TRUE, numerical edge weights are printed on the edges. This can also be a vector with a label for each edge. Defaults to FALSE. If a label contains an asterisk (e.g. "y1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}  
     \item{edge.label.cex}{Either a single number or a number per edge used as a scalar of the edge label size. Defaults to 1.}
     \item{edge.label.bg}{Either a logical or character vector/matrix. Indicates the background behind edge labels. If TRUE (default) a white background is plotted behind each edge label. If FALSE no background is plotted behind edge labels. Can also be a single color character, a vector or matrix of color vectors for each edge.}
-    \item{edge.label.position}{Vetor of numbers between 0 and 1 controlling the relative position of each edge label. Defaults to 0.5 for placing edge labels at the middle of the edge.}
-\item{edge.label.font}{Integer specifying the label font of edges. Can be a vector or matrix with value for each node}
+    \item{edge.label.position}{Vector of numbers between 0 and 1 controlling the relative position of each edge label. Defaults to 0.5 for placing edge labels at the middle of the edge.}
+  \item{edge.label.font}{Integer specifying the label font of edges. Can be a vector or matrix with value for each node}
+  \item{edge.label.color}{Character vector indicating the color of the edge labels. It can be either a vector of length equal to the number of edges in the network or a single character color that will be applied to all edges.}
 }
 }
 
 \subsection{Layout}{
 Arguments concerning the placement of nodes, in combination with 'layout'.
 \describe{
-  \item{repulsion}{Scalar on the default repulse radius in the spring layout. Defaults to 1. Setting this argument to lower values (e.g., 0.5) will cause nodes in the spring layout to repulse eachother less. This is especially useful if a few unconnected nodes cause the giant component to visually be clustered too much in the same place.}
+  \item{repulsion}{Scalar on the default repulse radius in the spring layout. Defaults to 1. Setting this argument to lower values (e.g., 0.5) will cause nodes in the spring layout to repulse each other less. This is especially useful if a few unconnected nodes cause the giant component to visually be clustered too much in the same place.}
   \item{layout.par}{A list of arguments passed to \code{\link{qgraph.layout.fruchtermanreingold}} when \code{layout = "spring"} or to an igraph function when such a function is assigned to 'layout'. Defaults to \code{ list(repulse.rad = nNodes^(repulsion * 3))} if \code{layout = "spring"} and \code{list()} otherwise.}
   \item{layoutRound}{Logical, should weights be rounded (default 10 digits) before computing layouts? This will hopefully make sure different machines result in the same layout. Defaults to \code{TRUE}}
 	\item{layout.control}{A scalar on the size of the circles created with the circular layout.}
