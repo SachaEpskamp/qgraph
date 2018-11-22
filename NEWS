@@ -1,5 +1,6 @@
 Changes in Version 1.5.2
   o Fixed a bug in ggmFit, leading to the number of parameters and estimated graph structure to occasionally be wrong
+  o Removed sna dependency
 
 Changes in Verson 1.5.1
   o Added a criterion argument to ggmModSelect to allow for other criteria to be used.

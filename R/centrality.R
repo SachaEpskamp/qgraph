@@ -96,7 +96,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     E <- cbind(c(row(W)),c(col(W)),c(posfun(W)))
     # E <- E[E[,3] != 0, ]
     # E[,3] <- 1/E[,3]
-    igraphObject <- igraph::graph_from_edgelist(E[,1:2],directed=TRUE)
+    igraphObject <- igraph::graph_from_edgelist(E[,1:2, drop=FALSE],directed=TRUE)
     
     
     

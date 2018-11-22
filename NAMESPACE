@@ -63,7 +63,7 @@ S3method(getWmat, bootnetResult)
 importFrom(reshape2, "melt")
 import(ggplot2)
 # importFrom(glasso, glasso)
-importFrom(sna, component.largest)
+# importFrom(sna, component.largest)
 
 import(fdrtool)
 
