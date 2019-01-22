@@ -33,7 +33,11 @@ flow <- function(
   E <- as.data.frame(object$Edgelist)
   
   # If not fully connected, stop:
-  foo <- capture.output(comps <- sna::components(getWmat(object)))
+  Adj <- 1*(getWmat(object)!=0)
+  diag(Adj) <- 0
+  Laplacian <- diag(rowSums(Adj)) - Adj
+  evLapl <- round(eigen(Laplacian)$values,10)
+  comps <- sum(evLapl == 0)
   if (comps > 1){
     stop("Disconnected graph is not yet supported.")
   }

@@ -226,9 +226,9 @@ These arguments control the background of the plot
 \describe{
 	\item{pty}{See 'par'}
 	\item{gray}{Logical, set to TRUE to plot the graph in grayscale colors}
-	\item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
-	\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
-	\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
+	% \item{tooltips}{A vector with tooltips for each node, only used when filetype='svg' or filetype='tex'}
+	%\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
+	%\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
 \item{font}{Integer specifying the default font for node and edge labels}
 }
 }
@@ -381,10 +381,6 @@ By default qgraph will plot the graph in a new R window. However the graphs are 
 
 Furthermore filetype can also be set to numerous other values. Alternatively any output device in R can be used by simply opening the device before calling qgraph and closing it with dev.off() after calling qgraph.
 
-The graphs can also be outputted in an SVG file using the RSVGTipsDevice package (Plate, 2009). An SVG image can be opened in most browsers (firefox and chrome are recommended), and can be used to display tooltips. Each node can be given a tooltip with the 'tooltips' argument. The function \code{\link{qgraph.svg}} can be used to make a battery of svg pictures with hyperlinks to each other, working like a navigation menu (note, RSVGTipsDevice is a 32-bit only package, so SVG functionality is not available in 64bit versions of R).
-
-Finally, the filetype 'tex' can be used. This uses the tikzDevice package to create a LaTeX file that can then be compiled in your LaTeX compiler to create a pdf file. The main benefit of this over plotting directly in a pdf file is that tooltips can be added which can be viewed in several PDF document readers (Adobe Reader is recommended for the best result).
-
 IMPORTANT NOTE: graphs made in qgraph must be exported programatically using device functions such as pdf() and png(). Manually resizing a graph and using export functions such as the one built into RStudio will give UNSTABLE RESULTS.}
 
 \section{Manual specification of color and width}{
@@ -452,8 +448,6 @@ Sacha Epskamp <mail@sachaepskamp.com>
 \seealso{
 \code{\link{cor_auto}}
 \code{\link{qgraph.animate}}
-\code{\link{qgraph.efa}}
-\code{\link{qgraph.pca}}
 \code{\link{qgraph.loadings}}
 }
 \examples{

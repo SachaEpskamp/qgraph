@@ -39,8 +39,6 @@ Sacha Epskamp (mail@sachaepskamp.com)
 }
 \seealso{
 \code{\link{qgraph}}
-\code{\link{qgraph.pca}}
-\code{\link{qgraph.efa}}
 }
 \examples{
 \dontrun{

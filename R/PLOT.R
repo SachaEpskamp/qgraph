@@ -28,8 +28,8 @@ plot.qgraph <- function(x, ...)
   vsize2 <- x$graphAttributes$Nodes$height
   subplots <- x$graphAttributes$Nodes$subplots
   images <- x$graphAttributes$Nodes$images
-  tooltips <- x$graphAttributes$Nodes$tooltips
-  SVGtooltips <- x$graphAttributes$Nodes$SVGtooltips
+  # tooltips <- x$graphAttributes$Nodes$tooltips
+  # SVGtooltips <- x$graphAttributes$Nodes$SVGtooltips
   bars <- x$graphAttributes$Nodes$bars
   barSide <- x$graphAttributes$Nodes$barSide
   barColor <- x$graphAttributes$Nodes$barColor
@@ -157,7 +157,7 @@ label.fill.vertical <- x$plotOptions$label.fill.vertical
 label.fill.horizontal <- x$plotOptions$label.fill.horizontal
 label.norm <- x$plotOptions$label.norm
 label.prop <- x$plotOptions$label.prop
-overlay <- x$plotOptions$overlay
+# overlay <- x$plotOptions$overlay
 details <- x$plotOptions$details
 legend.mode <- x$plotOptions$legend.mode
 
@@ -169,7 +169,7 @@ legend.mode <- x$plotOptions$legend.mode
 
   srt <- x$plotOptions$srt
   gray <- x$plotOptions$gray
-  overlaySize <- x$plotOptions$overlaySize
+  # overlaySize <- x$plotOptions$overlaySize
   plotELBG <- x$plotOptions$plotELBG
   alpha <- x$plotOptions$alpha
   width <- x$plotOptions$width
@@ -231,9 +231,10 @@ legend.mode <- x$plotOptions$legend.mode
     if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
     if (filetype=="svg")
     {
+      stop("filetype = 'svg' is no longer supported")
 #       if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
-      if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
-      RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
+      # if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
+      # RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
     }
     if (filetype=="tex")
     {
@@ -266,8 +267,8 @@ legend.mode <- x$plotOptions$legend.mode
       # 	
       # 	tikzDevice:::tikz(paste(filename,".tex",sep=""), standAlone = standAlone, width=width, height=height, packages=opt)
       
-      stop("Tikz device no longer supported due to removal from CRAN. Please see www.sachaepskamp.com/qgraph for a fix")
-    }
+      stop("filetype = 'tex' is no longer supported")
+      }
   }  
   
 
@@ -1062,25 +1063,25 @@ legend.mode <- x$plotOptions$legend.mode
       }
     }
   }
-  
-  if (!is.null(tooltips)) 
-  {
-    # Set Tooltips:
-    for (i in 1:nNodes) 
-    {
-      if (!is.na(tooltips[i]))
-      {
-        if (filetype=='svg') RSVGTipsDevice::setSVGShapeToolTip(desc=tooltips[i])
-      }
-      if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
-      {
-        RSVGTipsDevice::setSVGShapeToolTip(desc=SVGtooltips[i])
-      }       
-      NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],offset=0,polygonList))
-      polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
-      
-    }
-  }    
+  # 
+  # if (!is.null(tooltips)) 
+  # {
+  #   # Set Tooltips:
+  #   for (i in 1:nNodes) 
+  #   {
+  #     if (!is.na(tooltips[i]))
+  #     {
+  #       if (filetype=='svg') RSVGTipsDevice::setSVGShapeToolTip(desc=tooltips[i])
+  #     }
+  #     if (!is.null(SVGtooltips)) if (!is.na(SVGtooltips[i]))
+  #     {
+  #       RSVGTipsDevice::setSVGShapeToolTip(desc=SVGtooltips[i])
+  #     }       
+  #     NodeOutline <- lapply(seq(0,2*pi,length=10),function(r)Cent2Edge(layout[i,1],layout[i,2],r,vsize[i],vsize2[i],shape[i],offset=0,polygonList))
+  #     polygon(sapply(NodeOutline,'[',1),sapply(NodeOutline,'[',2),col="#01010101",border=NA)
+  #     
+  #   }
+  # }    
   
   
   ### CIRCLES AT END EDGES (RANDOM INTERCEPTS) ###
@@ -1118,28 +1119,28 @@ legend.mode <- x$plotOptions$legend.mode
   }
   
   ### Overlay:
-  if (overlay)
-  {
-    # Transparance in vertex colors:
-    num2hex <- function(x)
-    {
-      hex=unlist(strsplit("0123456789ABCDEF",split=""))
-      return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
-    }
-    
-    colHEX <- rgb(t(col2rgb(color)/255))
-    
-    fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
-
-    for (i in 1:length(groups)) 
-    {
-      if (length(groups[[i]]) > 1)
-      {
-        polygon(ellipse(cov(layout[groups[[i]],,drop=FALSE]),centre=colMeans(layout[groups[[i]],,drop=FALSE]),level=overlaySize),border=color[i],col=fillCols[i]) 
-      }
-    }
-  }
-  
+  # if (overlay)
+  # {
+  #   # Transparance in vertex colors:
+  #   num2hex <- function(x)
+  #   {
+  #     hex=unlist(strsplit("0123456789ABCDEF",split=""))
+  #     return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
+  #   }
+  #   
+  #   colHEX <- rgb(t(col2rgb(color)/255))
+  #   
+  #   fillCols <- paste(sapply(strsplit(colHEX,split=""),function(x)paste(x[1:7],collapse="")),num2hex(25),sep="")
+  # 
+  #   for (i in 1:length(groups)) 
+  #   {
+  #     if (length(groups[[i]]) > 1)
+  #     {
+  #       polygon(ellipse(cov(layout[groups[[i]],,drop=FALSE]),centre=colMeans(layout[groups[[i]],,drop=FALSE]),level=overlaySize),border=color[i],col=fillCols[i]) 
+  #     }
+  #   }
+  # }
+  # 
   if (is.null(names(groups))) names(groups) <- LETTERS[1:length(groups)]
   
   #if (!legend && filetype=="svg") plot(1, ann = FALSE, axes = FALSE, xlim = c(-1, 1), ylim = c(-1 ,1 ),type = "n", xaxs = "i", yaxs = "i")

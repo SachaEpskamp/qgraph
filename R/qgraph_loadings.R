@@ -86,10 +86,11 @@ if (filetype=='png') png(paste(filename,".png",sep=""),units='in',res=res,height
 if (filetype=='jpg' | filetype=='jpeg') jpeg(paste(filename,".jpg",sep=""),units='in',res=res,height=height,width=width)
 if (filetype=="svg")
 {
+  stop("filetype = 'svg' is no longer supported")
 # 	if (R.Version()$arch=="x64") stop("RSVGTipsDevice is not available for 64bit versions of R.")
 # 	require("RSVGTipsDevice")
-  if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
-  RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
+  # if (!requireNamespace("RSVGTipsDevice", quietly = TRUE)) stop("Please install 'RSVGTipsDevice' package first.")
+  # RSVGTipsDevice::devSVGTips(paste(filename,".svg",sep=""),width=width,height=height,title=filename)
 }
 
 # Rescale dims:

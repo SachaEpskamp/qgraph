@@ -4,24 +4,26 @@ qgraph <- function( input, ... )
 {
   
   # OTHER INPUT MODES: 
-  if (any(class(input)=="factanal") )
-  {
-    return(qgraph.efa(input,...))
-  } else if (any(class(input)=="principal") )
-  {
-    return(qgraph.pca(input,...))
-  } else if (any(class(input)=="lavaan"))
-  {
-    return(qgraph.lavaan(input,edge.labels=TRUE,include=8,filetype="",...))
-  } else if (any(class(input)=="sem"))
-  {
-    return(qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...))
-  } else if (any(class(input)=="loadings"))
+  # if (any(class(input)=="factanal") )
+  # {
+  #   return(qgraph.efa(input,...))
+  # } else if (any(class(input)=="principal") )
+  # {
+  #   return(qgraph.pca(input,...))
+  # } else if (any(class(input)=="lavaan"))
+  # {
+  #   return(qgraph.lavaan(input,edge.labels=TRUE,include=8,filetype="",...))
+  # } else if (any(class(input)=="sem"))
+  # {
+  #   return(qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...))
+  # } else 
+    if (any(class(input)=="loadings"))
   {
     return(qgraph.loadings(input,...))
-  }  else if (any(class(input)=="semmod"))
-  {
-    return(qgraph.semModel(input,...))
+  # }  
+  # else if (any(class(input)=="semmod"))
+  # {
+  #   return(qgraph.semModel(input,...))
   } else if (is.list(input) && identical(names(input),c("Bhat", "omega", "lambda1", "lambda2")))
   {
     layout(t(1:2))
@@ -275,7 +277,7 @@ qgraph <- function( input, ... )
                "repulsion", "layout.par", "layout.control", "aspect", "rotation", 
                "legend", "legend.cex", "legend.mode", "GLratio", "layoutScale", 
                "layoutOffset", "nodeNames", "bg", "bgcontrol", "bgres", "pty", 
-               "gray", "tooltips", "overlay", "overlaySize", "font", "directed", 
+               "gray",  "font", "directed", 
                "arrows", "arrowAngle", "asize", "open", "bidirectional", "mode", 
                "alpha", "sigScale", "bonf", "scores", "scores.range", "mode", 
                "edge.color", "knots", "knot.size", "knot.color", "knot.borders", 
@@ -1164,8 +1166,8 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$scores.range)) scores.range=NULL else scores.range=qgraphObject$Arguments$scores.range
   if(is.null(qgraphObject$Arguments$lty)) lty=1 else lty=qgraphObject$Arguments$lty
   if(is.null(qgraphObject$Arguments$vTrans)) vTrans=255 else vTrans=qgraphObject$Arguments$vTrans
-  if(is.null(qgraphObject$Arguments[['overlay']])) overlay <- FALSE else overlay <- qgraphObject$Arguments[['overlay']]
-  if(is.null(qgraphObject$Arguments[['overlaySize']])) overlaySize <- 0.5 else overlaySize <- qgraphObject$Arguments[['overlaySize']]
+  # if(is.null(qgraphObject$Arguments[['overlay']])) overlay <- FALSE else overlay <- qgraphObject$Arguments[['overlay']]
+  # if(is.null(qgraphObject$Arguments[['overlaySize']])) overlaySize <- 0.5 else overlaySize <- qgraphObject$Arguments[['overlaySize']]
   if(is.null(qgraphObject$Arguments[['GLratio']])) GLratio <- 2.5 else GLratio <- qgraphObject$Arguments[['GLratio']]
   if(is.null(qgraphObject$Arguments$layoutScale)) layoutScale <- 1 else layoutScale <- qgraphObject$Arguments$layoutScale
   if(is.null(qgraphObject$Arguments[['layoutOffset']])) layoutOffset <- 0 else layoutOffset <- qgraphObject$Arguments[['layoutOffset']]
@@ -1219,8 +1221,8 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$bidirectional)) bidirectional=FALSE else bidirectional=qgraphObject$Arguments$bidirectional
   
   # qgraphObject$Arguments for SVG pictures:
-  if(is.null(qgraphObject$Arguments$tooltips)) tooltips=NULL else tooltips=qgraphObject$Arguments$tooltips
-  if(is.null(qgraphObject$Arguments$SVGtooltips)) SVGtooltips=NULL else SVGtooltips=qgraphObject$Arguments$SVGtooltips
+  # if(is.null(qgraphObject$Arguments$tooltips)) tooltips=NULL else tooltips=qgraphObject$Arguments$tooltips
+  # if(is.null(qgraphObject$Arguments$SVGtooltips)) SVGtooltips=NULL else SVGtooltips=qgraphObject$Arguments$SVGtooltips
   if(is.null(qgraphObject$Arguments$hyperlinks)) hyperlinks=NULL else hyperlinks=qgraphObject$Arguments$hyperlinks
   
   # qgraphObject$Arguments for TEX:
@@ -2097,12 +2099,12 @@ qgraph <- function( input, ... )
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight/max(abs(E$weight)))^2,nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
+                                                       constraints=layout.par$constraints, version = layout.par$version)
             } else
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
+                                                       constraints=layout.par$constraints, version = layout.par$version)
             }
           } else
           {
@@ -2110,12 +2112,12 @@ qgraph <- function( input, ... )
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
+                                                       constraints=layout.par$constraints, version = layout.par$version)
             } else
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints)
+                                                       constraints=layout.par$constraints, version = layout.par$version)
             }
           }
         } 
@@ -2808,8 +2810,8 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Nodes$height <- vsize2
   qgraphObject$graphAttributes$Nodes$subplots <- subplots
   qgraphObject$graphAttributes$Nodes$images <- images
-  qgraphObject$graphAttributes$Nodes$tooltips <- tooltips
-  qgraphObject$graphAttributes$Nodes$SVGtooltips <- SVGtooltips
+  # qgraphObject$graphAttributes$Nodes$tooltips <- tooltips
+  # qgraphObject$graphAttributes$Nodes$SVGtooltips <- SVGtooltips
   qgraphObject$graphAttributes$Nodes$bars <- bars
   qgraphObject$graphAttributes$Nodes$barSide <- barSide
   qgraphObject$graphAttributes$Nodes$barColor <- barColor
@@ -2905,7 +2907,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$label.fill.horizontal <- label.fill.horizontal
   qgraphObject$plotOptions$label.prop <- label.prop
   qgraphObject$plotOptions$label.norm <- label.norm
-  qgraphObject$plotOptions$overlay <- overlay
+  # qgraphObject$plotOptions$overlay <- overlay
   qgraphObject$plotOptions$details <- details
   qgraphObject$plotOptions$title <- title
   qgraphObject$plotOptions$title.cex <- title.cex
@@ -2914,7 +2916,7 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$legend.mode <- legend.mode
   qgraphObject$plotOptions$srt <- srt
   qgraphObject$plotOptions$gray <- gray
-  qgraphObject$plotOptions$overlaySize <- overlaySize
+  # qgraphObject$plotOptions$overlaySize <- overlaySize
   qgraphObject$plotOptions$plotELBG <- plotELBG
   qgraphObject$plotOptions$alpha <- alpha
   qgraphObject$plotOptions$width <- width

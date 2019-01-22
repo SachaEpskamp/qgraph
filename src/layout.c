@@ -4,7 +4,7 @@
 #include <R.h>
 #include <Rmath.h>
 
-void qgraph_layout_fruchtermanreingold_R(
+void qgraph_layout_fruchtermanreingold_R_old(
 	int *pniter,
 	int *pvcount,
 	int *pecount,

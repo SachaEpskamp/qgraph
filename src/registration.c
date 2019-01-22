@@ -6,10 +6,10 @@ Check these declarations against the C/Fortran source code.
 */
 
 /* .C calls */
-extern void qgraph_layout_fruchtermanreingold_R(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void qgraph_layout_fruchtermanreingold_R_old(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 
 static const R_CMethodDef CEntries[] = {
-  {"qgraph_layout_fruchtermanreingold_R", (DL_FUNC) &qgraph_layout_fruchtermanreingold_R, 14},
+  {"qgraph_layout_fruchtermanreingold_R_old", (DL_FUNC) &qgraph_layout_fruchtermanreingold_R_old, 14},
   {NULL, NULL, 0}
 };
 
