@@ -5,7 +5,7 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   Et<-edgelist[,2]-1
   #Provide default settings
   ecount=nrow(edgelist)
-  if(is.null(version)) version <- 1
+  if(is.null(version)) version <- 2
   if (!is.null(vcount)) n=vcount else n=max(length(unique(c(edgelist))),max(edgelist))
   if (is.null(weights)) weights=rep(1,ecount)
   if(is.null(niter)) niter<-500
@@ -55,14 +55,20 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   #d<-symmetrize(d,rule="weak",return.as.edgelist=TRUE) 
   #Perform the layout calculation
   if (version == 1){
-    layout<-.C("qgraph_layout_fruchtermanreingold_R_old", as.integer(niter), as.integer(n), as.integer(ecount), as.double(max.delta),
-               as.double(area), as.double(cool.exp), as.double(repulse.rad), as.integer(Ef),
-               as.integer(Et), as.double(abs(weights)), as.double(x), as.double(y), as.integer(Cx), as.integer(Cy))
-    #Return the result
+    stop("Layout version 1 currently not supported.")
+    # layout<-.C("qgraph_layout_fruchtermanreingold_R_old", as.integer(niter), as.integer(n), as.integer(ecount), as.double(max.delta),
+    #            as.double(area), as.double(cool.exp), as.double(repulse.rad), as.integer(Ef),
+    #            as.integer(Et), as.double(abs(weights)), as.double(x), as.double(y), as.integer(Cx), as.integer(Cy))
+    # #Return the result
     
     return(cbind(layout[[11]],layout[[12]]))
   } else if (version == 2){
+
+    layout <- qgraph_layout_Cpp(as.integer(niter), as.integer(n), as.integer(ecount), max.delta,
+               as.double(area), as.double(cool.exp), as.double(repulse.rad), Ef,
+               Et, abs(weights), as.double(x), as.double(y), as.integer(Cx), as.integer(Cy))
     
+  #Return the result
   } else stop("Version must be 1 or 2.")
 }
 

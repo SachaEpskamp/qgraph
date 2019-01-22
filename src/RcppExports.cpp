@@ -5,13 +5,37 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _qgraph_rcpp_hello_world() {
+// qgraph_layout_Cpp
+NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, NumericVector Ef, /* Edges from */     NumericVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, IntegerVector Cx, IntegerVector Cy);
+RcppExport SEXP _qgraph_qgraph_layout_Cpp(SEXP pniterSEXP, SEXP pvcountSEXP, SEXP pecountSEXP, SEXP maxdeltaSEXP, SEXP pareaSEXP, SEXP pcoolexpSEXP, SEXP prepulseradSEXP, SEXP EfSEXP, SEXP EtSEXP, SEXP WSEXP, SEXP xInitSEXP, SEXP yInitSEXP, SEXP CxSEXP, SEXP CySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
+    Rcpp::traits::input_parameter< int >::type pniter(pniterSEXP);
+    Rcpp::traits::input_parameter< int >::type pvcount(pvcountSEXP);
+    Rcpp::traits::input_parameter< int >::type pecount(pecountSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type maxdelta(maxdeltaSEXP);
+    Rcpp::traits::input_parameter< double >::type parea(pareaSEXP);
+    Rcpp::traits::input_parameter< double >::type pcoolexp(pcoolexpSEXP);
+    Rcpp::traits::input_parameter< double >::type prepulserad(prepulseradSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Ef(EfSEXP);
+    Rcpp::traits::input_parameter< /* Edges from */     NumericVector >::type Et(EtSEXP);
+    Rcpp::traits::input_parameter< /*Edges t0*/     NumericVector >::type W(WSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type xInit(xInitSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type yInit(yInitSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Cx(CxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Cy(CySEXP);
+    rcpp_result_gen = Rcpp::wrap(qgraph_layout_Cpp(pniter, pvcount, pecount, maxdelta, parea, pcoolexp, prepulserad, Ef, Et, W, xInit, yInit, Cx, Cy));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_qgraph_qgraph_layout_Cpp", (DL_FUNC) &_qgraph_qgraph_layout_Cpp, 14},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_qgraph(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

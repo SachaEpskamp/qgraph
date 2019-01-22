@@ -17,6 +17,7 @@ Changes in Version 1.5.2
   o Added 'res' to the allArgs list
   o Added 'node.label.offset' and 'node.label.position' arguments to control the position of node labels (thanks to mihaiconstantin)
   o Some small bugfixes
+  o The Fruchterman Reingold layout has been translated from C to C++ using Rcpp. This will hopefully lead to more consistency in its results
 
 
 Changes in Verson 1.5.1
