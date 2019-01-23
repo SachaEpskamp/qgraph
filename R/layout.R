@@ -1,4 +1,4 @@
-qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL,round = TRUE, digits = 10){
+qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL,round = TRUE, digits = 6){
   version <- NULL
   Ef<-as.integer(edgelist[,1]-1)
   Et<-as.integer(edgelist[,2]-1)
@@ -48,6 +48,8 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   # Round:
   if (round){
     weights <- round(weights, digits)
+    x <- round(x, digits)
+    y <- round(y, digits)
   }
   
   #Symmetrize the graph, just in case
