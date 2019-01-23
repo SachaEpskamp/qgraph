@@ -78,7 +78,7 @@ NumericMatrix qgraph_layout_Cpp(
     for(j=0;j<n;j++)
     {
       /*Set the temperature (maximum move/iteration)*/
-      t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
+      t[j]=maxdelta[j]*pow((double)(i/niter),coolexp);
       
       if (j<n){
         for(k=j+1;k<n;k++){
@@ -132,7 +132,6 @@ NumericMatrix qgraph_layout_Cpp(
         y[j]+=dy[j];
       }
     }
-    Rf_PrintValue(x);
   }
   
   NumericMatrix Layout(n,2);

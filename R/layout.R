@@ -62,10 +62,23 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
     
     return(cbind(layout[[11]],layout[[12]]))
   } else if (version == 2){
-
-    layout <- qgraph_layout_Cpp(as.integer(niter), as.integer(n), as.integer(ecount), max.delta,
-               as.double(area), as.double(cool.exp), as.double(repulse.rad), Ef,
-               Et, abs(weights), as.double(x), as.double(y), as.logical(Cx), as.logical(Cy))
+    
+    
+    layout <- qgraph_layout_Cpp(
+      pniter = as.integer(niter),
+      pvcount = as.integer(n), 
+      pecount = as.integer(ecount),
+      maxdelta = max.delta,
+      parea = as.double(area), 
+      pcoolexp = as.double(cool.exp), 
+      prepulserad = as.double(repulse.rad), 
+      Ef = Ef,
+      Et = Et, 
+      W = abs(weights), 
+      xInit = as.double(x), 
+      yInit = as.double(y), 
+      Cx = as.logical(Cx), 
+      Cy = as.logical(Cy))
     
   #Return the result
   } else stop("Version must be 1 or 2.")
