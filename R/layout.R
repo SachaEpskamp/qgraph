@@ -8,7 +8,7 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   if (!is.null(vcount)) n=vcount else n=max(length(unique(c(edgelist))),max(edgelist))
   if (is.null(weights)) weights=rep(1,ecount)
   if(is.null(niter)) niter<-500
-  if(is.null(max.delta)) max.delta<-n
+  if(is.null(max.delta)) max.delta<-rep(n,n)
   if (length(max.delta)==1) max.delta=rep(max.delta,vcount)
   if(is.null(area)) area<-n^2
   if(is.null(cool.exp)) cool.exp<-1.5
