@@ -90,13 +90,13 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
   
   # if the largest component is smaller than the network, closeness is recomputed only on the largest component
   log <- capture.output({
-    graph <- igraph::graph.adjacency(x, mode = ifelse(directed.gr,"directed","undirected"))
+    graph <- igraph::graph.adjacency(1*(x!=0), mode = ifelse(directed.gr,"directed","undirected"))
     comps <- igraph::components(graph)
     largcomp <- comps$membership == which.max(comps$csize)
     # largcomp<-component.largest(x, connected="strong") # select only the largest component
   })
   
-  if(sum(largcomp)<ncol(x))
+  if(sum(largcomp)<ncol(x) & sum(largcomp) > 1)
   {
     x2<-x[largcomp,largcomp]
     clos<-centrality(qgraph(x2, diag=FALSE, labels=colnames(x)[largcomp], DoNotPlot=TRUE, minimum=0))$Closeness

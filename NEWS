@@ -18,6 +18,9 @@ Changes in Version 1.5.2
   o Added 'node.label.offset' and 'node.label.position' arguments to control the position of node labels (thanks to mihaiconstantin)
   o Some small bugfixes
   o The Fruchterman Reingold layout has been translated from C to C++ using Rcpp. This will hopefully lead to more consistency in its results
+  o Fixed a bug leading to centralityPlot occasionally crashing
+  o centralityPlot and clusteringPlot now support empty networks, and give an informative error when used on single-node networks
+  o theme = "neon" is now supported
 
 
 Changes in Verson 1.5.1

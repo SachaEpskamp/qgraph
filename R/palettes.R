@@ -19,3 +19,20 @@ ggplot_palette <- function(n) {
 
 # Fiftyshades:
 shadesOfGrey <- colorRampPalette(c("grey0", "grey100"))
+
+
+neon <- function(n, shift = 0){
+  # Taken from: http://jfly.iam.u-tokyo.ac.jp/color/
+  if (n > 6) warning("'colorblind' palette only supports 8 colors.")
+  Palette <- 
+    c(
+      "#ff3f3f",
+      "#99FC20",
+      "#ff48c4",
+      "#f3ea5f",
+      "#c04df9",
+      "#2bd1fc"
+    )
+  
+  Palette[(((shift + 1:n)-1)%%8)+1]
+}

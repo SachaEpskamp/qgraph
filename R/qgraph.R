@@ -597,9 +597,6 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['label.norm']])) label.norm <- "OOO" else label.norm <- qgraphObject$Arguments[['label.norm']]
   #   if(is.null(qgraphObject$Arguments[['label.cex']])) label.cex <- NULL else label.cex <- qgraphObject$Arguments[['label.cex']]
   #   
-  if(is.null(qgraphObject$Arguments[['font']])) font <- 1 else font <- qgraphObject$Arguments[['font']]
-  
-  if(is.null(qgraphObject$Arguments[['label.font']])) label.font <- font else label.font <- qgraphObject$Arguments[['label.font']]
   
   if(is.null(qgraphObject$Arguments[['nodeNames']])) nodeNames <- NULL else nodeNames <- qgraphObject$Arguments[['nodeNames']]
   
@@ -807,7 +804,6 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$weighted)) weighted=NULL else weighted=qgraphObject$Arguments$weighted
   if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
   if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
-  if(is.null(qgraphObject$Arguments[['edge.label.font']])) edge.label.font=font else edge.label.font=qgraphObject$Arguments[['edge.label.font']]
   if(is.null(qgraphObject$Arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=qgraphObject$Arguments[['edge.label.bg']]
   if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
   
@@ -820,6 +816,9 @@ qgraph <- function( input, ... )
   negDashed <- FALSE
   parallelEdge <- FALSE
   fade <- NA 
+  border.width <- 1 
+  font <- 1 
+  unCol <- "#808080" 
   # if (length(groups) < 8){
   #   palette <- "colorblind"
   # } else {
@@ -830,7 +829,7 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","gray","gimme","GIMME")){
+                      "Borkulo","colorblind","gray","gimme","GIMME","neon")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
  
@@ -875,7 +874,17 @@ qgraph <- function( input, ... )
       negCol <- "blue"
       parallelEdge <- TRUE
       fade <- FALSE
-    } 
+    } else if(theme == "neon"){
+      bg <- "black"
+      label.color <- "#8ffcff"
+      bcolor <- "#8ffcff"
+      border.width <- 4
+      font <- 2
+      posCol <- "#f3ea5f"
+      negCol <- "#c04df9"
+      unCol <- "#8ffcff"
+      palette <- "neon"
+    }
   }
   
   # Overwrite:
@@ -886,7 +895,14 @@ qgraph <- function( input, ... )
   if(!is.null(qgraphObject$Arguments[['negDashed']])) negDashed <- qgraphObject$Arguments[['negDashed']]
   if(!is.null(qgraphObject$Arguments[['posCol']])) posCol <- qgraphObject$Arguments[['posCol']]
   if(!is.null(qgraphObject$Arguments[['negCol']])) negCol <- qgraphObject$Arguments[['negCol']]
-  
+  if(!is.null(qgraphObject$Arguments[['border.width']])) border.width <- qgraphObject$Arguments[['border.width']]
+    
+  if(!is.null(qgraphObject$Arguments[['font']])) font <- qgraphObject$Arguments[['font']]
+  if(is.null(qgraphObject$Arguments[['edge.label.font']])) edge.label.font=font else edge.label.font=qgraphObject$Arguments[['edge.label.font']]
+  if(is.null(qgraphObject$Arguments[['label.font']])) label.font <- font else label.font <- qgraphObject$Arguments[['label.font']]
+   if(!is.null(qgraphObject$Arguments[['unCol']])) unCol <- qgraphObject$Arguments[['unCol']] 
+    
+    
   if (length(posCol)==1) posCol <- rep(posCol,2)
   if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
   if (length(negCol)==1) negCol <- rep(negCol,2)
@@ -925,7 +941,7 @@ qgraph <- function( input, ... )
     if (length(palette) != 1 && !is.character(palette)){
       stop("'palette' must be a single string.")
     }
-    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel")){
+    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon")){
       stop(paste0("Palette '",palette,"' is not supported."))
     }
   }
@@ -933,8 +949,7 @@ qgraph <- function( input, ... )
   
   ###
   
-  if(is.null(qgraphObject$Arguments[['unCol']])) unCol <- "#808080" else unCol <- qgraphObject$Arguments[['unCol']] 
-  
+
   if(is.null(qgraphObject$Arguments[['colFactor']])) colFactor <- 1 else colFactor <- qgraphObject$Arguments[['colFactor']]
   
   if(is.null(qgraphObject$Arguments[['edge.color']])) edge.color <- NULL else edge.color=qgraphObject$Arguments[['edge.color']]
@@ -986,7 +1001,7 @@ qgraph <- function( input, ... )
   
   
   
-  if(is.null(qgraphObject$Arguments[['border.width']])) border.width <- 1 else border.width <- qgraphObject$Arguments[['border.width']]
+  # if(is.null(qgraphObject$Arguments[['border.width']])) border.width <- 1 else border.width <- qgraphObject$Arguments[['border.width']]
   #if (!DoNotPlot & !is.null(dev.list()[dev.cur()]))
   #{
   #	par(mar=c(0,0,0,0), bg=background)
@@ -2099,12 +2114,12 @@ qgraph <- function( input, ... )
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight/max(abs(E$weight)))^2,nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints, version = layout.par$version)
+                                                       constraints=layout.par$constraints)
             } else
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),abs(E$weight),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints, version = layout.par$version)
+                                                       constraints=layout.par$constraints)
             }
           } else
           {
@@ -2112,12 +2127,12 @@ qgraph <- function( input, ... )
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints, version = layout.par$version)
+                                                       constraints=layout.par$constraints)
             } else
             {
               layout=qgraph.layout.fruchtermanreingold(cbind(E$from,E$to),numeric(0),nNodes,rotation=rotation,layout.control=layout.control,
                                                        niter=layout.par$niter,max.delta=layout.par$max.delta,area=layout.par$area,cool.exp=layout.par$cool.exp,repulse.rad=layout.par$repulse.rad,init=layout.par$init,
-                                                       constraints=layout.par$constraints, version = layout.par$version)
+                                                       constraints=layout.par$constraints)
             }
           }
         } 
@@ -2521,6 +2536,8 @@ qgraph <- function( input, ... )
       color <- ggplot_palette(length(groups))
     } else if (palette == "pastel"){
       color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
+    } else if (palette == "neon"){
+      color <- neon(length(groups))
     } else stop(paste0("Palette '",palette,"' is not supported."))
   }
   

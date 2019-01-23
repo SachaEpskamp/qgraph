@@ -3,7 +3,11 @@ centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE,
 {
   
   Wmats <- getWmat(list(...))
-
+  
+  # Check for single node:
+  if (any(sapply(Wmats,ncol)==1)){
+    stop("Not supported for single-node graphs")
+  }
 
   # Fix names:
   names(Wmats) <- fixnames(Wmats,"graph ")
