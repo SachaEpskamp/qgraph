@@ -126,7 +126,8 @@ NumericMatrix qgraph_layout_Cpp(
         dy[j]*=ded;
       }
       if (!Cx[j]){
-        x[j]+=Rf_fround(dx[j],10);               /*Update positions*/
+        Rf_PrintValue(dx);
+        x[j]+=Rf_fround(dx[j],10);               /*Update positions (correcting for floating point errors)*/
       }
       if (!Cy[j]){
         y[j]+=Rf_fround(dy[j],10);
