@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // qgraph_layout_Cpp
-NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, NumericVector Ef, /* Edges from */     NumericVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, IntegerVector Cx, IntegerVector Cy);
+NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, IntegerVector Ef, /* Edges from */     IntegerVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, LogicalVector Cx, LogicalVector Cy);
 RcppExport SEXP _qgraph_qgraph_layout_Cpp(SEXP pniterSEXP, SEXP pvcountSEXP, SEXP pecountSEXP, SEXP maxdeltaSEXP, SEXP pareaSEXP, SEXP pcoolexpSEXP, SEXP prepulseradSEXP, SEXP EfSEXP, SEXP EtSEXP, SEXP WSEXP, SEXP xInitSEXP, SEXP yInitSEXP, SEXP CxSEXP, SEXP CySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -18,13 +18,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type parea(pareaSEXP);
     Rcpp::traits::input_parameter< double >::type pcoolexp(pcoolexpSEXP);
     Rcpp::traits::input_parameter< double >::type prepulserad(prepulseradSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Ef(EfSEXP);
-    Rcpp::traits::input_parameter< /* Edges from */     NumericVector >::type Et(EtSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Ef(EfSEXP);
+    Rcpp::traits::input_parameter< /* Edges from */     IntegerVector >::type Et(EtSEXP);
     Rcpp::traits::input_parameter< /*Edges t0*/     NumericVector >::type W(WSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type xInit(xInitSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type yInit(yInitSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Cx(CxSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Cy(CySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type Cx(CxSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type Cy(CySEXP);
     rcpp_result_gen = Rcpp::wrap(qgraph_layout_Cpp(pniter, pvcount, pecount, maxdelta, parea, pcoolexp, prepulserad, Ef, Et, W, xInit, yInit, Cx, Cy));
     return rcpp_result_gen;
 END_RCPP

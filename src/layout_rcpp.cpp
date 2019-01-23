@@ -15,20 +15,20 @@ NumericMatrix qgraph_layout_Cpp(
     double parea,
     double pcoolexp,
     double prepulserad,
-    NumericVector Ef,  /* Edges from */
-    NumericVector Et, /*Edges t0*/
+    IntegerVector Ef,  /* Edges from */
+    IntegerVector Et, /*Edges t0*/
     NumericVector W,
     NumericVector xInit,
     NumericVector yInit,
-    IntegerVector Cx,
-    IntegerVector Cy
-  ) {
+    LogicalVector Cx,
+    LogicalVector Cy
+) {
   /*
-  Calculate a two-dimensional Fruchterman-Reingold layout for (symmetrized) 
-  edgelist matrix d.  Positions (stored in (x,y)) should be initialized
-  prior to calling this routine.
-  */
-
+   Calculate a two-dimensional Fruchterman-Reingold layout for (symmetrized) 
+   edgelist matrix d.  Positions (stored in (x,y)) should be initialized
+   prior to calling this routine.
+   */
+  
   int n = pvcount;
   int m = pecount;
   double frk;
@@ -46,8 +46,8 @@ NumericMatrix qgraph_layout_Cpp(
   double area = parea;
   double coolexp = pcoolexp;
   double repulserad = prepulserad;
-
-
+  
+  
   /*Allocate memory for transient structures*/
   // dx=(double *)R_alloc(n,sizeof(double));
   // dy=(double *)R_alloc(n,sizeof(double));
@@ -64,9 +64,9 @@ NumericMatrix qgraph_layout_Cpp(
     x[i] = xInit[i];
     y[i] = yInit[i];
   }
-
+  
   frk=sqrt(area/(double)n);
-
+  
   /*Run the annealing loop*/
   for(i=niter;i>=0;i--){
     /*Clear the deltas*/
@@ -79,31 +79,33 @@ NumericMatrix qgraph_layout_Cpp(
     {
       /*Set the temperature (maximum move/iteration)*/
       t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
-
-      for(k=j+1;k<n;k++){
-        /*Obtain difference vector*/
-        xd=x[j]-x[k];
-        yd=y[j]-y[k];
-        ded=sqrt(xd*xd+yd*yd);  /*Get dyadic euclidean distance*/
-        xd/=ded;                /*Rescale differences to length 1*/
-        yd/=ded;
-        /*Calculate repulsive "force"*/
-        rf=frk*frk*(1.0/ded-ded*ded/repulserad);
-        dx[j]+=xd*rf;        /*Add to the position change vector*/
-        dx[k]-=xd*rf;
-        dy[j]+=yd*rf;
-        dy[k]-=yd*rf;
+      
+      if (j<n){
+        for(k=j+1;k<n;k++){
+          /*Obtain difference vector*/
+          xd=x[j]-x[k];
+          yd=y[j]-y[k];
+          ded=sqrt(xd*xd+yd*yd);  /*Get dyadic euclidean distance*/
+          xd/=ded;                /*Rescale differences to length 1*/
+          yd/=ded;
+          /*Calculate repulsive "force"*/
+          rf=frk*frk*(1.0/ded-ded*ded/repulserad);
+          dx[j]+=xd*rf;        /*Add to the position change vector*/
+          dx[k]-=xd*rf;
+          dy[j]+=yd*rf;
+          dy[k]-=yd*rf;
+        }
       }
     }
     /*Calculate the attractive "force"*/
     for(j=0;j<m;j++){
       k=Ef[j];
       l=Et[j];
-
+      
       xd=x[k]-x[l];
       yd=y[k]-y[l];
       ded=sqrt(xd*xd+yd*yd);  /*Get dyadic euclidean distance*/
-    if (ded != 0)
+    if (std::abs(ded) > 0.000001)
     {
       xd/=ded;                /*Rescale differences to length 1*/
     yd/=ded;
@@ -113,7 +115,7 @@ NumericMatrix qgraph_layout_Cpp(
     dx[l]+=xd*af;
     dy[k]-=yd*af;
     dy[l]+=yd*af;
-
+    
     }
     /*Dampen motion, if needed, and move the points*/
     for(j=0;j<n;j++){
@@ -123,20 +125,22 @@ NumericMatrix qgraph_layout_Cpp(
         dx[j]*=ded;
         dy[j]*=ded;
       }
-      if (!Cx[j])
+      if (!Cx[j]){
         x[j]+=dx[j];               /*Update positions*/
-    if (!Cy[j])
-      y[j]+=dy[j];
+      }
+      if (!Cy[j]){
+        y[j]+=dy[j];
+      }
     }
   }
-
-    NumericMatrix Layout(n,2);
+  
+  NumericMatrix Layout(n,2);
   
   // Fill layout:
   for (i=0;i<n;i++){
     Layout(i,0) = x[i];
     Layout(i,1) = y[i];
   }
-
-    return Layout;
+  
+  return Layout;
 }

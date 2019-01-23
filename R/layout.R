@@ -1,7 +1,7 @@
 qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,niter=NULL,max.delta=NULL,area=NULL,cool.exp=NULL,repulse.rad=NULL,init=NULL,groups=NULL,rotation=NULL,layout.control=0.5,constraints=NULL,round = TRUE, digits = 10){
   version <- NULL
-  Ef<-edgelist[,1]-1
-  Et<-edgelist[,2]-1
+  Ef<-as.integer(edgelist[,1]-1)
+  Et<-as.integer(edgelist[,2]-1)
   #Provide default settings
   ecount=nrow(edgelist)
   if(is.null(version)) version <- 2
@@ -65,7 +65,7 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
 
     layout <- qgraph_layout_Cpp(as.integer(niter), as.integer(n), as.integer(ecount), max.delta,
                as.double(area), as.double(cool.exp), as.double(repulse.rad), Ef,
-               Et, abs(weights), as.double(x), as.double(y), as.integer(Cx), as.integer(Cy))
+               Et, abs(weights), as.double(x), as.double(y), as.logical(Cx), as.logical(Cy))
     
   #Return the result
   } else stop("Version must be 1 or 2.")
