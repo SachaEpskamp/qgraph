@@ -78,7 +78,8 @@ NumericMatrix qgraph_layout_Cpp(
     for(j=0;j<n;j++)
     {
       /*Set the temperature (maximum move/iteration)*/
-      t[j]=Rf_fround(maxdelta[j]*pow((double)i/(double)niter,coolexp),10);
+      // t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
+      t[j]=maxdelta[j]*pow((double)i/(double)50,coolexp);
       
       if (j<n){
         for(k=j+1;k<n;k++){
