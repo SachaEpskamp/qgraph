@@ -97,6 +97,7 @@ NumericMatrix qgraph_layout_Cpp(
         }
       }
     }
+    Rf_PrintValue(t);
     /*Calculate the attractive "force"*/
     for(j=0;j<m;j++){
       k=Ef[j];
