@@ -78,8 +78,7 @@ NumericMatrix qgraph_layout_Cpp(
     for(j=0;j<n;j++)
     {
       /*Set the temperature (maximum move/iteration)*/
-      // t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
-      t[j]=maxdelta[j]*pow((double)i/(double)50,coolexp);
+      t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
       
       if (j<n){
         for(k=j+1;k<n;k++){
@@ -98,7 +97,6 @@ NumericMatrix qgraph_layout_Cpp(
         }
       }
     }
-    Rf_PrintValue(t);
     /*Calculate the attractive "force"*/
     for(j=0;j<m;j++){
       k=Ef[j];
@@ -110,7 +108,7 @@ NumericMatrix qgraph_layout_Cpp(
     if (std::abs(ded) > 0.000001)
     {
       xd/=ded;                /*Rescale differences to length 1*/
-    yd/=ded;
+      yd/=ded;
     }
     af=ded*ded/frk*W[j];
     dx[k]-=xd*af;        /*Add to the position change vector*/
@@ -123,15 +121,15 @@ NumericMatrix qgraph_layout_Cpp(
     for(j=0;j<n;j++){
       ded=sqrt(dx[j]*dx[j]+dy[j]*dy[j]);
       if(ded>t[j]){                 /*Dampen to t*/
-    ded=t[j]/ded;
+        ded=t[j]/ded;
         dx[j]*=ded;
         dy[j]*=ded;
       }
       if (!Cx[j]){
-        x[j]+=dx[j];               /*Update positions*/
+        x[j]+=Rf_fround(dx[j],10);               /*Update positions*/
       }
       if (!Cy[j]){
-        y[j]+=dy[j];
+        y[j]+=Rf_fround(dy[j],10);
       }
     }
   }
