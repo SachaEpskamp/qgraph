@@ -78,7 +78,7 @@ NumericMatrix qgraph_layout_Cpp(
     for(j=0;j<n;j++)
     {
       /*Set the temperature (maximum move/iteration)*/
-      t[j]=maxdelta[j]*pow(i/(double)niter,coolexp);
+      t[j]=maxdelta[j]*pow((double)i/(double)niter,coolexp);
 
       for(k=j+1;k<n;k++){
         /*Obtain difference vector*/
