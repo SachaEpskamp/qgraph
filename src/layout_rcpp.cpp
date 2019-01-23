@@ -132,6 +132,7 @@ NumericMatrix qgraph_layout_Cpp(
         y[j]+=dy[j];
       }
     }
+    Rf_PrintValue(x);
   }
   
   NumericMatrix Layout(n,2);
