@@ -126,14 +126,12 @@ NumericMatrix qgraph_layout_Cpp(
         dy[j]*=ded;
       }
       if (!Cx[j]){
-        x[j]+=Rf_fround(dx[j],10);               /*Update positions (correcting for floating point errors)*/
+        x[j]+=Rf_fround(dx[j],6);               /*Update positions (correcting for floating point errors)*/
       }
       if (!Cy[j]){
-        y[j]+=Rf_fround(dy[j],10);
+        y[j]+=Rf_fround(dy[j],6);
       }
     }
-
-    Rf_PrintValue(wrap(dx[0]));
   }
   
   NumericMatrix Layout(n,2);
