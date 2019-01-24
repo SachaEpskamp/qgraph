@@ -1,10 +1,15 @@
 centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","relative"), 
-                           include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength","Closeness","Betweenness"), theme_bw = TRUE, print = TRUE,
+                           include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength"), 
+                           theme_bw = TRUE, print = TRUE,
                            verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE,
                            orderBy = "default", # Can also be one of the measures
                            decreasing = FALSE
 )
 {
+  if (any(include=="all") | any(include=="All")){
+    include <- c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength","Closeness","Betweenness",
+                 "ExpectedInfluence","OutExpectedInfluence","InExpectedInfluence")
+  }
   scale <- match.arg(scale)
   if (!missing(standardized)){
     warning("'standardized' argument is deprecated and will be removed.")

@@ -12,9 +12,9 @@ These functions can be used to facilitate interpreting centrality and clustering
 }
 \usage{
 centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
-                 include = c("Degree","Strength","OutDegree","InDegree","OutStrength",
-                 "InStrength", "Closeness","Betweenness"), theme_bw = TRUE, print = TRUE, 
-                 verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE, 
+                 include =c("Degree","Strength","OutDegree","InDegree","OutStrength",
+                 "InStrength"), theme_bw = TRUE, print = TRUE, verbose = TRUE, 
+                 standardized, relative, weighted = TRUE,signed = TRUE, 
                  orderBy = "default", decreasing = FALSE)
 clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
@@ -35,7 +35,7 @@ Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and
 A vector overwriting the labels used. Can be missing.
 }
   \item{include}{
-A vector of measures to include. if missing all measures available will be included. Not included by default are \code{"ExpectedInfluence"}, \code{"OutExpectedInfluence"}, and \code{"InExpectedInfluence"}
+A vector of measures to include. if missing all measures available will be included. Not included by default are \code{"Closeness"}, \code{"Betweenness"}, \code{"ExpectedInfluence"}, \code{"OutExpectedInfluence"}, and \code{"InExpectedInfluence"}. Can also be \code{"all"} or \code{"All"} to include all available centrality measures.
 }
 \item{theme_bw}{
 Adds the ggplot2 black and white theme to the plot

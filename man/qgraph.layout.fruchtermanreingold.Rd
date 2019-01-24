@@ -12,7 +12,7 @@ using constraints in this layout.}
 qgraph.layout.fruchtermanreingold(edgelist, weights=NULL, vcount=NULL,
 	niter=NULL, max.delta=NULL, area=NULL, cool.exp=NULL, repulse.rad=NULL,
 	init=NULL, groups=NULL, rotation=NULL, layout.control=0.5, constraints=NULL, 
-	round = TRUE, digits = 10)
+	round = TRUE, digits = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,7 +30,7 @@ qgraph.layout.fruchtermanreingold(edgelist, weights=NULL, vcount=NULL,
   \item{layout.control}{See \code{\link{qgraph}}}
   \item{constraints}{A constraints matrix with two columns and a row for each node containing a NA if the node is free or a fixed value for one of the coordinates.}
    \item{round}{Logical indicating if the initial input should be rounded}
-   \item{digits}{Number of digits to round initial input to}
+   \item{digits}{Number of digits to round initial input and displacement in the algorithm to. Defaults to 5. This helps prevent floating point disrepancies between different operating systems.}
 }
 \details{
 All arguments for this function can be passed from \code{\link{qgraph}} to this function by using the 'layout.par' argument, 

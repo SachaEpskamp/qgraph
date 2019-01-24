@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // qgraph_layout_Cpp
-NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, IntegerVector Ef, /* Edges from */     IntegerVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, LogicalVector Cx, LogicalVector Cy);
-RcppExport SEXP _qgraph_qgraph_layout_Cpp(SEXP pniterSEXP, SEXP pvcountSEXP, SEXP pecountSEXP, SEXP maxdeltaSEXP, SEXP pareaSEXP, SEXP pcoolexpSEXP, SEXP prepulseradSEXP, SEXP EfSEXP, SEXP EtSEXP, SEXP WSEXP, SEXP xInitSEXP, SEXP yInitSEXP, SEXP CxSEXP, SEXP CySEXP) {
+NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, IntegerVector Ef, /* Edges from */     IntegerVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, LogicalVector Cx, LogicalVector Cy, int digits);
+RcppExport SEXP _qgraph_qgraph_layout_Cpp(SEXP pniterSEXP, SEXP pvcountSEXP, SEXP pecountSEXP, SEXP maxdeltaSEXP, SEXP pareaSEXP, SEXP pcoolexpSEXP, SEXP prepulseradSEXP, SEXP EfSEXP, SEXP EtSEXP, SEXP WSEXP, SEXP xInitSEXP, SEXP yInitSEXP, SEXP CxSEXP, SEXP CySEXP, SEXP digitsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,13 +25,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type yInit(yInitSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type Cx(CxSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type Cy(CySEXP);
-    rcpp_result_gen = Rcpp::wrap(qgraph_layout_Cpp(pniter, pvcount, pecount, maxdelta, parea, pcoolexp, prepulserad, Ef, Et, W, xInit, yInit, Cx, Cy));
+    Rcpp::traits::input_parameter< int >::type digits(digitsSEXP);
+    rcpp_result_gen = Rcpp::wrap(qgraph_layout_Cpp(pniter, pvcount, pecount, maxdelta, parea, pcoolexp, prepulserad, Ef, Et, W, xInit, yInit, Cx, Cy, digits));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_qgraph_qgraph_layout_Cpp", (DL_FUNC) &_qgraph_qgraph_layout_Cpp, 14},
+    {"_qgraph_qgraph_layout_Cpp", (DL_FUNC) &_qgraph_qgraph_layout_Cpp, 15},
     {NULL, NULL, 0}
 };
 

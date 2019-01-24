@@ -1,25 +1,33 @@
-Changes in Version 1.5.2
-  o Fixed a bug in ggmFit, leading to the number of parameters and estimated graph structure to occasionally be wrong
-  o Removed several dependencies in order to start taking qgraph out of dependency hell
-  o The following functions have been *removed*:
-    - qgraph.pca
-    - qgraph.cfa
-    - qgraph.sem
-    - qgraph.semModel
-    - qgraph.lavaan
-    - qgraph.panel
-    - qgraph.svg
-    - qgraph.efa
-  o The following functionality has been *removed* from qgraph:
-    - tooltips
-    - overlay
-    - overlaySize
-  o Added 'res' to the allArgs list
-  o Added 'node.label.offset' and 'node.label.position' arguments to control the position of node labels (thanks to mihaiconstantin)
-  o Some small bugfixes
-  o The Fruchterman Reingold layout has been translated from C to C++ using Rcpp. This will hopefully lead to more consistency in its results
-  o Fixed a bug leading to centralityPlot occasionally crashing
-  o centralityPlot and clusteringPlot now support empty networks, and give an informative error when used on single-node networks
+Changes in Version 1.6
+  o Major changes:
+      o Removed several dependencies in order to start taking qgraph out of dependency hell:
+          o The following functions have been *removed*:
+              - qgraph.pca
+              - qgraph.cfa
+              - qgraph.sem
+              - qgraph.semModel
+              - qgraph.lavaan
+              - qgraph.panel
+              - qgraph.svg
+              - qgraph.efa
+          o The following functionality has been *removed* from qgraph:
+              - tooltips
+              - overlay
+              - overlaySize
+    o The Fruchterman Reingold layout has been changed. These changes *will* lead to a different 
+      layout to be returned now, but should prevent such disrepancies in the future.
+        - The function has been translated from C to C++ using Rcpp
+        - Results are now rounded in the algorithm. This should lead to more consistency in its results
+    o centralityPlot now only shows node degree or strength by default
+    o inlcude = "all" is now supported in centralityPlot to show all available centrality measures
+  o Minor changes:
+      o Fixed a bug in ggmFit, leading to the number of parameters and estimated graph structure to occasionally be wrong
+      o Added 'res' to the allArgs list
+      o Added 'node.label.offset' and 'node.label.position' arguments to control the position of node labels (thanks to 
+        mihaiconstantin)
+      o Some small bugfixes
+      o Fixed a bug leading to centralityPlot occasionally crashing
+      o centralityPlot and clusteringPlot now support empty networks, and give an informative error when used on single-node networks
   o theme = "neon" is now supported
 
 

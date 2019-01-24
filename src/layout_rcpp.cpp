@@ -21,7 +21,8 @@ NumericMatrix qgraph_layout_Cpp(
     NumericVector xInit,
     NumericVector yInit,
     LogicalVector Cx,
-    LogicalVector Cy
+    LogicalVector Cy,
+    int digits
 ) {
   /*
    Calculate a two-dimensional Fruchterman-Reingold layout for (symmetrized) 
@@ -126,10 +127,10 @@ NumericMatrix qgraph_layout_Cpp(
         dy[j]*=ded;
       }
       if (!Cx[j]){
-        x[j]+=Rf_fround(dx[j],6);               /*Update positions (correcting for floating point errors)*/
+        x[j]+=Rf_fround(dx[j],digits);               /*Update positions (correcting for floating point errors)*/
       }
       if (!Cy[j]){
-        y[j]+=Rf_fround(dy[j],6);
+        y[j]+=Rf_fround(dy[j],digits);
       }
     }
   }
