@@ -351,14 +351,6 @@ qgraph <- function( input, ... )
   # Set mode:
   sigSign <- FALSE
   if(is.null(qgraphObject$Arguments[['graph']])) graph <- "default" else graph=qgraphObject$Arguments[['graph']]
-  if (graph == "cor")
-  {
-    graph <- "assosciation"
-  }
-  if (graph == "pcor")
-  {
-    graph <- "concentration"
-  }
   if (graph == "fdr")
   {
     graph <- "fdr.cor"
@@ -370,8 +362,8 @@ qgraph <- function( input, ... )
     graph <- "ggmModSelect"
   }
   
-  if (!graph %in% c("default","cor","pcor","assosciation","concentration","glasso","ggmModSelect","factorial")){
-    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'assosciation', 'concentration', 'glasso', 'ggmModSelect', or 'factorial'")
+  if (!graph %in% c("default","cor","pcor","glasso","ggmModSelect","factorial")){
+    stop("'graph' argument must be one of 'default', 'cor', 'pcor', 'glasso', 'ggmModSelect', or 'factorial'")
   }
   
   # Reset graph for replotting:
@@ -763,13 +755,13 @@ qgraph <- function( input, ... )
         }
         if (graph == "default")
         {
-          warning("'graph' argument did not specify type of graph. Assuming correlation graph (graph = 'assosciation')")
-          graph <- "assosciation"
+          warning("'graph' argument did not specify type of graph. Assuming correlation graph (graph = 'cor')")
+          graph <- "cor"
         }
-        if (graph %in% c("assosciation","concentration")) {
+        if (graph %in% c("cor","pcor")) {
           # Find threshold for significance!
           # difference between cor and pcor is in df:
-          if (graph == "assosciation")
+          if (graph == "cor")
           {
             df <- sampleSize - 2
           } else {
@@ -1400,7 +1392,7 @@ qgraph <- function( input, ... )
   
   ########### GRAPHICAL MODEL SELECTION #######
   
-  if (graph == "assosciation") {
+  if (graph == "cor") {
     if(!all(eigen(input)$values > 0))  {
       warning("Correlation/covariance matrix is not positive definite. Finding nearest positive definite matrix")
       
@@ -1431,7 +1423,7 @@ qgraph <- function( input, ... )
     }
     
     # Association graph:
-    if (graph == "assosciation")
+    if (graph == "cor")
     {
       if (!all(diag(input) == 1)){
         input <- cov2cor(input)
@@ -1439,7 +1431,7 @@ qgraph <- function( input, ... )
     }
     
     # Concentration graph:
-    if (graph=="concentration") 
+    if (graph=="pcor") 
     {
       coln <- colnames(input)
       rown <- rownames(input)
@@ -1522,9 +1514,9 @@ qgraph <- function( input, ... )
       
       # If these checks are passed assume matrix is correlation or covariance: 
     } else {
-      if (!graph %in% c("assosciation","concentration"))
+      if (!graph %in% c("cor","pcor"))
       {
-        stop("Thresholding by significance level only supported for graph = 'assosciation' (graph = 'cor') or graph = 'concentration' (graph = 'pcor')")
+        stop("Thresholding by significance level only supported for graph = 'cor' or graph = 'pcor'")
       }
     }
     
@@ -1547,7 +1539,7 @@ qgraph <- function( input, ... )
         stop("'sampleSize' argument is needed for all thresholding with significance except 'locfdr'")
       }
       nadj <- sampleSize
-      if (graph == "concentration")
+      if (graph == "pcor")
       {
         nadj <- nadj - (nNodes - 2)
       }
