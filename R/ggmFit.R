@@ -235,7 +235,7 @@ ggmFit <- function(
   fitMeasures$bic2 <- BIC2
   
   # Add extended bic:
-  fitMeasures$ebic <-  -2*LL + fitMeasures$npar * log(sampleSize) + 4 *  fitMeasures$npar * ebicTuning * log(sampleSize)  
+  fitMeasures$ebic <-  -2*LL + fitMeasures$npar * log(sampleSize) + 4 *  fitMeasures$npar * ebicTuning * log(nVar)  
   fitMeasures$ebicTuning <- ebicTuning
   
   # Results object:

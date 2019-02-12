@@ -1,3 +1,6 @@
+Changes in Version 1.6.1
+  - EBIC computation now uses the number of variables in the extra penalty, as opposed to the number of cases.
+
 Changes in Version 1.6
   o Major changes:
       o Removed several dependencies in order to start taking qgraph out of dependency hell:
