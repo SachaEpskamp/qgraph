@@ -1,6 +1,7 @@
 Changes in Version 1.6.1
   - EBIC computation now uses the number of variables in the extra penalty, as opposed to the number of cases.
-
+  - Removed old spelling errors left in for backward competability. The argument 'graph' must now be "cor" or "pcor"
+  
 Changes in Version 1.6
   o Major changes:
       o Removed several dependencies in order to start taking qgraph out of dependency hell:
