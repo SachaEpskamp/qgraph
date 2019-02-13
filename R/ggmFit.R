@@ -224,7 +224,17 @@ ggmFit <- function(
   fitMeasures$logl <- LL
   fitMeasures$unrestricted.logl <- satLL
   
-  fitMeasures$aic <-  -2*LL + 2* fitMeasures$npar
+  # Deviance based AIC (traditional definition)
+  fitMeasures$aic.ll <-  -2*LL + 2* fitMeasures$npar
+  # Deviance based AIC with sample size adjustment
+  fitMeasures$aic.ll2 <-  -2*LL + 2* fitMeasures$npar + 
+                          (2*fitMeasures$npar^2 + 2*fitMeasures$npar)/(sampleSize - fitMeasures$npar - 1)
+  
+  # Chi-square based AIC with df penalty (Kaplan, 2000): AIC(null) - AIC(saturated)
+  fitMeasures$aic.x <- Tm - 2*fitMeasures$df
+  
+  # Chi-square based AIC with parameter penalty (Kline, 2016) - couldn't find the proper derivation
+  fitMeasures$aic.x2 <- Tm + 2*fitMeasures$npar
   
   BIC <- -2*LL + fitMeasures$npar * log(sampleSize)
   fitMeasures$bic <- BIC
