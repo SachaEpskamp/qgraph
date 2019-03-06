@@ -1,13 +1,21 @@
 centralityTable <- function(..., labels, standardized=TRUE, relative = FALSE, 
                             weighted = TRUE, signed = TRUE)
 {
-  
   Wmats <- getWmat(list(...))
   
   # Check for single node:
-  if (any(sapply(Wmats,ncol)==1)){
-    stop("Not supported for single-node graphs")
+  for (i in seq_along(Wmats)){
+    if (is.matrix(Wmats[[i]])){
+      if (ncol(Wmats[[i]]) == 1){
+        stop("Not supported for single-node graphs")
+      }
+    } else {
+      if (any(sapply(Wmats[[i]],ncol)==1)){
+        stop("Not supported for single-node graphs")
+      }    
+    }
   }
+  
 
   # Fix names:
   names(Wmats) <- fixnames(Wmats,"graph ")

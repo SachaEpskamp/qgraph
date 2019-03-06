@@ -1,3 +1,6 @@
+Changes in Version 1.6.2
+  - Fixed a bug in centralityPlot
+
 Changes in Version 1.6.1
   - EBIC computation now uses the number of variables in the extra penalty, as opposed to the number of cases.
   - Removed old spelling errors left in for backward competability. The argument 'graph' must now be "cor" or "pcor"
