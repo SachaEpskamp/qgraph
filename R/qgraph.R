@@ -1304,9 +1304,11 @@ qgraph <- function( input, ... )
   #if (!filetype%in%c('pdf','png','jpg','jpeg','svg','R','eps','tiff')) warning(paste("File type",filetype,"is not supported")) 
   
   # Specify background:
-  if (is.null(background)){
+  if (is.null(background) && !DoNotPlot){
     background <- par("bg")
     if (background == "transparent") background <- "white"    
+  } else {
+    background <- "white"
   }
   if (isColor(bg)) background <- bg
   # Remove alpha:
@@ -1343,7 +1345,10 @@ qgraph <- function( input, ... )
   
   # par settings:
   #parOrig <- par(no.readonly=TRUE)
-  par(pty=pty)
+  if (!DoNotPlot)
+  {
+    par(pty=pty)
+  }
   
   if (!edgelist)
   {
@@ -2743,25 +2748,32 @@ qgraph <- function( input, ... )
   
   
   # Compute loopRotation:
-  for (i in seq_len(nNodes))
+  if (DoNotPlot)
   {
-    if (is.na(loopRotation[i]))
+    loopRotation[is.na(loopRotation)] <- 0
+  } 
+  else 
+  {
+    for (i in seq_len(nNodes))
     {
-      centX <- mean(layout[,1])
-      centY <- mean(layout[,2])
-      for (g in 1:length(groups))
+      if (is.na(loopRotation[i]))
       {
-        if (i%in%groups[[g]] & length(groups[[g]]) > 1)
+        centX <- mean(layout[,1])
+        centY <- mean(layout[,2])
+        for (g in 1:length(groups))
         {
-          centX <- mean(layout[groups[[g]],1])
-          centY <- mean(layout[groups[[g]],2])
+          if (i%in%groups[[g]] & length(groups[[g]]) > 1)
+          {
+            centX <- mean(layout[groups[[g]],1])
+            centY <- mean(layout[groups[[g]],2])
+          }
         }
-      }
-      loopRotation[i] <- atan2usr2in(layout[i,1]-centX,layout[i,2]-centY)
-      if (shape[i]=="square")
-      {
-        loopRotation[i] <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-loopRotation[i]%%(2*pi)))]
-      }
+        loopRotation[i] <- atan2usr2in(layout[i,1]-centX,layout[i,2]-centY)
+        if (shape[i]=="square")
+        {
+          loopRotation[i] <- c(0,0.5*pi,pi,1.5*pi)[which.min(abs(c(0,0.5*pi,pi,1.5*pi)-loopRotation[i]%%(2*pi)))]
+        }
+      } 
     } 
   } 
   
