@@ -1,11 +1,12 @@
 Package: qgraph
 Type: Package
 Title: Graph Plotting Methods, Psychometric Data Visualization and Graphical Model Estimation
-Version: 1.6.2
+Version: 1.6.3
 Authors@R: c(
   person("Sacha", "Epskamp", email = "mail@sachaepskamp.com",role = c("aut", "cre")),
   person("Giulio", "Costantini", role = c("aut")),
   person("Jonas", "Haslbeck", role = c("aut")),
+  person("Adela", "Isvoranu", role = c("aut")),
   person("Angelique O. J.", "Cramer", role = c("ctb")),
   person("Lourens J.", "Waldorp", role = c("ctb")),
   person("Verena D.", "Schmittmann", role = c("ctb")),
