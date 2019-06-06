@@ -6,6 +6,7 @@ Authors@R: c(
   person("Sacha", "Epskamp", email = "mail@sachaepskamp.com",role = c("aut", "cre")),
   person("Giulio", "Costantini", role = c("aut")),
   person("Jonas", "Haslbeck", role = c("aut")),
+  person("Adela", "Isvoranu", role = c("aut")),
   person("Angelique O. J.", "Cramer", role = c("ctb")),
   person("Lourens J.", "Waldorp", role = c("ctb")),
   person("Verena D.", "Schmittmann", role = c("ctb")),
