@@ -1,3 +1,6 @@
+Changes in Version 1.6.3
+  - Updated warning message for when the densest network is selected.
+  
 Changes in Version 1.6.2
   - Fixed a bug in centralityPlot
 

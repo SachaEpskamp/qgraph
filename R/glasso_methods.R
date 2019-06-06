@@ -117,7 +117,7 @@ lambda.min = lambda.min.ratio*lambda.max
   
   # Check if rho is smallest:
   if (opt == 1){
-    warning("Network with lowest lambda selected as best network. Try setting 'lambda.min.ratio' lower.")
+    message("Note: Network with lowest lambda selected as best network: assumption of sparsity might be violated.")
   }
   
   # Return network:
@@ -147,7 +147,7 @@ lambda.min = lambda.min.ratio*lambda.max
 
   # If regularized and low lambda was selected, give warning:
   if (regularized && lambda[opt] < 0.1 * lambda.max && !isTRUE(threshold)){
-    warning("A dense regularized network was selected (lambda < 0.1 * lambda.max). Recent work indicates a possible drop in specificity. Interpret the presence of the smallest edges with care. Setting threshold = TRUE will enforce high specificity, at the cost of sensitivity.")
+    warning("A dense regularized network was selected (lambda < 0.1 * lambda.max). Recent work indicates a possible drop in specificity. Interpret the presence of the smallest edges with care. Setting threshold = TRUE will enforce higher specificity, at the cost of sensitivity.")
   }
   
   # Return 
