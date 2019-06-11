@@ -19,7 +19,8 @@ ggmFit <- function(
   nPar, # Number of parameters, used for more general fit
   invSigma, # inverse variance covariance matrix instead of pcor, used for more general fit
   tol = sqrt(.Machine$double.eps),
-  verbose = TRUE
+  verbose = TRUE,
+  countDiagonalPars = TRUE
 ){
   mimic <- "lavaan"
  
@@ -118,7 +119,7 @@ ggmFit <- function(
   
   # Number of parameters:
   if (missing(nPar)){
-    fitMeasures$npar <- sum(invSigma[upper.tri(invSigma,diag=FALSE)] != 0)
+    fitMeasures$npar <- sum(invSigma[upper.tri(invSigma,diag=countDiagonalPars)] != 0)
   } else {
     fitMeasures$npar <- nPar
   }
