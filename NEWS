@@ -1,6 +1,8 @@
 Changes in Version 1.6.3
   - Updated warning message for when the densest network is selected.
   - Added an option countDiagonalPars to ggmFit to count diagonal of the network as parameters, now set to TRUE by default.
+  - Added support for drawing confidence regions using pie charts with the following arguments:
+    - pieCImid, pieCIlower, pieCIupper, pieCIpointcex, pieCIpointcex
   
 Changes in Version 1.6.2
   - Fixed a bug in centralityPlot

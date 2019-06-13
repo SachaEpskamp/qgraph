@@ -46,6 +46,8 @@ plot.qgraph <- function(x, ...)
   pieStart <- x$graphAttributes$Nodes$pieStart
   pie <- x$graphAttributes$Nodes$pie
   pieDarken <- x$graphAttributes$Nodes$pieDarken
+  pieCIs <- x$plotOptions$pieCIs 
+  
   
   # for BW only
   bw <- FALSE
@@ -938,7 +940,7 @@ legend.mode <- x$plotOptions$legend.mode
                    usePCH = usePCH, resolution = node.resolution, noPar = noPar, bw = bw, density = density[i], angle = angle[i],
                    mean=means[i],SD=SDs[i],meanRange=meanRange,pie=pie[[i]],pieColor=pieColor[[i]],pieColor2=pieColor2[[i]],
                    pieBorder=pieBorder[[i]],pieStart=pieStart[[i]],pieDarken=pieDarken[[i]],pastel=piePastel,
-                   rainbowStart=rainbowStart)
+                   rainbowStart=rainbowStart,equalPieColor = pieCIs)
         
         }
       }      

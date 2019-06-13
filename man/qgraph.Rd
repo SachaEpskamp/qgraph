@@ -318,6 +318,21 @@ These arguments control the background of the plot
     \item{piePastel}{
     Should pastel colors be used to fill pie chart parts when more than 2 blocks are used?
   }
+  \item{pieCImid}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the center point of the confidence region. Overwrites the \code{pie} argument
+  }
+   \item{pieCIlower}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the lower bound of the confidence region. Overwrites the \code{pie} argument
+  }
+     \item{pieCIupper}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the upper bound of the confidence region. Overwrites the \code{pie} argument
+  }
+\item{pieCIpointcex}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the size of the point estimate of the confidence region. Overwrites the \code{pie} argument. Defaults to 0.01.
+  }
+  \item{pieCIpointcex}{
+    A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the color of the point estimate of the confidence region. Overwrites the \code{pie} argument. Defaults to \code{"black"}.
+  }
 }
 }
 

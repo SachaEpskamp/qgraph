@@ -10,7 +10,7 @@ darken <- function(x, dark = 0.25){
 drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.width, polygonList, bars, barSide, barColor, barLength, barsAtSide, font = 1, 
                      usePCH = TRUE, resolution = 100, noPar = FALSE, bw = FALSE, density = NULL, angle = NULL,
                      mean, SD, meanRange, pie, pieColor = NA, pieColor2 = "white", pieBorder = 0.15, pieStart = 0,
-                     pieDarken = 0.25, pastel = FALSE,rainbowStart=0)
+                     pieDarken = 0.25, pastel = FALSE,rainbowStart=0,equalPieColor=FALSE)
 {
   if (!is.null(pie) &&  !shape %in% c("circle", "square",names(polygonList))){
     stop("Pie charts only supported for shape = 'circle' or shape = 'square'")
@@ -101,10 +101,14 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
             if (length(pie) == 1){
               pieColor <- darken(vcolor,pieDarken)
             } else {
-              if (!pastel){
-                pieColor[is.na(pieColor)] <- rainbow(sum(is.na(pieColor)))
+              if (equalPieColor){
+                pieColor[is.na(pieColor)] <- darken(vcolor,pieDarken)
               } else {
-                pieColor[is.na(pieColor)] <- rainbow_hcl(sum(is.na(pieColor)), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(sum(is.na(pieColor))-1)/sum(is.na(pieColor))))
+                if (!pastel){
+                  pieColor[is.na(pieColor)] <- rainbow(sum(is.na(pieColor)))
+                } else {
+                  pieColor[is.na(pieColor)] <- rainbow_hcl(sum(is.na(pieColor)), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(sum(is.na(pieColor))-1)/sum(is.na(pieColor))))
+                } 
               }
             }
           }

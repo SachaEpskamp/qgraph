@@ -288,7 +288,7 @@ qgraph <- function( input, ... )
                "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
                "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex",  
-               "node.label.offset", "node.label.position")
+               "node.label.offset", "node.label.position", "pieCImid", "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -540,6 +540,10 @@ qgraph <- function( input, ... )
     stop("Length of 'pieDarken' argument must be 1 or number of nodes")
   }
   
+  
+  
+  
+  
   if(is.null(qgraphObject$Arguments[['pie']])){
     drawPies <- FALSE
     pie <- NULL
@@ -571,6 +575,94 @@ qgraph <- function( input, ... )
     # Logical:
     drawPies <- TRUE
   }
+  
+  # Pie CI:
+  # Pie CI args:
+  # "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol"
+  
+  pieCIs <- FALSE
+  
+  # Check if pieCIs are drawn:
+  if(!is.null(qgraphObject$Arguments[['pieCIlower']])){
+    pieCIs <- TRUE
+    pieCIlower <- qgraphObject$Arguments[['pieCIlower']]
+    if(is.null(qgraphObject$Arguments[['pieCIupper']])){
+      pieCIupper <- 1
+    }
+  } 
+  if(!is.null(qgraphObject$Arguments[['pieCIupper']])){
+    pieCIs <- TRUE
+    pieCIupper <- qgraphObject$Arguments[['pieCIupper']]
+    if(is.null(qgraphObject$Arguments[['pieCIlower']])){
+      pieCIlower <- 0
+    }
+  } 
+  
+  # Set up the pieCIs:
+  if (isTRUE(pieCIs)){
+    drawPies <- TRUE
+    
+    if (!is.null(qgraphObject$Arguments[['pieCImid']])){
+      pieCImid <- qgraphObject$Arguments[['pieCImid']]
+    } else stop("'pieCImid' may not be missing when pieCIs are used")
+      
+    
+    # Vectorize:
+    pieCIlower <- rep(pieCIlower,length=nNodes) 
+    pieCIupper <- rep(pieCIupper,length=nNodes) 
+    pieCImid <- rep(pieCImid, length=nNodes)
+    
+    # Check mid:
+    if (any(pieCIlower > pieCImid | pieCIupper < pieCImid)){
+      stop("'pieCImid' is not between 'pieCIlower' and 'pieCIupper'")
+    }
+    
+    # Check bounds:
+    if (any(pieCIlower < 0) | any(pieCImid > 1)){
+      stop("pieCI range should be between 0 and 1")
+    }
+    
+    # If pie argument is used, give an error:
+    if(!is.null(qgraphObject$Arguments[['pie']])){
+       stop("'pie' argument cannot be used in combination with pieCIs")
+    }
+    
+    # get the size of the point:
+    # "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol"
+    
+    if(!is.null(qgraphObject$Arguments[['pieCIpointcex']])){
+      pieCIpointcex <- qgraphObject$Arguments[['pieCIpointcex']]
+    } else {
+      pieCIpointcex <- 0.01
+    }
+    pieCIpointcex <-  rep(pieCIpointcex, length=nNodes)
+    
+    if(!is.null(qgraphObject$Arguments[['pieCIpointcol']])){
+      pieCIpointcol <- qgraphObject$Arguments[['pieCIpointcol']]
+    } else {
+      pieCIpointcol <- "black"
+    }
+    pieCIpointcol <- rep(pieCIpointcol, length = nNodes)
+    
+    # Now form the pie argument:
+    pieTab <- cbind(
+      0,
+      pieCIlower,
+      pmax(pieCIlower, pieCImid - (pieCIpointcex/2)),
+      pmin(pieCIupper, pieCImid + (pieCIpointcex/2)),
+      pieCIupper,
+      1)
+    pie <- list()
+    pieColor2 <- list()
+    
+    for (i in seq_len(nrow(pieTab))){
+      pie[[i]] <- diff(pieTab[i,])
+      pieColor2[[i]] <- c("white",pieColor[i],pieCIpointcol[i],pieColor[i],"white")
+    }
+    pieColor <- pieColor2
+  }
+  
+  
   
   #####
   
@@ -2960,6 +3052,8 @@ qgraph <- function( input, ... )
   qgraphObject$plotOptions$piePastel <- piePastel
   
   qgraphObject$plotOptions$rainbowStart <- rainbowStart
+  qgraphObject$plotOptions$pieCIs <- pieCIs 
+  
   
   
   if (!DoNotPlot)
