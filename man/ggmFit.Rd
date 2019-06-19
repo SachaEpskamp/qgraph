@@ -9,7 +9,8 @@ Obtain fit measures of a given Gaussian graphical model (GGM). Input can be eith
 }
 \usage{
 ggmFit(pcor, covMat, sampleSize, refit = TRUE, ebicTuning = 0.5, 
-        nPar, invSigma, tol = sqrt(.Machine$double.eps), verbose = TRUE)
+        nPar, invSigma, tol = sqrt(.Machine$double.eps), verbose = TRUE,
+        countDiagonalPars = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,6 +40,9 @@ Implied inverse variance-covariance matrix. If this object is assigned \code{pco
   }
   \item{verbose}{
   Logical, should progress reports be printed to the console?
+  }
+  \item{countDiagonalPars}{
+  Logical, should the diagonal of the precision matrix be counted as parameters?
   }
 }
 \author{

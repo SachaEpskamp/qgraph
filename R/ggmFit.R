@@ -54,6 +54,11 @@ ggmFit <- function(
   if (missing(pcor)){
     pcor <- qgraph::wi2net(invSigma)
   }
+  
+  if (is(pcor,"qgraph")){
+    pcor <- getWmat(pcor)
+  }
+  
   pcor <- as.matrix(pcor)
   
   # Refit:
@@ -71,7 +76,6 @@ ggmFit <- function(
     invSigma <- glassoRes$wi
     
   } else {
-    
     # If missing invSigma, compute from pcor:
     if (missing(invSigma)){
       # If qgraph object, extract:
@@ -116,7 +120,7 @@ ggmFit <- function(
   
   # Number of observations:
   fitMeasures$nobs <- nVar * (nVar+1) / 2
-  
+
   # Number of parameters:
   if (missing(nPar)){
     fitMeasures$npar <- sum(invSigma[upper.tri(invSigma,diag=countDiagonalPars)] != 0)
@@ -270,7 +274,7 @@ print.ggmFit <- function(x,...){
       paste0("Fit measures stored under ",name,"$fitMeasures"),
       "\n\n"
   )
-  
+
   fit <- data.frame(Measure = names(x$fitMeasures),
                     Value = goodNum(unlist(x$fitMeasures)))
   rownames(fit) <- NULL
