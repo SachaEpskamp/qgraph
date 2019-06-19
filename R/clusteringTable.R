@@ -1,11 +1,24 @@
 clusteringTable <- function(..., labels,standardized=TRUE,  relative = FALSE, signed = FALSE)
 {
   Wmats <- getWmat(list(...))
-  
-  if (any(sapply(Wmats,ncol)==1)){
-    stop("Not supported for single-node graphs")
+
+  # if (any(sapply(Wmats,ncol)==1)){
+  #   stop("Not supported for single-node graphs")
+  # }
+
+  # Check for single node:
+  for (i in seq_along(Wmats)){
+    if (is.matrix(Wmats[[i]])){
+      if (ncol(Wmats[[i]]) == 1){
+        stop("Not supported for single-node graphs")
+      }
+    } else {
+      if (any(sapply(Wmats[[i]],ncol)==1)){
+        stop("Not supported for single-node graphs")
+      }    
+    }
   }
-  
+
   
   # Check symmetric and remove:
   for (i in rev(seq_along(Wmats)))
