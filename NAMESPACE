@@ -152,4 +152,4 @@ importFrom("abind","abind")
 import(tidygraph)
 import(ggraph)
 
-S3method(as.ggraph, qgraph)
+export(as.ggraph)
