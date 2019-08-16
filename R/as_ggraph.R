@@ -1,11 +1,14 @@
 as.ggraph <- function(object){
   # To graph object using tidygraph:
   df <- as.data.frame(object$Edgelist)
-  tidyG <- tidygraph::as_tbl_graph(df[,1:3], directed = all(df$directed))
+  tidyG <- tidygraph::tbl_graph(edges = df[,1:2], directed = all(df$directed))
   
   # Add ID factor:
   tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(id = as.factor(seq_len(n())))
   tidyG <- tidyG %>% tidygraph::activate(nodes) %>% dplyr::mutate(id = as.factor(seq_len(n())), label = object$graphAttributes$Nodes$labels)
+  
+  # Put the edges in the right order:
+  tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(order = order(object$graphAttributes$Graph$edgesort)) %>% arrange(order)
   
   # Create plot:
   ggraph::ggraph(tidyG, layout = object$layout) + 
