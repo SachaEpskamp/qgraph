@@ -148,3 +148,8 @@ import(parallel)
 importFrom("pbapply","pblapply")
 importFrom("abind","abind")
 
+# ggraph:
+import(tidygraph)
+import(ggraph)
+
+S3method(as.ggraph, qgraph)
