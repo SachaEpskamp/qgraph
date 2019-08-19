@@ -2577,17 +2577,24 @@ qgraph <- function( input, ... )
       ## Add trans:
       if (any(is.na(fade)) & any(!is.na(ectemp)))
       {
+        # Replace all edge colors:
+        edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+        
+        # Colors to fade:
+        indx <- !is.na(ectemp) & is.na(fade)
+        
         if (!is.logical(transparency)) col <- rep(transparency,length(col))
         if (isTRUE(transparency))
         {
-          edge.color[!is.na(ectemp)] <- addTrans(ectemp[!is.na(ectemp)],round(255*col[!is.na(ectemp)]))
+          edge.color[indx] <- addTrans(ectemp[indx],round(255*col[indx]))
         } else {
-          edge.color[!is.na(ectemp)] <- Fade(ectemp[!is.na(ectemp)],col[!is.na(ectemp)], background)
+          edge.color[indx] <- Fade(ectemp[indx],col[indx], background)
         }
       } else {
-        edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
+        edge.color[indx] <- ectemp[indx]
       }
       rm(ectemp)
+      rm(indx)
     }
   } else {
     if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))

@@ -4,6 +4,7 @@ Changes in Version 1.6.3
   - Added support for drawing confidence regions using pie charts with the following arguments:
     - pieCImid, pieCIlower, pieCIupper, pieCIpointcex, pieCIpointcex
   - Fixed a bug with clusteringTable and clusteringPlot
+  - Fixed a bug with fade not working as matrix/vector when edge.colors are used
   
 Changes in Version 1.6.2
   - Fixed a bug in centralityPlot
