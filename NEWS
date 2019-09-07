@@ -1,4 +1,7 @@
 Changes in Version 1.6.3
+  - forcePD now defaults to FALSE in cor_auto
+
+Changes in Version 1.6.3
   - Updated warning message for when the densest network is selected.
   - Added an option countDiagonalPars to ggmFit to count diagonal of the network as parameters, now set to TRUE by default.
   - Added support for drawing confidence regions using pie charts with the following arguments:

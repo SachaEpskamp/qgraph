@@ -7,7 +7,7 @@ cor_auto <- function(
   detectOrdinal = TRUE, # Detect ordinal variables
   ordinalLevelMax = 7, # Maximum amount of levels to be classified as ordinal
   npn.SKEPTIC = FALSE, # If TRUE, will compute nonparanormal SKEPTIC on fully continous data
-  forcePD = TRUE, # Forces the result to be positive definite using nearPD from Matrix
+  forcePD = FALSE, # Forces the result to be positive definite using nearPD from Matrix
   missing = "pairwise",
   verbose=TRUE
   )
