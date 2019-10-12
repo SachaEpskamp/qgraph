@@ -70,6 +70,7 @@ plot.qgraph <- function(x, ...)
   edge.labels <- x$graphAttributes$Edges$labels
   edge.label.cex <- x$graphAttributes$Edges$label.cex
   edge.label.bg <- x$graphAttributes$Edges$label.bg
+  edge.label.margin <- x$graphAttributes$Edges$label.margin
   edge.label.font <- x$graphAttributes$Edges$label.font
   ELcolor <- x$graphAttributes$Edges$label.color
   edge.width <- x$graphAttributes$Edges$width
@@ -872,8 +873,9 @@ legend.mode <- x$plotOptions$legend.mode
         {
           labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
           labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
-          polygon(c(midX[i]-labwd/2,midX[i]+labwd/2,midX[i]+labwd/2,midX[i]-labwd/2),
-                  c(midY[i]-labht/2,midY[i]-labht/2,midY[i]+labht/2,midY[i]+labht/2),
+          mar <- edge.label.margin[i]
+          polygon(c(midX[i]-labwd/2-mar,midX[i]+labwd/2+mar,midX[i]+labwd/2+mar,midX[i]-labwd/2-mar),
+                  c(midY[i]-labht/2-mar,midY[i]-labht/2-mar,midY[i]+labht/2+mar,midY[i]+labht/2+mar),
                   border=NA,
                   col=edge.label.bg[i]) 
         }

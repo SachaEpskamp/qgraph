@@ -1,5 +1,6 @@
 Changes in Version 1.6.3
   - forcePD now defaults to FALSE in cor_auto
+  - Added the argument edge.label.margin to qgraph
 
 Changes in Version 1.6.3
   - Updated warning message for when the densest network is selected.

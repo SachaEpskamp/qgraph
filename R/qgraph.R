@@ -288,7 +288,8 @@ qgraph <- function( input, ... )
                "XKCD", "Edgelist", "Arguments", "plotOptions", "graphAttributes", 
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
                "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex",  
-               "node.label.offset", "node.label.position", "pieCImid", "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol")
+               "node.label.offset", "node.label.position", "pieCImid", "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol",
+               "edge.label.margin")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -889,8 +890,13 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$rescale)) rescale=TRUE else rescale=qgraphObject$Arguments$rescale
   if(is.null(qgraphObject$Arguments[['edge.labels']])) edge.labels=FALSE else edge.labels=qgraphObject$Arguments[['edge.labels']]
   if(is.null(qgraphObject$Arguments[['edge.label.bg']])) edge.label.bg=TRUE else edge.label.bg=qgraphObject$Arguments[['edge.label.bg']]
-  if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
   
+  if (identical(FALSE,edge.label.bg)) plotELBG <- FALSE else plotELBG <- TRUE
+
+  if(is.null(qgraphObject$Arguments[['edge.label.margin']])) edge.label.margin=0 else edge.label.margin=qgraphObject$Arguments[['edge.label.margin']]
+  
+  
+    
   ### Themes ###
   # Default theme:
   posCol <- c("#009900","darkgreen")
@@ -1896,6 +1902,11 @@ qgraph <- function( input, ... )
       edge.label.bg <- edge.label.bg[c(incl)]
       #       edge.label.bg <- edge.label.bg[E$weight!=0]
     }
+    if (is.matrix(edge.label.margin))
+    {
+      edge.label.margin <- edge.label.margin[c(incl)]
+      #       edge.label.bg <- edge.label.bg[E$weight!=0]
+    }
     if (is.matrix(edge.label.font))
     {
       edge.label.font <- edge.label.font[c(incl)]
@@ -1974,6 +1985,12 @@ qgraph <- function( input, ... )
   if (length(edge.label.bg) == 1) edge.label.bg <- rep(edge.label.bg,length(E$from))
   if (length(edge.label.bg) != length(keep) & length(edge.label.bg) != sum(keep)) stop("'edge.label.bg' is wrong length")
   if (length(edge.label.bg)==length(keep)) edge.label.bg <- edge.label.bg[keep]
+  
+  #     }
+  if (length(edge.label.margin) == 1) edge.label.margin <- rep(edge.label.margin,length(E$from))
+  if (length(edge.label.margin) != length(keep) & length(edge.label.margin) != sum(keep)) stop("'edge.label.margin' is wrong length")
+  if (length(edge.label.margin)==length(keep)) edge.label.margin <- edge.label.margin[keep]
+  
   
   
   if (length(edge.label.font) == 1) edge.label.font <- rep(edge.label.font,length(E$from))
@@ -2574,14 +2591,16 @@ qgraph <- function( input, ... )
     }
     if (repECs)
     {
+      # Colors to fade:
+      indx <- !is.na(ectemp) & is.na(fade)
+      
       ## Add trans:
       if (any(is.na(fade)) & any(!is.na(ectemp)))
       {
         # Replace all edge colors:
         edge.color[!is.na(ectemp)] <- ectemp[!is.na(ectemp)]
         
-        # Colors to fade:
-        indx <- !is.na(ectemp) & is.na(fade)
+
         
         if (!is.logical(transparency)) col <- rep(transparency,length(col))
         if (isTRUE(transparency))
@@ -2958,6 +2977,7 @@ qgraph <- function( input, ... )
   qgraphObject$graphAttributes$Edges$labels <- edge.labels
   qgraphObject$graphAttributes$Edges$label.cex <- edge.label.cex
   qgraphObject$graphAttributes$Edges$label.bg <- edge.label.bg
+  qgraphObject$graphAttributes$Edges$label.margin <- edge.label.margin
   qgraphObject$graphAttributes$Edges$label.font <- edge.label.font
   qgraphObject$graphAttributes$Edges$label.color <- ELcolor
   qgraphObject$graphAttributes$Edges$width <- edge.width
