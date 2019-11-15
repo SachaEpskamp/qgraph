@@ -149,7 +149,9 @@ importFrom("pbapply","pblapply")
 importFrom("abind","abind")
 
 # ggraph:
-import(tidygraph)
-import(ggraph)
+#import(dplyr)
+# import(tidygraph)
+# import(ggraph)
 
 export(as.ggraph)
+

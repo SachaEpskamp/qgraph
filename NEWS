@@ -1,6 +1,8 @@
-Changes in Version 1.6.3
+Changes in Version 1.6.4
+  - Added te as_ggraph function to transform a qgraph object into a ggraph object
   - forcePD now defaults to FALSE in cor_auto
   - Added the argument edge.label.margin to qgraph
+  - Fixed a bug with fade not working as matrix/vector when edge.colors are ised
 
 Changes in Version 1.6.3
   - Updated warning message for when the densest network is selected.
@@ -8,7 +10,6 @@ Changes in Version 1.6.3
   - Added support for drawing confidence regions using pie charts with the following arguments:
     - pieCImid, pieCIlower, pieCIupper, pieCIpointcex, pieCIpointcex
   - Fixed a bug with clusteringTable and clusteringPlot
-  - Fixed a bug with fade not working as matrix/vector when edge.colors are used
   
 Changes in Version 1.6.2
   - Fixed a bug in centralityPlot

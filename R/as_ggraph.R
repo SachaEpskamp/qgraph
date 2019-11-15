@@ -1,14 +1,24 @@
 as.ggraph <- function(object){
   # To graph object using tidygraph:
   df <- as.data.frame(object$Edgelist)
+  
+  if (any(df$directed)){
+    stop("Not yet supported for directed graphs")
+  }
+
   tidyG <- tidygraph::tbl_graph(edges = df[,1:2], directed = all(df$directed))
   
+  edges <- NULL
+  nodes <- NULL
+  order <- NULL
+  n <- NULL
+  
   # Add ID factor:
-  tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(id = as.factor(seq_len(n())))
-  tidyG <- tidyG %>% tidygraph::activate(nodes) %>% dplyr::mutate(id = as.factor(seq_len(n())), label = object$graphAttributes$Nodes$labels)
+  tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(id = as.factor(seq_len(dplyr::n())))
+  tidyG <- tidyG %>% tidygraph::activate(nodes) %>% dplyr::mutate(id = as.factor(seq_len(dplyr::n())), label = object$graphAttributes$Nodes$labels)
   
   # Put the edges in the right order:
-  tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(order = order(object$graphAttributes$Graph$edgesort)) %>% arrange(order)
+  tidyG <- tidyG %>% tidygraph::activate(edges) %>% dplyr::mutate(order = order(object$graphAttributes$Graph$edgesort)) %>% dplyr::arrange(order)
   
   # Create plot:
   ggraph::ggraph(tidyG, layout = object$layout) + 
@@ -27,10 +37,10 @@ as.ggraph <- function(object){
     
     # Nodes:
     ggraph::geom_node_point(
-      aes(
-        size = id,
-        colour = id,
-        fill = id
+      aes_string(
+        size = "id",
+        colour = "id",
+        fill = "id"
       ), shape = 21, show.legend = FALSE
     ) + 
     ggplot2::scale_size_manual(values = object$graphAttributes$Nodes$width*2)  + 
@@ -39,8 +49,8 @@ as.ggraph <- function(object){
     
     # Labels:
     ggraph::geom_node_text(
-      aes(
-        label = label
+      aes_string(
+        label = "label"
       )
     ) +
     
@@ -50,5 +60,4 @@ as.ggraph <- function(object){
     
     # Theme
     ggraph::theme_graph(plot_margin=margin(0,0,0,0))
-  
 }

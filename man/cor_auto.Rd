@@ -9,7 +9,7 @@ This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Ro
 }
 \usage{
 cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, 
-          forcePD = TRUE, missing = "pairwise", verbose = TRUE)
+          forcePD = FALSE, missing = "pairwise", verbose = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
