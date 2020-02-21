@@ -105,7 +105,6 @@ export(VARglm)
 
 export(FDRnetwork)
 
-export(findGraph)
 
 
 # importFrom(sendplot, "xy.send")
