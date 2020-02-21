@@ -1,3 +1,6 @@
+Changes in Version 1.6.5
+  - Removed findGraph
+
 Changes in Version 1.6.4
   - Added te as_ggraph function to transform a qgraph object into a ggraph object
   - forcePD now defaults to FALSE in cor_auto

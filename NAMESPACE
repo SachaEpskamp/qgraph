@@ -107,9 +107,6 @@ export(FDRnetwork)
 
 export(findGraph)
 
-importFrom(ggm,fitConGraph)
-importFrom(ggm,fitCovGraph)
-
 
 # importFrom(sendplot, "xy.send")
 export(qgraphAnnotate)
