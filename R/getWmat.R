@@ -208,8 +208,14 @@ getWmat.qgraph <- function(x, directed,...)
   from <- c(E$from, E$to[!E$directed | E$bidir])
   to <- c(E$to , E$from[!E$directed | E$bidir])
   w <- c(E$weight, E$weight[!E$directed | E$bidir])
+  df <- data.frame(
+    from=from,
+    to=to,
+    w=w
+  )
+  df <- df[!duplicated(df),]
   
-  mat <- as.matrix(1*sparseMatrix(from,to,x=w, dims = c(n,n)))
+  mat <- as.matrix(1*sparseMatrix(df$from, df$to,x= df$w, dims = c(n,n)))
   rownames(mat) <- colnames(mat) <- x$graphAttributes$Nodes$labels
   return(mat)
 }
