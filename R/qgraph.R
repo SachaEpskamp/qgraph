@@ -2754,8 +2754,11 @@ qgraph <- function( input, ... )
     bcolor <- rep(bcolor,length=nNodes)
   }
   
-  if (vTrans<255)
+  if (any(vTrans<255) || length(vTrans) > 1)
   {
+    if ( length(vTrans) > 1 && length(vTrans) != nNodes)
+    {vTrans <- 255}
+
     # Transparance in vertex colors:
     num2hex <- function(x)
     {
@@ -3093,4 +3096,3 @@ qgraph <- function( input, ... )
   }
   
 }
-
