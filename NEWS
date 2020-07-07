@@ -1,5 +1,6 @@
 Changes in Version 1.6.6
   - Fixed a bug where the diagonal of undirected graphs was counted twice in getWmat
+  - Fixed a bug with bnlearn as input
 
 Changes in Version 1.6.5
   - Removed findGraph

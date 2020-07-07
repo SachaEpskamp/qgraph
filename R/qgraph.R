@@ -124,6 +124,7 @@ qgraph <- function( input, ... )
   ### bnlearn ###
   if (is(input,"bn"))
   {
+    # browser()
     bnobject <- input
     input <- as.matrix(bnobject$arcs)
     TempLabs  <- names(bnobject$nodes)
@@ -136,6 +137,7 @@ qgraph <- function( input, ... )
     input <- input[!duplicated(srtInput),]
     qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))
     qgraphObject$Arguments$directed <- qgraphObject$Arguments$directed[!duplicated(srtInput)]
+    qgraphObject$Arguments$edgelist <- TRUE
   }
   if (is(input,"bn.strength"))
   {
