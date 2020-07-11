@@ -417,6 +417,8 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['edgeConnectPoints']])) edgeConnectPoints <- NULL else edgeConnectPoints <- qgraphObject$Arguments[['edgeConnectPoints']]
   
   
+  if(is.null(qgraphObject$Arguments[['label.color.split']])) label.color.split <- 0.25 else label.color.split <- qgraphObject$Arguments[['label.color.split']]
+  
   if(is.null(qgraphObject$Arguments$labels))
   {
     labels <- TRUE
@@ -2680,17 +2682,18 @@ qgraph <- function( input, ... )
     lcolor <- rep(lcolor,nNodes)
   }
   if (any(is.na(lcolor))){
-    if (!is.null(theme) && theme == "gray"){
+    # if (!is.null(theme) && is.character(theme) && theme == "gray"){
+    #   browser()
+    #   lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
+    #                                   ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
+    #                                   ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.5,"black","white")
+    #   )
+    # } else {
       lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
                                       ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
-                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.5,"black","white")
+                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])/255) > label.color.split,"black","white")
       )
-    } else {
-      lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
-                                      ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
-                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.25,"black","white")
-      )
-    }
+    # }
   }
   
   # Dummy groups list:
