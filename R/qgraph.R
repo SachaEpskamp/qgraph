@@ -2680,10 +2680,17 @@ qgraph <- function( input, ... )
     lcolor <- rep(lcolor,nNodes)
   }
   if (any(is.na(lcolor))){
-    lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
-                                    ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
-                                    ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.25,"black","white")
-    )
+    if (theme == "gray"){
+      lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
+                                      ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
+                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.5,"black","white")
+      )
+    } else {
+      lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
+                                      ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
+                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.25,"black","white")
+      )
+    }
   }
   
   # Dummy groups list:
