@@ -873,9 +873,9 @@ legend.mode <- x$plotOptions$legend.mode
         {
           labwd <- strwidth(edge.labels[[i]],cex=edge.label.cex[i])
           labht <- strheight(edge.labels[[i]],cex=edge.label.cex[i])
-          mar <- edge.label.margin[i]
-          polygon(c(midX[i]-labwd/2-mar,midX[i]+labwd/2+mar,midX[i]+labwd/2+mar,midX[i]-labwd/2-mar),
-                  c(midY[i]-labht/2-mar,midY[i]-labht/2-mar,midY[i]+labht/2+mar,midY[i]+labht/2+mar),
+          marEL <- edge.label.margin[i]
+          polygon(c(midX[i]-labwd/2-marEL,midX[i]+labwd/2+marEL,midX[i]+labwd/2+marEL,midX[i]-labwd/2-marEL),
+                  c(midY[i]-labht/2-marEL,midY[i]-labht/2-marEL,midY[i]+labht/2+marEL,midY[i]+labht/2+marEL),
                   border=NA,
                   col=edge.label.bg[i]) 
         }
@@ -1252,6 +1252,7 @@ legend.mode <- x$plotOptions$legend.mode
           
         } else if (legend.mode == "names")
         {
+
           text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
         } else 
         {

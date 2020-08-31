@@ -1,3 +1,6 @@
+Changes in Version 1.6.8
+  - Fixed a bug with legend not showing when edge labels are used.
+
 Changes in Version 1.6.7
   - node labels are now colored white for lighter nodes with theme = "gray"
   - Added argument label.color.split
