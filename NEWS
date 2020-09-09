@@ -1,3 +1,6 @@
+Changes in Version 1.6.9
+  - Fixed a bug where using qgraph on the output of qgraph did not use all arguments correctly
+
 Changes in Version 1.6.8
   - Fixed a bug with legend not showing when edge labels are used.
 
