@@ -1,6 +1,6 @@
 
 centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.shortest.paths=FALSE,
-                       weighted = TRUE, signed = TRUE)
+                       weighted = TRUE, signed = TRUE, R2 = FALSE)
 {
 
   # Check for correct class:
@@ -216,6 +216,24 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   }
   Labels <- colnames(W)
   
+  # R2:
+  if (R2){
+    # check if the matrix could be a GGM:
+    diag(W) <- 0
+    K <- diag(n) - W
+    rownames(K) <- colnames(K) <- NULL
+    if (!all(K == t(K)) || any(K < -1) || any(K > 1) || any(eigen(K)$values < 0)){
+      stop("Graph does not look like a Gaussian graphical model. R2 is only supported for a Gaussian graphical model.")
+    }
+    
+    # translate to precision matrix of standardized data:
+    K <- solve(cov2cor(solve(K)))
+    
+    # R^2 is simply...
+    R2_res <- 1 - 1 / diag(K)
+    names(R2_res) <- Labels
+  }
+  
   ### RETURN VALUES:
   retval <- list(
     OutDegree = lab(CombinedDegreesOut,Labels),
@@ -228,6 +246,10 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     OutExpectedInfluence = OutExpectedInfluence,
     ShortestPathLengths = lab(ShortestPaths,Labels),
     ShortestPaths = lab(Paths,Labels))
+  
+  if (R2){
+    retval$R2 <- R2_res
+  }
   
   return(retval)  
 }

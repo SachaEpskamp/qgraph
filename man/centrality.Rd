@@ -10,7 +10,7 @@ This function can be used on the output of \code{\link{qgraph}} to compute the n
 }
 \usage{
 centrality(graph, alpha = 1, posfun = abs, pkg, all.shortest.paths = FALSE, 
-           weighted = TRUE, signed = TRUE)
+           weighted = TRUE, signed = TRUE, R2 = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +30,7 @@ A function that converts positive and negative values to only positive. Defaults
 }
 \item{weighted}{Logical, set to \code{FALSE} to set all edge weights to 1 or -1}
 \item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
+\item{R2}{Logical, should R-squared (predictability) be computed for GGM structures?}
 }
 \details{
 This function computes and returns the in and out degrees, closeness and betweenness as well as the shortest path lengths and shortest paths between all pairs of nodes in the graph. For more information on these statistics, see Opsahl, Agneessens and Skvoretz (2010).

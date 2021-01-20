@@ -1,3 +1,6 @@
+Changes in Version 1.7.0
+  - The 'centrality()' function now includes R-squared (predictability)
+
 Changes in Version 1.6.9
   - Fixed a bug where using qgraph on the output of qgraph did not use all arguments correctly
 
