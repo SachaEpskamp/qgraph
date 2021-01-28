@@ -73,7 +73,8 @@ cor_auto <- function(
 #     message("All variables detected to be continuous, computing nonparanormal skeptic!")
     
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
-    CorMat <- huge.npn(data, "skeptic")
+    if(!requireNamespace("huge")) stop("'huge' package needs to be installed.")
+    CorMat <- huge::huge.npn(data, "skeptic")
   } else {
     CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing) )
     class(CorMat) <- "matrix"

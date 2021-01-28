@@ -12,7 +12,6 @@ citEntry(entry = "Article",
   volume       = "48",
   number       = "4",
   pages        = "1--18",
-  url          = "http://www.jstatsoft.org/v48/i04/",
 
   textVersion  =
   paste("Sacha Epskamp, Angelique O. J. Cramer, Lourens J. Waldorp, Verena D. Schmittmann, Denny Borsboom (2012).",

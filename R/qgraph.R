@@ -209,6 +209,7 @@ qgraph <- function( input, ... )
 
         if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
         {
+          if(!requireNamespace("BDgraph")) stop("'BDgraph' package needs to be installed.")
           # phat:
           W <- as.matrix(BDgraph::plinks(input))
           W <- W + t(W)
@@ -241,7 +242,7 @@ qgraph <- function( input, ... )
 
           if ("phat" %in% BDgraph)
           {
-            W <- as.matrix(plinks(input))
+            W <- as.matrix(BDgraph::plinks(input))
             W <- W + t(W)
             Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
             if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
@@ -343,7 +344,8 @@ qgraph <- function( input, ... )
   if (is(input,"huge"))
   {
     if (input$method != "glasso") stop("Only 'glasso' method is supported")
-    input <- huge.select(input, "ebic", ebic.gamma = tuning)
+    if(!requireNamespace("huge")) stop("'huge' package needs to be installed.")
+    input <- huge::huge.select(input, "ebic", ebic.gamma = tuning)
   }
   
   ### HUGE select ###

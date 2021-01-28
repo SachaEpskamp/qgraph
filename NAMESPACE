@@ -39,9 +39,7 @@ S3method(summary, qgraph)
 #importFrom(lavaan,"lavaan","cfa","standardizedSolution", "standardizedsolution", "parameterEstimates", "parameterestimates","inspect")
 importClassesFrom(lavaan,"lavaan")
 importFrom(stats,"factanal")
-importFrom(BDgraph,"plinks")
 # importFrom(ellipse,"ellipse")
-importFrom(corpcor,"pseudoinverse")
 importFrom(corpcor,"cor2pcor")
 importFrom(graphics,"plot","points","lines","polygon")
 importFrom(png,"readPNG")
@@ -94,8 +92,7 @@ importFrom(Matrix, forceSymmetric)
 import(glasso)
 
 ## corauto stuff:
-importFrom(huge, huge.select)
-importFrom(huge, huge.npn)
+#importFrom(huge, huge.npn)
 #importFrom(psych, tetrachoric)
 #importFrom(psych, polychoric)
 export(cor_auto)
@@ -110,7 +107,7 @@ export(FDRnetwork)
 # importFrom(sendplot, "xy.send")
 # export(qgraphAnnotate)
 
-importFrom(d3Network, "d3ForceNetwork")
+#importFrom(d3Network, "d3ForceNetwork")
 
 importFrom(gtools, mixedorder)
 importFrom(gtools, mixedsort)
@@ -144,10 +141,6 @@ import(parallel)
 importFrom("pbapply","pblapply")
 importFrom("abind","abind")
 
-# ggraph:
-#import(dplyr)
-# import(tidygraph)
-# import(ggraph)
 
-export(as.ggraph)
+#export(as.ggraph)
 
