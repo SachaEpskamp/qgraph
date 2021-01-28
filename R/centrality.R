@@ -219,10 +219,11 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
   # R2:
   if (R2){
     # check if the matrix could be a GGM:
+    W <- as.matrix(W)
     diag(W) <- 0
     K <- diag(n) - W
     rownames(K) <- colnames(K) <- NULL
-    if (!all(K == t(K)) || any(K < -1) || any(K > 1) || any(eigen(K)$values < 0)){
+    if (any(K < -1) || any(K > 1) || !all(K == t(K))  || any(eigen(K)$values < 0)){
       stop("Graph does not look like a Gaussian graphical model. R2 is only supported for a Gaussian graphical model.")
     }
     
