@@ -147,7 +147,6 @@ qgraph <- function( input, ... )
   }
   if (is(input,"bn.strength"))
   {
-    
     bnobject <- input
     input <- as.matrix(bnobject[c("from","to","strength")])
     TempLabs  <- unique(c(bnobject$from,bnobject$to))
@@ -1002,13 +1001,8 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments[['label.font']])) label.font <- font else label.font <- qgraphObject$Arguments[['label.font']]
    if(!is.null(qgraphObject$Arguments[['unCol']])) unCol <- qgraphObject$Arguments[['unCol']] 
     
-    
-  if (length(posCol)==1) posCol <- rep(posCol,2)
-  if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
-  if (length(negCol)==1) negCol <- rep(negCol,2)
-  if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
   
-  if(is.null(qgraphObject$Arguments[['probCol']])) probCol <- "blue" else probCol <- qgraphObject$Arguments[['probCol']]
+  if(is.null(qgraphObject$Arguments[['probCol']])) probCol <- "black" else probCol <- qgraphObject$Arguments[['probCol']]
   if(!is.null(qgraphObject$Arguments[['probabilityEdges']])) 
   {
     if (isTRUE(qgraphObject$Arguments[['probabilityEdges']]))
@@ -1016,6 +1010,12 @@ qgraph <- function( input, ... )
       posCol <- probCol
     }
   }
+    
+  if (length(posCol)==1) posCol <- rep(posCol,2)
+  if (length(posCol)!=2) stop("'posCol' must be of length 1 or 2.")
+  if (length(negCol)==1) negCol <- rep(negCol,2)
+  if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
+  
   
   # border color:
   if(!is.null(qgraphObject$Arguments[['border.color']])) {
