@@ -108,7 +108,7 @@ export(FDRnetwork)
 
 
 # importFrom(sendplot, "xy.send")
-export(qgraphAnnotate)
+# export(qgraphAnnotate)
 
 importFrom(d3Network, "d3ForceNetwork")
 
