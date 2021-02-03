@@ -76,7 +76,22 @@ cor_auto <- function(
     if(!requireNamespace("huge")) stop("'huge' package needs to be installed.")
     CorMat <- huge::huge.npn(data, "skeptic")
   } else {
-    CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing) )
+    
+    #provide needed arguments for lavcor
+    if(missing == "fiml"){
+      
+      #fiml needs ml and TRUE to work
+      meanstructure <- TRUE
+      estimator <- "ml"
+    }
+    else{
+      
+      #use defaults for other options
+      meanstructure <- FALSE
+      estimator <- "two.step"
+    }
+    
+    CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator) )
     class(CorMat) <- "matrix"
   }
 
