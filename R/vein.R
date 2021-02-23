@@ -128,5 +128,18 @@ flow <- function(
   }
   
   # Plot:
-  qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE,fade=fade,labels=labels, ...)
+  # qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints = ECP, curveScale = FALSE,fade=fade,labels=labels, ...)
+  
+  
+  qgraph(as.matrix(E[,1:3]), layout = Layout, 
+         curve = Curve, 
+         edgeConnectPoints = ECP, 
+         curveScale = FALSE,
+         fade=fade,
+         labels=labels,
+         object,
+         directed = object$Edgelist$directed,
+         bidirectional = object$Edgelist$bidirectional,
+         ...)
+  
 }

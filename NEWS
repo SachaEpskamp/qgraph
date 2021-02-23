@@ -1,6 +1,13 @@
+Changes in Version 1.7.1
+  - Fixed a bug with the flow() function
+
 Changes in Version 1.7.0
   - The 'centrality()' function now includes R-squared (predictability)
   - 'qgraphAnnotate' has been removed due to CRAN removal of sendplot
+  - Fixed a bug when using edges colored as probabilities with more than 20 nodes
+  - the 'probCol' argument now defaults to "black"
+  - Removed several dependencies
+  - Removed 'as_ggraph' to reduce dependencies
 
 Changes in Version 1.6.9
   - Fixed a bug where using qgraph on the output of qgraph did not use all arguments correctly
