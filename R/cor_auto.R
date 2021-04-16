@@ -80,19 +80,20 @@ cor_auto <- function(
     #provide needed arguments for lavcor
     if(missing == "fiml"){
       
-      #fiml needs ml and TRUE to work
-      meanstructure <- TRUE
-      estimator <- "ml"
+      #fiml needs ml, TRUE and fit to have estimation in object
+      lavobject <- suppressWarnings(lavaan::lavCor(data, missing = missing, se = "standard", meanstructure = TRUE, estimator = "ML", output = "fit"))
+      #compute correlation matrix from covariance matrix
+      CorMat <- cov2cor(lavaan::inspect(lavobject, "est")$theta)
+      class(CorMat) <- "matrix"
     }
     else{
-      
       #use defaults for other options
       meanstructure <- FALSE
       estimator <- "two.step"
+      CorMat <- suppressWarnings(lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator))
+      class(CorMat) <- "matrix"
     }
     
-    CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator) )
-    class(CorMat) <- "matrix"
   }
 
   # Check for positive definite:
