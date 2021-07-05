@@ -930,7 +930,7 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","gray","gimme","GIMME","neon")){
+                      "Borkulo","colorblind","gray","gimme","GIMME","neon","pride")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
  
@@ -985,6 +985,11 @@ qgraph <- function( input, ... )
       negCol <- "#c04df9"
       unCol <- "#8ffcff"
       palette <- "neon"
+    }else if(theme == "pride"){
+      posCol <- "#1AB3FF"
+      negCol <- "#FF1C8D"
+      unCol <- "#613915"
+      palette <- "pride"
     }
   }
   
@@ -1043,7 +1048,7 @@ qgraph <- function( input, ... )
     if (length(palette) != 1 && !is.character(palette)){
       stop("'palette' must be a single string.")
     }
-    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon")){
+    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon","pride")){
       stop(paste0("Palette '",palette,"' is not supported."))
     }
   }
@@ -2665,7 +2670,19 @@ qgraph <- function( input, ... )
       color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
     } else if (palette == "neon"){
       color <- neon(length(groups))
-    } else stop(paste0("Palette '",palette,"' is not supported."))
+    } else if (palette == "pride"){
+      if (length(groups) > 7){
+        color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
+      } else {
+        pridecols <- c("#E50000","#FF8D00","#FFEE00","#028121","#004CFF","#760088")
+        # Reorder:
+        startcol <- round(1 + rainbowStart * 6)
+        sequence <- startcol:(startcol+length(groups))%%6
+        sequence[sequence==0] <- 6
+        color <- pridecols[sequence]        
+      }
+
+    }  else stop(paste0("Palette '",palette,"' is not supported."))
   }
   
   # Default color:
