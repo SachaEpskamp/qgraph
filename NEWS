@@ -1,5 +1,6 @@
 Changes in Version 1.7.1
   - Fixed a bug with the flow() function
+  - Added theme = "pride"
 
 Changes in Version 1.7.0
   - The 'centrality()' function now includes R-squared (predictability)
