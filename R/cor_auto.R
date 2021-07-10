@@ -84,7 +84,7 @@ cor_auto <- function(
   if(forcePD & !all(eigen(CorMat)$values > 0))  {
     warning("Correlation matrix is not positive definite. Finding nearest positive definite matrix")
   
-    CorMat <- as.matrix(Matrix::nearPD(CorMat, corr = TRUE, ensureSymmetry = TRUE)$mat)
+    CorMat <- as.matrix(Matrix::nearPD(CorMat, corr = TRUE, ensureSymmetry = TRUE, keepDiag = TRUE)$mat)
   }
 
   return(CorMat)
