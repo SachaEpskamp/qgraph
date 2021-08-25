@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // qgraph_layout_Cpp
 NumericMatrix qgraph_layout_Cpp(int pniter, int pvcount, int pecount, NumericVector maxdelta, double parea, double pcoolexp, double prepulserad, IntegerVector Ef, /* Edges from */     IntegerVector Et, /*Edges t0*/     NumericVector W, NumericVector xInit, NumericVector yInit, LogicalVector Cx, LogicalVector Cy, int digits);
 RcppExport SEXP _qgraph_qgraph_layout_Cpp(SEXP pniterSEXP, SEXP pvcountSEXP, SEXP pecountSEXP, SEXP maxdeltaSEXP, SEXP pareaSEXP, SEXP pcoolexpSEXP, SEXP prepulseradSEXP, SEXP EfSEXP, SEXP EtSEXP, SEXP WSEXP, SEXP xInitSEXP, SEXP yInitSEXP, SEXP CxSEXP, SEXP CySEXP, SEXP digitsSEXP) {

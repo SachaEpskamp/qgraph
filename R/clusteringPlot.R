@@ -1,4 +1,4 @@
-clusteringPlot <- function(..., scale = c("z-scores", "raw", "raw0","relative"), labels, include , signed = FALSE, theme_bw = TRUE, print = TRUE,
+clusteringPlot <- function(..., scale = c("raw0","raw","z-scores", "relative"), labels, include , signed = FALSE, theme_bw = TRUE, print = TRUE,
                            verbose = TRUE, standardized, relative,
                            orderBy = "default", # Can also be one of the measures
                            decreasing = FALSE)

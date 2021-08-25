@@ -11,12 +11,12 @@ Centrality and Clustering plots and tables
 These functions can be used to facilitate interpreting centrality and clustering coefficients. The plot functions use ggplot2 (Wickham, 2009). The table functions create a long format table which can easilly be plotted in ggplot2.
 }
 \usage{
-centralityPlot(..., labels, scale = c("z-scores", "raw", "raw0","relative"),
+centralityPlot(..., labels, scale = c("raw0", "raw", "z-scores", "relative"),
                  include =c("Degree","Strength","OutDegree","InDegree","OutStrength",
                  "InStrength"), theme_bw = TRUE, print = TRUE, verbose = TRUE, 
                  standardized, relative, weighted = TRUE,signed = TRUE, 
                  orderBy = "default", decreasing = FALSE)
-clusteringPlot(..., scale = c("z-scores", "raw", "raw0","relative"), labels, 
+clusteringPlot(..., scale = c("raw0", "raw", "z-scores", "relative"), labels, 
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
                   verbose = TRUE, standardized, relative,orderBy = "default", 
                   decreasing = FALSE)

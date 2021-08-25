@@ -1,3 +1,6 @@
+Changes in Version 1.8
+  - The 'centralityPlot' and 'clusteringPlot' functions now use 'raw0' as default for the 'scale' argument, meaning that centrality and clustering coefficients are no longer standardized to z-scores by default.
+
 Changes in Version 1.7.1
   - Fixed a bug with the flow() function
   - Added theme = "pride"
