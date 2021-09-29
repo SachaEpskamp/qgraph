@@ -1943,7 +1943,7 @@ qgraph <- function( input, ... )
       }      
     }
     
-    if (!is.null(edge.color)) if (length(edge.color) == length(E$weight)) edge.color <- edge.color[E$weight!=0]
+    # if (!is.null(edge.color)) if (length(edge.color) == length(E$weight)) edge.color <- edge.color[E$weight!=0]
     
     if (is.matrix(lty))
     {
@@ -1966,11 +1966,10 @@ qgraph <- function( input, ... )
       #       edge.label.position <- edge.label.position[E$weight!=0]
     }
   }	
-  
+
   keep <- abs(E$weight)>threshold
   
   ######
-  
   if (length(loopRotation)==1) loopRotation <- rep(loopRotation,nNodes)
   
   if (length(directed)==1) 

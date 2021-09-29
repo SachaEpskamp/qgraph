@@ -1,5 +1,6 @@
 Changes in Version 1.8.1
   - Removed unused dplyr import
+  - Fixed a bug with manual color assignment
 
 Changes in Version 1.8
   - The 'centralityPlot' and 'clusteringPlot' functions now use 'raw0' as default for the 'scale' argument, meaning that centrality and clustering coefficients are no longer standardized to z-scores by default.
