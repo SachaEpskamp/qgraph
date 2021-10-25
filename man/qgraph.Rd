@@ -564,17 +564,7 @@ big5Graph <- qgraph(cor(big5),minimum=0.25,groups=big5groups,
   
   
   ### Input based on other R objects ###
-  
-  ## Exploratory factor analysis:
-  big5efa <- factanal(big5,factors=5,rotation="promax",scores="regression")
-  qgraph(big5efa,groups=big5groups,layout="circle",minimum=0.2,
-         cut=0.4,vsize=c(1.5,10),borders=FALSE,vTrans=200,title="Big 5 EFA")
-  
-  ## Principal component analysis:
-  library("psych")
-  big5pca <- principal(cor(big5),5,rotate="promax")
-  qgraph(big5pca,groups=big5groups,layout="circle",rotation="promax",minimum=0.2,
-         cut=0.4,vsize=c(1.5,10),borders=FALSE,vTrans=200,title="Big 5 PCA")
+
   
   ## pcalg
   # Example from pcalg vignette:
