@@ -1,3 +1,6 @@
+Changes in Version 1.9.1
+  - Fixed a bug in checking input class of qgraph.loadings
+
 Changes in Version 1.9
   - Removed unused dplyr import
   - Fixed a bug with manual color assignment

@@ -2,7 +2,7 @@
 qgraph.loadings=function( fact, ...)
 {
 
-if (class(fact)=="loadings") fact <- fact[1:nrow(fact),1:ncol(fact)]
+if (is(fact,"loadings")) fact <- fact[1:nrow(fact),1:ncol(fact)]
 
 arguments=list(...)
 
