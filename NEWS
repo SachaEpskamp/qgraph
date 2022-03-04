@@ -1,3 +1,6 @@
+Changes in Version 1.9.2
+  - Fixed another bug in checking input class of qgraph.loadings
+
 Changes in Version 1.9.1
   - Fixed a bug in checking input class of qgraph.loadings
 

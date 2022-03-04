@@ -17,7 +17,7 @@ qgraph <- function( input, ... )
   # {
   #   return(qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...))
   # } else 
-    if (any(class(input)=="loadings"))
+    if (is(input,"loadings"))
   {
     return(qgraph.loadings(input,...))
   # }  
@@ -79,7 +79,7 @@ qgraph <- function( input, ... )
   }
   
   # If qgraph object is used as input, recreate edgelist input:
-  if ("qgraph"%in%class(input)) 
+  if (is(input,"qgraph")) 
   {
     # if (is.null(qgraphObject$Arguments$directed)) qgraphObject$Arguments$directed <- input$Edgelist$directed
     # if (is.null(qgraphObject$Arguments$bidirectional)) qgraphObject$Arguments$bidirectional <- input$Edgelist$bidirectional
@@ -101,9 +101,9 @@ qgraph <- function( input, ... )
   }
   
   ### PCALG AND GRAPHNEL ###
-  if (any(c("graphNEL","pcAlgo")  %in% class(input)  ))
+  if (is(input,"pcAlgo") | is(input,"graphNEL"))
   {
-    if (class(input) == "pcAlgo") graphNEL <- input@graph else graphNEL <- input
+    if (is(input,"pcAlgo")) graphNEL <- input@graph else graphNEL <- input
     qgraphObject$Arguments$directed <- graphNEL@graphData$edgemode == "directed"
     qgraphObject$Arguments$bidirectional <- TRUE
     TempLabs  <- graphNEL@nodes
@@ -116,7 +116,7 @@ qgraph <- function( input, ... )
     EL[,2] <- match(EL[,2],TempLabs)
     mode(EL) <- "numeric"
     # Create mixed graph if pcAlgo:
-    if ("pcAlgo" %in% class(input))
+    if (is(input,"pcAlgo"))
     {
       srtInput <- aaply(EL,1,sort)
       qgraphObject$Arguments$directed <- !(duplicated(srtInput)|duplicated(srtInput,fromLast=TRUE))

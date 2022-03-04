@@ -10,7 +10,7 @@ if (length(arguments)>0)
 {
 	for (i in 1:length(arguments))
 	{
-		if (class(arguments[[i]])=="qgraph") 
+		if (is(arguments[[i]],"qgraph") )
 		{
 			if (!is.null(names(arguments[[i]])))
 			{
@@ -315,7 +315,7 @@ else if (legend & filetype!="pdf") warning("Legend in qgraph.loadings only suppo
 	
 if (filetype%in%c('pdf','png','jpg','jpeg','svg','eps','tiff')) dev.off()
 
-class(Q)="qgraph"
+class(Q) <- "qgraph"
 invisible(Q)
 }
 
