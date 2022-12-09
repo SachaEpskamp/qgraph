@@ -104,8 +104,19 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
     centr1$Closeness[!largcomp]<-NA
   }
   
+  # # compute edge betweenness with package igraph
+  # net_ig_abs<-graph.adjacency(adjmatrix=abs(1/x), mode=ifelse(directed.gr, "directed", "undirected"), weighted=(if(weighted.gr)TRUE), diag=FALSE)
+  # 
+  
   # compute edge betweenness with package igraph
-  net_ig_abs<-graph.adjacency(adjmatrix=abs(1/x), mode=ifelse(directed.gr, "directed", "undirected"), weighted=(if(weighted.gr)TRUE), diag=FALSE)
+  if (weighted.gr){
+    igraphinput <- abs(1/x)
+  } else {
+    igraphinput <- x
+  }
+  net_ig_abs<- igraph::graph.adjacency(adjmatrix=igraphinput, mode=ifelse(directed.gr, "directed", "undirected"), weighted=(if(weighted.gr)TRUE), diag=FALSE)
+  
+  
   # edge betweenness centrality
   edgebet<-edge.betweenness(graph=net_ig_abs, directed=directed.gr)
   el<-data.frame(get.edgelist(graph=net_ig_abs), stringsAsFactors=FALSE)

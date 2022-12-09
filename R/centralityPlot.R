@@ -1,4 +1,4 @@
-centralityPlot <- function(..., labels, scale = c("z-scores", "raw", "raw0","relative"), 
+centralityPlot <- function(..., labels, scale = c("raw0","raw","z-scores", "relative"), 
                            include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength"), 
                            theme_bw = TRUE, print = TRUE,
                            verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE,

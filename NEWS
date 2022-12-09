@@ -1,6 +1,28 @@
+Changes in Version 1.9.2
+  - Fixed another bug in checking input class of qgraph.loadings
+
+Changes in Version 1.9.1
+  - Fixed a bug in checking input class of qgraph.loadings
+
+Changes in Version 1.9
+  - Removed unused dplyr import
+  - Fixed a bug with manual color assignment
+  - Fixed an issue with 'centrality_auto' on M1 chipped Mac computers
+
+Changes in Version 1.8
+  - The 'centralityPlot' and 'clusteringPlot' functions now use 'raw0' as default for the 'scale' argument, meaning that centrality and clustering coefficients are no longer standardized to z-scores by default.
+
+Changes in Version 1.7.1
+  - Fixed a bug with the flow() function
+  - Added theme = "pride"
+
 Changes in Version 1.7.0
   - The 'centrality()' function now includes R-squared (predictability)
   - 'qgraphAnnotate' has been removed due to CRAN removal of sendplot
+  - Fixed a bug when using edges colored as probabilities with more than 20 nodes
+  - the 'probCol' argument now defaults to "black"
+  - Removed several dependencies
+  - Removed 'as_ggraph' to reduce dependencies
 
 Changes in Version 1.6.9
   - Fixed a bug where using qgraph on the output of qgraph did not use all arguments correctly
