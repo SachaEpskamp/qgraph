@@ -76,8 +76,24 @@ cor_auto <- function(
     if(!requireNamespace("huge")) stop("'huge' package needs to be installed.")
     CorMat <- huge::huge.npn(data, "skeptic")
   } else {
-    CorMat <- suppressWarnings( lavaan::lavCor(data, missing = missing) )
-    class(CorMat) <- "matrix"
+    
+    #provide needed arguments for lavcor
+    if(missing == "fiml"){
+      
+      #fiml needs ml, TRUE and fit to have estimation in object
+      lavobject <- suppressWarnings(lavaan::lavCor(data, missing = missing, se = "standard", meanstructure = TRUE, estimator = "ML", output = "fit"))
+      #compute correlation matrix from covariance matrix
+      CorMat <- cov2cor(lavaan::inspect(lavobject, "est")$theta)
+      class(CorMat) <- "matrix"
+    }
+    else{
+      #use defaults for other options
+      meanstructure <- FALSE
+      estimator <- "two.step"
+      CorMat <- suppressWarnings(lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator))
+      class(CorMat) <- "matrix"
+    }
+    
   }
 
   # Check for positive definite:

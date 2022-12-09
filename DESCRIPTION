@@ -1,7 +1,7 @@
 Package: qgraph
 Type: Package
 Title: Graph Plotting Methods, Psychometric Data Visualization and Graphical Model Estimation
-Version: 1.9.2
+Version: 1.9.3
 Authors@R: c(
   person("Sacha", "Epskamp", email = "mail@sachaepskamp.com",role = c("aut", "cre")),
   person("Giulio", "Costantini", role = c("aut")),
@@ -15,7 +15,7 @@ Maintainer: Sacha Epskamp <mail@sachaepskamp.com>
 Depends: R (>= 3.0.0)
 Imports:  Rcpp (>= 1.0.0), methods, grDevices, psych, lavaan, plyr, Hmisc, igraph, jpeg, png, colorspace, Matrix, corpcor, reshape2, ggplot2, glasso, fdrtool, gtools, parallel, pbapply, abind
 ByteCompile: yes
-Description:  Weighted network visualization and analysis, as well as Gaussian graphical model computation. See Epskamp et al. (2012) <doi:10.18637/jss.v048.i04>.
+Description: Fork of qgraph - Weighted network visualization and analysis, as well as Gaussian graphical model computation. See Epskamp et al. (2012) <doi:10.18637/jss.v048.i04>.
 BugReports: https://github.com/SachaEpskamp/qgraph
 License: GPL-2
 LazyLoad: yes
