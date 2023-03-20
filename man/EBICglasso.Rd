@@ -5,7 +5,7 @@
 Compute Gaussian graphical model using graphical lasso based on extended BIC criterium.
 }
 \description{
-This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie and Tibshirani, 2011) to compute a sparse gaussian graphical model with the graphical lasso (Friedman, Hastie \& Tibshirani, 2008). The tuning parameter is chosen using the Extended Bayesian Information criterium  (EBIC). 
+This function uses the \code{\link[glasso]{glasso}} package (Friedman, Hastie and Tibshirani, 2011) to compute a sparse gaussian graphical model with the graphical lasso (Friedman, Hastie and Tibshirani, 2008). The tuning parameter is chosen using the Extended Bayesian Information criterium  (EBIC). 
 }
 
 

@@ -6,7 +6,7 @@ toJSONarray <- function(dtf){
   
   name.value <- function(i){
     quote <- '';
-    if(class(dtf[, i])!='numeric' && class(dtf[, i])!='integer'){
+    if(!is(dtf[, i],"numeric") && !is(dtf[, i], "integer")){
       quote <- '"';
     }
     paste('"', i, '" : ', quote, dtf[,i], quote, sep='')

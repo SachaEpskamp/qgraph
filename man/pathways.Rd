@@ -33,7 +33,7 @@ The line type of the edges that are not part of shortest paths between 'from' an
 Isvoranu, A. M., van Borkulo, C. D., Boyette, L. L., Wigman, J. T., Vinkers, C. H., Borsboom, D., & Group Investigators. (2016). A Network Approach to Psychosis: Pathways Between Childhood Trauma and Psychotic Symptoms. Schizophrenia bulletin, sbw055.
 }
 \author{
-Sacha Epskamp \& Adela M. Isvoranu
+Sacha Epskamp and Adela M. Isvoranu
 }
 
 \seealso{

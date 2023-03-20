@@ -67,5 +67,5 @@ H. Wickham. ggplot2: elegant graphics for data
 analysis. Springer New York, 2009.
 }
 \author{
-Sacha Epskamp <mail@sachaepskamp.com> \& Jolanda Kossakowski
+Sacha Epskamp <mail@sachaepskamp.com> and Jolanda Kossakowski
 }
