@@ -8,13 +8,14 @@ Converts qgraph object to igraph object.
 This function converts the output of \code{\link{qgraph}} to an 'igraph' object that can be used in the igraph package (Csardi & Nepusz, 2006)
 }
 \usage{
-\method{as.igraph}{qgraph}(object, attributes = TRUE)
+\method{as.igraph}{qgraph}(x, ..., attributes = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{
+  \item{x}{
 A \code{"qgraph"} object
 }
+\item{\dots}{Not used.}
   \item{attributes}{
 Logical, should graphical attributes also be transferred?
 }

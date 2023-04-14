@@ -58,9 +58,7 @@ Logical, should all measures be scaled relative to the largest value? Argument i
 \item{decreasing}{Logical indicating if the nodes should be ordered increasing or decreasing}
 }
 
-\details{
-Note that under default setting the plot functions show the standardized centrality indices. That is, z-scores instead of raw centrality indices. This is done to allow easier comparison of multiple networks.
-}
+
 
 \references{
 H. Wickham. ggplot2: elegant graphics for data
