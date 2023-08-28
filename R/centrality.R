@@ -103,7 +103,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     E(igraphObject)$weight <- 1/E[,3]
     igraphObject <- igraph::delete_edges(igraphObject, which(E(igraphObject)$weight == Inf))
     
-    Betweenness <-  igraph::estimate_betweenness(igraphObject,cutoff = 1/1e-10)
+    Betweenness <-  igraph::betweenness(igraphObject,cutoff = 1/1e-10)
     
     ShortestPaths <- igraph::shortest.paths(igraphObject, mode = "out")
     

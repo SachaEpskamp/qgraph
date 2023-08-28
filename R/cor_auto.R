@@ -81,9 +81,9 @@ cor_auto <- function(
     if(missing == "fiml"){
       
       #fiml needs ml, TRUE and fit to have estimation in object
-      lavobject <- suppressWarnings(lavaan::lavCor(data, missing = missing, se = "standard", meanstructure = TRUE, estimator = "ML", output = "fit"))
+      lavobject <- suppressWarnings(lavaan::lavCor(data, missing = missing, se = "none", meanstructure = TRUE, estimator = "ML", output = "fit"))
       #compute correlation matrix from covariance matrix
-      CorMat <- cov2cor(lavaan::inspect(lavobject, "est")$theta)
+      CorMat <- cov2cor(lavaan::inspect(lavobject, "cov.ov"))
       class(CorMat) <- "matrix"
     }
     else{
