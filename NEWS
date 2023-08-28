@@ -1,3 +1,6 @@
+Changes in Version 1.9.6
+  - Fixed a bug where rescale does not work with only one node
+
 Changes in Version 1.9.5
   - Removed z-score warning ?centralityPlot
 

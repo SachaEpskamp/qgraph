@@ -2168,7 +2168,7 @@ qgraph <- function( input, ... )
   
   
   # Layout settings:
-  if (nNodes == 1)
+  if (nNodes == 1 & isTRUE(rescale))
   {
     layout <- matrix(0,1,2)
   } else {
