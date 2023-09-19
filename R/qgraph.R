@@ -1023,7 +1023,6 @@ qgraph <- function( input, ... )
   if (length(negCol)==1) negCol <- rep(negCol,2)
   if (length(negCol)!=2) stop("'negCol' must be of length 1 or 2.")
   
-  
   # border color:
   if(!is.null(qgraphObject$Arguments[['border.color']])) {
     bcolor <- qgraphObject$Arguments[['border.color']]
@@ -2522,7 +2521,12 @@ qgraph <- function( input, ... )
           col <- (abs(E$weight)-minimum)/(maximum-minimum)
         } else 
         {
-          col <- (abs(E$weight)-minimum)/(cut-minimum)
+          if (cut > minimum){
+            col <- (abs(E$weight)-minimum)/(cut-minimum)  
+          } else {
+            col <- ifelse(abs(E$weight) > minimum, 1, 0)
+          }
+          
         }
         col[col>1] <- 1
         col[col<0] <- 0
@@ -2558,8 +2562,13 @@ qgraph <- function( input, ... )
         # Set colors over cutoff if cut != 0:
         if (cut!=0)
         {
-          if (posCol[1]!=posCol[2]) edge.color[E$weight >= cut] <- posCol[2]
-          if (negCol[1]!=negCol[2]) edge.color[E$weight <= -1*cut] <- negCol[2]
+          # Old code:
+          # if (posCol[1]!=posCol[2]) edge.color[E$weight >= cut] <- posCol[2]
+          # if (negCol[1]!=negCol[2]) edge.color[E$weight <= -1*cut] <- negCol[2]
+          
+          # New code (1.9.7)
+          edge.color[E$weight >= cut & abs(E$weight) >= minimum] <- posCol[2]
+          edge.color[E$weight <= -1*cut & abs(E$weight) >= minimum] <- negCol[2]
         }
       } 
       
@@ -2635,7 +2644,6 @@ qgraph <- function( input, ... )
     if (length(edge.color) == 1) edge.color <- rep(edge.color,length(E$from))
     if (length(edge.color) != length(E$from)) stop("Number of edge colors not equal to number of edges")
   }
-  
   
   # Vertex color:
   # if (is.null(color) & !is.null(groups))
