@@ -1,6 +1,6 @@
 \name{smallworldness}
 \alias{smallworldness}
-\encoding{UTF8}
+\encoding{UTF-8}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Compute the small-worldness index.

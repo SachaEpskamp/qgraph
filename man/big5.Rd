@@ -1,4 +1,4 @@
-\encoding{UTF8}
+\encoding{UTF-8}
 \name{big5}
 \alias{big5}
 \docType{data}
@@ -10,9 +10,9 @@ This is a dataset of the Big 5 personality traits that will be used in talks and
 }
 \usage{data(big5)}
 \references{
-Hoekstra, H. A., Ormel, J., & De Fruyt, F. (2003). NEO-PI-R/NEO-FFI: Big 5 persoonlijkheidsvragenlijst. Handleiding \[Manual of the Dutch version of the NEO-PI-R/NEO-FFI\]. Lisse, The Netherlands: Swets and Zeitlinger.
+Hoekstra, H. A., Ormel, J., & De Fruyt, F. (2003). NEO-PI-R/NEO-FFI: Big 5 persoonlijkheidsvragenlijst. Handleiding [Manual of the Dutch version of the NEO-PI-R/NEO-FFI]. Lisse, The Netherlands: Swets and Zeitlinger.
 
-Dolan, C. V., Oort, F. J., Stoel, R. D., & Wicherts, J. M. (2009). Testing measurement invariance in the target rotates multigroup exploratory factor model. Structural Equation Modeling, 16, 295–314.
+Dolan, C. V., Oort, F. J., Stoel, R. D., & Wicherts, J. M. (2009). Testing measurement invariance in the target rotates multigroup exploratory factor model. Structural Equation Modeling, 16, 295--314.
 }
 \format{
   The format is:

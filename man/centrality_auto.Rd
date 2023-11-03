@@ -1,4 +1,4 @@
-\encoding{UTF8}
+\encoding{UTF-8}
 \name{centrality_auto}
 \alias{centrality_auto}
 %- Also NEED an '\alias' for EACH other topic documented here.

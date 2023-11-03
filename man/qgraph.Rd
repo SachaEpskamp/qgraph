@@ -1,4 +1,4 @@
-\encoding{UTF8}
+\encoding{UTF-8}
 \name{qgraph}
 \alias{qgraph}
 %- Also NEED an '\alias' for EACH other topic documented here.

@@ -433,7 +433,7 @@ qgraph <- function( input, ... )
     {
       #       if (nrow(input) <= 20 & all(colnames(input)==rownames(input)))
       #       {
-      labels <- iconv(abbreviate(colnames(input),3))
+      labels <- abbreviate(colnames(input),3)
       if (any(is.na(labels))){
         warning("Some labels where not abbreviatable.")
         labels <- ifelse(is.na(labels), colnames(input), labels)

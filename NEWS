@@ -1,3 +1,6 @@
+Changes in Version 1.9.8
+  - Fixed some encoding issues
+
 Changes in Version 1.9.6
   - Fixed a bug where rescale does not work with only one node
   - Fixed a bug where minimum > cut might lead to edges not being plotted
