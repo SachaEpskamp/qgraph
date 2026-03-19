@@ -1,3 +1,33 @@
+Changes in Version 2.0.0
+  - MAJOR: Modernized qgraph() function signature. All major arguments are now
+    explicitly listed in the function signature, enabling IDE autocomplete
+    (e.g., in RStudio). Arguments default to NULL and are fully backward compatible.
+  - MAJOR: Adopted consistent dot.case naming convention for all arguments.
+    Old camelCase and abbreviated names (e.g., vsize, posCol, DoNotPlot) are
+    deprecated but still work with deprecation warnings. See ?qgraph for the
+    full mapping of old to new argument names.
+  - Renamed arguments include:
+      vsize -> node.size, vsize2 -> node.size2, esize -> edge.size,
+      asize -> arrow.size, posCol -> positive.color, negCol -> negative.color,
+      unCol -> unweighted.color, DoNotPlot -> do.not.plot,
+      nodeNames -> node.names, sampleSize -> sample.size,
+      countDiagonal -> count.diagonal, FDRcutoff -> fdr.cutoff,
+      GLratio -> gl.ratio, layoutScale -> layout.scale,
+      layoutOffset -> layout.offset, bgcontrol -> bg.control,
+      bgres -> bg.resolution, arrowAngle -> arrow.angle,
+      parallelEdge -> parallel.edge, curveAll -> curve.all,
+      curveDefault -> curve.default, curveShape -> curve.shape,
+      curveScale -> curve.scale, nNodes -> n.nodes,
+      and many more (see ?qgraph "Deprecated argument names" section).
+  - Added deprecation handler (.handle_qgraph_args) that maps old names to new
+    internal names and emits informative warnings.
+  - When both old and new names are specified, the new name takes precedence
+    with a warning.
+  - Added testthat test suite covering basic functionality, deprecated argument
+    warnings, renamed argument equivalence, and edge cases.
+  - Updated documentation (qgraph.Rd) with new argument names and deprecation
+    table.
+
 Changes in Version 1.9.8
   - Fixed some encoding issues
 

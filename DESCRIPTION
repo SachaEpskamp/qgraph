@@ -1,7 +1,7 @@
 Package: qgraph
 Type: Package
 Title: Graph Plotting Methods, Psychometric Data Visualization and Graphical Model Estimation
-Version: 1.9.8
+Version: 2.0.0
 Authors@R: c(
   person("Sacha", "Epskamp", email = "mail@sachaepskamp.com",role = c("aut", "cre")),
   person("Giulio", "Costantini", role = c("aut")),
@@ -20,4 +20,4 @@ BugReports: https://github.com/SachaEpskamp/qgraph
 License: GPL-2
 LazyLoad: yes
 LinkingTo: Rcpp
-Suggests: BDgraph, huge
+Suggests: BDgraph, huge, testthat (>= 3.0.0)

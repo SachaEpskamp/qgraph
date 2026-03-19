@@ -1,36 +1,238 @@
 # Create qgraph model:
 
-qgraph <- function( input, ... )
+qgraph <- function(
+  input,
+  # --- Layout ---
+  layout = NULL,
+  groups = NULL,
+  rotation = NULL,
+  repulsion = NULL,
+  layout.par = NULL,
+  layout.control = NULL,
+  aspect = NULL,
+  # --- Thresholding & display ---
+  minimum = NULL,
+  maximum = NULL,
+  cut = NULL,
+  threshold = NULL,
+  details = NULL,
+  # --- Graph type / estimation ---
+  graph = NULL,
+  sample.size = NULL,
+  tuning = NULL,
+  gamma = NULL,
+  lambda.min.ratio = NULL,
+  refit = NULL,
+  count.diagonal = NULL,
+  alpha = NULL,
+  bonf = NULL,
+  fdr.cutoff = NULL,
+  # --- Output ---
+  filetype = NULL,
+  filename = NULL,
+  width = NULL,
+  height = NULL,
+  normalize = NULL,
+  do.not.plot = NULL,
+  plot = NULL,
+  rescale = NULL,
+  mar = NULL,
+  res = NULL,
+  stand.alone = NULL,
+  # --- Theme / palette ---
+  palette = NULL,
+  theme = NULL,
+  # --- Node appearance ---
+  color = NULL,
+  node.size = NULL,
+  node.size2 = NULL,
+  node.width = NULL,
+  node.height = NULL,
+  borders = NULL,
+  border.color = NULL,
+  border.width = NULL,
+  shape = NULL,
+  polygon.list = NULL,
+  node.transparency = NULL,
+  use.pch = NULL,
+  node.resolution = NULL,
+  # --- Node labels ---
+  labels = NULL,
+  label.cex = NULL,
+  label.color = NULL,
+  label.prop = NULL,
+  label.norm = NULL,
+  label.scale = NULL,
+  label.scale.equal = NULL,
+  label.font = NULL,
+  label.fill.vertical = NULL,
+  label.fill.horizontal = NULL,
+  node.label.offset = NULL,
+  node.label.position = NULL,
+  node.names = NULL,
+  title = NULL,
+  title.cex = NULL,
+  # --- Edges ---
+  edge.size = NULL,
+  edge.width = NULL,
+  edge.color = NULL,
+  positive.color = NULL,
+  negative.color = NULL,
+  unweighted.color = NULL,
+  probability.color = NULL,
+  probability.edges = NULL,
+  negative.dashed = NULL,
+  color.factor = NULL,
+  trans = NULL,
+  fade = NULL,
+  lty = NULL,
+  loop = NULL,
+  loop.rotation = NULL,
+  diag = NULL,
+  edge.connect.points = NULL,
+  # --- Edge curvature ---
+  curve = NULL,
+  curve.all = NULL,
+  curve.default = NULL,
+  curve.shape = NULL,
+  curve.scale = NULL,
+  curve.scale.node.correction = NULL,
+  curve.pivot = NULL,
+  curve.pivot.shape = NULL,
+  parallel.edge = NULL,
+  parallel.angle = NULL,
+  parallel.angle.default = NULL,
+  # --- Edge labels ---
+  edge.labels = NULL,
+  edge.label.cex = NULL,
+  edge.label.bg = NULL,
+  edge.label.position = NULL,
+  edge.label.font = NULL,
+  edge.label.color = NULL,
+  edge.label.margin = NULL,
+  # --- Arrows / directed ---
+  directed = NULL,
+  arrows = NULL,
+  arrow.angle = NULL,
+  arrow.size = NULL,
+  open = NULL,
+  bidirectional = NULL,
+  # --- Legend ---
+  legend = NULL,
+  legend.cex = NULL,
+  legend.mode = NULL,
+  gl.ratio = NULL,
+  layout.scale = NULL,
+  layout.offset = NULL,
+  # --- Background ---
+  bg = NULL,
+  bg.control = NULL,
+  bg.resolution = NULL,
+  # --- Significance ---
+  mode = NULL,
+  sig.scale = NULL,
+  # --- Scores ---
+  scores = NULL,
+  scores.range = NULL,
+  # --- Misc ---
+  weighted = NULL,
+  edgelist = NULL,
+  n.nodes = NULL,
+  font = NULL,
+  gray = NULL,
+  rainbow.start = NULL,
+  no.par = NULL,
+  pre.expression = NULL,
+  post.expression = NULL,
+  # --- Subplots / images ---
+  subplots = NULL,
+  subpars = NULL,
+  subplot.bg = NULL,
+  images = NULL,
+  # --- Bars ---
+  bars = NULL,
+  bar.side = NULL,
+  bar.color = NULL,
+  bar.length = NULL,
+  bars.at.side = NULL,
+  means = NULL,
+  SDs = NULL,
+  meanRange = NULL,
+  # --- Pies ---
+  pie = NULL,
+  pie.border = NULL,
+  pie.color = NULL,
+  pie.color2 = NULL,
+  pie.start = NULL,
+  pie.darken = NULL,
+  pie.pastel = NULL,
+  pie.radius = NULL,
+  pie.ci.mid = NULL,
+  pie.ci.lower = NULL,
+  pie.ci.upper = NULL,
+  pie.ci.point.cex = NULL,
+  pie.ci.point.col = NULL,
+  # --- Knots ---
+  knots = NULL,
+  knot.size = NULL,
+  knot.color = NULL,
+  knot.borders = NULL,
+  knot.border.color = NULL,
+  knot.border.width = NULL,
+  # --- Circle edge end / residuals ---
+  circle.edge.end = NULL,
+  residuals = NULL,
+  residScale = NULL,
+  residEdge = NULL,
+  # --- Passthrough ---
+  ...
+)
 {
   
-  # OTHER INPUT MODES: 
-  # if (any(class(input)=="factanal") )
-  # {
-  #   return(qgraph.efa(input,...))
-  # } else if (any(class(input)=="principal") )
-  # {
-  #   return(qgraph.pca(input,...))
-  # } else if (any(class(input)=="lavaan"))
-  # {
-  #   return(qgraph.lavaan(input,edge.labels=TRUE,include=8,filetype="",...))
-  # } else if (any(class(input)=="sem"))
-  # {
-  #   return(qgraph.sem(input,edge.labels=TRUE,include=6,filetype="",...))
-  # } else 
+  # For early returns, we need to forward all args (both explicit and ...).
+  # Build a list of all non-NULL explicit args plus the dots.
+  .build_fwd_args <- function() {
+    # Collect non-NULL explicit args
+    ea <- list(
+      layout = layout, groups = groups, rotation = rotation, repulsion = repulsion,
+      layout.par = layout.par, layout.control = layout.control, aspect = aspect,
+      minimum = minimum, maximum = maximum, cut = cut, threshold = threshold,
+      details = details, graph = graph, sample.size = sample.size,
+      tuning = tuning, gamma = gamma, lambda.min.ratio = lambda.min.ratio,
+      refit = refit, count.diagonal = count.diagonal, alpha = alpha, bonf = bonf,
+      fdr.cutoff = fdr.cutoff, filetype = filetype, filename = filename,
+      width = width, height = height, normalize = normalize,
+      do.not.plot = do.not.plot, plot = plot, rescale = rescale,
+      mar = mar, res = res, stand.alone = stand.alone,
+      palette = palette, theme = theme, color = color,
+      node.size = node.size, node.size2 = node.size2,
+      node.width = node.width, node.height = node.height,
+      borders = borders, border.color = border.color, border.width = border.width,
+      shape = shape, node.transparency = node.transparency,
+      labels = labels, label.cex = label.cex, label.color = label.color,
+      edge.labels = edge.labels, edge.color = edge.color,
+      directed = directed, legend = legend, legend.cex = legend.cex,
+      positive.color = positive.color, negative.color = negative.color,
+      fade = fade, lty = lty, mode = mode, font = font
+    )
+    # Remove NULLs
+    ea <- ea[!vapply(ea, is.null, logical(1))]
+    # Merge with dots (dots take lower priority)
+    c(ea, list(...))
+  }
+
+  # OTHER INPUT MODES:
     if (is(input,"loadings"))
   {
-    return(qgraph.loadings(input,...))
-  # }  
-  # else if (any(class(input)=="semmod"))
-  # {
-  #   return(qgraph.semModel(input,...))
+    return(do.call(qgraph.loadings, c(list(fact = input), .build_fwd_args())))
   } else if (is.list(input) && identical(names(input),c("Bhat", "omega", "lambda1", "lambda2")))
   {
     layout(t(1:2))
-    
-    Q1 <- qgraph((input$omega + t(input$omega) ) / 2,...)
-    Q2 <- qgraph(input$Bhat,...)
-    
+
+    .fwd <- .build_fwd_args()
+    Q1 <- do.call(qgraph, c(list(input = (input$omega + t(input$omega)) / 2), .fwd))
+    Q2 <- do.call(qgraph, c(list(input = input$Bhat), .fwd))
+
     return(list(Bhat = Q1, omega = Q2))
   }
   
@@ -53,8 +255,81 @@ qgraph <- function( input, ... )
   
 
   ### Extract nested arguments ###
-  # if ("qgraph"%in%class(input)) qgraphObject$Arguments <- list(...,input) else qgraphObject$Arguments <- list(...)
-  qgraphObject$Arguments <- list(...,input=input) 
+  # Collect all explicitly provided arguments (new-style names mapped to old internal names)
+  # and merge with ... (which may contain old-style deprecated names or passthrough args)
+  .explicit_args <- list(
+    layout = layout, groups = groups, rotation = rotation, repulsion = repulsion,
+    layout.par = layout.par, layout.control = layout.control, aspect = aspect,
+    minimum = minimum, maximum = maximum, cut = cut, threshold = threshold,
+    details = details, graph = graph,
+    sample.size = sample.size, tuning = tuning, gamma = gamma,
+    lambda.min.ratio = lambda.min.ratio, refit = refit,
+    count.diagonal = count.diagonal, alpha = alpha, bonf = bonf,
+    fdr.cutoff = fdr.cutoff,
+    filetype = filetype, filename = filename, width = width, height = height,
+    normalize = normalize, do.not.plot = do.not.plot, plot = plot,
+    rescale = rescale, mar = mar, res = res, stand.alone = stand.alone,
+    palette = palette, theme = theme,
+    color = color, node.size = node.size, node.size2 = node.size2,
+    node.width = node.width, node.height = node.height,
+    borders = borders, border.color = border.color, border.width = border.width,
+    shape = shape, polygonList = polygon.list, node.transparency = node.transparency,
+    use.pch = use.pch, node.resolution = node.resolution,
+    labels = labels, label.cex = label.cex, label.color = label.color,
+    label.prop = label.prop, label.norm = label.norm, label.scale = label.scale,
+    label.scale.equal = label.scale.equal, label.font = label.font,
+    label.fill.vertical = label.fill.vertical,
+    label.fill.horizontal = label.fill.horizontal,
+    node.label.offset = node.label.offset, node.label.position = node.label.position,
+    node.names = node.names, title = title, title.cex = title.cex,
+    edge.size = edge.size, edge.width = edge.width, edge.color = edge.color,
+    positive.color = positive.color, negative.color = negative.color,
+    unweighted.color = unweighted.color, probability.color = probability.color,
+    probability.edges = probability.edges, negative.dashed = negative.dashed,
+    color.factor = color.factor, trans = trans, fade = fade, lty = lty,
+    loop = loop, loop.rotation = loop.rotation, diag = diag,
+    edge.connect.points = edge.connect.points,
+    curve = curve, curve.all = curve.all, curve.default = curve.default,
+    curve.shape = curve.shape, curve.scale = curve.scale,
+    curve.scale.node.correction = curve.scale.node.correction,
+    curve.pivot = curve.pivot, curve.pivot.shape = curve.pivot.shape,
+    parallel.edge = parallel.edge, parallel.angle = parallel.angle,
+    parallel.angle.default = parallel.angle.default,
+    edge.labels = edge.labels, edge.label.cex = edge.label.cex,
+    edge.label.bg = edge.label.bg, edge.label.position = edge.label.position,
+    edge.label.font = edge.label.font, edge.label.color = edge.label.color,
+    edge.label.margin = edge.label.margin,
+    directed = directed, arrows = arrows, arrow.angle = arrow.angle,
+    arrow.size = arrow.size, open = open, bidirectional = bidirectional,
+    legend = legend, legend.cex = legend.cex, legend.mode = legend.mode,
+    gl.ratio = gl.ratio, layout.scale = layout.scale, layout.offset = layout.offset,
+    bg = bg, bg.control = bg.control, bg.resolution = bg.resolution,
+    mode = mode, sig.scale = sig.scale,
+    scores = scores, scores.range = scores.range,
+    weighted = weighted, edgelist = edgelist, n.nodes = n.nodes,
+    font = font, gray = gray, rainbow.start = rainbow.start,
+    no.par = no.par, pre.expression = pre.expression,
+    post.expression = post.expression,
+    subplots = subplots, subpars = subpars, subplot.bg = subplot.bg,
+    images = images,
+    bars = bars, bar.side = bar.side, bar.color = bar.color,
+    bar.length = bar.length, bars.at.side = bars.at.side,
+    means = means, SDs = SDs, meanRange = meanRange,
+    pie = pie, pie.border = pie.border, pie.color = pie.color,
+    pie.color2 = pie.color2, pie.start = pie.start, pie.darken = pie.darken,
+    pie.pastel = pie.pastel, pie.radius = pie.radius,
+    pie.ci.mid = pie.ci.mid, pie.ci.lower = pie.ci.lower,
+    pie.ci.upper = pie.ci.upper, pie.ci.point.cex = pie.ci.point.cex,
+    pie.ci.point.col = pie.ci.point.col,
+    knots = knots, knot.size = knot.size, knot.color = knot.color,
+    knot.borders = knot.borders, knot.border.color = knot.border.color,
+    knot.border.width = knot.border.width,
+    circle.edge.end = circle.edge.end,
+    residuals = residuals, residScale = residScale, residEdge = residEdge
+  )
+  # Merge explicit args (new names -> old names) with dots, handling deprecation
+  .merged_args <- .handle_qgraph_args(.explicit_args, list(...))
+  qgraphObject$Arguments <- c(.merged_args, list(input = input))
   
   if (isTRUE(qgraphObject$Arguments[['gui']]) | isTRUE(qgraphObject$Arguments[['GUI']])) 
   {
@@ -297,7 +572,10 @@ qgraph <- function( input, ... )
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
                "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex",  
                "node.label.offset", "node.label.position", "pieCImid", "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol",
-               "edge.label.margin")
+               "edge.label.margin", "verbose", "gui", "GUI", "adj",
+               "background", "label.color.split", "layoutRound",
+               "OmitInsig", "loopAngle", "nfact", "pieRadius",
+               "border.colors", "lcolor")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -939,11 +1217,11 @@ qgraph <- function( input, ... )
       posCol <- c("#009900","darkgreen")
       negCol <- c("#BF0000","red")
     } else if (theme == "Leuven"){
-      dots <- list(...)
-      dots$DoNotPlot <- TRUE
-      dots$theme <- "classic"
-      dots$input <- input
-      return(getWmat(do.call(qgraph,dots )))
+      .leuven_args <- qgraphObject$Arguments
+      .leuven_args$DoNotPlot <- TRUE
+      .leuven_args$theme <- "classic"
+      .leuven_args$input <- input
+      return(getWmat(do.call(qgraph, .leuven_args)))
     } else if (theme == "Hollywood"){
       negCol <- "#FFA500"
       posCol <- "#005AFF"

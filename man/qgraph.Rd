@@ -6,12 +6,117 @@
 \description{
 This is the main function of qgraph which automatically creates an appropriate network and sends it to the plotting method.}
 \usage{
-qgraph( input, ... )
+qgraph(input, layout = NULL, groups = NULL, minimum = NULL,
+  maximum = NULL, cut = NULL, threshold = NULL, details = NULL,
+  graph = NULL, sample.size = NULL, tuning = NULL, gamma = NULL,
+  lambda.min.ratio = NULL, refit = NULL, count.diagonal = NULL,
+  alpha = NULL, bonf = NULL, fdr.cutoff = NULL,
+  palette = NULL, theme = NULL,
+  filetype = NULL, filename = NULL, width = NULL, height = NULL,
+  normalize = NULL, do.not.plot = NULL, plot = NULL, rescale = NULL,
+  mar = NULL, res = NULL, stand.alone = NULL,
+  color = NULL, node.size = NULL, node.size2 = NULL,
+  node.width = NULL, node.height = NULL, borders = NULL,
+  border.color = NULL, border.width = NULL, shape = NULL,
+  node.transparency = NULL, use.pch = NULL, node.resolution = NULL,
+  labels = NULL, label.cex = NULL, label.color = NULL,
+  label.prop = NULL, label.norm = NULL, label.scale = NULL,
+  label.scale.equal = NULL, label.font = NULL,
+  label.fill.vertical = NULL, label.fill.horizontal = NULL,
+  node.label.offset = NULL, node.label.position = NULL,
+  node.names = NULL, title = NULL, title.cex = NULL,
+  edge.size = NULL, edge.width = NULL, edge.color = NULL,
+  positive.color = NULL, negative.color = NULL,
+  unweighted.color = NULL, negative.dashed = NULL,
+  color.factor = NULL, trans = NULL, fade = NULL, lty = NULL,
+  loop = NULL, loop.rotation = NULL, diag = NULL,
+  curve = NULL, curve.all = NULL, curve.default = NULL,
+  curve.shape = NULL, curve.scale = NULL,
+  parallel.edge = NULL, parallel.angle = NULL,
+  parallel.angle.default = NULL,
+  edge.labels = NULL, edge.label.cex = NULL,
+  edge.label.bg = NULL, edge.label.position = NULL,
+  edge.label.font = NULL, edge.label.color = NULL,
+  edge.label.margin = NULL,
+  directed = NULL, arrows = NULL, arrow.angle = NULL,
+  arrow.size = NULL, open = NULL, bidirectional = NULL,
+  legend = NULL, legend.cex = NULL, legend.mode = NULL,
+  gl.ratio = NULL, layout.scale = NULL, layout.offset = NULL,
+  rotation = NULL, repulsion = NULL, layout.par = NULL,
+  layout.control = NULL, aspect = NULL,
+  bg = NULL, bg.control = NULL, bg.resolution = NULL,
+  mode = NULL, scores = NULL, scores.range = NULL,
+  weighted = NULL, edgelist = NULL, n.nodes = NULL,
+  font = NULL, gray = NULL,
+  ...)
 }
 \arguments{
-	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz), "pcAlgo" (pcalg),  \code{"huge"} (huge), \code{"select"} (huge) or the output of \code{glasso}} 
-	\item{...}{Any additional arguments described below. Also a list with class "qgraph" can be added that contains any of these arguments (this is returned invisibly by the function)}
-}	
+	\item{input}{Can be either a weights matrix or an edgelist. Can also be an object of class "sem" (sem), "mod" (sem), "lavaan" (lavaan), "principal" (psych), "loadings" (stats), "factanal" (stats), "graphNEL" (Rgraphviz), "pcAlgo" (pcalg),  \code{"huge"} (huge), \code{"select"} (huge) or the output of \code{glasso}}
+	\item{...}{Any additional arguments described below that are not listed in the signature, or deprecated argument names (which will produce warnings). Also a list with class "qgraph" can be added that contains any of these arguments (this is returned invisibly by the function).}
+}
+
+\section{Deprecated argument names}{
+As of version 2.0.0, many arguments have been renamed to use a consistent dot.case naming convention. The old names still work but produce deprecation warnings. The mapping is:
+
+\tabular{ll}{
+Old name \tab New name \cr
+\code{vsize} \tab \code{node.size} \cr
+\code{vsize2} \tab \code{node.size2} \cr
+\code{esize} \tab \code{edge.size} \cr
+\code{asize} \tab \code{arrow.size} \cr
+\code{vTrans} \tab \code{node.transparency} \cr
+\code{posCol} \tab \code{positive.color} \cr
+\code{negCol} \tab \code{negative.color} \cr
+\code{unCol} \tab \code{unweighted.color} \cr
+\code{probCol} \tab \code{probability.color} \cr
+\code{negDashed} \tab \code{negative.dashed} \cr
+\code{colFactor} \tab \code{color.factor} \cr
+\code{arrowAngle} \tab \code{arrow.angle} \cr
+\code{DoNotPlot} \tab \code{do.not.plot} \cr
+\code{nodeNames} \tab \code{node.names} \cr
+\code{sampleSize} \tab \code{sample.size} \cr
+\code{countDiagonal} \tab \code{count.diagonal} \cr
+\code{FDRcutoff} \tab \code{fdr.cutoff} \cr
+\code{GLratio} \tab \code{gl.ratio} \cr
+\code{layoutScale} \tab \code{layout.scale} \cr
+\code{layoutOffset} \tab \code{layout.offset} \cr
+\code{bgcontrol} \tab \code{bg.control} \cr
+\code{bgres} \tab \code{bg.resolution} \cr
+\code{nNodes} \tab \code{n.nodes} \cr
+\code{parallelEdge} \tab \code{parallel.edge} \cr
+\code{parallelAngle} \tab \code{parallel.angle} \cr
+\code{parallelAngleDefault} \tab \code{parallel.angle.default} \cr
+\code{curveAll} \tab \code{curve.all} \cr
+\code{curveDefault} \tab \code{curve.default} \cr
+\code{curveShape} \tab \code{curve.shape} \cr
+\code{curveScale} \tab \code{curve.scale} \cr
+\code{curvePivot} \tab \code{curve.pivot} \cr
+\code{curvePivotShape} \tab \code{curve.pivot.shape} \cr
+\code{loopRotation} \tab \code{loop.rotation} \cr
+\code{edgeConnectPoints} \tab \code{edge.connect.points} \cr
+\code{CircleEdgeEnd} \tab \code{circle.edge.end} \cr
+\code{usePCH} \tab \code{use.pch} \cr
+\code{noPar} \tab \code{no.par} \cr
+\code{standAlone} \tab \code{stand.alone} \cr
+\code{rainbowStart} \tab \code{rainbow.start} \cr
+\code{preExpression} \tab \code{pre.expression} \cr
+\code{postExpression} \tab \code{post.expression} \cr
+\code{probabilityEdges} \tab \code{probability.edges} \cr
+\code{subplotbg} \tab \code{subplot.bg} \cr
+\code{barSide} \tab \code{bar.side} \cr
+\code{barColor} \tab \code{bar.color} \cr
+\code{barLength} \tab \code{bar.length} \cr
+\code{barsAtSide} \tab \code{bars.at.side} \cr
+\code{pieBorder} \tab \code{pie.border} \cr
+\code{pieColor} \tab \code{pie.color} \cr
+\code{pieColor2} \tab \code{pie.color2} \cr
+\code{pieStart} \tab \code{pie.start} \cr
+\code{pieDarken} \tab \code{pie.darken} \cr
+\code{piePastel} \tab \code{pie.pastel} \cr
+\code{sigScale} \tab \code{sig.scale} \cr
+}
+}
+
 \section{Important additional arguments}{	
 \describe{
 \item{layout}{This argument controls the layout of the graph. "circle" places all nodes in a single circle, "groups" gives a circular layout in which each group is put in separate circles and "spring" gives a force embedded layout. It also can be a matrix with a row for each node and x and y coordinates in the first and second column respectively. Defaults to "circular" in weighted graphs without a groups list, "groups" in weighted graphs with a groups list, and "spring" in unweighted graphs. Can also be a function from the igraph package.}
@@ -40,19 +145,19 @@ qgraph( input, ... )
   Outdated and limited supported options are \code{"factorial"}, which will create a graph based on an exploratory factor analysis, and \code{"sig"} will transform all correlations in p-values (using the fdrtool package; Korbinian Strimmer, 2014) and force mode="sig". "sig2" will do the same but show p-values based on negative statistics in shades of orange}
   \item{threshold}{In addition to a numeric value to omit edges this argument can also be assigned a string to omit insignficant edges. Note that this REMOVES edges from the network (which influences centrality measures and the spring layout). Can be \code{"sig"} to compute significance without correction for multiple testing, \code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"bonferroni"}, \code{"BH"}, \code{"BY"}, \code{"fdr"} or \code{"none"} which are used directly in the \code{adjust} argument in \code{\link[psych]{corr.p}} of the psych package (Revelle, 2014). In addition, this argument can be assigned \code{"locfdr"} in which edges are set to zero if the local FDR is below \code{FDRcutoff}. \code{\link[fdrtool]{fdrtool}} from the fdrtool package (Klaus and Strimmer, 2014) is used to compute these measures, which is used inside \code{\link{FDRnetwork}}.}
   
-  \item{sampleSize}{The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
+  \item{sample.size}{(Previously \code{sampleSize}) The sample-size. Used when \code{graph = "glasso"} or \code{minimum = "sig"}}
     \item{tuning}{A tuning parameter used in estimation. Currently only used when \code{graph = "glasso"} and corresponds to the \code{gamma} argument}
         \item{lambda.min.ratio}{The minimal lambda ratio used in \code{\link{EBICglasso}}, defaults to 0.01.}
     \item{gamma}{Alias for tuning (overwrites the tuning argument).}
       \item{refit}{
     Logical, should the optimal graph be refitted without LASSO regularization? Defaults to \code{FALSE} and only used if \code{graph = "glasso"}.
   }
-     \item{countDiagonal}{
+     \item{count.diagonal}{(Previously \code{countDiagonal})
     Should diagonal be counted in EBIC computation? Defaults to \code{FALSE}. Set to \code{TRUE} to mimic qgraph < 1.3 behavior (not recommended!).
   }
     \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}.}
 	  \item{bonf}{Logical indicating if a bonferonni correction should be applied if \code{minimum = "sig"}.}
-    \item{FDRcutoff}{Cutoff used in which partial correlations should be included if \code{graph = "fdr"}. Defaults to 0.9}
+    \item{fdr.cutoff}{(Previously \code{FDRcutoff}) Cutoff used in which partial correlations should be included if \code{graph = "fdr"}. Defaults to 0.9}
   }
 }
 
@@ -64,10 +169,10 @@ qgraph( input, ... )
 	\item{width}{Width of the plot, in inches}
 	\item{height}{Height of the plot, in inches}
   \item{normalize}{Logical, should the plot be normalized to the plot size. If TRUE (default) border width, vertex size, edge width and arrow sizes are adjusted to look the same for all sizes of the plot, corresponding to what they would look in a 7 by 7 inches plot if normalize is FALSE.}
-    \item{DoNotPlot}{Runs qgraph but does not plot. Useful for saving the output (i.e. layout) without plotting}
+    \item{do.not.plot}{(Previously \code{DoNotPlot}) Runs qgraph but does not plot. Useful for saving the output (i.e. layout) without plotting}
 	\item{plot}{Logical. Should a new plot be made? Defaults to TRUE. Set to FALSE to add the graph to the existing plot.}
 	\item{rescale}{Logical. Defines if the layout should be rescaled to fit the -1 to 1 x and y area. Defaults to TRUE. Can best be used in combination with plot=FALSE.}
-    \item{standAlone}{Logical. If filetype="tex" this argument can be used to choose between making the output a standalone LaTeX file or only the codes to include the graph.}
+    \item{stand.alone}{(Previously \code{standAlone}) Logical. If filetype="tex" this argument can be used to choose between making the output a standalone LaTeX file or only the codes to include the graph.}
 }}
 
 \section{Graphical arguments}{	
@@ -75,8 +180,8 @@ qgraph( input, ... )
 These arguments influence the plotting of nodes in qgraph. Most of them can be assigned a single value or a vector with a value for each node.
 \describe{
 \item{color}{A vector with a color for each element in the groups list, or a color for each node. Defaults to the background color ("bg" argument, which defaults to "white") without groups list and rainbow(length(groups)) with a groups list.}
-    \item{vsize}{A value indicating the size of the nodes (horizontal if shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to 8*exp(-nNodes/80)+1}
-    \item{vsize2}{A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'vsize'. If 'vsize' is not assigned this value is used as a scalar to 'vsize' (e.g., \code{vsize2 = 1/2} would result in rectangled nodes where the height is half the default width)}
+    \item{node.size}{(Previously \code{vsize}) A value indicating the size of the nodes (horizontal if shape is "rectangle"). Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to 8*exp(-nNodes/80)+1}
+    \item{node.size2}{(Previously \code{vsize2}) A value indicating the vertical size of the nodes where the shape is "rectangle". Can also be a vector of length 2 (nodes are scaled to degree) or a size for each node. Defaults to the value of 'node.size'. If 'node.size' is not assigned this value is used as a scalar to 'node.size' (e.g., \code{node.size2 = 1/2} would result in rectangled nodes where the height is half the default width)}
     \item{node.width}{Scalar on the default value of 'vsize'. Defaults to 1.}
     \item{node.height}{Scalar on the default value of 'vsize2'. Defaults to 1.}
     \item{borders}{Logical indicating if borders should be plotted, defaults to TRUE.}
@@ -84,23 +189,23 @@ These arguments influence the plotting of nodes in qgraph. Most of them can be a
     \item{border.width}{Controls the width of the border. Defaults to 2 and is comparable to 'lwd' argument in 'points'.}
 	\item{shape}{A character containing the shape of the nodes. \code{"circle"}, \code{"square"}, \code{"triangle"} and \code{"diamond"} are supported. In addition, can be a name of an element of \code{polygonList} to plot the corresponding polygon (not reccomended for large graphs), which by default includes shapes \code{"ellipse"} and \code{"heart"} Can also be a vector with a shape for each node. Defaults to "circle".}
     \item{polygonList}{ A list contaning named lists for each element to include polygons to lookup in the \code{shape} argument. Each element must be named as they are used in \code{shape} and contain a list with elements \code{x} and \code{y} contaning the coordinates of the polygon. By default \code{ellipse} and \code{heart} are added to this list. These polygons are scaled according to \code{vsize} and \code{vsize2}}
-      \item{vTrans}{Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
+      \item{node.transparency}{(Previously \code{vTrans}) Transparency of the nodes, must be an integer between 0 and 255, 255 indicating no transparency. Defaults to 255}
           \item{subplots}{A list with as elements R expressions or NULL for each node. If it is an R expression it is evaluated to create a plot for the node.}
           \item{subpars}{List of graphical parameters to be used in the subplots}
-          \item{subplotbg}{Background to be used in the sublots. If missing inherits from 'background' argument.}
+          \item{subplot.bg}{(Previously \code{subplotbg}) Background to be used in the sublots. If missing inherits from 'background' argument.}
         \item{images}{A character vector of length 1 or the same length as the number of nodes indicating the file location of PNG or JPEG images to use as nodes. Can be NA to not plot an image as node and overwrites 'subplots'
 }
-  \item{noPar}{Set to \code{TRUE} to not have qgraph run the \code{par} function. Useful when sending qgraph plots as sublots using \code{subplots}.}
-\item{pastel}{Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used.}
-\item{rainbowStart}{A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
-\item{usePCH}{Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
-\item{node.resolution}{Resolution of the nodes if \code{usePCH=FALSE}. Defaults to 100}
+  \item{no.par}{(Previously \code{noPar}) Set to \code{TRUE} to not have qgraph run the \code{par} function. Useful when sending qgraph plots as sublots using \code{subplots}.}
+\item{pastel}{Deprecated. Logical, should default colors (for groups or edge equality constraints) be chosen from pastel colors? If TRUE then \code{\link[colorspace]{rainbow_hcl}} is used. Please use \code{palette = "pastel"} instead.}
+\item{rainbow.start}{(Previously \code{rainbowStart}) A number between 0 and 1 indicating the offset used in rainbow functions for default node coloring.}
+\item{use.pch}{(Previously \code{usePCH}) Logical indicating if nodes should be drawn using polygons or base R plotting symbols. Defaults to \code{TRUE} if more than 50 nodes are used in the graph or if the graph is stored in a file. See details.}
+\item{node.resolution}{Resolution of the nodes if \code{use.pch=FALSE}. Defaults to 100}
 \item{title}{String with a title to be drawn in the topleft of the plot.}
 \item{title.cex}{Size of the title, defaults to 1.}
 
-\item{preExpression}{A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
+\item{pre.expression}{(Previously \code{preExpression}) A parsable string containing R codes to be evaluated after opening a plot and before drawing the graph.}
 
-\item{postExpression}{A parsable string containing R codes to be evaluated just before closing the device.}
+\item{post.expression}{(Previously \code{postExpression}) A parsable string containing R codes to be evaluated just before closing the device.}
 
   \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
 }
@@ -138,22 +243,22 @@ These arguments influence the plotting of node labels in qgraph. Most of them ca
 \subsection{Edges}{
 These arguments influence the plotting of edges qgraph. Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
 \describe{
-  \item{esize}{Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to 15*exp(-nNodes/90)+1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
+  \item{edge.size}{(Previously \code{esize}) Size of the largest edge (or what it would be if there was an edge with weight maximum). Defaults to 15*exp(-nNodes/90)+1) for weighted graphs and 2 for unweighted graphs. In directed graphs these values are halved.}
   \item{edge.width}{Scalar on 'esize' and 'asize' arguments to make edges wider with a single argument. 'esize' is multiplied with this value and 'asize' with the square root of this value.}
     \item{edge.color}{Color of edges. Can be either a single value to make all edges the same color, a matrix with a color for each edge (when using a weights matrix) or a vector with a color for each edge (when using an edgelist). NA indicates that the default color should be used. Note that unless \code{fade=FALSE} colors still fade to white corresponding to their strength}
-    \item{posCol}{Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
-\item{negCol}{Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
-\item{unCol}{Color to indicate the default edge color of unweighted graphs. Defaults to "#808080".}
-        \item{probCol}{Color of the probability edges. Defaults to \code{"blue"}. Only used when \code{probabilityEdges = TRUE}}
-\item{negDashed}{Logical, set to \code{TRUE} to make negative edges dashed (overwrites \code{lty}).}
-        \item{probabilityEdges}{Logical, do edges indicate probabilities? If this is set to \code{TRUE} \code{posCol} is overwritten by \code{probCol}. Mainly implemented for automatic generation of graphs}
-\item{colFactor}{Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
+    \item{positive.color}{(Previously \code{posCol}) Color of positive edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#009900","darkgreen")}
+\item{negative.color}{(Previously \code{negCol}) Color of negative edges. Can be a vector of two to indicate color of edges under 'cut' value and color of edges over 'cut' value. If 'fade is set to TRUE the first color will be faded the weaker the edge weight is. If this is only one element this color will also be used for edges stronger than the 'cut' value. Defaults to c("#BF0000","red")}
+\item{unweighted.color}{(Previously \code{unCol}) Color to indicate the default edge color of unweighted graphs. Defaults to "#808080".}
+        \item{probability.color}{(Previously \code{probCol}) Color of the probability edges. Defaults to \code{"blue"}. Only used when \code{probability.edges = TRUE}}
+\item{negative.dashed}{(Previously \code{negDashed}) Logical, set to \code{TRUE} to make negative edges dashed (overwrites \code{lty}).}
+        \item{probability.edges}{(Previously \code{probabilityEdges}) Logical, do edges indicate probabilities? If this is set to \code{TRUE} \code{positive.color} is overwritten by \code{probability.color}. Mainly implemented for automatic generation of graphs}
+\item{color.factor}{(Previously \code{colFactor}) Exponent of transformation in color intensity of relative strength. Defaults to 1 for linear behavior.}
   \item{trans}{In weighted graphs: logical indicating if the edges should fade to white (FALSE) or become more transparent (TRUE; use this only if you use a background). In directed graphs this is a value between 0 and 1 indicating the level of transparency. (also used as 'transparency')}
     \item{fade}{if TRUE (default) and if 'edge.color' is assigned, transparency will be added to edges that are not transparent (or for which no transparency has been assigned) relative to the edge strength, similar if 'trans' is set to TRUE.}
-    \item{loopRotation}{A vector with an element for each node with either \code{NA} to let qgraph choose the rotation of the loop, or the rotation of the loop per node in radian}
+    \item{loop.rotation}{(Previously \code{loopRotation}) A vector with an element for each node with either \code{NA} to let qgraph choose the rotation of the loop, or the rotation of the loop per node in radian}
 	\item{loop}{If diag=TRUE, this can be used to scale the size of the loop. defaults to 1.}
 	\item{lty}{Line type, see 'par'}
-      \item{edgeConnectPoints}{This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
+      \item{edge.connect.points}{(Previously \code{edgeConnectPoints}) This argument specifies the point for each edge to which it connects to a node, in radians. Can be either a matrix with a row for each edge and two columns: The first column indicates the connection point of the source of the edge and the second column specifies the connection point of the destination of the edge. Can also be an array with a row and column for each node two slices which indicate the source and destination of the edge connecting the two nodes.}
 }
 }
 
@@ -161,16 +266,16 @@ These arguments influence the plotting of edges qgraph. Most of them can be assi
 These arguments control the curvature of edges.  Most of them can be assigned a single value, a vector with a value per edge when an edgelist is used as input or a matrix containing values for each edge when a wheights matrix is used as input.
 \describe{
 \item{curve}{A value indicating how strongly edges should be curved. Either a single value, a vector (edgelist input) with a value for each edge or a matrix (weights matrix input). NA indicates default curve behavior should be used, which only curves edges if there are multiple edges between two nodes.}
-    \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
-    \item{curveDefault}{The default curvature. Defaults to 1.}
-    \item{curveShape}{The shape of the curve, as used in \code{xspline}. Defaults to \code{-1}.}
-    \item{curveScale}{Logical, should curve scale with distance between nodes. Defaults to \code{TRUE}. If \code{FALSE}, the curve can be exactly determined. Recommended to set to \code{TRUE} for graphs and \code{FALSE} for diagrams. The curvature is corrected for the number of nodes and will be smaller if there are more nodes.}
-    \item{curveScaleNodeCorrection}{Logical, set to \code{FALSE} to disable the node correction in \code{curveScale}. Defaults to \code{TRUE}. Not recommended. Set to \code{FALSE} ONLY if you know what you are doing.}
-    \item{curvePivot}{Quantile to pivot curves on. This can be used to, rather than round edges, make straight edges as curves with "knicks" in them. Can be logical or numeric. \code{FALSE} (default) indicates no pivoting in the curved edges, a number indicates the quantile (and one minus this value as quantile) on which to pivot curved edges and \code{TRUE} indicates a value of 0.1.}
-        \item{curvePivotShape}{The shape of the curve around the pivots, as used in \code{xspline}. Defaults to \code{0.25}.}
-        \item{parallelEdge}{Logical, set to \code{TRUE} to draw parallel straight edges rather than curved edges when there are multiple edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
-         \item{parallelAngle}{The distance in radians an edge is shifted if \code{parallel=TRUE}. Can be set to \code{NA} (default) to determine based on number of edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights marices.}
-         \item{parallelAngleDefault}{The default value for parallelAngle, indicating the angle of the edge furthest from the center. Defaults to \code{pi/6}}
+    \item{curve.all}{(Previously \code{curveAll}) Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that have share multiple edges.}
+    \item{curve.default}{(Previously \code{curveDefault}) The default curvature. Defaults to 1.}
+    \item{curve.shape}{(Previously \code{curveShape}) The shape of the curve, as used in \code{xspline}. Defaults to \code{-1}.}
+    \item{curve.scale}{(Previously \code{curveScale}) Logical, should curve scale with distance between nodes. Defaults to \code{TRUE}. If \code{FALSE}, the curve can be exactly determined. Recommended to set to \code{TRUE} for graphs and \code{FALSE} for diagrams. The curvature is corrected for the number of nodes and will be smaller if there are more nodes.}
+    \item{curve.scale.node.correction}{(Previously \code{curveScaleNodeCorrection}) Logical, set to \code{FALSE} to disable the node correction in \code{curve.scale}. Defaults to \code{TRUE}. Not recommended. Set to \code{FALSE} ONLY if you know what you are doing.}
+    \item{curve.pivot}{(Previously \code{curvePivot}) Quantile to pivot curves on. This can be used to, rather than round edges, make straight edges as curves with "knicks" in them. Can be logical or numeric. \code{FALSE} (default) indicates no pivoting in the curved edges, a number indicates the quantile (and one minus this value as quantile) on which to pivot curved edges and \code{TRUE} indicates a value of 0.1.}
+        \item{curve.pivot.shape}{(Previously \code{curvePivotShape}) The shape of the curve around the pivots, as used in \code{xspline}. Defaults to \code{0.25}.}
+        \item{parallel.edge}{(Previously \code{parallelEdge}) Logical, set to \code{TRUE} to draw parallel straight edges rather than curved edges when there are multiple edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights matrices.}
+         \item{parallel.angle}{(Previously \code{parallelAngle}) The distance in radians an edge is shifted if \code{parallel.edge=TRUE}. Can be set to \code{NA} (default) to determine based on number of edges between two nodes. Can be a vector with value per edge for edgelists or a matrix with a value per edge for weights matrices.}
+         \item{parallel.angle.default}{(Previously \code{parallelAngleDefault}) The default value for parallel.angle, indicating the angle of the edge furthest from the center. Defaults to \code{pi/6}}
 }
 }
 
@@ -207,10 +312,10 @@ Arguments to control the legend placed on the right side of the graph.
   \item{legend}{Logical value indicating if a legend should be plotted. Defaults to TRUE if a groups object or nodeNames is supplied}
 	\item{legend.cex}{Scalar of the legend. defaults to 1}
   \item{legend.mode}{Character string indicating the type of legend to be drawn. \code{"groups"} indicates the legend should be based on the \code{groups} object, \code{"names"} indicates the legend should be based on the \code{nodeNames} object, and \code{style1} and \code{style2} indicate the legend should be based on both. Defaults to \code{"style1"} if both \code{"groups"} and \code{"nodeNames"} arguments are used.}
-	\item{GLratio}{Relative size of the graph compared to the layout. Defaults to 2.5}
-      \item{layoutScale}{A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layoutOffset' and 'plot' arguments to define the graph placement on an existing plot.}
-    \item{layoutOffset}{A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layoutScale' and 'plot' arguments to define the graph placement on an existing plot.}
-  \item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
+	\item{gl.ratio}{(Previously \code{GLratio}) Relative size of the graph compared to the layout. Defaults to 2.5}
+      \item{layout.scale}{(Previously \code{layoutScale}) A vector with a scalar for respectively the x and y coordinates of the layout (which default plotting area is from -1 to 1 on both x and y axis). Setting this to e.g. c(2,2) would make the plot twice as big. Use this in combination with 'layout.offset' and 'plot' arguments to define the graph placement on an existing plot.}
+    \item{layout.offset}{(Previously \code{layoutOffset}) A vector with the offset to the x and  coordinates of the center of the graph (defaults to (0,0)). Use this in combination with 'layout.scale' and 'plot' arguments to define the graph placement on an existing plot.}
+  \item{node.names}{(Previously \code{nodeNames}) Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
 }
 }
 
@@ -218,8 +323,8 @@ Arguments to control the legend placed on the right side of the graph.
 These arguments control the background of the plot
 \describe{
   \item{bg}{If this is TRUE, a background is plotted in which node colors cast a light of that color on a black background. Can also be a character containing the color of the background Defaults to FALSE}
-	\item{bgcontrol}{The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
-	\item{bgres}{square root of the number of pixels used in bg=TRUE, defaults to 100.}
+	\item{bg.control}{(Previously \code{bgcontrol}) The higher this is, the less light each node gives if bg=TRUE. Defaults to 6.}
+	\item{bg.resolution}{(Previously \code{bgres}) Square root of the number of pixels used in bg=TRUE, defaults to 100.}
 }
 }
 
@@ -241,8 +346,8 @@ These arguments control the background of the plot
 \describe{
 	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 	\item{arrows}{A logical indicating if arrows should be drawn, or a number indicating how much arrows should be drawn on each edge. If this is TRUE, a simple arrow is plotted, if this is a number, arrows are put in the middle of the edges.}
-  \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
-	\item{asize}{Size of the arrowhead. Defaults to 2*exp(-nNodes/20)+2.}
+  \item{arrow.angle}{(Previously \code{arrowAngle}) Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/4 for weighted graphs.}
+	\item{arrow.size}{(Previously \code{asize}) Size of the arrowhead. Defaults to 2*exp(-nNodes/20)+2.}
 	\item{open}{Logical indicating if open (TRUE) or closed (FALSE) arrowheads should be drawn.}
 	\item{bidirectional}{If this is TRUE, Then directional edges between nodes that have two edges between them are not curved. Defaults to FALSE. Can also be a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 }}
@@ -251,7 +356,7 @@ These arguments control the background of the plot
 \describe{
 	\item{mode}{This argument defines the mode used for coloring the edges. The default, "strength" assumes each edge weight indicates the strength of connection centered around  and makes positive edges green and negative edges red. If this is set to "sig" then the edge weights are assumed to be significance values and colored accordingly. This can also include negative values, which will be interpreted as p-values based on negative statistics.}
   \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}, or if \code{Graph = "sig"} a vector of max 4 elements indicating the alpha level cutoffs. Defaults to c(0.0001,0.001,0.01,0.05)}
-	\item{sigScale}{The function used to scale the edges if mode="sig". Defaults to $function(x)0.8*(1-x)^(log(0.4/0.8,1-0.05))$}
+	\item{sig.scale}{(Previously \code{sigScale}) The function used to scale the edges if mode="sig". Defaults to $function(x)0.8*(1-x)^(log(0.4/0.8,1-0.05))$}
 	  \item{bonf}{Logical indicating if a bonferonni correction should be applied if \code{minimum = "sig"} or \code{mode="sig"}}
 }}
 
@@ -290,10 +395,10 @@ These arguments control the background of the plot
     The range of the \code{means} argument. Default to \code{range(means,na.rm=TRUE)}
   }
   \item{bars}{A list with for each node containing either NULL or a vector with values between 0 and 1 indicating where bars should be placed inside the node.}
-  \item{barSide}{Integer for each node indicating at which side the bars should be drawn. 1, 2, 3 or 4 indicating at bottom, left, top or right respectively.}  
-  \item{barColor}{A vector with for each node indicating the color of bars. Defaults to the border color of the node.}  
-  \item{barLength}{A Vector indicating the relative length of bars of each node compared to the node size. Defaults to 0.5.}  
-      \item{barsAtSide}{Logical, should bars be drawn at the side of a node or at its center? Defaults to FALSE.}  
+  \item{bar.side}{(Previously \code{barSide}) Integer for each node indicating at which side the bars should be drawn. 1, 2, 3 or 4 indicating at bottom, left, top or right respectively.}
+  \item{bar.color}{(Previously \code{barColor}) A vector with for each node indicating the color of bars. Defaults to the border color of the node.}
+  \item{bar.length}{(Previously \code{barLength}) A Vector indicating the relative length of bars of each node compared to the node size. Defaults to 0.5.}
+      \item{bars.at.side}{(Previously \code{barsAtSide}) Logical, should bars be drawn at the side of a node or at its center? Defaults to FALSE.}  
   
 }}
 
@@ -301,37 +406,37 @@ These arguments control the background of the plot
 \describe{
   \item{pie}{
        A vector with values between 0 and 1 for each node (or one value for all nodes). Supplying this argument will make the border of nodes a pie chart. Can also be a list with vectors to make pie charts of multiple parts.}
-    \item{pieBorder}{
+    \item{pie.border}{(Previously \code{pieBorder})
       The size of the pie chart in the border, between 0 and 1. Defaults to \code{0.15}. Set to 1 to make the whole node a pie chart. Can be a vector with a value for each node.
   }
-      \item{pieColor}{
+      \item{pie.color}{(Previously \code{pieColor})
        Colors of the pie plot parts. Can be a vector with a value for each node, or a list with multiple values if there are more parts.
   }
-      \item{pieColor2}{
+      \item{pie.color2}{(Previously \code{pieColor2})
       Final color of the pie chart. Only added if the values in the 'pie' argument do not add up to 1. Defaults to \code{'white'}. Can be a vector with a value for each node.
   }
-  \item{pieStart}{
-      A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the starting point of the pie chart. 
+  \item{pie.start}{(Previously \code{pieStart})
+      A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the starting point of the pie chart.
   }
-  \item{pieDarken}{
+  \item{pie.darken}{(Previously \code{pieDarken})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating how much darker the pie border color is made than the node color in the default coloring scheme.
   }
-    \item{piePastel}{
+    \item{pie.pastel}{(Previously \code{piePastel})
     Should pastel colors be used to fill pie chart parts when more than 2 blocks are used?
   }
-  \item{pieCImid}{
+  \item{pie.ci.mid}{(Previously \code{pieCImid})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the center point of the confidence region. Overwrites the \code{pie} argument
   }
-   \item{pieCIlower}{
+   \item{pie.ci.lower}{(Previously \code{pieCIlower})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the lower bound of the confidence region. Overwrites the \code{pie} argument
   }
-     \item{pieCIupper}{
+     \item{pie.ci.upper}{(Previously \code{pieCIupper})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the upper bound of the confidence region. Overwrites the \code{pie} argument
   }
-\item{pieCIpointcex}{
+\item{pie.ci.point.cex}{(Previously \code{pieCIpointcex})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the size of the point estimate of the confidence region. Overwrites the \code{pie} argument. Defaults to 0.01.
   }
-  \item{pieCIpointcex}{
+  \item{pie.ci.point.col}{(Previously \code{pieCIpointcol})
     A vector with values between 0 and 1 for each node (or one value for all nodes), indicating the color of the point estimate of the confidence region. Overwrites the \code{pie} argument. Defaults to \code{"black"}.
   }
 }
@@ -347,12 +452,12 @@ These arguments control the background of the plot
 \describe{
   \item{edgelist}{Logical, if TRUE 'input' is assumed to be an edgelist, else if FALSE input is assumed to be a weights matrix. By default this is chosen automatically based on the dimensions of 'input' and this argument is only needed if the dimensions are ambiguous (square matrix with 2 or 3 rows/columns)}
 	\item{weighted}{Logical that can be used to force either a weighted graph (TRUE) or an unweighted graph(FALSE).}
-	\item{nNodes}{The number of nodes, only needs to be specified if the first argument is an edge-list and some nodes have no edges}
+	\item{n.nodes}{(Previously \code{nNodes}) The number of nodes, only needs to be specified if the first argument is an edge-list and some nodes have no edges}
   \item{XKCD}{If set to TRUE the graph is plotted in XKCD style based on http://stackoverflow.com/a/12680841/567015.}
 }}
 
 \details{
-Because of the amount of arguments the usage of the qgraph function has been reduced by using the ... method for clarity. This does mean that arguments need to be specified by using their exact name. For instance, to specify color="red" you can not use col="red".
+As of version 2.0.0, the most commonly used arguments are now explicitly listed in the function signature, enabling IDE autocomplete (e.g., in RStudio). Less commonly used arguments and deprecated old argument names are still accepted via \code{...}. Many arguments have been renamed to use a consistent dot.case naming convention (e.g., \code{vsize} is now \code{node.size}). The old names still work but produce deprecation warnings. See the "Deprecated argument names" section for the full mapping.
 
 Important to note is that qgraph needs to compute in many graphs where the border of nodes are in the plotting area. If the graph is manually rescaled (such as through the "zoom" option in RStudio) the plotting area is changed. This means that the computed location of the border of nodes is no longer valid if the nodes are to remain perfectly square or circular. To overcome this, the \code{usePCH} argument can be used. If this argument is set to \code{FALSE} nodes will be plotted as polygons meaning they will rescale with rescaling the graph (circles can become ovals) and not have perfect resolution in PDF files. If \code{usePCH} is set to \code{TRUE} a default plotting symbol is used meaning the graph can not be rescaled but the node will look good in PDF. By defaut, \code{qgraph} sets \code{usePCH} to \code{TRUE} if it detects the graph is stored in a file. 
 
