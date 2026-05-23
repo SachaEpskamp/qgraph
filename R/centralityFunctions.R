@@ -333,7 +333,7 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
   
   #generate B rnd networks with the same degree distribution of A
   deg.dist<-igraph::degree(A, mode="all", loops=F)
-  rndA<-lapply(1:B, function(x)degree.sequence.game(deg.dist, method="simple.no.multiple"))
+  rndA<-lapply(1:B, function(x)degree.sequence.game(deg.dist, method = "fast.heur.simple"))
   # compute the average (global) clustering coefficient over the B random networks
   clustrnd<-sapply(rndA, transitivity, type="global", isolates="zero")
   clustrnd_m<-mean(clustrnd)
