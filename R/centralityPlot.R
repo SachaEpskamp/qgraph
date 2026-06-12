@@ -1,14 +1,24 @@
-centralityPlot <- function(..., labels, scale = c("raw0","raw","z-scores", "relative"), 
-                           include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength"), 
+centralityPlot <- function(..., labels, scale = c("raw0","raw","z-scores", "relative"),
+                           include = c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength"),
                            theme_bw = TRUE, print = TRUE,
                            verbose = TRUE, standardized, relative, weighted = TRUE, signed = TRUE,
                            orderBy = "default", # Can also be one of the measures
-                           decreasing = FALSE
+                           decreasing = FALSE,
+                           communities = NULL, useCommunities = "all"
 )
 {
   if (any(include=="all") | any(include=="All")){
     include <- c("Degree","Strength","OutDegree","InDegree","OutStrength","InStrength","Closeness","Betweenness",
                  "ExpectedInfluence","OutExpectedInfluence","InExpectedInfluence")
+    if (!is.null(communities)){
+      include <- c(include, "Bridge Indegree", "Bridge Outdegree", "Bridge Strength",
+                   "Bridge Betweenness", "Bridge Closeness",
+                   "Bridge Expected Influence (1-step)", "Bridge Expected Influence (2-step)")
+    }
+  } else if (missing(include) && !is.null(communities)){
+    # When communities are supplied, also include the bridge analogues of the
+    # default centrality measures (Jones, Ma, & McNally, 2021):
+    include <- c(include, "Bridge Indegree", "Bridge Outdegree", "Bridge Strength")
   }
   scale <- match.arg(scale)
   if (!missing(standardized)){
@@ -39,7 +49,8 @@ centralityPlot <- function(..., labels, scale = c("raw0","raw","z-scores", "rela
   ## I realize I should have used a more appropriate programmatic way of doing this. My
   ## programming is bad and I fo feel bad.
   
-  Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative, weighted = weighted, signed = signed)
+  Long <- centralityTable(..., standardized=standardized, labels=labels, relative=relative, weighted = weighted, signed = signed,
+                          communities = communities, useCommunities = useCommunities)
 
   # If not missing, include only include vars:
   # if (!missing(include))

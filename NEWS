@@ -1,3 +1,7 @@
+Changes in Version 1.9.9
+  - New function 'bridgeCentrality' computes the bridge centrality statistics of Jones, Ma, & McNally (2021): bridge strength, bridge betweenness, bridge closeness, and bridge expected influence (1-step and 2-step). Bridge centrality was developed by Payton J. Jones and first implemented in the 'networktools' package; this independent implementation produces identical results.
+  - 'centralityPlot', 'centralityTable' and 'centrality_auto' gained 'communities' and 'useCommunities' arguments. When communities are supplied, bridge centrality statistics are included, allowing bridge centrality to be plotted in the same style as other centrality measures. Defaults are unchanged.
+
 Changes in Version 1.9.8
   - Fixed some encoding issues
 

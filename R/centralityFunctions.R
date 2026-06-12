@@ -21,7 +21,7 @@ mat2vec<-function(x, diag=FALSE, tol=1e-10)
 }
 
 # Exported:
-centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
+centrality_auto<-function(x, weighted = TRUE, signed = TRUE, communities = NULL, useCommunities = "all")
 {
   # This function recognizes whether a network is weighted, directed and
   # whether there are disconnected nodes.
@@ -55,7 +55,8 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
   # If list of matrices, return list of output:
   if (is.list(x))
   {
-    return(lapply(x, centrality_auto, weighted = weighted, signed = signed))
+    return(lapply(x, centrality_auto, weighted = weighted, signed = signed,
+                  communities = communities, useCommunities = useCommunities))
   }
   
   # Make unweighted or unsigned:
@@ -102,6 +103,20 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE)
     clos<-centrality(qgraph(x2, diag=FALSE, labels=colnames(x)[largcomp], DoNotPlot=TRUE, minimum=0))$Closeness
     centr1$Closeness[largcomp]<-clos
     centr1$Closeness[!largcomp]<-NA
+  }
+
+  # Bridge centrality (Jones, Ma, & McNally, 2021), only computed when communities are supplied:
+  if (!is.null(communities))
+  {
+    bridge <- bridgeCentrality(x, communities = communities, useCommunities = useCommunities)
+    for (m in setdiff(names(bridge), "communities"))
+    {
+      vals <- as.numeric(bridge[[m]])
+      # Bridge closeness is undefined (NaN) for nodes without positive paths to
+      # other communities; NA is used instead, as for closeness above:
+      vals[is.nan(vals)] <- NA
+      centr1[[m]] <- vals
+    }
   }
   
   # # compute edge betweenness with package igraph

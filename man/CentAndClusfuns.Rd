@@ -13,16 +13,17 @@ These functions can be used to facilitate interpreting centrality and clustering
 \usage{
 centralityPlot(..., labels, scale = c("raw0", "raw", "z-scores", "relative"),
                  include =c("Degree","Strength","OutDegree","InDegree","OutStrength",
-                 "InStrength"), theme_bw = TRUE, print = TRUE, verbose = TRUE, 
-                 standardized, relative, weighted = TRUE,signed = TRUE, 
-                 orderBy = "default", decreasing = FALSE)
-clusteringPlot(..., scale = c("raw0", "raw", "z-scores", "relative"), labels, 
+                 "InStrength"), theme_bw = TRUE, print = TRUE, verbose = TRUE,
+                 standardized, relative, weighted = TRUE,signed = TRUE,
+                 orderBy = "default", decreasing = FALSE, communities = NULL,
+                 useCommunities = "all")
+clusteringPlot(..., scale = c("raw0", "raw", "z-scores", "relative"), labels,
                   include , signed = FALSE, theme_bw = TRUE, print = TRUE,
-                  verbose = TRUE, standardized, relative,orderBy = "default", 
+                  verbose = TRUE, standardized, relative,orderBy = "default",
                   decreasing = FALSE)
 centralityTable(..., labels, standardized = TRUE,  relative = FALSE, weighted =
-                 TRUE, signed = TRUE)
-clusteringTable(..., labels,  standardized = TRUE, relative = FALSE, 
+                 TRUE, signed = TRUE, communities = NULL, useCommunities = "all")
+clusteringTable(..., labels,  standardized = TRUE, relative = FALSE,
                 signed = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -35,7 +36,7 @@ Objects usuable in the \code{\link{getWmat}} generic, such as qgraph objects and
 A vector overwriting the labels used. Can be missing.
 }
   \item{include}{
-A vector of measures to include. if missing all measures available will be included. Not included by default are \code{"Closeness"}, \code{"Betweenness"}, \code{"ExpectedInfluence"}, \code{"OutExpectedInfluence"}, and \code{"InExpectedInfluence"}. Can also be \code{"all"} or \code{"All"} to include all available centrality measures.
+A vector of measures to include. if missing all measures available will be included. Not included by default are \code{"Closeness"}, \code{"Betweenness"}, \code{"ExpectedInfluence"}, \code{"OutExpectedInfluence"}, and \code{"InExpectedInfluence"}. Can also be \code{"all"} or \code{"All"} to include all available centrality measures. When \code{communities} is supplied, the bridge centrality measures \code{"Bridge Strength"}, \code{"Bridge Indegree"} and \code{"Bridge Outdegree"} are included by default as well, and \code{"Bridge Betweenness"}, \code{"Bridge Closeness"}, \code{"Bridge Expected Influence (1-step)"} and \code{"Bridge Expected Influence (2-step)"} can be included by hand or via \code{"all"}.
 }
 \item{theme_bw}{
 Adds the ggplot2 black and white theme to the plot
@@ -56,6 +57,8 @@ Logical, should all measures be scaled relative to the largest value? Argument i
 \item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
 \item{orderBy}{String indicating which measure to order by. Can be default (alphabetical), or one of the measures plotted (e.g., \code{"Strength"})}
 \item{decreasing}{Logical indicating if the nodes should be ordered increasing or decreasing}
+\item{communities}{A community assignment of each node (see \code{\link{bridgeCentrality}} for supported formats). When supplied, the bridge centrality statistics of Jones, Ma and McNally (2021) are computed and included in the table/plot (only in \code{centralityPlot} and \code{centralityTable}). Defaults to \code{NULL}, in which case no bridge centrality statistics are computed.}
+\item{useCommunities}{A character vector specifying which communities should be included in the computation of bridge centrality. Defaults to \code{"all"}. See \code{\link{bridgeCentrality}}.}
 }
 
 
@@ -63,7 +66,12 @@ Logical, should all measures be scaled relative to the largest value? Argument i
 \references{
 H. Wickham. ggplot2: elegant graphics for data
 analysis. Springer New York, 2009.
+
+Jones, P. J., Ma, R., & McNally, R. J. (2021). Bridge centrality: A network approach to understanding comorbidity. Multivariate Behavioral Research, 56(2), 353-367.
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com> and Jolanda Kossakowski
+}
+\seealso{
+\code{\link{bridgeCentrality}}, \code{\link{centrality_auto}}
 }
