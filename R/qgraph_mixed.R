@@ -50,7 +50,7 @@ qgraphMixed <- function(
   
   # append:
   Edgelist <- rbind(undirected, directed)
-  if (all(directed[,3] == 1)){
+  if (all(Edgelist[,3] == 1)){
     Edgelist <- Edgelist[,1:2]
   }
   

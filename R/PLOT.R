@@ -768,8 +768,8 @@ legend.mode <- x$plotOptions$legend.mode
             midX[i] <- curvemid[1]
             midY[i] <- curvemid[2]
           } else {
-            midX[i]=spl$x[round(edge.label.position[i]*length(spl$x))]
-            midY[i]=spl$y[round(edge.label.position[i]*length(spl$y))] 
+            midX[i]=spl$x[max(1,round(edge.label.position[i]*length(spl$x)))]
+            midY[i]=spl$y[max(1,round(edge.label.position[i]*length(spl$y)))]
           }
         }
         
@@ -827,7 +827,7 @@ legend.mode <- x$plotOptions$legend.mode
     if (length(knot.color)==1) knot.color <- rep(knot.color,length=max(knots))
     if (length(knot.borders)==1) knot.borders <- rep(knot.borders,length=max(knots))
     if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.color,length=max(knots))
-    if (length(knot.border.color)==1) knot.border.color <- rep(knot.border.width,length=max(knots))
+    if (length(knot.border.width)==1) knot.border.width <- rep(knot.border.width,length=max(knots))
     
     for (i in 1:max(knots)) if (is.na(knot.color[i])) knot.color[i] <- mixCols(edge.color[knots==i])
     
@@ -907,8 +907,8 @@ legend.mode <- x$plotOptions$legend.mode
   if (!XKCD)
   {
     # Check if nodes need to be plotted in for loop:
-    if (!usePCH || !is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0) & 
-        !all(is.na(means)) & !all(is.na(SDs)))
+    if (!usePCH || !is.null(subplots) || any(shape=="rectangle") || !all(shape %in% c("circle","square","triangle","diamond")) || any(sapply(bars,length) > 0) ||
+        (!all(is.na(means)) & !all(is.na(SDs))))
     {
       # Get which nodes become a subplot:
       #           whichsub <- which(sapply(subplots,function(x)is.expression(x)|is.function(x)))
@@ -979,7 +979,7 @@ legend.mode <- x$plotOptions$legend.mode
       
       
       bordVec <- unlist(lapply(order(vsize,decreasing=FALSE),function(x)rep(x,1+borders[x])))
-      points(layout[bordVec,],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width[bordVec],pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))  
+      points(layout[bordVec,,drop=FALSE],cex=vsize[bordVec],col=ifelse(duplicated(bordVec),bcolor[bordVec],vertex.colors[bordVec]),lwd=border.width[bordVec],pch=ifelse(duplicated(bordVec),pch2[bordVec],pch1[bordVec]))
     }
     
     

@@ -99,14 +99,14 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
       {
         for (i in 2:(sum(!ind[1,])+1))
         {
-          ind[i,] <- ind[i-1,] | (1:10)==which.min(ind[i-1,])
+          ind[i,] <- ind[i-1,] | (1:n)==which.min(ind[i-1,])
         }
       } else if (growth == "degree")
       {
         degs <- order((rowSums(input)+colSums(input))/2,decreasing=TRUE)
         for (i in 2:(sum(!ind[1,])+1))
         {
-          ind[i,] <- ind[i-1,] | (1:10)== degs[!degs%in%which(ind[i-1,])][1]
+          ind[i,] <- ind[i-1,] | (1:n)== degs[!degs%in%which(ind[i-1,])][1]
         }
       }
     }
@@ -127,7 +127,7 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
   }
   
   # If numeric vector, treat as if each node is added:
-  if (is.numeric(ind) & length(dim(ind)) == 1) ind <- as.list(ind)
+  if (is.numeric(ind) & is.null(dim(ind))) ind <- as.list(ind)
   
   # If list, add nodes in each step:
   if (is.list(ind))
@@ -192,9 +192,7 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
       init <- Graphs[[i]]$layout.orig
     }
     Layout <- "spring"
-    
-    if (!is.null(titles)) title(titles[i],line=-1)
-    
+
     ### PRogress bar:
     if (progress)
     {
@@ -285,6 +283,7 @@ qgraph.animate <- function(input,ind=NULL,...,constraint=10,growth="order",title
     {
       Graphs[[graph]] <- qgraph(Graphs[[graph]], DoNotPlot = !plotGraphs, layout = Graphs[[graph]]$layout )
 #       plot(Graphs[[graph]])
+      if (plotGraphs && !is.null(titles)) title(titles[graph],line=-1)
       Sys.sleep(sleep)
       
       ### PRogress bar:

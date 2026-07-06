@@ -28,7 +28,7 @@ makeBW <- function(x, colorlist = NA, plot = TRUE)
   # count how many different colors are there
   N <- length(unq) 
   if(N > 12)
-    stop("Too many colors: Black & White qgraphs can be plotted with up to 14 colors")
+    stop("Too many colors: Black & White qgraphs can be plotted with up to 12 colors")
   
 
   # define the new combinations of density / angle for each node
@@ -42,7 +42,7 @@ makeBW <- function(x, colorlist = NA, plot = TRUE)
   
   
   x$graphAttributes$Nodes$density <- as.numeric(newcol$density)
-  x$graphAttributes$Nodes$angles <- as.numeric(newcol$angle)
+  x$graphAttributes$Nodes$angle <- as.numeric(newcol$angle)
   x$graphAttributes$Nodes$borders <- rep(TRUE, nrow(newcol))
   x$graphAttributes$Nodes$border.width <- rep(1, nrow(newcol))
   x$plotOptions$usePCH <- FALSE  

@@ -19,13 +19,17 @@ drawEdge <- function(x,y,col=1,lwd=1,arrowlwd=1,lty=1,directed=FALSE,bidirection
     # Distance of each curve point in inches:
     curveDist <- sqrt((usr2inX(x)-usr2inX(xRange[2]))^2 + (usr2inY(y)-usr2inY(yRange[2]))^2)
     
-    # Points that fall outside the arrow:    
+    # Points that fall outside the arrow:
     OutsideArrow <- curveDist > arrowRad
-    
+
+    # If no point falls outside the arrow (edge shorter than the arrowhead),
+    # keep the first point so the edge does not vanish entirely:
+    if (!any(OutsideArrow)) OutsideArrow[1] <- TRUE
+
     # Censor x and y:
     x <- x[rev(cumsum(rev(OutsideArrow))>0)]
     y <- y[rev(cumsum(rev(OutsideArrow))>0)]
-    
+
     # Add midpoint:
     mid <- ArrowMidPoint(xRange[2],yRange[2],atan2usr2in(xRange[2]-x[length(x)],yRange[2]-y[length(y)]),angle=arrowAngle,cex=arrowlwd)
         
@@ -37,9 +41,13 @@ drawEdge <- function(x,y,col=1,lwd=1,arrowlwd=1,lty=1,directed=FALSE,bidirection
       # Distance of each curve point in inches:
       curveDist <- sqrt((usr2inX(x)-usr2inX(xRange[1]))^2 + (usr2inY(y)-usr2inY(yRange[1]))^2)
       
-      # Points that fall outside the arrow:    
+      # Points that fall outside the arrow:
       OutsideArrow <- curveDist > arrowRad
-      
+
+      # If no point falls outside the arrow, keep the last point so the edge
+      # does not vanish entirely:
+      if (!any(OutsideArrow)) OutsideArrow[length(OutsideArrow)] <- TRUE
+
       # Censor x and y:
       x <- x[cumsum(OutsideArrow)>0]
       y <- y[cumsum(OutsideArrow)>0]

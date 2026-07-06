@@ -15,8 +15,8 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList, noPar = FALSE)
   
   if (shape %in% names(polygonList))
   {
-    xOff <- Cent2Edge(x,y,pi/2,cex,cex2,"rectangle")[1] - x
-    yOff <- Cent2Edge(x,y,0,cex,cex2,"rectangle")[2] - y
+    xOff <- Cent2Edge(x,y,pi/2,cex,cex2,"rectangle",noPar=noPar)[1] - x
+    yOff <- Cent2Edge(x,y,0,cex,cex2,"rectangle",noPar=noPar)[2] - y
     
     xOutline <- x + polygonList[[shape]]$x * xOff
     yOutline <-  y + polygonList[[shape]]$y * yOff

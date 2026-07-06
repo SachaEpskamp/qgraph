@@ -19,6 +19,7 @@ ggmModSelect <- function(
     startMat <- start
     start <- "manual"
   }
+  considerPerStep <- match.arg(considerPerStep)
 
   
   # Number of variables:
@@ -133,14 +134,19 @@ ggmModSelect <- function(
     
     # Test if any smaller:
     if (any(EBICs < curEBIC)){
+      # Indices (in the full edge vector) of the edges just considered:
+      considered <- which(curConsider)
+
       # Update which to consider:
-      curConsider[curConsider] <- EBICs < curEBIC
-      
+      if (considerPerStep == "subset"){
+        curConsider[curConsider] <- EBICs < curEBIC
+      }
+
       # Find optimal network:
       optnet <- which.min(EBICs)
       curGraph <- Results[[optnet]]$graph
       curEBIC <- Results[[optnet]]$criterion
-      curConsider[optnet] <- FALSE
+      curConsider[considered[optnet]] <- FALSE
       if (verbose) message("Changed one edge...")
       
       # Update current edges:

@@ -19,7 +19,8 @@ pathways <- function(
   }
   
   if (missing(to)){
-    browser()
+    # If missing, highlight pathways to all nodes:
+    to <- seq_len(graph$graphAttributes$Graph$nNodes)
   }
   
   if (is.character(to)){
@@ -39,10 +40,11 @@ pathways <- function(
     }
   }
   
-  highlight <- rep(FALSE,nrow(pathList))
+  highlight <- integer(0)
   for (i in seq_len(nrow(pathList))){
-    highlight[i] <- which(graph$Edgelist$from %in% pathList[i,] & graph$Edgelist$to %in% pathList[i,])
+    highlight <- c(highlight, which(graph$Edgelist$from %in% pathList[i,] & graph$Edgelist$to %in% pathList[i,]))
   }
+  highlight <- unique(highlight)
   graph$graphAttributes$Edges$color <- Fade(graph$graphAttributes$Edges$color, ifelse(seq_along(graph$Edgelist$from) %in% highlight, 1, fading))
   graph$graphAttributes$Edges$lty <- ifelse(seq_along(graph$Edgelist$from) %in% highlight, 1, lty)
 

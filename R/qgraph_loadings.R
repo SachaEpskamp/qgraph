@@ -2,7 +2,7 @@
 qgraph.loadings=function( fact, ...)
 {
 
-if (is(fact,"loadings")) fact <- fact[1:nrow(fact),1:ncol(fact)]
+if (is(fact,"loadings")) fact <- fact[1:nrow(fact),1:ncol(fact),drop=FALSE]
 
 arguments=list(...)
 
@@ -258,7 +258,7 @@ curve <- 0
 
 if (!is.null(resid))
 {
-	if (length(resid)!=n) stop("Length of residuals does not correspond to number of factors")
+	if (length(resid)!=n) stop("Length of residuals does not correspond to number of variables")
 	m <- rbind(m, cbind( n+k+1:n, 1:n, resid))
 	Gvsize <- c(Gvsize,rep(0,n))
 	Gcolor <- c(Gcolor, rep("#00000000",n))
@@ -289,7 +289,7 @@ if (!is.null(factorCors))
 	
 ### RUN QGRAPH ###
 # class(arguments)="qgraph"
-args <- list(input=m,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
+args <- list(input=m,edgelist=TRUE,nNodes=n+k,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
              height=height,width=width,legend=F,directed=directed,bidirectional=TRUE)
 
 args <- c(args,arguments[!names(arguments) %in% names(args)])

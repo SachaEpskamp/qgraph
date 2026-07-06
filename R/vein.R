@@ -18,7 +18,7 @@ flow <- function(
 ){
   # Test input:
   if (!is(object,"qgraph")){
-    warning("Input is not a qgraph object, runnin gqgraph")
+    warning("Input is not a qgraph object, running qgraph")
     object <- qgraph(object, ..., DoNotPlot = TRUE)
   }
   if (length(from)!=1){

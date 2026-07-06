@@ -21,12 +21,13 @@ VARglm <-
     
     if (missing(adjacency)) adjacency <- matrix(1,Ni,No)
     if (is.vector(adjacency)) adjacency <- as.matrix(adjacency)
-    if (!is.matrix(adjacency) && ncol(adjacency)!=No && nrow(adjacency)!=Ni) stop("'adjacency' must be square matrix with a row for each predictor and column for each outcome variable.")
-    
-    if (any(apply(x,2,sd)==0))
+    if (!is.matrix(adjacency) || nrow(adjacency)!=Ni || ncol(adjacency)<No) stop("'adjacency' must be a matrix with a row for each predictor and a column for each outcome variable.")
+
+    zeroVar <- apply(x,2,sd)==0
+    if (any(zeroVar))
     {
-      adjacency[apply(x,2,sd)==0,] <- 0
-      adjacency[,apply(x,2,sd)==0] <- 0
+      adjacency[zeroVar,] <- 0
+      adjacency[,zeroVar[vars]] <- 0
       warning("Adjacency matrix adjusted to not include nodes with 0 variance.")
     }
     

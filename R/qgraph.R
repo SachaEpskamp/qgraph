@@ -56,10 +56,11 @@ qgraph <- function( input, ... )
   # if ("qgraph"%in%class(input)) qgraphObject$Arguments <- list(...,input) else qgraphObject$Arguments <- list(...)
   qgraphObject$Arguments <- list(...,input=input) 
   
-  if (isTRUE(qgraphObject$Arguments[['gui']]) | isTRUE(qgraphObject$Arguments[['GUI']])) 
+  if (isTRUE(qgraphObject$Arguments[['gui']]) | isTRUE(qgraphObject$Arguments[['GUI']]))
   {
     qgraphObject$Arguments$gui <- qgraphObject$Arguments$GUI <- FALSE
-    return(invisible(do.call(qgraph.gui,c(list(input=input),qgraphObject$Arguments))))
+    # Remove 'input' from the argument list to avoid matching the 'input' formal twice:
+    return(invisible(do.call(qgraph.gui,c(list(input=input),qgraphObject$Arguments[names(qgraphObject$Arguments) != "input"]))))
   }
   
   if(!is.null(qgraphObject$Arguments$adj))
@@ -207,13 +208,17 @@ qgraph <- function( input, ... )
 
         Res <- list()
 
+        # Arguments supplied explicitly in the recursive qgraph calls below may
+        # not also be present in the argument list (they would be matched twice):
+        dropArgs <- function(args, drop) args[!names(args) %in% drop]
+
         if (isTRUE(which(BDgraph == "phat") < which(BDgraph == "Khat")))
         {
           if(!requireNamespace("BDgraph")) stop("'BDgraph' package needs to be installed.")
           # phat:
           W <- as.matrix(BDgraph::plinks(input))
           W <- W + t(W)
-          Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),qgraphObject$Arguments))
+          Res[["phat"]] <- do.call(qgraph,c(list(input=W,probabilityEdges = TRUE),dropArgs(qgraphObject$Arguments,c("input","probabilityEdges"))))
           L <- Res[["phat"]]$layout
 
           if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Posterior probabilities", adj = c(0.5,1))
@@ -223,7 +228,7 @@ qgraph <- function( input, ... )
           # diag(W) <- -1*diag(W)
           # W <-  - W / sqrt(diag(W)%o%diag(W))
           W <- wi2net(W)
-          Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), qgraphObject$Arguments))
+          Res[["Khat"]] <- do.call(qgraph,c(list(input = W,layout = L), dropArgs(qgraphObject$Arguments,c("input","layout"))))
           L <- Res[["Khat"]]$layout
           if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4] - (par("usr")[4] - par("usr")[3])/40,"Mean partial correlations", adj = c(0.5,1))
 
@@ -235,7 +240,7 @@ qgraph <- function( input, ... )
             # diag(W) <- -1*diag(W)
             # W <-  - W / sqrt(diag(W)%o%diag(W))
             W <- wi2net(input$K_hat)
-            Res[["Khat"]] <- do.call(qgraph,c(list(input=W),qgraphObject$Arguments))
+            Res[["Khat"]] <- do.call(qgraph,c(list(input=W),dropArgs(qgraphObject$Arguments,"input")))
             L <- Res[["Khat"]]$layout
             if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Mean partial correlations", adj = c(0.5,1))
           } else L <- qgraphObject$Arguments$layout
@@ -244,7 +249,7 @@ qgraph <- function( input, ... )
           {
             W <- as.matrix(BDgraph::plinks(input))
             W <- W + t(W)
-            Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), qgraphObject$Arguments))
+            Res[["phat"]] <- do.call(qgraph,c(list(input = W,layout = L,probabilityEdges= TRUE), dropArgs(qgraphObject$Arguments,c("input","layout","probabilityEdges"))))
             if (BDtitles) text(mean(par('usr')[1:2]),par("usr")[4],"Posterior probabilities", adj = c(0.5,1))
           }
         }
@@ -297,7 +302,11 @@ qgraph <- function( input, ... )
                "layout", "layout.orig","resid","factorCors","residSize","filetype","model",
                "crossloadings","gamma","lambda.min.ratio","loopRotation","edgeConnectPoints","residuals","residScale","residEdge","CircleEdgeEnd","title.cex",  
                "node.label.offset", "node.label.position", "pieCImid", "pieCIlower", "pieCIupper", "pieCIpointcex", "pieCIpointcol",
-               "edge.label.margin")
+               "edge.label.margin",
+               # Arguments that were previously missing from this list, leading to false warnings:
+               "verbose", "OmitInsig", "label.color.split", "pieRadius", "layoutRound",
+               "nfact", "lcolor", "border.colors", "background", "hyperlinks", "loopAngle",
+               "gui", "GUI")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -477,29 +486,29 @@ qgraph <- function( input, ... )
   
   if(is.null(qgraphObject$Arguments[['pieBorder']])){
     pieBorder <- .15
-    if (any(pieBorder < 0 | pieBorder > 1)){
-      stop("Values in the 'pieBorder' argument must be within [0,1]")
-    }
   } else {
     pieBorder <- qgraphObject$Arguments[['pieBorder']]
   }
-  
+  if (any(pieBorder < 0 | pieBorder > 1)){
+    stop("Values in the 'pieBorder' argument must be within [0,1]")
+  }
+
   if(is.null(qgraphObject$Arguments[['pieStart']])){
     pieStart <- 0
-    if (any(pieStart < 0 | pieStart > 1)){
-      stop("Values in the 'pieStart' argument must be within [0,1]")
-    }
   } else {
     pieStart <- qgraphObject$Arguments[['pieStart']]
   }
-  
+  if (any(pieStart < 0 | pieStart > 1)){
+    stop("Values in the 'pieStart' argument must be within [0,1]")
+  }
+
   if(is.null(qgraphObject$Arguments[['pieDarken']])){
     pieDarken <- 0.25
-    if (any(pieDarken < 0 | pieDarken > 1)){
-      stop("Values in the 'pieDarken' argument must be within [0,1]")
-    }
   } else {
     pieDarken <- qgraphObject$Arguments[['pieDarken']]
+  }
+  if (any(pieDarken < 0 | pieDarken > 1)){
+    stop("Values in the 'pieDarken' argument must be within [0,1]")
   }
   
   if(is.null(qgraphObject$Arguments[['pieColor']])){
@@ -630,7 +639,7 @@ qgraph <- function( input, ... )
     }
     
     # Check bounds:
-    if (any(pieCIlower < 0) | any(pieCImid > 1)){
+    if (any(pieCIlower < 0) | any(pieCIupper > 1) | any(pieCImid > 1)){
       stop("pieCI range should be between 0 and 1")
     }
     
@@ -914,6 +923,7 @@ qgraph <- function( input, ... )
   negCol <- c("#BF0000","red")
   bcolor <- NULL
   bg <- FALSE
+  lcolorTheme <- NA
   negDashed <- FALSE
   parallelEdge <- FALSE
   fade <- NA 
@@ -930,7 +940,7 @@ qgraph <- function( input, ... )
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","gray","gimme","GIMME","neon","pride")){
+                      "Borkulo","colorblind","gray","grey","gimme","GIMME","neon","pride")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
  
@@ -977,7 +987,7 @@ qgraph <- function( input, ... )
       fade <- FALSE
     } else if(theme == "neon"){
       bg <- "black"
-      label.color <- "#8ffcff"
+      lcolorTheme <- "#8ffcff"
       bcolor <- "#8ffcff"
       border.width <- 4
       font <- 2
@@ -1161,11 +1171,13 @@ qgraph <- function( input, ... )
   }
   
   if(is.null(qgraphObject$Arguments[['pastel']])){
-    pastel <- FALSE 
+    pastel <- FALSE
   } else {
-    warning("The 'pastel' argument is deprecated, please use palette = 'pastel' instead.")
-    palette <- "pastel"
-    pastel <- qgraphObject$Arguments[['pastel']]
+    pastel <- isTRUE(qgraphObject$Arguments[['pastel']])
+    if (pastel){
+      warning("The 'pastel' argument is deprecated, please use palette = 'pastel' instead.")
+      palette <- "pastel"
+    }
   }
   
   
@@ -1225,7 +1237,7 @@ qgraph <- function( input, ... )
   if (!is.list(bars)) bars <- as.list(bars)
   
   if(is.null(qgraphObject$Arguments[['CircleEdgeEnd']])) CircleEdgeEnd=FALSE else CircleEdgeEnd=qgraphObject$Arguments[['CircleEdgeEnd']]
-  if(is.null(qgraphObject$Arguments[['loopAngle']])) loopangle=pi/2 else loopAngle=qgraphObject$Arguments[['loopAngle']]
+  if(is.null(qgraphObject$Arguments[['loopAngle']])) loopAngle=pi/2 else loopAngle=qgraphObject$Arguments[['loopAngle']]
   if(is.null(qgraphObject$Arguments[['legend.cex']])) legend.cex=0.6 else legend.cex=qgraphObject$Arguments[['legend.cex']]
   if(is.null(qgraphObject$Arguments[['legend.mode']]))
   {
@@ -1350,7 +1362,7 @@ qgraph <- function( input, ... )
   if(is.null(qgraphObject$Arguments$standAlone)) standAlone=TRUE else standAlone=qgraphObject$Arguments$standAlone
   
   ### EASTER EGGS ###
-  if(is.null(qgraphObject$Arguments[['XKCD']])) XKCD <- FALSE else XKCD <- TRUE
+  if(is.null(qgraphObject$Arguments[['XKCD']])) XKCD <- FALSE else XKCD <- isTRUE(qgraphObject$Arguments[['XKCD']])
   
   #     # Legend setting 1
   #     if (is.null(legend))
@@ -1418,11 +1430,13 @@ qgraph <- function( input, ... )
   #if (!filetype%in%c('pdf','png','jpg','jpeg','svg','R','eps','tiff')) warning(paste("File type",filetype,"is not supported")) 
   
   # Specify background:
-  if (is.null(background) && !DoNotPlot){
-    background <- par("bg")
-    if (background == "transparent") background <- "white"    
-  } else {
-    background <- "white"
+  if (is.null(background)){
+    if (!DoNotPlot){
+      background <- par("bg")
+      if (background == "transparent") background <- "white"
+    } else {
+      background <- "white"
+    }
   }
   if (isColor(bg)) background <- bg
   # Remove alpha:
@@ -1434,7 +1448,7 @@ qgraph <- function( input, ... )
   if (isTRUE(edge.label.bg)) edge.label.bg <- background
   if(is.null(qgraphObject$Arguments[['label.color']])) {
     # if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- ifelse(mean(col2rgb(background)/255) > 0.5,"black","white") else lcolor <- qgraphObject$Arguments$lcolor
-    if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- NA else lcolor <- qgraphObject$Arguments$lcolor
+    if(is.null(qgraphObject$Arguments$lcolor)) lcolor <- lcolorTheme else lcolor <- qgraphObject$Arguments$lcolor
   } else lcolor <- qgraphObject$Arguments[['label.color']]
   
   # Legend setting 2
@@ -1512,6 +1526,7 @@ qgraph <- function( input, ... )
   ########### GRAPHICAL MODEL SELECTION #######
   
   if (graph == "cor") {
+    if (edgelist) stop("Graph requires correlation or covariance matrix")
     if(!all(eigen(input)$values > 0))  {
       warning("Correlation/covariance matrix is not positive definite. Finding nearest positive definite matrix")
       
@@ -1612,6 +1627,12 @@ qgraph <- function( input, ... )
   # If threshold is TRUE and graph = "glasso" or "ggmModSelect", set to FALSE:
   if (isTRUE(threshold) && (graph == "glasso" || graph == "ggmModSelect")){
     threshold <- qgraphObject$Arguments[['threshold']] <- 0
+  }
+  # A logical threshold is only meaningful for graph = "glasso" or "ggmModSelect";
+  # warn instead of silently treating it as the number 1 (removing all edges):
+  if (is.logical(threshold)){
+    if (isTRUE(threshold)) warning("'threshold = TRUE' is only supported for graph = \"glasso\" or graph = \"ggmModSelect\", and is otherwise treated as threshold = 1 (which removes all edges).")
+    threshold <- as.numeric(threshold)
   }
     
     
@@ -1987,7 +2008,7 @@ qgraph <- function( input, ... )
   if (!is.logical(edge.labels))
   {
     if (length(edge.labels) == 1) edge.labels <- rep(edge.labels,length(E$from))
-    if (length(edge.labels) != length(keep) & length(edge.labels) != sum(keep)) stop("'edge.label.bg' is wrong length")
+    if (length(edge.labels) != length(keep) & length(edge.labels) != sum(keep)) stop("'edge.labels' is wrong length")
     if (length(edge.labels)==length(keep)) edge.labels <- edge.labels[keep]
     
     # edge.labels <- rep(edge.labels,length=length(E$from))
@@ -2179,10 +2200,13 @@ qgraph <- function( input, ... )
       if (is.function(layout))
       {
         Graph <- graph.edgelist(as.matrix(cbind(E$from,E$to)), any(directed))
+        # Ensure nodes without edges are also included in the graph:
+        if (vcount(Graph) < nNodes) Graph <- add.vertices(Graph, nNodes - vcount(Graph))
         E(Graph)$weight <- E$weight
-        
+
         # set roots:
-        if (deparse(match.call()[['layout']]) == "layout.reingold.tilford" && is.null(layout.par[['root']]))
+        layoutFunctionName <- deparse(match.call()[['layout']])
+        if (length(layoutFunctionName) == 1 && layoutFunctionName == "layout.reingold.tilford" && is.null(layout.par[['root']]))
         {
           sp <- shortest.paths(Graph, mode = "out")
           diag(sp) <- Inf
@@ -2684,7 +2708,7 @@ qgraph <- function( input, ... )
         pridecols <- c("#E50000","#FF8D00","#FFEE00","#028121","#004CFF","#760088")
         # Reorder:
         startcol <- round(1 + rainbowStart * 6)
-        sequence <- startcol:(startcol+length(groups))%%6
+        sequence <- (startcol:(startcol+length(groups)-1))%%6
         sequence[sequence==0] <- 6
         color <- pridecols[sequence]        
       }
@@ -2711,7 +2735,7 @@ qgraph <- function( input, ... )
   
   # Label color:
   if (length(lcolor) != nNodes){
-    lcolor <- rep(lcolor,nNodes)
+    lcolor <- rep(lcolor,length.out=nNodes)
   }
   if (any(is.na(lcolor))){
     # if (!is.null(theme) && is.character(theme) && theme == "gray"){
@@ -2721,9 +2745,10 @@ qgraph <- function( input, ... )
     #                                   ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])) > 0.5,"black","white")
     #   )
     # } else {
-      lcolor[is.na(lcolor)] <- ifelse(vertex.colors == "background",
+      whichNA <- which(is.na(lcolor))
+      lcolor[whichNA] <- ifelse(vertex.colors[whichNA] == "background",
                                       ifelse(mean(col2rgb(background)/255) > 0.5,"black","white"),
-                                      ifelse(colMeans(col2rgb(vertex.colors[is.na(lcolor)])/255) > label.color.split,"black","white")
+                                      ifelse(colMeans(col2rgb(vertex.colors[whichNA])/255) > label.color.split,"black","white")
       )
     # }
   }

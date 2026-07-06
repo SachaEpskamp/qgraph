@@ -12,7 +12,7 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1, po
   # If shape is rectangle, compute square on largext cex and move to border:
   if (shape == "rectangle")
   {
-    loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale)
+    loop <- SelfLoop(x,y,rotation,min(cex,cex2),min(cex,cex2),"square",residual,resScale, polygonList = polygonList, offset = offset)
     
     xOff <- (Cent2Edge(x,y,pi/2,cex,cex2,shape, offset=offset,polygonList = polygonList)[1] - x)
     yOff <- (Cent2Edge(x,y,0,cex,cex2,shape, offset=offset,polygonList = polygonList)[2] - y)

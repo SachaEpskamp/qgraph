@@ -27,7 +27,7 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   if (any(duplicated(init)))
   {
     init[duplicated(init),] <- init[duplicated(init),] + rnorm(prod(dim(init[duplicated(init),,drop=FALSE])),0,1e-10)
-    warning("Duplciated initial placement found. Initial slightly pertubated.")
+    warning("Duplicated initial placement found. Initial placement slightly perturbed.")
   }
   
   x<-init[,1]
@@ -36,8 +36,8 @@ qgraph.layout.fruchtermanreingold=function(edgelist,weights=NULL,vcount=NULL,nit
   # constraints:
   if (is.null(constraints))
   {
-    Cx=Cy=rep(FALSE,vcount)
-  } else 
+    Cx=Cy=rep(FALSE,n)
+  } else
   {
     Cx=!is.na(constraints[,1])
     Cy=!is.na(constraints[,2])

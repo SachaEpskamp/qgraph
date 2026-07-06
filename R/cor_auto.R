@@ -33,11 +33,11 @@ cor_auto <- function(
       message(paste("Removing factor variables:",paste(names(data)[Factors], collapse = "; ")))      
     }
 
-    data <- data[,!Factors]
+    data <- data[,!Factors,drop=FALSE]
   }
-  
+
   # Remove columns with all NA:
-  data <- data[,sapply(data,function(x)mean(is.na(x)))!=1]
+  data <- data[,sapply(data,function(x)mean(is.na(x)))!=1,drop=FALSE]
 
   
   # Detect ordinal:

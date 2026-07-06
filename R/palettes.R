@@ -1,13 +1,13 @@
 colorblind <- function(n, shift = 0){
   # Taken from: http://jfly.iam.u-tokyo.ac.jp/color/
-  if (n > 7) warning("'colorblind' palette only supports 8 colors.")
-  Palette <- 
+  if (n > 8) warning("'colorblind' palette only supports 8 colors.")
+  Palette <-
     rgb(
-      c(230,86,0,240,204,213,0),
-      c(159,180,158,228,121,94,114),
-      c(0,233,115,66,167,0,178),
+      c(230,86,0,240,204,213,0,0),
+      c(159,180,158,228,121,94,114,0),
+      c(0,233,115,66,167,0,178,0),
       maxColorValue=255)
-  
+
   Palette[(((shift + 1:n)-1)%%8)+1]
 }
 
@@ -22,9 +22,8 @@ shadesOfGrey <- colorRampPalette(c("grey0", "grey100"))
 
 
 neon <- function(n, shift = 0){
-  # Taken from: http://jfly.iam.u-tokyo.ac.jp/color/
-  if (n > 6) warning("'colorblind' palette only supports 8 colors.")
-  Palette <- 
+  if (n > 6) warning("'neon' palette only supports 6 colors.")
+  Palette <-
     c(
       "#ff3f3f",
       "#99FC20",
@@ -33,6 +32,6 @@ neon <- function(n, shift = 0){
       "#c04df9",
       "#2bd1fc"
     )
-  
-  Palette[(((shift + 1:n)-1)%%8)+1]
+
+  Palette[(((shift + 1:n)-1)%%6)+1]
 }

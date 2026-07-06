@@ -21,7 +21,7 @@ averageWmat <- function(...)
     } else  Wmats[[i]][] <- 0
   }
   
-  if (!(length(unique(sapply(Wmats,nrow))) == 1 | length(unique(sapply(Wmats,ncol))) == 1 )) stop("Graphs of different dimensions")
+  if (!(length(unique(sapply(Wmats,nrow))) == 1 & length(unique(sapply(Wmats,ncol))) == 1 )) stop("Graphs of different dimensions")
   avgWmat <- Reduce('+',Wmats)/length(Wmats)
   return(avgWmat)
   

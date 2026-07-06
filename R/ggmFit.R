@@ -1,5 +1,8 @@
 goodNum <- function(x){
   sapply(x,function(xx){
+    if (is.na(xx)){
+      return(NA_character_)
+    }
     if (xx < 0.0001 & xx > 0){
       return("< 0.0001")
     }
@@ -176,8 +179,9 @@ ggmFit <- function(
       lambda.l <- NA
     } else {
       lambda.l <- try(uniroot(f=lower.lambda, lower=0, upper=Tm)$root,
-                      silent=TRUE)      
+                      silent=TRUE)
     }
+    if(inherits(lambda.l, "try-error")) {lambda.l <- NA }
     fitMeasures$rmsea.ci.lower <- sqrt( lambda.l/(sampleSize*dfm) )
   }
   

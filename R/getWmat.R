@@ -205,9 +205,9 @@ getWmat.qgraph <- function(x, directed,...)
   
   if (!missing(directed)) E$directed <- directed
   
-  from <- c(E$from, E$to[!E$directed | E$bidir])
-  to <- c(E$to , E$from[!E$directed | E$bidir])
-  w <- c(E$weight, E$weight[!E$directed | E$bidir])
+  from <- c(E$from, E$to[!E$directed | E$bidirectional])
+  to <- c(E$to , E$from[!E$directed | E$bidirectional])
+  w <- c(E$weight, E$weight[!E$directed | E$bidirectional])
   df <- data.frame(
     from=from,
     to=to,

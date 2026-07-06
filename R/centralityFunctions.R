@@ -126,6 +126,9 @@ centrality_auto<-function(x, weighted = TRUE, signed = TRUE, communities = NULL,
   # compute edge betweenness with package igraph
   if (weighted.gr){
     igraphinput <- abs(1/x)
+    # Absent edges (weight zero) become Inf above; set them back to zero so
+    # they are not treated as edges by igraph:
+    igraphinput[!is.finite(igraphinput)] <- 0
   } else {
     igraphinput <- x
   }
@@ -184,7 +187,7 @@ clustcoef_auto<-function(x, thresholdWS=0, thresholdON=0)
   # If list of matrices, return list of output:
   if (is.list(x))
   {
-    return(lapply(x, clustcoef_auto, thresholdWS=thresholdWS, thresholdON=thresholdWS))
+    return(lapply(x, clustcoef_auto, thresholdWS=thresholdWS, thresholdON=thresholdON))
   }
   
   # check adjacency matrix (this code is mostly borrowed from package WGCNA, function checkAdjMat)

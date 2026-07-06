@@ -1,7 +1,7 @@
 
 print.qgraph <- function(x,...)
 {
-	out <- cbind(x$Edgelist$from,"\t",ifelse(x$Edgelist$directed,ifelse(x$Edgelist$bidir,"<->","-->"),"---"),"\t",x$Edgelist$to,"\t",round(x$Edgelist$weight,2),"\n")
+	out <- cbind(x$Edgelist$from,"\t",ifelse(x$Edgelist$directed,ifelse(x$Edgelist$bidirectional,"<->","-->"),"---"),"\t",x$Edgelist$to,"\t",round(x$Edgelist$weight,2),"\n")
 	cat(c("From\t\tTo\tWeight\n"))
 	apply(out,1,cat)
 }

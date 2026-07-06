@@ -57,7 +57,7 @@ IntInNode <- function(layout,cex,cex2,shape,m,width=0.2,triangles=TRUE,col="blac
         {
           for (j in 1:length(m[[i]]))
           {
-            if (!flip){
+            if (!flip[i]){
               lines(c(x-xran+m[[i]][j]*xran*2,x-xran+m[[i]][j]*xran*2),c(y-width*yran,y+width*yran),col=col[i])              
             } else {
               lines(c(x-xran+m[[i]][j]*xran*2-width*xran,x-xran+m[[i]][j]*xran*2+width*xran),c(y,y),col=col[i])
