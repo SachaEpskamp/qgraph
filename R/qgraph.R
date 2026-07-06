@@ -1,9 +1,47 @@
 # Create qgraph model:
 
-qgraph <- function( input, ... )
+qgraph <- function( input, ...,
+  # The arguments below behave exactly as if they were passed via '...' (as in
+  # qgraph < 2.0); they are named in the function definition only so that they
+  # are visible for auto-completion. Because they are placed after '...', they
+  # are matched by exact name only, as before. See ?qgraph for documentation.
+  # Estimation and scaling:
+  layout, groups, minimum, maximum, cut, details, threshold, palette, theme,
+  graph, sampleSize, tuning, alpha, bonf,
+  # Labels:
+  labels, nodeNames, label.cex, label.color, label.scale, label.prop,
+  # Nodes:
+  color, vsize, vsize2, shape, borders, border.color, border.width,
+  pie, pieColor,
+  # Edges:
+  esize, edge.width, edge.color, edge.labels, edge.label.cex,
+  posCol, negCol, fade, curve, curveAll, lty, diag,
+  directed, weighted, edgelist, nNodes, arrows, asize, parallelEdge,
+  # Layout and legend:
+  repulsion, layout.par, aspect, rescale, normalize,
+  legend, legend.cex, legend.mode, GLratio,
+  # Output:
+  title, title.cex, mar, filetype, filename, width, height, res,
+  DoNotPlot, plot, bg )
 {
-  
-  # OTHER INPUT MODES: 
+  # Collect all arguments in a single list, exactly as list(...) did before
+  # the arguments above were named in the function definition:
+  arguments <- list(...)
+  for (argName in setdiff(names(formals(sys.function())), c("input","..."))){
+    if (!eval(call("missing", as.name(argName)))){
+      # Single-bracket assignment so that explicitly passed NULL values are
+      # stored in the list rather than deleted, as with list(...):
+      arguments[argName] <- list(get(argName))
+    }
+    # Set the local variable to NULL so that same-named functions (e.g.,
+    # diag(), layout(), plot()) are still found by function-call lookup:
+    assign(argName, NULL)
+  }
+
+  # Resolve alternative argument names to their canonical names:
+  arguments <- resolveArgumentAliases(arguments)
+
+  # OTHER INPUT MODES:
   # if (any(class(input)=="factanal") )
   # {
   #   return(qgraph.efa(input,...))
@@ -19,18 +57,18 @@ qgraph <- function( input, ... )
   # } else 
     if (is(input,"loadings"))
   {
-    return(qgraph.loadings(input,...))
-  # }  
+    return(do.call(qgraph.loadings,c(list(input),arguments)))
+  # }
   # else if (any(class(input)=="semmod"))
   # {
   #   return(qgraph.semModel(input,...))
   } else if (is.list(input) && identical(names(input),c("Bhat", "omega", "lambda1", "lambda2")))
   {
     layout(t(1:2))
-    
-    Q1 <- qgraph((input$omega + t(input$omega) ) / 2,...)
-    Q2 <- qgraph(input$Bhat,...)
-    
+
+    Q1 <- do.call(qgraph,c(list((input$omega + t(input$omega) ) / 2),arguments))
+    Q2 <- do.call(qgraph,c(list(input$Bhat),arguments))
+
     return(list(Bhat = Q1, omega = Q2))
   }
   
@@ -54,7 +92,7 @@ qgraph <- function( input, ... )
 
   ### Extract nested arguments ###
   # if ("qgraph"%in%class(input)) qgraphObject$Arguments <- list(...,input) else qgraphObject$Arguments <- list(...)
-  qgraphObject$Arguments <- list(...,input=input) 
+  qgraphObject$Arguments <- c(arguments,list(input=input))
   
   if (isTRUE(qgraphObject$Arguments[['gui']]) | isTRUE(qgraphObject$Arguments[['GUI']]))
   {
@@ -76,6 +114,7 @@ qgraph <- function( input, ... )
   if (!is.null(def$qgraph)) class(def$qgraph) <- "qgraph"
   if (any(sapply(def,function(x)!is.null(x))))
   {
+    def <- resolveArgumentAliases(def)
     qgraphObject$Arguments <- getArgs(c(qgraphObject$Arguments,def))
   }
   
@@ -949,7 +988,7 @@ qgraph <- function( input, ... )
       posCol <- c("#009900","darkgreen")
       negCol <- c("#BF0000","red")
     } else if (theme == "Leuven"){
-      dots <- list(...)
+      dots <- arguments
       dots$DoNotPlot <- TRUE
       dots$theme <- "classic"
       dots$input <- input
