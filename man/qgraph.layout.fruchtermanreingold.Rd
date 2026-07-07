@@ -16,28 +16,28 @@ qgraph.layout.fruchtermanreingold(edgelist, weights=NULL, vcount=NULL,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{edgelist}{A matrix with on each row the nodes at the start and the node at the end of each edge.}
+  \item{edgelist}{A matrix with a row for each edge containing the node at the start and the node at the end of the edge.}
   \item{weights}{A vector containing the edge weights.}
   \item{vcount}{The number of nodes.}
   \item{niter}{Number of iterations, default is 500.}
   \item{max.delta}{Maximum displacement, default is equal to the number of nodes.}
   \item{area}{The area of the plot, default is the square of the number of nodes.}
   \item{cool.exp}{Cooling exponent, default is 1.5.}
-  \item{repulse.rad}{Repulse radius, defaults to the cube of the number of nodes.}
+  \item{repulse.rad}{Repulse radius, defaults to \code{area} times the number of nodes (which equals the cube of the number of nodes with the default \code{area}).}
   \item{init}{Matrix with two columns and a row for each node containing the initial X and Y positions.}
-  \item{groups}{See \code{\link{qgraph}}}
-  \item{rotation}{See \code{\link{qgraph}}}
-  \item{layout.control}{See \code{\link{qgraph}}}
+  \item{groups}{Accepted for backward compatibility; currently unused.}
+  \item{rotation}{Accepted for backward compatibility; currently unused.}
+  \item{layout.control}{Accepted for backward compatibility; currently unused.}
   \item{constraints}{A constraints matrix with two columns and a row for each node containing a NA if the node is free or a fixed value for one of the coordinates.}
    \item{round}{Logical indicating if the initial input should be rounded}
-   \item{digits}{Number of digits to round initial input and displacement in the algorithm to. Defaults to 5. This helps prevent floating point disrepancies between different operating systems.}
+   \item{digits}{Number of digits to round initial input and displacement in the algorithm to. Defaults to 5. This helps prevent floating point discrepancies between different operating systems.}
 }
 \details{
 All arguments for this function can be passed from \code{\link{qgraph}} to this function by using the 'layout.par' argument, 
 which must be a list containing the arguments. This can be used to constrain the layout in two ways:
 }
 \section{Hard constraints}{
-By using the 'constraints' argument the X and Y positions of each node can be fixed to a certain value. The 'constraint'
+By using the 'constraints' argument the X and Y positions of each node can be fixed to a certain value. The 'constraints'
 argument must be given a matrix with two columns and a row for each node. An NA means that that coordinate for that
 node is free, and a value means it is fixed to that value.}
 
@@ -60,7 +60,7 @@ Sacha Epskamp, Angelique O. J. Cramer, Lourens J.
 
 Carter T. Butts <buttsc@uci.edu> (2010). sna: Tools for Social Network Analysis. R package version 2.2-0. http://CRAN.R-project.org/package=sna
 
-Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129?1164.
+Fruchterman, T. & Reingold, E. (1991). Graph drawing by force-directed placement. Software - Pract. Exp. 21, 1129-1164.
 }
 \author{
 Sacha Epskamp (mail@sachaepskamp.com)

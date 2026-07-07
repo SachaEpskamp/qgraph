@@ -25,7 +25,7 @@ This function extracts a weights matrix from various kinds of objects.
 An input object
 }
   \item{nNodes}{
-Number of Nodes
+Number of nodes
 }
   \item{labels}{
 A vector specifying the labels of each node

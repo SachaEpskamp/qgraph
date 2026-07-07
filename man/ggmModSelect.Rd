@@ -30,7 +30,7 @@ What model should stepwise search start from? \code{"glasso"} to first run glass
 Logical indicating if stepwise model search should be used.
 }
   \item{considerPerStep}{
-\code{"subet"} to only consider changing edges that previously indicated improvement in EBIC, unless changing no edge indicated an improvement to EBIC, in which case all edges are again considered (see details). \code{"all"} will consider changing all edges at every step.
+\code{"subset"} to only consider changing edges that previously indicated improvement in EBIC, unless changing no edge indicated an improvement to EBIC, in which case all edges are again considered (see details). \code{"all"} will consider changing all edges at every step.
 } 
   \item{verbose}{
 Logical, should progress reports be printed to the console?
@@ -39,7 +39,7 @@ Logical, should progress reports be printed to the console?
 The number of cores to use in testing models.
 }
   \item{checkPD}{
-If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that can not be a covariance matrix and (b) glasso can hang if the input is not positive definite.
+If \code{TRUE}, the function will check if \code{S} is positive definite and return an error if not. It is not advised to use a non-positive definite matrix as input as (a) that cannot be a covariance matrix and (b) glasso can hang if the input is not positive definite.
 }
 \item{criterion}{
 String indicating an output of \code{\link{ggmFit}} to be minimized
@@ -61,18 +61,18 @@ The full algorithm is as follows:
 
 5. If no edge can be added or changed to improve EBIC, stop here
 
-6. Change the edge that best improved EBIC, now test all other edges that would have also lead to an increase in EBIC again
+6. Change the edge that best improved EBIC, now test all other edges that would have also led to an improvement in EBIC again
 
 7. If no edge can be added or changed to improve EBIC, go to 4, else, go to 6.
 
-When \code{stepwise = FALSE}, steps 4 to 7 are ignored. When \code{considerPerStep = "all"}, all edges are considered at every step. Note that this algorithm is very slow in higher dimensions (e.g., above 30-40 nodes). Note that EBIC computation is slightly different as in \code{\link{EBICglasso}} and instead follows the implementation in Lavaan.
+When \code{stepwise = FALSE}, steps 4 to 7 are ignored. When \code{considerPerStep = "all"}, all edges are considered at every step. Note that this algorithm is very slow in higher dimensions (e.g., above 30-40 nodes). Note that EBIC computation is slightly different from that in \code{\link{EBICglasso}} and instead follows the implementation in Lavaan.
 }
 
 \value{
 A list with the following elements:
 
 \item{graph}{The optimal partial correlation network}
-\item{EBIC}{EBIC corresponding to optimal network.}
+\item{criterion}{The value of the selection criterion (e.g., EBIC) corresponding to the optimal network.}
 }
 \references{
 Foygel, R., & Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. In Advances in neural information processing systems (pp. 604-612).

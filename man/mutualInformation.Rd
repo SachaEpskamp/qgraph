@@ -13,19 +13,21 @@ mutualInformation(ggm, from, to = "all", covMat)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{ggm}{
-Partial correlation network. Can be missing if 'covMat' is supplied.
+Partial correlation network. Must be missing if 'covMat' is supplied (supplying both results in an error).
 }
   \item{from}{
-Integer vector corresponding to one set of nodes. Defaults to all nodes.
+Integer or character (node label) vector corresponding to one set of nodes. Defaults to all nodes.
 }
   \item{to}{
-Integer vector corresponding to another set of nodes, or \code{'all'} to compute the mutual information of each node to all other nodes.
+Integer or character (node label) vector corresponding to another set of nodes, or \code{'all'} to compute the mutual information of each node to all other nodes.
 }
   \item{covMat}{
 Variance-covariance matrix. Can be missing if 'ggm' is supplied.
 }
 }
-
+\value{
+A named numeric vector with the mutual information of each node in 'from'.
+}
 \author{
 Sacha Epskamp
 }

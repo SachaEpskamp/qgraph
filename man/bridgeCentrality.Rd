@@ -42,7 +42,7 @@ Bridge closeness is the inverse of the average shortest path length between a no
 
 Bridge expected influence (1-step) is the sum of the signed weights of all edges connecting a node to nodes in other communities. In directed networks, only outgoing edges are considered. Bridge expected influence (2-step) additionally considers the indirect influence on other communities through intermediate nodes, weighted by the connecting edge weight.
 
-Bridge betweenness and bridge closeness are only defined for positive edge weights; negative edges, if present, are excluded from the computation of these two statistics. Bridge expected influence is recommended when a network contains negative edges. Self-loops are not included in the computation.
+Bridge betweenness is only defined for positive edge weights; negative edges, if present, are excluded from its computation. For bridge closeness, distances are first computed on the full network including negative edges; only when igraph cannot handle the negative edge weights does the computation fall back to the network with negative edges excluded. Bridge expected influence is recommended when a network contains negative edges. Self-loops are not included in the computation.
 
 Shortest paths are computed using distances equal to the inverse of the absolute edge weights, as in \code{\link{centrality}}.
 }

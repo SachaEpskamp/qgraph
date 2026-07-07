@@ -15,7 +15,7 @@ centrality_auto(x, weighted = TRUE, signed = TRUE, communities = NULL,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.
+A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix, an edgelist, or a weighted edgelist.
 }
 \item{weighted}{Logical, set to \code{FALSE} to set all edge weights to 1 or -1}
 \item{signed}{Logical, set to \code{FALSE} to make all edge weights absolute}
@@ -23,25 +23,26 @@ A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency ma
 \item{useCommunities}{A character vector specifying which communities should be included in the computation of bridge centrality. Defaults to \code{"all"}. See \code{\link{bridgeCentrality}}.}
 }
 \details{
-The function recognizes whether the network is unweighted vs. weighted, undirected vs. directed, and connected vs. disconnected and computes a set of centrality indices that is best suited for that particular kind of network. Edge signs are always disregarded, while edge weights and directions, if present, are considered in the computation of the indices. If the network is disconnected, closeness centrality is computed only considering the largest component (notice that this is different from what function \code{\link{centrality}} does).
+The function recognizes whether the network is unweighted vs. weighted, undirected vs. directed, and connected vs. disconnected and computes a set of centrality indices that is best suited for that particular kind of network. Edge signs are disregarded in the computation of the shortest-path based indices (betweenness and closeness), while the expected influence statistics take edge signs into account (unless \code{signed = FALSE}, in which case all edge weights are made absolute). Edge weights and directions, if present, are considered in the computation of the indices. In undirected networks, the node betweenness centrality is divided by two. If the network is disconnected, closeness centrality is computed only considering the largest component (notice that this is different from what function \code{\link{centrality}} does).
 
-If \code{x} is unweighted and directed, then the indegree, the outdegree, the node betweenness centrality, the closenes centrality, and the edge betweenness centrality are computed.
-If \code{x} is unweighted and undirected, then the degree, the node betweenness centrality, the closenes centrality, and the edge betweenness centralities are computed.
-If \code{x} is weighted and directed, then the instrength and the outstrength (same as indegree and outdegree, but considering weights), the node betweenness centrality, the closeness centrality, and edge betweenness centralities are computed
-If \code{x} is weighted and undirected, then the strength, the node betweenness centrality, the closenes centrality, and edge betweenness centralities are computed.
+If \code{x} is unweighted and directed, then the indegree, the outdegree, the node betweenness centrality, the closeness centrality, and the edge betweenness centrality are computed.
+If \code{x} is unweighted and undirected, then the degree, the node betweenness centrality, the closeness centrality, and the edge betweenness centralities are computed.
+If \code{x} is weighted and directed, then the instrength and the outstrength (same as indegree and outdegree, but considering weights), the node betweenness centrality, the closeness centrality, and edge betweenness centralities are computed.
+If \code{x} is weighted and undirected, then the strength, the node betweenness centrality, the closeness centrality, and edge betweenness centralities are computed.
+In all cases, the (in and out) expected influence statistics are computed as well.
 Additionally, the shortest path length between each pair of nodes is also computed for all the kinds of networks.
 }
 \value{
 A list containing:
-\item{node.centrality }{A dataframe that includes the node centrality statistics. A subset of the following centrality indices is included, depending on the input network: \code{Degree}, \code{InDegree}, \code{OutDegree}, \code{Strength}, \code{InStrength}, \code{OutStrength}, \code{Betweenness}, and \code{Closeness}. If \code{communities} is supplied, the bridge centrality statistics (Jones, Ma, & McNally, 2021; see \code{\link{bridgeCentrality}}) are included as well.}
-\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights.}
+\item{node.centrality }{A dataframe that includes the node centrality statistics. A subset of the following centrality indices is included, depending on the input network: \code{Degree}, \code{InDegree}, \code{OutDegree}, \code{Strength}, \code{InStrength}, \code{OutStrength}, \code{Betweenness}, \code{Closeness}, \code{ExpectedInfluence}, \code{InExpectedInfluence}, and \code{OutExpectedInfluence}. If \code{communities} is supplied, the bridge centrality statistics (Jones, Ma, & McNally, 2021; see \code{\link{bridgeCentrality}}) are included as well.}
+\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pair of nodes. These path lengths are based on the inverse of the absolute edge weights.}
 \item{edge.betweenness.centrality}{The edge betweenness centrality statistic (Newman & Girvan, 2004). Edges are ordered by their decreasing centrality.}
 }
 
 \references{
 Jones, P. J., Ma, R., & McNally, R. J. (2021). Bridge centrality: A network approach to understanding comorbidity. Multivariate Behavioral Research, 56(2), 353-367.
 
-Newman, M. E. J., Girvan, M. (2004). Finding and evaluating community structure in networks. Phisical Review E 69(026113).
+Newman, M. E. J., Girvan, M. (2004). Finding and evaluating community structure in networks. Physical Review E 69(026113).
 
 Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mõttus, R., Waldorp, L., Cramer, A. O. J., State of the aRt personality research: A tutorial on network analysis of personality data in R. Manuscript submitted for publication.
 }

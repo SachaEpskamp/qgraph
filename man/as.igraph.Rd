@@ -5,7 +5,7 @@
 Converts qgraph object to igraph object.
 }
 \description{
-This function converts the output of \code{\link{qgraph}} to an 'igraph' object that can be used in the igraph package (Csardi & Nepusz, 2006)
+This function converts the output of \code{\link{qgraph}} to an 'igraph' object that can be used in the igraph package (Csardi & Nepusz, 2006).
 }
 \usage{
 \method{as.igraph}{qgraph}(x, ..., attributes = TRUE)
@@ -21,8 +21,12 @@ Logical, should graphical attributes also be transferred?
 }
 }
 
+\value{
+An \code{igraph} object.
+}
+
 \references{
- Csardi G, Nepusz T (2006). The igraph software package for complex network research, InterJournal, Complex Systems 1695. http://igraph.sf.net
+ Csardi G, Nepusz T (2006). The igraph software package for complex network research, InterJournal, Complex Systems 1695. https://igraph.org
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>

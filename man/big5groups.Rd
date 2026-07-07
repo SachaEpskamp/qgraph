@@ -6,13 +6,13 @@
 Big 5 groups list
 }
 \description{
-This is the groups list of the big 5 data. It is a measurement of the Dutch translation of the NEO-PI-R on 500 first year psychology students (Dolan, Oort, Stoel, Wicherts, 2009).
+This is the groups list of the big 5 data. It is a measurement of the Dutch translation of the NEO-PI-R on 500 first-year psychology students (Dolan, Oort, Stoel, Wicherts, 2009).
 }
 \usage{data(big5groups)}
 \references{
 Hoekstra, H. A., Ormel, J., & De Fruyt, F. (2003). NEO-PI-R/NEO-FFI: Big 5 persoonlijkheidsvragenlijst. Handleiding [Manual of the Dutch version of the NEO-PI-R/NEO-FFI]. Lisse, The Netherlands: Swets and Zeitlinger.
 
-Dolan, C. V., Oort, F. J., Stoel, R. D., & Wicherts, J. M. (2009). Testing measurement invariance in the target rotates multigroup exploratory factor model. Structural Equation Modeling, 16, 295--314.
+Dolan, C. V., Oort, F. J., Stoel, R. D., & Wicherts, J. M. (2009). Testing measurement invariance in the target rotated multigroup exploratory factor model. Structural Equation Modeling, 16, 295--314.
 }
 \format{
   The format is:

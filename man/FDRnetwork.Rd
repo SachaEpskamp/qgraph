@@ -5,7 +5,7 @@
 Model selection using local False Discovery Rate
 }
 \description{
-This function is a wrapper arounf \code{\link[fdrtool]{fdrtool}} to easilly compute a correlation or partial correlation network in which all nonsignificant edges are set to zero.
+This function is a wrapper around \code{\link[fdrtool]{fdrtool}} to easily compute a correlation or partial correlation network in which all nonsignificant edges are set to zero.
 }
 \usage{
 FDRnetwork(net, cutoff = 0.1, method = c('lfdr', 'pval', 'qval'))
@@ -16,12 +16,15 @@ FDRnetwork(net, cutoff = 0.1, method = c('lfdr', 'pval', 'qval'))
 A correlation or partial correlation matrix
 }
   \item{cutoff}{
-  The cutoff value to use. The edges of which the value of the first element of \code{method} are higher than the cutoff are removed. Thus, by default, edges with a local false discovery rate of higher than 0.1 are removed from the graph.
+  The cutoff value to use. Edges for which the measure indicated by the first element of \code{method} is higher than the cutoff are removed. Thus, by default, edges with a local false discovery rate higher than 0.1 are removed from the graph.
 }
-  \item{method}{The method to use with the cutoff. Can be \code{'lfdr'} for the local false discobvery rate, \code{'pval'} for the p-value of \code{'qval'} for the q-value.}
+  \item{method}{The method to use with the cutoff. Can be \code{'lfdr'} for the local false discovery rate, \code{'pval'} for the p-value or \code{'qval'} for the q-value.}
 }
 \details{
 \code{method = 'lfdr'} could result in a very sparse network, so also looking at other values is advisable.
+}
+\value{
+A matrix of the same dimensions as \code{net} in which the edges for which the selected measure exceeds the cutoff are set to zero.
 }
 \references{
 Bernd Klaus and Korbinian Strimmer. (2014). fdrtool: Estimation of (Local) False Discovery Rates and Higher Criticism. R package version 1.2.12. http://CRAN.R-project.org/package=fdrtool
@@ -42,7 +45,7 @@ CorMat <- cor_auto(bfi[,1:25])
 # Run local FDR:
 CorMat_FDR <- FDRnetwork(CorMat)
 
-# Number of edges remaining:
+# Proportion of edges remaining:
 mean(CorMat_FDR[upper.tri(CorMat_FDR,diag=FALSE)]!=0)
 
 # None, so might use different criterion:
@@ -64,13 +67,12 @@ centralityPlot(list(cor=CorMat, fdr = CorMat_FDR))
 
 ### PARTIAL CORRELATIONS ###
 # Partial correlation matrix:
-library("parcor")
-PCorMat <- cor2pcor(CorMat)
+PCorMat <- corpcor::cor2pcor(CorMat)
 
 # Run local FDR:
 PCorMat_FDR <- FDRnetwork(PCorMat, cutoff = 0.1, method = "pval")
 
-# Number of edges remaining:
+# Proportion of edges remaining:
 mean(PCorMat_FDR[upper.tri(PCorMat_FDR,diag=FALSE)]!=0)
 
 # Compare:

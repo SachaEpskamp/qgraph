@@ -13,7 +13,7 @@ VARglm(x, family, vars, adjacency, icfun = BIC, ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-A data frame
+A data frame or matrix containing repeated measures
 }
   \item{family}{
 The family to be used. Defaults to \code{gaussian} if data is continuous or \code{binomial} if data is binary
@@ -25,7 +25,7 @@ Vector of variables to predict. If missing all variables are predicted.
 Adjacency matrix. If missing full network is estimated
 }
   \item{icfun}{
-Information criterium function to be included in the output
+Information criterion function to be included in the output
 }
   \item{\dots}{
 Arguments used in the \code{icfun}
@@ -34,8 +34,8 @@ Arguments used in the \code{icfun}
 \value{
 A list containing:
 \item{graph}{The estimated graph}
-\item{IC}{The information criterium}
+\item{IC}{The information criterion}
 }
 \author{
-Sacha Epskamp <mail@sachaepskamp.com
+Sacha Epskamp <mail@sachaepskamp.com>
 }

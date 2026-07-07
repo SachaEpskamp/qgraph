@@ -9,8 +9,8 @@ Centrality statistics of graphs
 This function can be used on the output of \code{\link{qgraph}} to compute the node centrality statistics for weighted graphs proposed by Opsahl, Agneessens and Skvoretz (2010).
 }
 \usage{
-centrality(graph, alpha = 1, posfun = abs, pkg, all.shortest.paths = FALSE, 
-           weighted = TRUE, signed = TRUE, R2 = FALSE)
+centrality(graph, alpha = 1, posfun = abs, pkg = c("igraph","qgraph"),
+           all.shortest.paths = FALSE, weighted = TRUE, signed = TRUE, R2 = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,7 +23,7 @@ The tuning parameter. Defaults to 1.
 A function that converts positive and negative values to only positive. Defaults to the absolute value.
 }
 \item{pkg}{
- Package to use. Either \code{"qgraph"} or \code{"igraph"}. Defaults to \code{"qgraph"} for directed networks and  \code{"igraph"} for undirected networks.
+ Package to use. Either \code{"igraph"} or \code{"qgraph"}. Defaults to \code{"igraph"}.
 }
 \item{all.shortest.paths}{
  Logical if all shortest paths should be returned. Defaults to \code{FALSE}. Setting this to true can greatly increase computing time if \code{pkg = "igraph"}.
@@ -37,20 +37,21 @@ This function computes and returns the in and out degrees, closeness and between
 
 Self-loops are ignored in computing centrality indices. These statistics are only defined for positive edge weights, and thus negative edge weights need to be transformed into positive edge weights. By default, this is done by taking the absolute value.
 
-The algorithm used for computing the shortest paths is the well known "Dijkstra’s algorithm" (Dijkstra, 1959). The algorithm has been implemented in R, which can make this function take several minutes to run for large graphs (over 100 nodes). A future version of qgraph will include a compiled version to greatly speed up this function.
+The shortest paths are computed using Dijkstra's algorithm (Dijkstra, 1959).
 }
 \value{
 A list containing:
 \item{OutDegree}{A vector containing the outward degree of each node.}
 \item{InDegree}{A vector containing the inward degree of each node.}
 \item{Closeness}{A vector containing the closeness of each node.}
-\item{Betweenness}{A vector containing the betweenness of each node}
+\item{Betweenness}{A vector containing the betweenness of each node.}
 %\item{rspbc}{Randomized Shortest Paths Betweenness Centrality as implemented in \code{\link[NetworkToolbox]}{rspbc}
 %\item{hybrid}{Hybrid centrality as implemented in \code{\link[NetworkToolbox]}{hybrid}
-\item{InExpectedInfluence}{Expected incoming influence - sum of incomming edge weights connected to a node (not made absolute)}
+\item{InExpectedInfluence}{Expected incoming influence - sum of incoming edge weights connected to a node (not made absolute)}
 \item{OutExpectedInfluence}{Expected outgoing influence - sum of outgoing edge weights connected to a node (not made absolute)}
-\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pairs of nodes. These path lenghts are based on the inverse of the absolute edge weights raised to the power alpha.}
-\item{ShortestPaths }{A matrix of lists containing all shortest path lengths between all pairs of nodes. Use double square brackets to index. E.g., if the list is called 'res', res$ShortestPaths[[i,j]] gives a list containing all shortest paths between node i and j.}
+\item{ShortestPathLengths }{A matrix containing the shortest path lengths of each pair of nodes. These path lengths are based on the inverse of the absolute edge weights raised to the power alpha.}
+\item{ShortestPaths }{A matrix of lists containing all shortest paths between all pairs of nodes. Use double square brackets to index. E.g., if the list is called 'res', res$ShortestPaths[[i,j]] gives a list containing all shortest paths between node i and j. With \code{pkg = "igraph"}, shortest paths are only returned if \code{all.shortest.paths = TRUE}.}
+\item{R2}{Only if \code{R2 = TRUE}: a vector containing the predictability (R-squared) of each node.}
 }
 \references{
 Opsahl, T., Agneessens, F., Skvoretz, J. (2010). Node centrality in weighted networks: generalizing degree and shortest paths. Soc Netw. 32:245–251.

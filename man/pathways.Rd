@@ -16,21 +16,23 @@ pathways(graph, from, to, fading = 0.25, lty = 3)
 Output from \code{\link{qgraph}}.
 }
   \item{from}{
-A vector indicating the first set of nodes between which pathways should be highlighted. Can be numeric or characters corresponding to node labels.
+A vector indicating the first set of nodes between which pathways should be highlighted. Can be numeric or character corresponding to node labels.
 }
   \item{to}{
-A vector indicating the second set of nodes between which pathways should be highlighted. Can be numeric or characters corresponding to node labels.
+A vector indicating the second set of nodes between which pathways should be highlighted. Can be numeric or character corresponding to node labels.
 }
   \item{fading}{
 The fading of the edges that are not part of shortest paths between 'from' and 'to'.
 }
   \item{lty}{
-The line type of the edges that are not part of shortest paths between 'from' and 'to'. 
+The line type of the edges that are not part of shortest paths between 'from' and 'to'.
 }
 }
-
+\value{
+No return value; the function is called for its side effect of plotting the graph with the shortest pathways highlighted.
+}
 \references{
-Isvoranu, A. M., van Borkulo, C. D., Boyette, L. L., Wigman, J. T., Vinkers, C. H., Borsboom, D., & Group Investigators. (2016). A Network Approach to Psychosis: Pathways Between Childhood Trauma and Psychotic Symptoms. Schizophrenia bulletin, sbw055.
+Isvoranu, A. M., van Borkulo, C. D., Boyette, L. L., Wigman, J. T., Vinkers, C. H., Borsboom, D., & Group Investigators. (2017). A Network Approach to Psychosis: Pathways Between Childhood Trauma and Psychotic Symptoms. Schizophrenia Bulletin, 43(1), 187-196.
 }
 \author{
 Sacha Epskamp and Adela M. Isvoranu
@@ -40,6 +42,7 @@ Sacha Epskamp and Adela M. Isvoranu
 \code{\link{qgraph}}
 }
 \examples{
+\donttest{
 library("qgraph")
 library("psych")
 data(bfi)
@@ -52,8 +55,8 @@ BICgraph <- qgraph(CorMat, graph = "glasso", sampleSize = nrow(bfi),
                    tuning = 0, layout = "spring", title = "BIC", details = TRUE)
 
 # All paths between Agreeableness and Neuroticism:
-pathways(BICgraph, 
-         from = c("A1","A2","A3","A4","A5"), 
+pathways(BICgraph,
+         from = c("A1","A2","A3","A4","A5"),
          to = c("N1","N2","N3","N4","N5"))
-
+}
 }

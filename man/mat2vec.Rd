@@ -5,7 +5,7 @@
 Weights matrix to vector
 }
 \description{
-Converts a weights matrix to a vector of weights. If the matrix is symmetrical only upper triangle values are returned in the vector.
+Converts a weights matrix to a vector of weights. If the matrix is symmetric only upper triangle values are returned in the vector.
 }
 \usage{
 mat2vec(x, diag = FALSE, tol = 1e-10)
@@ -19,8 +19,11 @@ A weights matrix
 Logical: should diagonal values be included?
 }
   \item{tol}{
-Tolerance level
+Tolerance used when testing whether the matrix is symmetric
 }
+}
+\value{
+A numeric vector of edge weights. If the matrix is symmetric, the upper triangle values are returned; if it is not symmetric, the upper and lower triangle values are returned. If \code{diag = TRUE}, all elements of the matrix are returned.
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>

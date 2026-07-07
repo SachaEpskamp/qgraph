@@ -30,10 +30,10 @@ Logical, should the network be refitted using \code{\link[glasso]{glasso}}?
 EBIC tuning parameter.
 }
   \item{invSigma}{
-Implied inverse variance-covariance matrix. If this object is assigned \code{pcor} is not used.
+Implied inverse variance-covariance matrix. If this object is assigned \code{pcor} is not used. Note that \code{invSigma} is ignored (with a warning) when \code{refit = TRUE}.
 }
   \item{nPar}{
-    Number of parameters, if not specified this is retrieved from the number of zeroes in the inverse variance--covariance matrix. Can be used to compute fit measures of any statistical model (e.g., SEM). 
+    Number of parameters, if not specified this is retrieved from the number of nonzero elements in the inverse variance-covariance matrix. Can be used to compute fit measures of any statistical model (e.g., SEM).
   }
     \item{tol}{
     Tolerance for setting an edge to zero.
@@ -44,6 +44,12 @@ Implied inverse variance-covariance matrix. If this object is assigned \code{pco
   \item{countDiagonalPars}{
   Logical, should the diagonal of the precision matrix be counted as parameters?
   }
+}
+\value{
+A list of class \code{"ggmFit"} containing:
+\item{network}{The partial correlation matrix of the evaluated model}
+\item{invSigma}{The inverse variance-covariance matrix of the evaluated model}
+\item{fitMeasures}{A list containing the fit measures (e.g., \code{chisq}, \code{npar}, \code{rmsea}, \code{bic}, \code{ebic})}
 }
 \author{
 Sacha Epskamp <mail@sachaepskamp.com>
@@ -61,7 +67,7 @@ CovMat <- cov(bfi[,1:25], use="pairwise.complete.obs")
 
 # Compute network:
 EBICgraph <- qgraph(CovMat, graph = "glasso", sampleSize = nrow(bfi),
-                    tuning = 0.5, layout = "spring", title = "BIC", details = TRUE)
+                    tuning = 0.5, layout = "spring", title = "EBIC", details = TRUE)
 
 # Obtain fit measures:
 fitNetwork <- ggmFit(EBICgraph, CovMat, nrow(bfi))

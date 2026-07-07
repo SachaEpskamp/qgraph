@@ -5,7 +5,7 @@
 Draws network as a flow diagram showing how one node is connected to all other nodes
 }
 \description{
-This function will draw one node of interest on the left, then subsequently draw all other nodes in vertical levels to the right, in the order of direct (unweighted) connectiveness to the node of interest. Layout is based on the \code{layout_as_tree} function from the igraph package. This allows one to see how one node connects to other nodes in the network.
+This function will draw one node of interest on the left, then subsequently draw all other nodes in vertical levels to the right, in the order of direct (unweighted) connectedness to the node of interest. Layout is based on the \code{layout_as_tree} function from the igraph package. This allows one to see how one node connects to other nodes in the network.
 }
 \usage{
 flow(object, from, horizontal = TRUE, equalize = TRUE, minCurve = 1, maxCurve = 4, 
@@ -32,7 +32,7 @@ Minimum curve of edges on the same level
 Maximum curve of edges on the same level
 }
   \item{unfadeFirst}{
-Logical, should edges between the node of interest be unfaded?
+Logical, should edges connected to the node of interest be unfaded?
 }
   \item{fade}{
 'fade' argument as used in \code{\link{qgraph}}
@@ -44,7 +44,9 @@ Logical, should edges between the node of interest be unfaded?
 Arguments sent to qgraph
 }
 }
-
+\value{
+Invisibly returns a \code{qgraph} object corresponding to the plotted flow diagram. The function will return an error if the network is disconnected.
+}
 \author{
 Sacha Epskamp
 }

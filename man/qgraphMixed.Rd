@@ -5,7 +5,7 @@
 Plots a mixed graph with both directed and undirected edges.
 }
 \description{
-This function can be used to plot a network in which each node is connected by at most 3 edges; one undirected edge and two directed edges.
+This function can be used to plot a network in which each pair of nodes is connected by at most 3 edges: one undirected edge and two directed edges.
 }
 \usage{
 qgraphMixed(undirected, directed, parallel = TRUE, parallelAngle = pi/6, 

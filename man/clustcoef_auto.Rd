@@ -21,18 +21,18 @@ clustOnnela(x, thresholdON=0)
 \arguments{
   \item{x}{An undirected graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.}
   \item{thresholdWS}{
-The threshold used to binarize a weighted network \code{x} to compute the binary clustering coefficients \code{clustWS} and \code{signed_clustWS}. Edges with weights lower than \code{thresholdWS} in absolute value are zeroed. For unweighted networks, \code{thresholdWS = 0} is the suggested value.
+The threshold used to binarize a weighted network \code{x} to compute the binary clustering coefficients \code{clustWS} and \code{signed_clustWS}. Edges with weights lower than or equal to \code{thresholdWS} in absolute value are zeroed. For unweighted networks, \code{thresholdWS = 0} is the suggested value.
 }
   \item{thresholdON}{
-In the computation of Onnela's clustering coefficient \code{clustOnnela}, edge of weights lower than \code{thresholdON} in absolute value are excluded. The value \code{thresholdON = 0} (i.e., no edge is excluded) is generally suggested also for weighted networks.
+In the computation of Onnela's clustering coefficient \code{clustOnnela}, edges with weights lower than \code{thresholdON} in absolute value are excluded. The value \code{thresholdON = 0} (i.e., no edge is excluded) is generally suggested also for weighted networks.
 }
 }
 \details{
 \code{clustWS} computes the clustering coefficient for unweighted networks introduced by Watts & Strogatz (1998) and the corresponding signed version (Costantini & Perugini, in press).
-\code{ClustZhang} computes the clustering coefficient for weighted networks introduced by Zhang & Horvath (2005) and the corresponding signed version (Costantini & Perugini, in press).
+\code{clustZhang} computes the clustering coefficient for weighted networks introduced by Zhang & Horvath (2005) and the corresponding signed version (Costantini & Perugini, in press).
 \code{clustOnnela} computes the clustering coefficient for weighted networks introduced by Onnela et al. (2005) and the corresponding signed version (Costantini & Perugini, in press).
-\code{clustering_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However the unsigned indices are computed for signed networks, by considering the absolute value of the weights, and the unweighted indices are computed for weighted networks, after a binarization according to the parameter \code{thresholdWS}. \code{clustering_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph]{transitivity}} from package \code{\link[igraph]{igraph}}.
-For the computation of the local clustering coefficient, a node must have at least two neighbors: for nodes with less than two neighbors \code{NaN} is returned.
+\code{clustcoef_auto} automatically recognizes the kind of the input network \code{x} (weighted vs. unweighted, signed vs. unsigned) and computes a subset of indices according to the kind of the network: signed indices are not computed for unsigned networks and weighted indices are not computed for unweighted networks. However, the unsigned indices are computed for signed networks, by considering the absolute value of the weights, and the unweighted indices are computed for weighted networks, after a binarization according to the parameter \code{thresholdWS}. \code{clustcoef_auto} computes also the weighted clustering coefficient by Barrat et al. (2004), relying on function \code{\link[igraph]{transitivity}} from package \code{\link[igraph]{igraph}}.
+For the computation of the local clustering coefficient, a node must have at least two neighbors: for nodes with fewer than two neighbors the low-level functions \code{clustWS}, \code{clustZhang} and \code{clustOnnela} return \code{NaN}, whereas \code{clustcoef_auto} returns 0.
 }
 \value{A dataframe that includes one or more of the following indices.
 \item{clustWS}{The Watts & Strogatz's (1998) unweighted clustering coefficient}
@@ -72,10 +72,10 @@ The function requires an undirected network. To convert a directed network to un
 \examples{
 set.seed(1)
 # generate a random (directed) network:
-net_ig <- igraph::erdos.renyi.game(n=8, p.or.m=.4, type="gnp", directed=TRUE) 
+net_ig <- igraph::sample_gnp(n=8, p=.4, directed=TRUE)
 
 # convert it to an adjacency matrix:
-net <- as.matrix(igraph:::get.adjacency(net_ig, type="both")) 
+net <- as.matrix(igraph::as_adjacency_matrix(net_ig, type="both"))
 
 # convert it to a signed and weighted network:
 net <- net*matrix(rnorm(ncol(net)^2), ncol=ncol(net)) 

@@ -10,17 +10,17 @@ qgraph.loadings( fact, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-	\item{fact}{A matrix containing factor loadings (items per row, factors per column) or an "loadings" object}
+	\item{fact}{A matrix containing factor loadings (items per row, factors per column) or a "loadings" object}
 	\item{...}{Additional optional arguments passed to \code{\link{qgraph}} and special arguments used in this function (described below).}
 }
 \section{Additional optional arguments}{	
 \describe{
-	\item{layout}{If "default" a standard layout for factor models will be made. If this is "circle" the default layout is circled (factors in the centre, items at the edge). No other layouts are currently supported.}
+	\item{layout}{Defaults to "circle", which gives a circular layout (factors in the centre, items at the edge). Any other value results in the standard (linear) layout for factor models.}
 	\item{vsize}{A vector where the first value indicates the size of manifest variables and the second value indicates the size of latent variables.}
 	\item{model}{"reflective" to have arrows go to manifest variables, "formative" to have arrows go to latent variables or "none" (default) for no arrows}
-	\item{crossloadings}{Logical, if TRUE then for each manifest variable the strongest loading is omitted (default to FALSE).}
+	\item{crossloadings}{Logical, if TRUE then for each manifest variable the strongest loading is omitted (defaults to FALSE).}
 	\item{groups}{An optional list containing the measurement model, see  \code{\link{qgraph}}}
-	\item{Fname}{When there is only one factor, this is it's name. If there are more factors, the names in the groups list are used only if the factors can be identified.}
+	\item{Fname}{When there is only one factor, this is its name. If there are more factors, the names in the groups list are used only if the factors can be identified.}
 	\item{resid}{Values for the residuals}
 	\item{residSize}{Size of the residuals, defaults to 0.1}
 	\item{factorCors}{Correlation matrix of the factors}

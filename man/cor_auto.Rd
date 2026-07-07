@@ -2,10 +2,10 @@
 \alias{cor_auto}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Automatically compute an apppropriate correlation matrix
+Automatically compute an appropriate correlation matrix
 }
 \description{
-This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Rosseel, 2012) to compute a correlation matrix based on pychoric, polyserial and/or Pearson correlations. The wrapper removes all factors and searches for possible ordinal variabes. A variable is classified as ordinal if it is either \code{ordered} or if it consist of at most 7 unique integer values. After computing the correlations an additional check will be performed to see if the correlation matrix is positive definite.
+This is mainly a wrapper around Lavaan function \code{\link[lavaan]{lavCor}} (Rosseel, 2012) to compute a correlation matrix based on polychoric, polyserial and/or Pearson correlations. The wrapper removes all factors and searches for possible ordinal variables. A variable is classified as ordinal if it is either \code{ordered} or if it consists of at most 7 unique integer values. If \code{forcePD = TRUE}, an additional check will be performed after computing the correlations to see if the correlation matrix is positive definite.
 }
 \usage{
 cor_auto(data, select, detectOrdinal = TRUE, ordinalLevelMax = 7, npn.SKEPTIC = FALSE, 
@@ -23,7 +23,7 @@ Variables to select from the data frame (as used in \code{\link[base]{subset}})
 Logical, should ordinal variables be detected? If \code{FALSE} only variables that are \code{ordered} are treated as ordinal variables
 }
   \item{ordinalLevelMax}{
-Integer specyfying the amount of unique integer values a variable should have to be classified as ordinal
+Integer specifying the number of unique integer values a variable should have to be classified as ordinal
 }
   \item{npn.SKEPTIC}{
 Logical, should the Nonparanormal SKEPTIC from the huge package be applied if the data is continuous? See \code{\link[huge]{huge.npn}} (Zhao, Liu, Roeder, Lafferty and Wasserman, 2014)

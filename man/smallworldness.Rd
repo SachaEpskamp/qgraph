@@ -6,7 +6,7 @@
 Compute the small-worldness index.
 }
 \description{
-Compute the small-worldness index (Humphries & Gurney, 2008) relying on the global transitity of the network (Newman, 2003) and on its average shortest path length.
+Compute the small-worldness index (Humphries & Gurney, 2008) relying on the global transitivity of the network (Newman, 2003) and on its average shortest path length.
 }
 \usage{
 smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
@@ -14,7 +14,7 @@ smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-A graph. Can be a \code{qgraph} object object, an \code{igraph} object, an adjacency matrix, a weight matrix and an edgelist, or a weighted edgelist.
+A graph. Can be a \code{qgraph} object, an \code{igraph} object, an adjacency matrix, a weight matrix, an edgelist, or a weighted edgelist.
 }
   \item{B}{
 The number of random networks.
@@ -23,13 +23,13 @@ The number of random networks.
 The upper quantile.
 }
   \item{lo}{
-the lower quantile.
+The lower quantile.
 }
 }
 \details{
 The function computes the transitivity of the target network and the average shortest path length. Then it computes the average of the same indices on \code{B} random networks. The small-worldness index is then computed as the transitivity (normalized by the random transitivity) over the average shortest path length (normalized by the random average shortest path length). The  \code{lo} and \code{up} quantiles of the distribution of the random networks are also returned for both the transitivity and the average shortest path length.
 
-A network can be said "smallworld" if its \code{smallworldness} is higher than one (a stricter rule is \code{smallworldness}>=3; Humphries & Gurney, 2008). To consider a network as "smallworld", it is also suggested to inspect that the network has a transitivity substantially higher than comparable random networks and that its average shortest path length is similar or higher (but not many times higher) than that computed on random networks.
+A network can be said "smallworld" if its \code{smallworldness} is higher than one (a stricter rule is \code{smallworldness}>=3; Humphries & Gurney, 2008). To consider a network as "smallworld", it is also suggested to inspect that the network has a transitivity substantially higher than comparable random networks and that its average shortest path length is similar to, or higher than (but not many times higher than), that computed on random networks.
 Edge weights, signs and directions are ignored in the computation of the indices.
 }
 \value{
@@ -63,18 +63,18 @@ If a directed network is given as input, an edge between every two nodes i and j
 set.seed(1)
 # a regular lattice. Even if the small-worldness is higher than three, the average path length is 
 # much higher than that of random networks.
-regnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=0, loops=FALSE, multiple=FALSE)
+regnet<-igraph::sample_smallworld(dim=1, size=1000, nei=10, p=0, loops=FALSE, multiple=FALSE)
 smallworldness(regnet, B=10)
 
 \dontrun{
 # a small-world network: the transitivity is much higher than random, the average path length is 
 # close to that of random networks
-swnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=.1, loops=FALSE, multiple=FALSE)
+swnet<-igraph::sample_smallworld(dim=1, size=1000, nei=10, p=.1, loops=FALSE, multiple=FALSE)
 smallworldness(swnet, B=10)
 
 # a pseudorandom network: both the average path length and the transitivity are similar to random 
 # networks.
-rndnet<-igraph::watts.strogatz.game(dim=1, size=1000, nei=10, p=1, loops=FALSE, multiple=FALSE)
+rndnet<-igraph::sample_smallworld(dim=1, size=1000, nei=10, p=1, loops=FALSE, multiple=FALSE)
 smallworldness(rndnet, B=10)
 }
 }
