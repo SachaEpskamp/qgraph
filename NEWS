@@ -1,4 +1,13 @@
 Changes in Version 2.0
+  - New interactive HTML output: 'filetype = "html"' (or the new exported
+    function 'qgraphHTML') writes a self-contained HTML file that renders
+    the graph as SVG in exactly the layout and style of the R plot. Nodes
+    can be dragged, and clicking a node highlights either its direct
+    connections or all outgoing shortest paths (toggleable). Node tooltips
+    are supported through the revived 'tooltips' argument and 'nodeNames'.
+    The viewer includes save-as-SVG/PNG buttons and an interactive legend.
+    The new 'htmltype' argument switches between the full viewer ("rich",
+    default) and a minimal embeddable page ("plain").
   - The most commonly used arguments of 'qgraph' are now named explicitly in
     the function definition, so that they are visible to auto-completion in
     RStudio and other editors. They are placed after '...' and are therefore

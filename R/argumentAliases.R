@@ -81,7 +81,8 @@ qgraphArgumentAliases <- c(
   "resid.edge"                 = "residEdge",
   "resid.scale"                = "residScale",
   # Plotting:
-  "do.not.plot"                = "DoNotPlot"
+  "do.not.plot"                = "DoNotPlot",
+  "html.type"                  = "htmltype"
 )
 
 # Replace alias argument names in an argument list with their canonical

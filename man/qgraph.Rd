@@ -91,7 +91,7 @@ qgraph( input, ...,
 \item{title}{String with a title to be drawn in the top left of the plot.}
 \item{title.cex}{Size of the title, defaults to 1.}
 \item{mar}{A vector of the form c(bottom, left, top, right) which gives the margins. Works similar to the argument in par(). Defaults to c(3,3,3,3)}
-\item{filetype}{A character containing the file type to save the output in. "R" outputs in a new R window, "pdf" creates a pdf file. 'jpg', 'tiff' and 'png' can also be used. Note that "svg" and "tex" are no longer supported. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device. A function such as \code{x11} can also be used}
+\item{filetype}{A character containing the file type to save the output in. "R" outputs in a new R window, "pdf" creates a pdf file. 'jpg', 'tiff' and 'png' can also be used. "html" creates a self-contained interactive HTML file in which nodes can be dragged and selected (see \code{\link{qgraphHTML}} and the \code{htmltype} argument). Note that "svg" and "tex" are no longer supported. If this is given any other string (e.g. filetype="") no device is opened. Defaults to 'R' if the current device is the NULL-device or no new device if there already is an open device. A function such as \code{x11} can also be used}
 \item{filename}{Name of the file without extension}
 \item{width}{Width of the plot, in inches}
 \item{height}{Height of the plot, in inches}
@@ -124,6 +124,8 @@ Because argument names in qgraph historically mix several naming styles, consist
 
 \section{Output arguments}{
 \describe{
+    \item{htmltype}{Type of HTML file created when \code{filetype = "html"}. \code{"rich"} (default) writes a full interactive viewer with a toolbar and legend panel; \code{"plain"} writes a minimal page suitable for embedding in another page. See \code{\link{qgraphHTML}}.}
+    \item{tooltips}{A character vector with a tooltip text for each node, shown when hovering a node in the interactive HTML output (\code{filetype = "html"}).}
 				      		    \item{standAlone}{Logical. Was used to choose between making the output a standalone LaTeX file or only the codes to include the graph when \code{filetype = "tex"} was still supported. Currently has no effect.}
 }}
 

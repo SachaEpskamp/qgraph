@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__QGRAPH_TITLE__</title>
+<style>
+  :root{
+    --bg:#fafafa; --panel:#ffffff; --border:#d8d8d8; --text:#222;
+    --accent:#2d6cdf; --muted:#777;
+  }
+  html,body{margin:0;padding:0;height:100%;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--text);background:var(--bg);}
+  #qgraph-app{display:flex;flex-direction:column;height:100%;}
+
+  /* Toolbar (rich mode only) */
+  #qgraph-toolbar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  #qgraph-toolbar .qg-title{font-weight:600;font-size:15px;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .qg-btn{border:1px solid var(--border);background:#fff;border-radius:6px;padding:5px 11px;font-size:12.5px;cursor:pointer;color:var(--text);}
+  .qg-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .qg-btn.qg-active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .qg-seg{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+  .qg-seg .qg-btn{border:none;border-radius:0;}
+  .qg-seg .qg-btn + .qg-btn{border-left:1px solid var(--border);}
+  .qg-hint{font-size:11.5px;color:var(--muted);margin-left:4px;}
+
+  #qgraph-main{display:flex;flex:1;min-height:0;}
+  #qgraph-svgwrap{flex:1;min-width:0;position:relative;}
+  #qgraph-svg{width:100%;height:100%;display:block;touch-action:none;}
+
+  /* Legend panel (rich mode only) */
+  #qgraph-legend{width:230px;flex:none;background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;padding:10px 12px;font-size:12.5px;}
+  #qgraph-legend h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px 0;}
+  .qg-group{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:5px;cursor:pointer;}
+  .qg-group:hover{background:#f0f4ff;}
+  .qg-group.qg-active{background:#e4ecfd;}
+  .qg-swatch{width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.35);flex:none;}
+  .qg-nodeitem{display:flex;gap:7px;padding:3px 6px;border-radius:5px;cursor:pointer;line-height:1.3;}
+  .qg-nodeitem:hover{background:#f0f4ff;}
+  .qg-nodeitem.qg-active{background:#e4ecfd;}
+  .qg-nodeitem .qg-lab{font-weight:600;min-width:2.2em;flex:none;}
+  .qg-nodeitem .qg-name{color:#444;}
+
+  /* Tooltip */
+  #qgraph-tooltip{position:absolute;pointer-events:none;background:rgba(28,28,30,.92);color:#fff;padding:6px 9px;border-radius:6px;font-size:12px;line-height:1.35;max-width:260px;opacity:0;transition:opacity .12s;z-index:10;}
+  #qgraph-tooltip .qg-tt-label{font-weight:600;}
+  #qgraph-tooltip .qg-tt-name{color:#d0d8ff;}
+  #qgraph-tooltip .qg-tt-extra{color:#c8c8cc;margin-top:2px;}
+
+  .qg-node{cursor:grab;}
+  .qg-node.qg-dragging{cursor:grabbing;}
+  .qg-faded{opacity:0.15;}
+  text{user-select:none;-webkit-user-select:none;}
+
+  /* Plain mode: hide chrome */
+  body.qg-plain #qgraph-toolbar,body.qg-plain #qgraph-legend{display:none;}
+</style>
+</head>
+<body>
+<div id="qgraph-app">
+  <div id="qgraph-toolbar">
+    <span class="qg-title" id="qg-title-el"></span>
+    <span class="qg-seg" title="What clicking a node highlights">
+      <button class="qg-btn qg-active" id="qg-mode-nb">Neighborhood</button>
+      <button class="qg-btn" id="qg-mode-sp">Shortest paths</button>
+    </span>
+    <button class="qg-btn" id="qg-reset">Reset layout</button>
+    <button class="qg-btn" id="qg-save-svg">Save SVG</button>
+    <button class="qg-btn" id="qg-save-png">Save PNG</button>
+    <span class="qg-hint">drag nodes &middot; click to highlight &middot; click background to clear</span>
+  </div>
+  <div id="qgraph-main">
+    <div id="qgraph-svgwrap">
+      <svg id="qgraph-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="qgraph-tooltip"></div>
+    </div>
+    <div id="qgraph-legend"></div>
+  </div>
+</div>
+<script type="application/json" id="qgraph-data">__QGRAPH_DATA__</script>
+<script>
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById("qgraph-data").textContent);
+var PLAIN = DATA.meta.htmltype === "plain";
+if (PLAIN) document.body.classList.add("qg-plain");
+
+/* ------------------------------------------------------------------ *
+ * Geometry: reproduce the R plot. User coordinates from DATA.meta.usr
+ * = [x0, x1, y0, y1]; reference device 7 x 7 in at 96 px/in.
+ * ------------------------------------------------------------------ */
+var PX_PER_IN = 96, DEV_IN = 7, DEV = DEV_IN * PX_PER_IN;
+var usr = DATA.meta.usr;
+var sx = DEV / (usr[1] - usr[0]), sy = DEV / (usr[3] - usr[2]);
+function X(x){ return (x - usr[0]) * sx; }
+function Y(y){ return DEV - (y - usr[2]) * sy; }        // y axis flips
+function dashArray(lty, w){
+  var u = Math.max(w, 1);
+  switch (Number(lty)){
+    case 2: return [4*u, 4*u]; case 3: return [u, 3*u];
+    case 4: return [u, 3*u, 4*u, 3*u]; case 5: return [7*u, 3*u];
+    case 6: return [2*u, 2*u, 6*u, 2*u]; default: return null;
+  }
+}
+var SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){
+  var e = document.createElementNS(SVGNS, tag);
+  for (var k in attrs) if (attrs[k] !== null && attrs[k] !== undefined) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+var svg = document.getElementById("qgraph-svg");
+svg.setAttribute("viewBox", "0 0 " + DEV + " " + DEV);
+svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+svg.style.background = DATA.meta.background || "#ffffff";
+var edgeLayer = el("g", {id:"qg-edges"}, svg);
+var nodeLayer = el("g", {id:"qg-nodes"}, svg);
+var titleLayer = el("g", {id:"qg-extra"}, svg);
+
+var nodes = DATA.nodes, edges = DATA.edges;
+nodes.forEach(function(n){ n.px = X(n.x); n.py = Y(n.y); n.prx = n.rx*sx; n.pry = n.ry*sy; });
+
+/* Title drawn like R (top left) unless the toolbar shows it */
+if (DATA.meta.title){
+  if (PLAIN){
+    el("text", {x: 8, y: 20, "font-size": 15 * (DATA.meta.titleCex||1), "font-weight": "bold", fill: "#000"}, titleLayer)
+      .textContent = DATA.meta.title;
+  } else {
+    document.getElementById("qg-title-el").textContent = DATA.meta.title;
+    document.title = DATA.meta.title;
+  }
+}
+
+/* ---------------------------- node shapes ---------------------------- */
+function shapePath(n){
+  var x=n.px, y=n.py, rx=n.prx, ry=n.pry;
+  switch(n.shape){
+    case "square": case "rectangle":
+      return {tag:"rect", attrs:{x:x-rx, y:y-ry, width:2*rx, height:2*ry}};
+    case "triangle":
+      return {tag:"polygon", attrs:{points:[[x,y-ry],[x-rx,y+ry],[x+rx,y+ry]].map(function(p){return p.join(",");}).join(" ")}};
+    case "diamond":
+      return {tag:"polygon", attrs:{points:[[x,y-ry],[x+rx,y],[x,y+ry],[x-rx,y]].map(function(p){return p.join(",");}).join(" ")}};
+    case "circle": case "ellipse":
+      return {tag:"ellipse", attrs:{cx:x, cy:y, rx:rx, ry:ry}};
+    default:
+      var poly = (DATA.meta.polygons||{})[n.shape];
+      if (poly){
+        var pts = poly.x.map(function(vx,i){ return (x+vx*rx) + "," + (y - poly.y[i]*ry); }).join(" ");
+        return {tag:"polygon", attrs:{points:pts}};
+      }
+      return {tag:"ellipse", attrs:{cx:x, cy:y, rx:rx, ry:ry}};
+  }
+}
+/* Point on the node boundary in direction (dx,dy) from its center (+pad px) */
+function boundaryPoint(n, dx, dy, pad){
+  var len = Math.sqrt(dx*dx + dy*dy) || 1; dx/=len; dy/=len;
+  pad = pad || 0;
+  var t;
+  if (n.shape === "square" || n.shape === "rectangle"){
+    t = 1/Math.max(Math.abs(dx)/n.prx, Math.abs(dy)/n.pry);
+  } else { // ellipse-based for all other shapes
+    t = 1/Math.sqrt((dx*dx)/(n.prx*n.prx) + (dy*dy)/(n.pry*n.pry));
+  }
+  return [n.px + dx*(t+pad), n.py + dy*(t+pad)];
+}
+
+/* ---------------------------- edges ---------------------------- */
+function edgeGeometry(e){
+  var a = nodes[e.from-1], b = nodes[e.to-1];
+  if (e.from === e.to) return loopGeometry(e, a);
+  var dx = b.px-a.px, dy = b.py-a.py;
+  var rot = (e.pAngle||0);
+  function rotate(vx, vy, ang){
+    var c=Math.cos(ang), s=Math.sin(ang);
+    return [vx*c - vy*s, vx*s + vy*c];
+  }
+  var d1 = rotate(dx, dy, rot), d2 = rotate(-dx, -dy, -rot);
+  var p1 = boundaryPoint(a, d1[0], d1[1], 0);
+  var p2 = boundaryPoint(b, d2[0], d2[1], 0);
+  var curve = e.curve || 0;
+  if (Math.abs(curve) > 1e-9){
+    var mx=(p1[0]+p2[0])/2, my=(p1[1]+p2[1])/2;
+    var len=Math.sqrt(dx*dx+dy*dy)||1;
+    // perpendicular offset; sign convention follows qgraph (curve>0 bends right of from->to)
+    var ox =  (dy/len), oy = -(dx/len);
+    var off = curve * 0.35 * Math.min(len, 3.2*72);
+    var cxp = mx - ox*off, cyp = my - oy*off;
+    // re-anchor endpoints toward the control point:
+    p1 = boundaryPoint(a, cxp-a.px, cyp-a.py, 0);
+    p2 = boundaryPoint(b, cxp-b.px, cyp-b.py, 0);
+    return {type:"curve", p1:p1, p2:p2, c:[cxp,cyp],
+            mid:[0.25*p1[0]+0.5*cxp+0.25*p2[0], 0.25*p1[1]+0.5*cyp+0.25*p2[1]],
+            endAngle: Math.atan2(p2[1]-cyp, p2[0]-cxp),
+            startAngle: Math.atan2(p1[1]-cyp, p1[0]-cxp)};
+  }
+  return {type:"line", p1:p1, p2:p2, mid:[(p1[0]+p2[0])/2,(p1[1]+p2[1])/2],
+          endAngle: Math.atan2(p2[1]-p1[1], p2[0]-p1[0]),
+          startAngle: Math.atan2(p1[1]-p2[1], p1[0]-p2[0])};
+}
+function loopGeometry(e, n){
+  var rot = n.loopRot || 0;                        // radians; 0 = up in qgraph
+  var ux = Math.sin(rot), uy = -Math.cos(rot);     // direction the loop points to
+  var a1 = rot - 0.45, a2 = rot + 0.45;
+  var p1 = boundaryPoint(n, Math.sin(a1), -Math.cos(a1), 0);
+  var p2 = boundaryPoint(n, Math.sin(a2), -Math.cos(a2), 0);
+  var r = Math.max(n.prx, n.pry);
+  var c1 = [n.px + ux*3.1*r + (p1[0]-n.px)*1.4, n.py + uy*3.1*r + (p1[1]-n.py)*1.4];
+  var c2 = [n.px + ux*3.1*r + (p2[0]-n.px)*1.4, n.py + uy*3.1*r + (p2[1]-n.py)*1.4];
+  return {type:"loop", p1:p1, p2:p2, c1:c1, c2:c2,
+          mid:[n.px + ux*2.6*r, n.py + uy*2.6*r],
+          endAngle: Math.atan2(p2[1]-c2[1], p2[0]-c2[0])};
+}
+function edgePathD(g){
+  if (g.type === "curve") return "M"+g.p1[0]+","+g.p1[1]+" Q"+g.c[0]+","+g.c[1]+" "+g.p2[0]+","+g.p2[1];
+  if (g.type === "loop")  return "M"+g.p1[0]+","+g.p1[1]+" C"+g.c1[0]+","+g.c1[1]+" "+g.c2[0]+","+g.c2[1]+" "+g.p2[0]+","+g.p2[1];
+  return "M"+g.p1[0]+","+g.p1[1]+" L"+g.p2[0]+","+g.p2[1];
+}
+function arrowPoints(x, y, angle, size, open){
+  // arrowhead pointing along 'angle' with tip at (x,y); size ~ qgraph asize
+  var len = 4.2*size, wid = Math.tan(DATA.meta.arrowAngle || Math.PI/6)*len;
+  var bx = x - Math.cos(angle)*len, by = y - Math.sin(angle)*len;
+  var px = -Math.sin(angle), py = Math.cos(angle);
+  return [[x,y],[bx+px*wid, by+py*wid],[bx-px*wid, by-py*wid]];
+}
+
+var edgeEls = [];   // {g(roup), path, arrows[], labelEl, geom}
+function drawEdge(e, i){
+  var grp = el("g", {"class":"qg-edge", "data-i":i}, edgeLayer);
+  var geom = edgeGeometry(e);
+  var dash = dashArray(e.lty, e.width);
+  var path = el("path", {
+    d: edgePathD(geom), fill:"none", stroke:e.color,
+    "stroke-width": e.width, "stroke-linecap":"round",
+    "stroke-dasharray": dash ? dash.join(",") : null
+  }, grp);
+  var arrows = [];
+  if (e.dir && DATA.meta.arrows){
+    arrows.push(el("polygon", {fill:e.color, stroke:e.color, "stroke-width":1}, grp));
+    if (e.bidir) arrows.push(el("polygon", {fill:e.color, stroke:e.color, "stroke-width":1, "data-start":"1"}, grp));
+  }
+  var labelEl = null, labelBg = null;
+  if (e.label){
+    labelBg = el("rect", {fill: e.labelBg || "#FFFFFF", rx:2, ry:2}, grp);
+    labelEl = el("text", {"text-anchor":"middle", "dominant-baseline":"middle",
+                          "font-size": 12*(e.labelCex||1), fill: e.labelColor || e.color}, grp);
+    labelEl.textContent = e.label;
+  }
+  var rec = {g:grp, path:path, arrows:arrows, labelEl:labelEl, labelBg:labelBg, geom:geom, e:e};
+  edgeEls[i] = rec;
+  updateEdge(rec);
+  return rec;
+}
+function updateEdge(rec){
+  var geom = edgeGeometry(rec.e);
+  rec.geom = geom;
+  rec.path.setAttribute("d", edgePathD(geom));
+  if (rec.arrows.length){
+    var pts = arrowPoints(geom.p2[0], geom.p2[1], geom.endAngle, rec.e.asize || 2, DATA.meta.open);
+    rec.arrows[0].setAttribute("points", pts.map(function(p){return p.join(",");}).join(" "));
+    if (rec.arrows[1]){
+      var pts2 = arrowPoints(geom.p1[0], geom.p1[1], geom.startAngle, rec.e.asize || 2, DATA.meta.open);
+      rec.arrows[1].setAttribute("points", pts2.map(function(p){return p.join(",");}).join(" "));
+    }
+  }
+  if (rec.labelEl){
+    var pos = rec.e.labelPos == null ? 0.5 : rec.e.labelPos;
+    var lx, ly;
+    if (geom.type === "line"){ lx = geom.p1[0] + (geom.p2[0]-geom.p1[0])*pos; ly = geom.p1[1] + (geom.p2[1]-geom.p1[1])*pos; }
+    else { lx = geom.mid[0]; ly = geom.mid[1]; }
+    rec.labelEl.setAttribute("x", lx); rec.labelEl.setAttribute("y", ly);
+    var bb = rec.labelEl.getBBox();
+    rec.labelBg.setAttribute("x", bb.x-2); rec.labelBg.setAttribute("y", bb.y-1);
+    rec.labelBg.setAttribute("width", bb.width+4); rec.labelBg.setAttribute("height", bb.height+2);
+  }
+}
+
+/* ---------------------------- nodes ---------------------------- */
+var nodeEls = [];
+function drawNode(n, i){
+  var grp = el("g", {"class":"qg-node", "data-i":i}, nodeLayer);
+  var sp = shapePath(n);
+  var shape = el(sp.tag, sp.attrs, grp);
+  shape.setAttribute("fill", n.color);
+  shape.setAttribute("stroke", n.hasBorder ? n.border : "none");
+  shape.setAttribute("stroke-width", n.bwidth);
+  var pieG = null;
+  if (n.pie && n.pie.length){
+    pieG = el("g", {"class":"qg-pie"}, grp);
+    drawPie(pieG, n);
+  }
+  var label = null;
+  if (n.label !== null && n.label !== ""){
+    label = el("text", {x:n.px, y:n.py, "text-anchor":"middle", "dominant-baseline":"central",
+                        fill:n.lcolor, "font-size":16,
+                        "font-weight": (n.lfont===2||n.lfont===4) ? "bold" : "normal",
+                        "font-style": (n.lfont===3||n.lfont===4) ? "italic" : "normal"}, grp);
+    label.textContent = n.label;
+    // scale to fit node like qgraph label.scale:
+    var bb = label.getBBox();
+    var maxW = 2*n.prx*(DATA.meta.labelProp||0.765), maxH = 2*n.pry*(DATA.meta.labelProp||0.765);
+    var f = Math.min(maxW/Math.max(bb.width,1), maxH/Math.max(bb.height,1), 1.6) * (n.lcex||1) * (DATA.meta.labelCex||1);
+    label.setAttribute("font-size", 16*f);
+  }
+  var rec = {g:grp, shape:shape, label:label, pieG:pieG, n:n};
+  nodeEls[i] = rec;
+  return rec;
+}
+function pieArc(cx, cy, r1, r2, a0, a1){
+  // ring segment between angles a0..a1 (radians, clockwise from 12 o'clock)
+  function pt(r, a){ return [cx + r*Math.sin(a), cy - r*Math.cos(a)]; }
+  var large = (a1-a0) % (2*Math.PI) > Math.PI ? 1 : 0;
+  var p0=pt(r2,a0), p1=pt(r2,a1), p2=pt(r1,a1), p3=pt(r1,a0);
+  return "M"+p0.join(",")+" A"+r2+","+r2+" 0 "+large+" 1 "+p1.join(",")+
+         " L"+p2.join(",")+" A"+r1+","+r1+" 0 "+large+" 0 "+p3.join(",")+" Z";
+}
+function drawPie(g, n){
+  g.innerHTML = "";
+  var vals = n.pie.slice(), cols = (n.pieColor || []).slice();
+  var r2x = n.prx, r1x = n.prx*(1-(n.pieBorder||0.15));
+  var a = (n.pieStart||0)*2*Math.PI, total = 0;
+  vals.forEach(function(v){ total += v; });
+  if (total > 1){ vals = vals.map(function(v){ return v/total; }); }
+  else if (total < 1){ vals.push(1-total); cols[vals.length-1] = n.pieColor2 || "#ffffff"; }
+  for (var k=0;k<vals.length;k++){
+    var a2 = a + vals[k]*2*Math.PI;
+    if (vals[k] > 1e-9)
+      el("path", {d: pieArc(n.px, n.py, r1x*0.999, r2x, a, Math.min(a2, a + 2*Math.PI*0.99999)),
+                  fill: cols[k] || "#888", stroke:"none"}, g);
+    a = a2;
+  }
+}
+function updateNode(rec){
+  var n = rec.n, sp = shapePath(n);
+  for (var k in sp.attrs) rec.shape.setAttribute(k, sp.attrs[k]);
+  if (rec.label){ rec.label.setAttribute("x", n.px); rec.label.setAttribute("y", n.py); }
+  if (rec.pieG) drawPie(rec.pieG, n);
+}
+
+/* Draw edges in qgraph's plotting order (weak edges first), then nodes */
+var order = DATA.meta.edgesort || edges.map(function(_,i){return i+1;});
+order.forEach(function(idx){ drawEdge(edges[idx-1], idx-1); });
+nodes.forEach(function(n,i){ drawNode(n,i); });
+
+/* ---------------------------- tooltips ---------------------------- */
+var tt = document.getElementById("qgraph-tooltip");
+function showTooltip(evt, n){
+  var html = '<div class="qg-tt-label">' + escapeHTML(String(n.label!==null?n.label:"")) + '</div>';
+  if (n.name)    html += '<div class="qg-tt-name">' + escapeHTML(n.name) + '</div>';
+  if (n.tooltip) html += '<div class="qg-tt-extra">' + escapeHTML(n.tooltip) + '</div>';
+  tt.innerHTML = html;
+  var wrap = document.getElementById("qgraph-svgwrap").getBoundingClientRect();
+  tt.style.left = Math.min(evt.clientX - wrap.left + 14, wrap.width - 270) + "px";
+  tt.style.top  = (evt.clientY - wrap.top + 14) + "px";
+  tt.style.opacity = 1;
+}
+function hideTooltip(){ tt.style.opacity = 0; }
+function escapeHTML(s){ return s.replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+/* ---------------------------- selection / highlighting ---------------------------- */
+var mode = "nb";       // "nb" (neighborhood) or "sp" (shortest paths)
+var selected = -1;     // node index or -1
+function setFade(elm, faded){ elm.classList.toggle("qg-faded", !!faded); }
+function clearHighlight(){
+  selected = -1;
+  nodeEls.forEach(function(r){ setFade(r.g,false); });
+  edgeEls.forEach(function(r){ if(r) setFade(r.g,false); });
+  document.querySelectorAll(".qg-nodeitem,.qg-group").forEach(function(d){ d.classList.remove("qg-active"); });
+}
+function highlightSets(keepNodes, keepEdges){
+  nodeEls.forEach(function(r,i){ setFade(r.g, !keepNodes.has(i)); });
+  edgeEls.forEach(function(r,i){ if(r) setFade(r.g, !keepEdges.has(i)); });
+}
+function neighborhood(i){
+  var kn = new Set([i]), ke = new Set();
+  edges.forEach(function(e,j){
+    if (e.from-1===i || e.to-1===i){ ke.add(j); kn.add(e.from-1); kn.add(e.to-1); }
+  });
+  return {nodes:kn, edges:ke};
+}
+function shortestPaths(i){
+  // Dijkstra over |weight|^-1; directed edges only usable from->to (bidir both ways)
+  var N = nodes.length, dist = new Array(N).fill(Infinity), done = new Array(N).fill(false);
+  var predEdges = []; for (var k=0;k<N;k++) predEdges.push([]);
+  var adj = []; for (k=0;k<N;k++) adj.push([]);
+  edges.forEach(function(e,j){
+    var w = Math.abs(e.w); if (!(w>0) || e.from===e.to) return;
+    adj[e.from-1].push({to:e.to-1, len:1/w, j:j});
+    if (!e.dir || e.bidir) adj[e.to-1].push({to:e.from-1, len:1/w, j:j});
+  });
+  dist[i]=0;
+  for(;;){
+    var u=-1, best=Infinity;
+    for (k=0;k<N;k++) if (!done[k] && dist[k]<best){best=dist[k];u=k;}
+    if (u<0) break;
+    done[u]=true;
+    adj[u].forEach(function(a){
+      var nd = dist[u]+a.len;
+      if (nd < dist[a.to]-1e-12){ dist[a.to]=nd; predEdges[a.to]=[a.j]; }
+      else if (Math.abs(nd-dist[a.to])<=1e-12){ predEdges[a.to].push(a.j); }
+    });
+  }
+  var kn = new Set([i]), ke = new Set();
+  for (k=0;k<N;k++) if (k!==i && isFinite(dist[k])){
+    kn.add(k);
+    predEdges[k].forEach(function(j){ ke.add(j); });
+  }
+  return {nodes:kn, edges:ke};
+}
+function selectNode(i){
+  selected = i;
+  var res = (mode==="sp") ? shortestPaths(i) : neighborhood(i);
+  highlightSets(res.nodes, res.edges);
+  document.querySelectorAll(".qg-nodeitem").forEach(function(d){
+    d.classList.toggle("qg-active", Number(d.getAttribute("data-i"))===i);
+  });
+}
+function setMode(m){
+  mode = m;
+  var nb=document.getElementById("qg-mode-nb"), sp=document.getElementById("qg-mode-sp");
+  if (nb){ nb.classList.toggle("qg-active", m==="nb"); sp.classList.toggle("qg-active", m==="sp"); }
+  if (selected>=0) selectNode(selected);
+}
+
+/* ---------------------------- dragging ---------------------------- */
+var drag = null;
+function svgPoint(evt){
+  var pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+  var m = svg.getScreenCTM().inverse();
+  return pt.matrixTransform(m);
+}
+nodeLayer.addEventListener("pointerdown", function(evt){
+  var g = evt.target.closest(".qg-node"); if (!g) return;
+  var i = Number(g.getAttribute("data-i")), p = svgPoint(evt);
+  drag = {i:i, dx:nodes[i].px-p.x, dy:nodes[i].py-p.y, moved:false};
+  g.classList.add("qg-dragging");
+  g.setPointerCapture && g.setPointerCapture(evt.pointerId);
+  evt.preventDefault();
+});
+window.addEventListener("pointermove", function(evt){
+  if (drag){
+    var p = svgPoint(evt), n = nodes[drag.i];
+    n.px = p.x + drag.dx; n.py = p.y + drag.dy;
+    drag.moved = true;
+    updateNode(nodeEls[drag.i]);
+    edges.forEach(function(e,j){
+      if (e.from-1===drag.i || e.to-1===drag.i) updateEdge(edgeEls[j]);
+    });
+    hideTooltip();
+    return;
+  }
+  var g = evt.target.closest && evt.target.closest(".qg-node");
+  if (g) showTooltip(evt, nodes[Number(g.getAttribute("data-i"))]); else hideTooltip();
+});
+window.addEventListener("pointerup", function(evt){
+  if (!drag) return;
+  var g = nodeEls[drag.i].g; g.classList.remove("qg-dragging");
+  if (!drag.moved){    // click
+    if (selected===drag.i) clearHighlight(); else selectNode(drag.i);
+  }
+  drag = null;
+});
+svg.addEventListener("pointerdown", function(evt){
+  if (!evt.target.closest(".qg-node") && !evt.target.closest(".qg-edge")) clearHighlight();
+});
+/* Plain mode extras: shift-click = shortest paths; m toggles mode */
+svg.addEventListener("click", function(evt){
+  var g = evt.target.closest && evt.target.closest(".qg-node");
+  if (g && evt.shiftKey){ setMode("sp"); selectNode(Number(g.getAttribute("data-i"))); }
+});
+window.addEventListener("keydown", function(evt){
+  if (evt.key==="m" || evt.key==="M") setMode(mode==="nb"?"sp":"nb");
+  if (evt.key==="Escape") clearHighlight();
+});
+
+/* ---------------------------- toolbar ---------------------------- */
+var orig = nodes.map(function(n){ return [n.px, n.py]; });
+function onId(id, fn){ var e=document.getElementById(id); if (e) e.addEventListener("click", fn); }
+onId("qg-mode-nb", function(){ setMode("nb"); });
+onId("qg-mode-sp", function(){ setMode("sp"); });
+onId("qg-reset", function(){
+  nodes.forEach(function(n,i){ n.px=orig[i][0]; n.py=orig[i][1]; updateNode(nodeEls[i]); });
+  edgeEls.forEach(function(r){ if(r) updateEdge(r); });
+});
+function download(name, url){
+  var a = document.createElement("a"); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function svgString(){
+  var clone = svg.cloneNode(true);
+  clone.setAttribute("xmlns", SVGNS);
+  clone.setAttribute("width", DEV); clone.setAttribute("height", DEV);
+  var bgRect = document.createElementNS(SVGNS, "rect");
+  bgRect.setAttribute("x",0); bgRect.setAttribute("y",0);
+  bgRect.setAttribute("width",DEV); bgRect.setAttribute("height",DEV);
+  bgRect.setAttribute("fill", DATA.meta.background || "#ffffff");
+  clone.insertBefore(bgRect, clone.firstChild);
+  return new XMLSerializer().serializeToString(clone);
+}
+onId("qg-save-svg", function(){
+  var blob = new Blob([svgString()], {type:"image/svg+xml"});
+  download((DATA.meta.filename||"qgraph")+".svg", URL.createObjectURL(blob));
+});
+onId("qg-save-png", function(){
+  var img = new Image(), scale = 3;
+  img.onload = function(){
+    var canvas = document.createElement("canvas");
+    canvas.width = DEV*scale; canvas.height = DEV*scale;
+    var ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale); ctx.drawImage(img, 0, 0);
+    canvas.toBlob(function(blob){ download((DATA.meta.filename||"qgraph")+".png", URL.createObjectURL(blob)); });
+  };
+  img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgString());
+});
+
+/* ---------------------------- legend ---------------------------- */
+if (!PLAIN){
+  var lg = document.getElementById("qgraph-legend");
+  var groups = DATA.groups;
+  var activeGroup = -1;
+  if (groups && groups.names && groups.names.length){
+    var h = document.createElement("h3"); h.textContent = "Groups"; lg.appendChild(h);
+    groups.names.forEach(function(gn, gi){
+      var d = document.createElement("div"); d.className = "qg-group"; d.setAttribute("data-g", gi);
+      var sw = document.createElement("span"); sw.className = "qg-swatch";
+      sw.style.background = groups.colors[gi] || "#999";
+      var t = document.createElement("span"); t.textContent = gn;
+      d.appendChild(sw); d.appendChild(t); lg.appendChild(d);
+      d.addEventListener("click", function(){
+        if (activeGroup===gi){ activeGroup=-1; clearHighlight(); return; }
+        activeGroup = gi; selected = -1;
+        var kn = new Set(groups.members[gi].map(function(v){return v-1;}));
+        var ke = new Set();
+        edges.forEach(function(e,j){ if (kn.has(e.from-1) && kn.has(e.to-1)) ke.add(j); });
+        highlightSets(kn, ke);
+        document.querySelectorAll(".qg-group").forEach(function(x){ x.classList.toggle("qg-active", Number(x.getAttribute("data-g"))===gi); });
+        document.querySelectorAll(".qg-nodeitem").forEach(function(x){ x.classList.remove("qg-active"); });
+      });
+    });
+  }
+  var anyName = nodes.some(function(n){ return n.name; });
+  var h2 = document.createElement("h3"); h2.textContent = "Nodes"; lg.appendChild(h2);
+  nodes.forEach(function(n,i){
+    var d = document.createElement("div"); d.className = "qg-nodeitem"; d.setAttribute("data-i", i);
+    var lab = document.createElement("span"); lab.className="qg-lab"; lab.textContent = n.label!==null?n.label:String(i+1);
+    d.appendChild(lab);
+    if (anyName){ var nm = document.createElement("span"); nm.className="qg-name"; nm.textContent = n.name||""; d.appendChild(nm); }
+    lg.appendChild(d);
+    d.addEventListener("click", function(){ activeGroup=-1; if (selected===i) clearHighlight(); else selectNode(i); });
+    d.addEventListener("mouseenter", function(){ nodeEls[i].shape.setAttribute("filter", "brightness(0.85)"); });
+    d.addEventListener("mouseleave", function(){ nodeEls[i].shape.removeAttribute("filter"); });
+  });
+}
+})();
+</script>
+</body>
+</html>

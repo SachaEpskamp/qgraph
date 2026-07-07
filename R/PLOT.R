@@ -201,8 +201,15 @@ legend.mode <- x$plotOptions$legend.mode
   rainbowStart <- x$plotOptions$rainbowStart
   piePastel <- x$plotOptions$piePastel
   
+  # Interactive HTML output:
+  if (identical(filetype, "html"))
+  {
+    return(invisible(qgraphHTML(x, filename = filename,
+                                htmltype = if (is.null(x$plotOptions$htmltype)) "rich" else x$plotOptions$htmltype)))
+  }
+
   rm(x)
-  
+
   # Some setup
   vAlpha <- col2rgb(vertex.colors,TRUE)[4,]
   midX=numeric(0)

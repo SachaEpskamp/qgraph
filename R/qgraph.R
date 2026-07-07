@@ -345,7 +345,9 @@ qgraph <- function( input, ...,
                # Arguments that were previously missing from this list, leading to false warnings:
                "verbose", "OmitInsig", "label.color.split", "pieRadius", "layoutRound",
                "nfact", "lcolor", "border.colors", "background", "hyperlinks", "loopAngle",
-               "gui", "GUI")
+               "gui", "GUI",
+               # Interactive HTML output:
+               "htmltype", "tooltips")
   
   if (any(!names(qgraphObject$Arguments) %in% allArgs)){
     wrongArgs <- names(qgraphObject$Arguments)[!names(qgraphObject$Arguments) %in% allArgs]
@@ -1170,6 +1172,8 @@ qgraph <- function( input, ...,
   PlotOpen <- !is.null(dev.list()[dev.cur()])
   
   if(is.null(qgraphObject$Arguments$filetype)) filetype="default" else filetype=qgraphObject$Arguments$filetype
+  # Type of HTML output for filetype = "html" ("rich" or "plain"):
+  if(is.null(qgraphObject$Arguments[['htmltype']])) htmltype <- "rich" else htmltype <- qgraphObject$Arguments[['htmltype']]
   if(is.null(qgraphObject$Arguments$filename)) filename="qgraph" else filename=qgraphObject$Arguments$filename
   if(is.null(qgraphObject$Arguments$width)) width <- 7 else width <- qgraphObject$Arguments[['width']]
   if(is.null(qgraphObject$Arguments$height)) height <- 7 else height <- qgraphObject$Arguments[['height']]
@@ -1392,8 +1396,8 @@ qgraph <- function( input, ...,
   if(is.null(qgraphObject$Arguments$open)) open=FALSE else open=qgraphObject$Arguments$open
   if(is.null(qgraphObject$Arguments$bidirectional)) bidirectional=FALSE else bidirectional=qgraphObject$Arguments$bidirectional
   
-  # qgraphObject$Arguments for SVG pictures:
-  # if(is.null(qgraphObject$Arguments$tooltips)) tooltips=NULL else tooltips=qgraphObject$Arguments$tooltips
+  # Tooltips, used in the interactive HTML output (filetype = "html"):
+  if(is.null(qgraphObject$Arguments$tooltips)) tooltips=NULL else tooltips=qgraphObject$Arguments$tooltips
   # if(is.null(qgraphObject$Arguments$SVGtooltips)) SVGtooltips=NULL else SVGtooltips=qgraphObject$Arguments$SVGtooltips
   if(is.null(qgraphObject$Arguments$hyperlinks)) hyperlinks=NULL else hyperlinks=qgraphObject$Arguments$hyperlinks
   
@@ -3060,7 +3064,7 @@ qgraph <- function( input, ...,
   qgraphObject$graphAttributes$Nodes$height <- vsize2
   qgraphObject$graphAttributes$Nodes$subplots <- subplots
   qgraphObject$graphAttributes$Nodes$images <- images
-  # qgraphObject$graphAttributes$Nodes$tooltips <- tooltips
+  if (!is.null(tooltips)) qgraphObject$graphAttributes$Nodes$tooltips <- rep(tooltips, length.out = nNodes)
   # qgraphObject$graphAttributes$Nodes$SVGtooltips <- SVGtooltips
   qgraphObject$graphAttributes$Nodes$bars <- bars
   qgraphObject$graphAttributes$Nodes$barSide <- barSide
@@ -3131,6 +3135,7 @@ qgraph <- function( input, ...,
   
   # Plot options:
   qgraphObject$plotOptions$filetype <- filetype
+  qgraphObject$plotOptions$htmltype <- htmltype
   qgraphObject$plotOptions$filename <- filename
   qgraphObject$plotOptions$background <- background
   qgraphObject$plotOptions$bg <- bg
