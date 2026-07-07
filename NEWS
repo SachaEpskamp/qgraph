@@ -1,5 +1,4 @@
 Changes in Version 2.0
-  New features:
   - The most commonly used arguments of 'qgraph' are now named explicitly in
     the function definition, so that they are visible to auto-completion in
     RStudio and other editors. They are placed after '...' and are therefore
@@ -18,9 +17,9 @@ Changes in Version 2.0
   - New function 'bridgeCentrality' computes the bridge centrality statistics of Jones, Ma, & McNally (2021): bridge strength, bridge betweenness, bridge closeness, and bridge expected influence (1-step and 2-step). Bridge centrality was developed by Payton J. Jones and first implemented in the 'networktools' package; this independent implementation produces identical results.
   - 'centralityPlot', 'centralityTable' and 'centrality_auto' gained 'communities' and 'useCommunities' arguments. When communities are supplied, bridge centrality statistics are included, allowing bridge centrality to be plotted in the same style as other centrality measures. Defaults are unchanged.
 
-  Bug fixes (node placement, colors and defaults are unchanged for all
-  correct existing calls; a 45-scenario regression battery produces
-  identical output, including spring layouts):
+  - Many bug fixes, listed below. Node placement, colors and defaults are
+    unchanged for all correct existing calls; a 45-scenario regression
+    battery produces identical output, including spring layouts.
   - Plotting 'bdgraph' objects and using 'gui = TRUE' no longer fail with
     "formal argument matched by multiple actual arguments".
   - theme = "grey" is now accepted (equivalent to theme = "gray").
