@@ -1,6 +1,77 @@
-Changes in Version 1.9.9
+Changes in Version 2.0
+  New features:
+  - The most commonly used arguments of 'qgraph' are now named explicitly in
+    the function definition, so that they are visible to auto-completion in
+    RStudio and other editors. They are placed after '...' and are therefore
+    matched by exact name only, exactly as when they were part of '...'.
+    All other arguments continue to work through '...' unchanged, and
+    existing code is not affected.
+  - Consistently styled alternative names are now accepted for a number of
+    arguments with historically mixed naming styles, e.g. 'node.size'
+    (vsize), 'node.size2' (vsize2), 'arrow.size' (asize), 'curve.all'
+    (curveAll), 'pos.color' (posCol), 'neg.color' (negCol), 'sample.size'
+    (sampleSize), 'layout.offset' (layoutOffset), 'loop.rotation'
+    (loopRotation), 'edge.connect.points' (edgeConnectPoints) and
+    'do.not.plot' (DoNotPlot). The original names remain fully supported,
+    are used in the documentation, and take precedence when both are
+    supplied. No warnings are raised for either name.
   - New function 'bridgeCentrality' computes the bridge centrality statistics of Jones, Ma, & McNally (2021): bridge strength, bridge betweenness, bridge closeness, and bridge expected influence (1-step and 2-step). Bridge centrality was developed by Payton J. Jones and first implemented in the 'networktools' package; this independent implementation produces identical results.
   - 'centralityPlot', 'centralityTable' and 'centrality_auto' gained 'communities' and 'useCommunities' arguments. When communities are supplied, bridge centrality statistics are included, allowing bridge centrality to be plotted in the same style as other centrality measures. Defaults are unchanged.
+
+  Bug fixes (node placement, colors and defaults are unchanged for all
+  correct existing calls; a 45-scenario regression battery produces
+  identical output, including spring layouts):
+  - Plotting 'bdgraph' objects and using 'gui = TRUE' no longer fail with
+    "formal argument matched by multiple actual arguments".
+  - theme = "grey" is now accepted (equivalent to theme = "gray").
+  - 'pastel = FALSE' and 'XKCD = FALSE' no longer activate the very feature
+    they were supposed to disable.
+  - The 'background' argument is now honored instead of being overwritten.
+  - The neon theme now colors node labels as intended.
+  - Passing 'verbose', 'OmitInsig', 'layoutRound', 'pieRadius', 'nfact',
+    'label.color.split' and several other working arguments no longer
+    triggers a false warning claiming the argument is ignored.
+  - 'pieBorder', 'pieStart' and 'pieDarken' values are now validated
+    (previously invalid values were silently accepted).
+  - 'threshold = TRUE' outside graph = "glasso"/"ggmModSelect" now warns
+    instead of silently removing all edges.
+  - Fixed an error when igraph layout functions were used and the
+    highest-numbered node had no edges.
+  - 'qgraph.layout.fruchtermanreingold' no longer errors when 'vcount' is
+    omitted.
+  - The colorblind palette gained its missing 8th (black) color; the neon
+    palette no longer produces missing (NA) colors.
+  - 'knot.border.width' no longer overwrites the knot border color for
+    single knots.
+  - Bars and means/SDs are no longer silently dropped when 'usePCH = TRUE'.
+  - 'makeBW' now stores the hatching angle in the correct field.
+  - 'pathways' no longer opens the debugger when 'to' is missing (all nodes
+    are used, as documented).
+  - 'clustcoef_auto' on a list of graphs now honors 'thresholdON'.
+  - 'centrality' on a list of graphs no longer crashes with
+    'weighted'/'signed' = FALSE and now forwards all arguments.
+  - 'centrality_auto' no longer reports spurious zero-betweenness rows for
+    absent edges.
+  - 'qgraph.animate' now works for networks with any number of nodes
+    (growth used a hardcoded node count of 10), accepts numeric 'ind'
+    vectors as documented, and draws titles on the correct plots.
+  - 'qgraph.loadings' no longer fails for single-factor loadings.
+  - 'ggmModSelect' now honors 'considerPerStep' ("all" was ignored) and
+    correctly removes the changed edge from the considered subset (the
+    bookkeeping previously excluded the wrong edge after the first step;
+    in rare cases this could affect which local optimum the stepwise
+    search returned).
+  - 'ggmFit' no longer errors when printing NA fit measures, and handles a
+    failing RMSEA lower-bound search.
+  - 'VARglm' input validation was dead code; zero-variance adjustment now
+    indexes columns correctly when 'vars' is a subset.
+  - 'qgraphMixed' no longer drops edge weights when all directed edge
+    weights equal 1.
+  - 'FDRnetwork' now errors on an unknown 'method' instead of returning
+    the network unchanged.
+  - 'cor_auto' no longer fails when only one variable remains.
+  - Various spelling corrections and corrections of factual errors in the
+    documentation; previously undocumented arguments are now documented.
 
 Changes in Version 1.9.8
   - Fixed some encoding issues
