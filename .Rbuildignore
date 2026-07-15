@@ -1,2 +1,3 @@
 ^\.claude$
-^Fable_audit\.md$
+^.*\.Rproj$
+^\.Rproj\.user$

@@ -1,5 +1,5 @@
 .DS_Store
-Fable_audit.md
 src/*.o
 src/*.so
 .claude/
+.Rproj.user/
