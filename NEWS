@@ -5,6 +5,11 @@ Changes in Version 2.0
   - 'as.igraph' no longer errors on graphs with nodes without any edges;
     such nodes are now included as isolated vertices in the igraph object
     (github issue #91).
+  - 'as.igraph' now sets vertex sizes such that plotting the resulting
+    igraph object gives node sizes that match the qgraph plot (on equally
+    sized single-panel devices). The intended node-size scaling silently
+    never applied because it referenced a field that does not exist in
+    qgraph objects, and nodes came out roughly 25% too large.
   - New journal-style node palettes 'npg' (Nature Publishing Group),
     'lancet', 'jama', 'nejm' and 'aaas' (Science), using the colours
     documented in the ggsci package (github issue #82).

@@ -45,8 +45,13 @@ as.igraph.qgraph <- function(x,...,attributes=TRUE)
     V(Graph)$shape <- x$graphAttributes$Nodes$shape
     V(Graph)$shape[!V(Graph)$shape%in%c("circle", "square", "csquare", "rectangle", "crectangle", "vrectangle", "pie")] <- "none"
     V(Graph)$color <- x$graphAttributes$Nodes$color
-    V(Graph)$size <- x$graphAttributes$Nodes$width / max((-1/72)*(x$nNodes)+5.35,1) * 4
-    V(Graph)$size2 <- x$graphAttributes$Nodes$height / max((-1/72)*(x$nNodes)+5.35,1) * 4
+    # qgraph's vsize and igraph's vertex.size use different units; on equally
+    # sized devices, node diameters match when vertex.size = 3.38 * vsize - 1.35
+    # (measured empirically). The previous formula referenced x$nNodes, which
+    # does not exist in a qgraph object, so its denominator silently evaluated
+    # to 1 and nodes came out roughly 25% too large:
+    V(Graph)$size <- pmax(3.38 * x$graphAttributes$Nodes$width - 1.35, 1)
+    V(Graph)$size2 <- pmax(3.38 * x$graphAttributes$Nodes$height - 1.35, 1)
     
     ## Edge attributes:
     E(Graph)$curved <- x$graphAttributes$Edges$curve[edgesort]
