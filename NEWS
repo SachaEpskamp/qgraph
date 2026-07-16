@@ -1,4 +1,22 @@
 Changes in Version 2.0
+  - New journal-style node palettes 'npg' (Nature Publishing Group),
+    'lancet', 'jama', 'nejm' and 'aaas' (Science), using the colours
+    documented in the ggsci package (github issue #82).
+  - 'cor_auto' now warns when 'npn.SKEPTIC = TRUE' is ignored because the
+    data contain ordinal variables (github issue #96).
+  - 'cor_auto' with 'missing = "fiml"' no longer suppresses lavaan warnings,
+    and additionally warns when the lavaan model did not converge (github
+    issue #88).
+  - Fixed 'cor_auto' with 'npn.SKEPTIC = TRUE' erroring in huge.npn on the
+    row names of the data ("length of 'dimnames' [1] not equal to array
+    extent").
+  - More informative error messages for mis-specified grid layout matrices,
+    e.g. a character grid layout matrix with only two columns, which was
+    previously interpreted as node coordinates and failed with "non-numeric
+    argument to binary operator" (github issue #97).
+  - The documentation of the 'theme' argument now notes that "colorblind"
+    is the de facto standard in the literature (the default remains
+    "classic" for backward compatibility).
   - Three new themes (and matching node palettes): 'kawaii', a soft candy
     palette on a pale pink background, and the dark-background 'vaporwave'
     and 'dracula'. Each palette is ordered so that neighbouring groups stay

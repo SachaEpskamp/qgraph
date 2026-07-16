@@ -67,6 +67,12 @@ cor_auto <- function(
   }
   
   ### START COMPUTING CORRELATIONS ###
+  # Warn if npn.SKEPTIC is requested but cannot be applied due to ordinal variables:
+  if (npn.SKEPTIC && !all(sapply(data,is.numeric) | sapply(data,is.integer)))
+  {
+    warning("'npn.SKEPTIC' is ignored: the nonparanormal SKEPTIC is only applied when all variables are continuous, but the data contain ordinal variables. Set 'detectOrdinal = FALSE' to treat all variables as continuous.")
+  }
+
   # IF ALL NUMERIC OR INTEGER, NONPARANORMAL SKEPTIC:
   if (all(sapply(data,is.numeric) | sapply(data,is.integer) ) & npn.SKEPTIC)
   {
@@ -74,14 +80,22 @@ cor_auto <- function(
     
     for (i in seq_len(ncol(data))) data[,i] <- as.numeric(data[,i])
     if(!requireNamespace("huge")) stop("'huge' package needs to be installed.")
-    CorMat <- huge::huge.npn(data, "skeptic")
+    # Drop row names, as huge.npn would otherwise erroneously copy them to the
+    # returned correlation matrix and fail:
+    dataMat <- as.matrix(data)
+    rownames(dataMat) <- NULL
+    CorMat <- huge::huge.npn(dataMat, "skeptic")
   } else {
     
     #provide needed arguments for lavcor
     if(missing == "fiml"){
       
       #fiml needs ml, TRUE and fit to have estimation in object
-      lavobject <- suppressWarnings(lavaan::lavCor(data, missing = missing, se = "none", meanstructure = TRUE, estimator = "ML", output = "fit"))
+      lavobject <- lavaan::lavCor(data, missing = missing, se = "none", meanstructure = TRUE, estimator = "ML", output = "fit")
+      if (!lavaan::lavInspect(lavobject, "converged"))
+      {
+        warning("The lavaan model used to estimate FIML correlations did not converge; the returned correlation matrix may not be reliable.")
+      }
       #compute correlation matrix from covariance matrix
       CorMat <- cov2cor(lavaan::inspect(lavobject, "cov.ov"))
       class(CorMat) <- "matrix"

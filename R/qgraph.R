@@ -1129,7 +1129,7 @@ qgraph <- function( input, ...,
       stop("'palette' must be a single string.")
     }
     if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon","pride",
-                        "kawaii","vaporwave","dracula")){
+                        "kawaii","vaporwave","dracula","npg","lancet","jama","nejm","aaas")){
       stop(paste0("Palette '",palette,"' is not supported."))
     }
   }
@@ -2367,10 +2367,13 @@ qgraph <- function( input, ...,
         layout[] <- match(layout,labels)
         layout[is.na(layout)] <- 0
         mode(layout) <- 'numeric'
+      } else if (is.character(layout))
+      {
+        stop("Grid layout matrix contains node labels, but 'labels' is not a character vector to match them against. Either supply character node labels via 'labels', or use node numbers (1 to the number of nodes) in the grid layout matrix.")
       }
-      
+
       # Check:
-      if (!all(seq_len(nNodes) %in% layout)) stop("Grid matrix does not contain a placement for every node.")
+      if (!all(seq_len(nNodes) %in% layout)) stop(paste0("Grid layout matrix does not contain a placement for every node. Missing node(s): ",paste(seq_len(nNodes)[!seq_len(nNodes) %in% layout],collapse=", "),". The grid matrix must contain the numbers 1 to the number of nodes (",nNodes,"), or all node labels."))
       if (any(sapply(seq_len(nNodes),function(x)sum(layout==x))>1)) stop("Grid matrix contains a double entry.")
       
       Lmat=layout
@@ -2380,10 +2383,24 @@ qgraph <- function( input, ...,
       
       loc <- t(sapply(1:nNodes,function(x)which(Lmat==x,arr.ind=T)))
       layout <- cbind(LmatX[loc[,2]],LmatY[loc[,1]])
-      
+
     }
   }
-  
+
+  # A layout matrix that is still non-numeric at this point cannot be used. This
+  # happens most often with a character grid layout matrix of only two columns,
+  # which is instead interpreted as per-node coordinates (rows = nodes, columns
+  # = x and y). Fail here with an informative error rather than later with
+  # "non-numeric argument to binary operator":
+  if (is.matrix(layout) && !is.numeric(layout))
+  {
+    if (ncol(layout) == 2){
+      stop("'layout' matrix is not numeric. A layout matrix with two columns is interpreted as node placement (rows = nodes, columns = x and y coordinates) and must be numeric. To use a grid layout matrix containing node labels, the matrix must have at least three columns (a column of NAs can be added to achieve this).")
+    } else {
+      stop("'layout' matrix is not numeric. A grid layout matrix must contain the numbers 1 to the number of nodes, or the node labels (with 'labels' a character vector).")
+    }
+  }
+
   # Rescale layout:
   l=original.layout=layout
   if (rescale) {
@@ -2781,6 +2798,16 @@ qgraph <- function( input, ...,
       color <- vaporwave(length(groups))
     } else if (palette == "dracula"){
       color <- dracula(length(groups))
+    } else if (palette == "npg"){
+      color <- npg(length(groups))
+    } else if (palette == "lancet"){
+      color <- lancet(length(groups))
+    } else if (palette == "jama"){
+      color <- jama(length(groups))
+    } else if (palette == "nejm"){
+      color <- nejm(length(groups))
+    } else if (palette == "aaas"){
+      color <- aaas(length(groups))
     } else if (palette == "pride"){
       if (length(groups) > 7){
         color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   
