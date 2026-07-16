@@ -1,4 +1,10 @@
 Changes in Version 2.0
+  - 'nodeNames' can now contain plotmath expressions (e.g.
+    expression(lambda)), which are rendered in the legend instead of being
+    printed as literal text (github issue #94).
+  - 'as.igraph' no longer errors on graphs with nodes without any edges;
+    such nodes are now included as isolated vertices in the igraph object
+    (github issue #91).
   - New journal-style node palettes 'npg' (Nature Publishing Group),
     'lancet', 'jama', 'nejm' and 'aaas' (Science), using the colours
     documented in the ggsci package (github issue #82).

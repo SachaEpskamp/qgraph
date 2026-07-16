@@ -45,7 +45,7 @@ qgraph( input, ...,
 \item{alpha}{The significance level (defaults to 0.05) to be used for not showing edges if \code{minimum = "sig"}.}
 \item{bonf}{Logical indicating if a Bonferroni correction should be applied if \code{minimum = "sig"}.}
 \item{labels}{If FALSE, no labels are plotted. If TRUE, order in weights matrix is used as labels. This can also be a vector with a label for each node. Defaults to a 3 character abbreviation of the column names if the weights matrix contains column names and otherwise to TRUE. If a label contains an asterisk (e.g. "x1*") then the asterisk will be omitted and the label will be printed in symbol font (use this for Greek letters). Can also be a list with a label as each element, which can be expressions for more advanced mathematical annotation.}
-\item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names.}
+\item{nodeNames}{Names for each node, can be used to plot a legend next to the plot that links the node labels to node names. Can be a character vector, or a list that may also contain \code{\link{expression}} elements (plotmath) to include, e.g., Greek letters in the legend.}
 \item{label.cex}{Scalar on the label size.}
 \item{label.color}{Character containing the color of the labels. By default the color of each label is computed automatically: black or white depending on the luminance of the background and node color (see \code{label.color.split})}
 \item{label.scale}{Logical indicating if labels should be scaled to fit the node. Defaults to TRUE.}

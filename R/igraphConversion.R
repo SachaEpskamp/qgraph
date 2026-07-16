@@ -16,6 +16,14 @@ as.igraph.qgraph <- function(x,...,attributes=TRUE)
   Bi <-  x$Edgelist$bidirectional[edgesort]
   
   Graph <- graph.edgelist(E, any(Dir))
+  # graph.edgelist only creates vertices up to the highest node number used in
+  # an edge, so nodes without edges (or only trailing isolated nodes) would be
+  # missing and setting vertex attributes of length nNodes would fail:
+  nNodes <- x$graphAttributes$Graph$nNodes
+  if (vcount(Graph) < nNodes)
+  {
+    Graph <- add_vertices(Graph, nNodes - vcount(Graph))
+  }
   E(Graph)$weight <- x$Edgelist$weight[edgesort]
   
   # Arrow mode:

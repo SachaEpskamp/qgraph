@@ -1,3 +1,42 @@
+# Combine node labels and node names into "label: name" legend entries.
+# Returns a character vector for ordinary input, or an expression vector when
+# nodeNames contains expressions (plotmath such as expression(lambda), so that
+# e.g. Greek letters can be used in the legend; github issue #94):
+legendNodeNames <- function(labels, nodeNames){
+  isExpr <- is.expression(nodeNames) ||
+    (is.list(nodeNames) && any(sapply(nodeNames, function(x) is.expression(x) || is.language(x))))
+  if (!isExpr){
+    return(paste0(labels, ": ", unlist(nodeNames)))
+  }
+  as.expression(lapply(seq_along(nodeNames), function(i){
+    nm <- nodeNames[[i]]
+    if (is.expression(nm)) nm <- nm[[1]]
+    prefix <- paste0(labels[i], ": ")
+    if (is.character(nm)){
+      paste0(prefix, nm)
+    } else {
+      substitute(paste(p, n), list(p = prefix, n = nm))
+    }
+  }))
+}
+
+# Draw the legend.mode = "names" legend. Character entries are drawn exactly
+# as before (one text call with newlines); expression entries are drawn line
+# by line, as plotmath cannot span multiple lines:
+drawNamesLegend <- function(xpos, labels, nodeNames, legend.cex){
+  entries <- legendNodeNames(labels, nodeNames)
+  if (is.character(entries)){
+    text(xpos, 0, paste(entries, collapse="\n"), cex=legend.cex, adj = c(0, 0.5))
+  } else {
+    n <- length(entries)
+    lineheight <- strheight("X\nX", cex=legend.cex) - strheight("X", cex=legend.cex)
+    ypos <- ((n - seq_len(n)) - (n - 1)/2) * lineheight
+    for (i in seq_len(n)){
+      text(xpos, ypos[i], entries[i], cex=legend.cex, adj = c(0, 0.5))
+    }
+  }
+}
+
 plot.qgraph <- function(x, ...)
 {
   ### Extract arguments:
@@ -1168,7 +1207,7 @@ legend.mode <- x$plotOptions$legend.mode
       {
         if (legend.mode == "names")
         {
-          text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
+          drawNamesLegend(1 + mar[4], labels, nodeNames, legend.cex)
         } else 
         {
           if (length(groups) > 1)
@@ -1207,26 +1246,33 @@ legend.mode <- x$plotOptions$legend.mode
 
         if (legend.mode == "style2"){
           # Generate names in list:
-          LEGENDgroups <- lapply(groups,function(x)paste0(labels[x],": ",nodeNames[x]))
-          LEGENDstr <- character(0)
+          LEGENDgroups <- lapply(groups,function(x)legendNodeNames(labels[x],nodeNames[x]))
+          LEGENDstr <- list()
           LEGENDcol <- character(0)
           LEGENDpch <- numeric(0)
           LEGENDtextfont <- numeric(0)
           for (GR in seq_along(groups)){
-            LEGENDstr <- c(LEGENDstr,names(groups)[GR],LEGENDgroups[[GR]])
+            LEGENDstr <- c(LEGENDstr,names(groups)[GR],as.list(LEGENDgroups[[GR]]))
             LEGENDcol <- c(LEGENDcol,rep(color[GR],length(LEGENDgroups[[GR]])+1))
             LEGENDpch <- c(LEGENDpch,16,rep(1,length(LEGENDgroups[[GR]])))
             LEGENDtextfont <- c(LEGENDtextfont,2,rep(1,length(LEGENDgroups[[GR]])))
           }
-          
+          # Character vector as before, or an expression vector if any node
+          # name is an expression:
+          if (all(sapply(LEGENDstr,is.character))){
+            LEGENDstr <- unlist(LEGENDstr)
+          } else {
+            LEGENDstr <- as.expression(LEGENDstr)
+          }
+
           legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           
           
         } else if (legend.mode == "style1"){
 
           # Generate names in list:
-          LEGENDgroups <- lapply(groups,function(x)paste0(labels[x],": ",nodeNames[x]))
-          LEGENDstr <- character(0)
+          LEGENDgroups <- lapply(groups,function(x)legendNodeNames(labels[x],nodeNames[x]))
+          LEGENDstr <- list()
           LEGENDcol <- character(0)
           LEGENDbord <- character(0)
           LEGENDpch <- numeric(0)
@@ -1246,13 +1292,20 @@ legend.mode <- x$plotOptions$legend.mode
             
             
           for (GR in seq_along(groups)){
-            LEGENDstr <- c(LEGENDstr,names(groups)[GR],LEGENDgroups[[GR]],"")
+            LEGENDstr <- c(LEGENDstr,names(groups)[GR],as.list(LEGENDgroups[[GR]]),"")
             LEGENDcol <- c(LEGENDcol,NA,rep(color[GR],length(LEGENDgroups[[GR]])),NA)
             LEGENDbord <- c(LEGENDbord,NA,bcolor[groups[[GR]]],NA)
             LEGENDpch <- c(LEGENDpch,NA,getShape(shape[groups[[GR]]]),NA)
             LEGENDtextfont <- c(LEGENDtextfont,2,rep(1,length(LEGENDgroups[[GR]])),NA)
           }
-          
+          # Character vector as before, or an expression vector if any node
+          # name is an expression:
+          if (all(sapply(LEGENDstr,is.character))){
+            LEGENDstr <- unlist(LEGENDstr)
+          } else {
+            LEGENDstr <- as.expression(LEGENDstr)
+          }
+
           legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = LEGENDpch-15, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
           
@@ -1260,7 +1313,7 @@ legend.mode <- x$plotOptions$legend.mode
         } else if (legend.mode == "names")
         {
 
-          text(1 + mar[4] ,0, paste(labels,": ",nodeNames,sep="",collapse="\n"), cex=legend.cex, adj = c(0, 0.5)) 
+          drawNamesLegend(1 + mar[4], labels, nodeNames, legend.cex)
         } else 
         {
           legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
