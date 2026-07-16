@@ -981,7 +981,8 @@ qgraph <- function( input, ...,
     theme <- qgraphObject$Arguments[['theme']]
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
-                      "Borkulo","colorblind","gray","grey","gimme","GIMME","neon","pride")){
+                      "Borkulo","colorblind","gray","grey","gimme","GIMME","neon","pride",
+                      "kawaii","vaporwave","dracula")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
  
@@ -1041,6 +1042,35 @@ qgraph <- function( input, ...,
       negCol <- "#FF1C8D"
       unCol <- "#613915"
       palette <- "pride"
+    } else if (theme == "kawaii"){
+      # Soft candy palette on a pale pink background. The edge colours stay
+      # deep enough to read against it: mint for positive, strawberry for
+      # negative.
+      bg <- "#FFF4F8"
+      posCol <- c("#31C8A5","#12866D")
+      negCol <- c("#FF7BAC","#E23E77")
+      unCol <- "#B9A6C9"
+      bcolor <- "#F0C4DA"
+      palette <- "kawaii"
+    } else if (theme == "vaporwave"){
+      # 'lcolorTheme' is deliberately left at NA so that each node label is
+      # given black or white by contrast with its own node colour; a single
+      # fixed label colour disappears on the palette's paler nodes.
+      bg <- "#1A0B2E"
+      posCol <- c("#05FFA1","#00C97C")
+      negCol <- c("#FF71CE","#E12EA0")
+      unCol <- "#B967FF"
+      bcolor <- "#01CDFE"
+      border.width <- 2
+      palette <- "vaporwave"
+    } else if (theme == "dracula"){
+      bg <- "#282A36"
+      posCol <- c("#50FA7B","#26C94F")
+      negCol <- c("#FF5555","#D63232")
+      unCol <- "#6272A4"
+      bcolor <- "#BD93F9"
+      border.width <- 2
+      palette <- "dracula"
     }
   }
   
@@ -1098,7 +1128,8 @@ qgraph <- function( input, ...,
     if (length(palette) != 1 && !is.character(palette)){
       stop("'palette' must be a single string.")
     }
-    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon","pride")){
+    if (!palette %in% c("rainbow","colorblind","R","ggplot2","gray","grey","pastel","neon","pride",
+                        "kawaii","vaporwave","dracula")){
       stop(paste0("Palette '",palette,"' is not supported."))
     }
   }
@@ -2744,6 +2775,12 @@ qgraph <- function( input, ...,
       color <- rainbow_hcl(length(groups), start = rainbowStart * 360, end = (360 * rainbowStart + 360*(length(groups)-1)/length(groups)))
     } else if (palette == "neon"){
       color <- neon(length(groups))
+    } else if (palette == "kawaii"){
+      color <- kawaii(length(groups))
+    } else if (palette == "vaporwave"){
+      color <- vaporwave(length(groups))
+    } else if (palette == "dracula"){
+      color <- dracula(length(groups))
     } else if (palette == "pride"){
       if (length(groups) > 7){
         color <- rainbow(length(groups), start = rainbowStart, end = (rainbowStart + (max(1.1,length(groups)-1))/length(groups)) %% 1)   

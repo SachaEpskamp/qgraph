@@ -27,8 +27,10 @@ qgraph( input, ...,
 \item{cut}{In weighted graphs, this argument can be used to cut the scaling of edges in width and color saturation. Edges with absolute weights over this value will have the strongest color intensity and become wider the stronger they are, and edges with absolute weights under this value will have the smallest width and become vaguer the weaker the weight. If this is set to \code{0}, no cutoff is used and all edges vary in width and color. Defaults to 0 for graphs with less than 20 nodes. For larger graphs the \code{cut} value is automatically chosen to be equal to the maximum of the 75th quantile of absolute edge strengths or the edge strength corresponding to 2n-th edge strength (n being the number of nodes).}
 \item{details}{Logical indicating if minimum, maximum and cutoff score should be printed under the graph. Defaults to FALSE.}
 \item{threshold}{A numeric value that defaults to 0. Edges with absolute weight that are not above this value are REMOVED from the network. This differs from \code{minimum} which simply changes the scaling of width and color so that edges with absolute weight under minimum are not plotted/invisible. Setting a threshold influences the spring layout and centrality measures obtained with the graph whereas setting a minimum does not. In the case of correlation (\code{graph = "cor"}) or partial correlation (\code{graph = "pcor"}) networks this argument can also be given a string to omit insignificant edges. See description of this argument in the next section (Additional options for correlation/covariance matrices).}
-\item{palette}{The palette used for coloring nodes when the \code{groups} argument is used. Can be one of \code{"rainbow"} (default), \code{"colorblind"} (making use of http://jfly.iam.u-tokyo.ac.jp/color/), \code{"pastel"}, \code{"gray"} (or \code{"grey"}), \code{"R"}, \code{"ggplot2"}, \code{"neon"} and \code{"pride"}. Can also be a function that takes the number of colors to generate as its first argument.}
-\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"gray"} (or \code{"grey"}), \code{"Hollywood"}, \code{"Borkulo"}, \code{"gimme"} (or \code{"GIMME"}), \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"}, \code{"Fried"}, \code{"neon"} or \code{"pride"}.}
+\item{palette}{The palette used for coloring nodes when the \code{groups} argument is used. Can be one of \code{"rainbow"} (default), \code{"colorblind"} (making use of http://jfly.iam.u-tokyo.ac.jp/color/), \code{"pastel"}, \code{"gray"} (or \code{"grey"}), \code{"R"}, \code{"ggplot2"}, \code{"neon"}, \code{"pride"}, \code{"kawaii"}, \code{"vaporwave"} and \code{"dracula"}. Can also be a function that takes the number of colors to generate as its first argument.}
+\item{theme}{This argument sets different defaults for various graphical arguments (most notably \code{posCol}, \code{negCol} and \code{palette}). Can be \code{"classic"}, \code{"colorblind"}, \code{"gray"} (or \code{"grey"}), \code{"Hollywood"}, \code{"Borkulo"}, \code{"gimme"} (or \code{"GIMME"}), \code{"TeamFortress"}, \code{"Reddit"}, \code{"Leuven"}, \code{"Fried"}, \code{"neon"}, \code{"pride"}, \code{"kawaii"}, \code{"vaporwave"} or \code{"dracula"}.
+
+\code{"kawaii"} is a soft candy palette on a pale pink background; \code{"vaporwave"} and \code{"dracula"} are dark-background themes. If you need a palette chosen for colour-vision deficiency rather than for fun, use \code{"colorblind"}.}
 \item{graph}{Type of graph to be made when a correlation or covariance matrix is used as input. Setting this to other values than 
   \code{"default"} will check if the matrix is a correlation or covariance matrix; if the matrix is not positive definite \code{\link[Matrix]{nearPD}} from the Matrix package will be used. Options are:
   \describe{
@@ -504,7 +506,12 @@ big5Graph <- qgraph(big5_cors,minimum=0.25,groups=big5groups,
   
   # Same graph with different color scheme:
   qgraph(big5Graph,posCol="blue",negCol="purple")
- 
+
+  # Same graph using a theme, which sets a color scheme and node palette
+  # together (see the 'theme' argument for all options):
+  qgraph(big5Graph,theme="kawaii")
+  qgraph(big5Graph,theme="dracula")
+
   ### Network analysis ###
   ### Using bfi dataset from psych ###
   library("psych")

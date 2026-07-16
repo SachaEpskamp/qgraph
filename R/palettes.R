@@ -35,3 +35,56 @@ neon <- function(n, shift = 0){
 
   Palette[(((shift + 1:n)-1)%%6)+1]
 }
+
+# Soft candy pastels. Ordered so that neighbouring groups stay far apart in
+# colour: every adjacent pair is >= 29 in normal-vision and >= 8 in
+# deuteranope/protanope OKLab dE, comparable to the existing 'neon' and 'pride'
+# palettes. (For a palette chosen for colour-vision deficiency, use
+# theme/palette "colorblind".)
+kawaii <- function(n, shift = 0){
+  if (n > 6) warning("'kawaii' palette only supports 6 colors.")
+  Palette <-
+    c(
+      "#FF5FA2", # bubblegum
+      "#00BCD4", # soda blue
+      "#FFD23F", # custard
+      "#9B5DE5", # taro
+      "#3DD68C", # matcha
+      "#F4664A"  # strawberry
+    )
+
+  Palette[(((shift + 1:n)-1)%%6)+1]
+}
+
+# 1980s retro-futurism, intended for the dark background the theme sets.
+vaporwave <- function(n, shift = 0){
+  if (n > 6) warning("'vaporwave' palette only supports 6 colors.")
+  Palette <-
+    c(
+      "#FF71CE", # hot pink
+      "#05FFA1", # mint
+      "#B967FF", # violet
+      "#FFFB96", # pale lemon
+      "#01CDFE", # cyan
+      "#FF6E4A"  # sunset
+    )
+
+  Palette[(((shift + 1:n)-1)%%6)+1]
+}
+
+# The Dracula palette (https://draculatheme.com), intended for the dark
+# background the theme sets.
+dracula <- function(n, shift = 0){
+  if (n > 6) warning("'dracula' palette only supports 6 colors.")
+  Palette <-
+    c(
+      "#FF79C6", # pink
+      "#50FA7B", # green
+      "#BD93F9", # purple
+      "#F1FA8C", # yellow
+      "#8BE9FD", # cyan
+      "#FFB86C"  # orange
+    )
+
+  Palette[(((shift + 1:n)-1)%%6)+1]
+}

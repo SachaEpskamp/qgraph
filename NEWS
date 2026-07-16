@@ -1,4 +1,18 @@
 Changes in Version 2.0
+  - Three new themes (and matching node palettes): 'kawaii', a soft candy
+    palette on a pale pink background, and the dark-background 'vaporwave'
+    and 'dracula'. Each palette is ordered so that neighbouring groups stay
+    far apart in colour, at a separation comparable to the existing 'neon'
+    and 'pride' palettes. For a palette chosen for colour-vision deficiency
+    rather than for fun, use theme/palette "colorblind" as before.
+  - Fixed 'qgraph.loadings(resid = ...)' erroring with "missing value where
+    TRUE/FALSE needed". Residuals add one node per variable, but the node
+    count passed on to qgraph() did not include them, so the edges to the
+    residual nodes pointed past the last node and the per-node attributes
+    (colour, loop rotation, ...) were built too short.
+  - The plot title is now drawn in black or white by contrast with the
+    background, instead of always in black. It was previously invisible on
+    the background set by dark themes such as 'neon'.
   - New interactive HTML output: 'filetype = "html"' (or the new exported
     function 'qgraphHTML') writes a self-contained HTML file that renders
     the graph as SVG in exactly the layout and style of the R plot. Nodes

@@ -289,7 +289,12 @@ if (!is.null(factorCors))
 	
 ### RUN QGRAPH ###
 # class(arguments)="qgraph"
-args <- list(input=m,edgelist=TRUE,nNodes=n+k,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
+# Residuals add one node per variable (see 'Set residuals' above), which the
+# node attributes and the layout are already extended for; nNodes must count
+# them too, or the edges to the residual nodes point past the last node and
+# the per-node attributes are built too short.
+nNodes <- if (is.null(resid)) n + k else n + k + n
+args <- list(input=m,edgelist=TRUE,nNodes=nNodes,layout=l,vsize=Gvsize,color=Gcolor,labels=Glabels,shape=shape,filetype="",curve=curve,
              height=height,width=width,legend=F,directed=directed,bidirectional=TRUE)
 
 args <- c(args,arguments[!names(arguments) %in% names(args)])

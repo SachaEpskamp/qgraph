@@ -20,4 +20,4 @@ BugReports: https://github.com/SachaEpskamp/qgraph/issues
 License: GPL-2
 LazyLoad: yes
 LinkingTo: Rcpp
-Suggests: BDgraph, huge
+Suggests: BDgraph, huge, pcalg
