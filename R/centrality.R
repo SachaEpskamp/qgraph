@@ -111,7 +111,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     
     
     ls <- vector("list",n^2)
-    Paths <- structure( ls, .Dim = c(n, n))
+    Paths <- structure( ls, dim = c(n, n))
     
     if (all.shortest.paths){
       for (i in 1:n)
@@ -137,7 +137,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     ShortestPaths <- matrix(Inf,n,n)
     ls <- list()
     for (i in 1:n^2) ls[[i]] <- numeric(0)
-    Previous <- structure(ls, .Dim = c(n, n))
+    Previous <- structure(ls, dim = c(n, n))
     
     # Main loop:
     for (source in 1:n)
@@ -182,7 +182,7 @@ centrality <- function(graph,alpha=1,posfun=abs,pkg = c("igraph","qgraph"),all.s
     }
     
     # Compute shortest paths:
-    Paths <- structure(ls, .Dim = c(n, n))
+    Paths <- structure(ls, dim = c(n, n))
     for (i in 1:n)
     {
       for (j in 1:n)
