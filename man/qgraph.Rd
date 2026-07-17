@@ -495,7 +495,7 @@ data(big5)
 data(big5groups)
 
 # Compute correlation matrix:
-big5_cors <- cor_auto(big5, detectOrdinal = FALSE)
+big5_cors <- cor(big5, method = "spearman")
 
 # Correlations:
 big5Graph <- qgraph(big5_cors,minimum=0.25,groups=big5groups,
@@ -518,8 +518,8 @@ big5Graph <- qgraph(big5_cors,minimum=0.25,groups=big5groups,
   library("psych")
   data(bfi)
   
-  # Compute correlations:
-  CorMat <- cor_auto(bfi[,1:25])
+  # Compute Spearman correlations:
+  CorMat <- cor(bfi[,1:25], method = "spearman", use = "pairwise.complete.obs")
   
   # Compute graph with tuning = 0 (BIC):
   BICgraph <- qgraph(CorMat, graph = "glasso", sampleSize = nrow(bfi),
@@ -606,7 +606,7 @@ big5Graph <- qgraph(big5_cors,minimum=0.25,groups=big5groups,
   # Using bfi dataset from psych:
   library("psych")
   data(bfi)
-  cor_bfi <- cor_auto(bfi[,1:25])
+  cor_bfi <- cor(bfi[,1:25], method = "spearman", use = "pairwise.complete.obs")
   
   # Run qgraph:
   library("glasso")

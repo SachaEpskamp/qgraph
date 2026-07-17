@@ -57,8 +57,8 @@ Sacha Epskamp
 library("psych")
 data(bfi)
 
-# Compute polychoric correlations:
-corMat <- cor_auto(bfi[,1:25])
+# Compute Spearman correlations:
+corMat <- cor(bfi[,1:25], method = "spearman", use = "pairwise.complete.obs")
 
 # Glasso network:
 g2 <- qgraph(corMat,  cut = 0, graph = "glasso", sampleSize = nrow(bfi),

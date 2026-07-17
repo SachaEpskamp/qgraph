@@ -97,8 +97,8 @@ Sacha Epskamp <mail@sachaepskamp.com>
 library("psych")
 data(bfi)
 
-# Compute correlations:
-CorMat <- cor_auto(bfi[,1:25])
+# Compute Spearman correlations:
+CorMat <- cor(bfi[,1:25], method = "spearman", use = "pairwise.complete.obs")
 
 # Compute graph with tuning = 0 (BIC):
 BICgraph <- EBICglasso(CorMat, nrow(bfi), 0, threshold = TRUE)

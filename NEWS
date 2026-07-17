@@ -1,4 +1,7 @@
 Changes in Version 1.10.0
+  - Documentation examples now compute Spearman correlations with base R
+    cor() instead of cor_auto(), reflecting current practice in network
+    psychometrics. cor_auto() itself remains available and documented.
   - 'cor_auto' now re-throws estimation failures inside lavaan (such as
     "NA/NaN Hessian evaluation") with context and possible workarounds
     (github issue #78).

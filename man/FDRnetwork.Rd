@@ -39,8 +39,8 @@ library("psych")
 data(bfi)
 
 ### CORRELATIONS ###
-# Compute correlations:
-CorMat <- cor_auto(bfi[,1:25])
+# Compute Spearman correlations:
+CorMat <- cor(bfi[,1:25], method = "spearman", use = "pairwise.complete.obs")
 
 # Run local FDR:
 CorMat_FDR <- FDRnetwork(CorMat)
