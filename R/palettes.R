@@ -169,18 +169,20 @@ aaas <- function(n, shift = 0){
   Palette[(((shift + 1:n)-1)%%10)+1]
 }
 
-# The Dracula palette (https://draculatheme.com), intended for the dark
-# background the theme sets.
+# Gothic vampire palette, intended for the parchment background the theme
+# sets. All colours are dark, so the automatic node-label contrast gives
+# white labels. Ordered so that neighbouring groups stay far apart in hue
+# (the two reds, crimson and velvet, are maximally separated).
 dracula <- function(n, shift = 0){
   if (n > 6) warning("'dracula' palette only supports 6 colors.")
   Palette <-
     c(
-      "#FF79C6", # pink
-      "#50FA7B", # green
-      "#BD93F9", # purple
-      "#F1FA8C", # yellow
-      "#8BE9FD", # cyan
-      "#FFB86C"  # orange
+      "#A4133C", # crimson
+      "#22223B", # midnight ink
+      "#A98307", # old gold (candlelight)
+      "#4B244A", # gothic plum
+      "#344E41", # graveyard yew
+      "#6D213C"  # velvet burgundy
     )
 
   Palette[(((shift + 1:n)-1)%%6)+1]

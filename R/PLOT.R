@@ -23,16 +23,16 @@ legendNodeNames <- function(labels, nodeNames){
 # Draw the legend.mode = "names" legend. Character entries are drawn exactly
 # as before (one text call with newlines); expression entries are drawn line
 # by line, as plotmath cannot span multiple lines:
-drawNamesLegend <- function(xpos, labels, nodeNames, legend.cex){
+drawNamesLegend <- function(xpos, labels, nodeNames, legend.cex, col = contrastColor()){
   entries <- legendNodeNames(labels, nodeNames)
   if (is.character(entries)){
-    text(xpos, 0, paste(entries, collapse="\n"), cex=legend.cex, adj = c(0, 0.5))
+    text(xpos, 0, paste(entries, collapse="\n"), cex=legend.cex, adj = c(0, 0.5), col = col)
   } else {
     n <- length(entries)
     lineheight <- strheight("X\nX", cex=legend.cex) - strheight("X", cex=legend.cex)
     ypos <- ((n - seq_len(n)) - (n - 1)/2) * lineheight
     for (i in seq_len(n)){
-      text(xpos, ypos[i], entries[i], cex=legend.cex, adj = c(0, 0.5))
+      text(xpos, ypos[i], entries[i], cex=legend.cex, adj = c(0, 0.5), col = col)
     }
   }
 }
@@ -1208,6 +1208,9 @@ legend.mode <- x$plotOptions$legend.mode
   # Plot Legend:
   if (legend)
   {
+    # Legend text and outline rings are black by default, which is invisible
+    # on a dark background (e.g. themes 'neon' and 'vaporwave'):
+    legendTextCol <- contrastColor()
     if (is.null(scores))
     {
       legend.cex=legend.cex*2
@@ -1222,8 +1225,8 @@ legend.mode <- x$plotOptions$legend.mode
         {
           if (length(groups) > 1)
           {
-            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n') 
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
+            legend (1 + mar[4] + 0.5 * 2.4/GLratio,0, names(groups), col= legendTextCol ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol) 
           }
         }
         
@@ -1231,24 +1234,24 @@ legend.mode <- x$plotOptions$legend.mode
         {
           legend(1 + mar[4] + 0.5 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                  col = c(rgb(0.7,0.7,0.7),rgb(0.5,0.5,0.5),rgb(0.3,0.3,0.3),"black")[(5-length(alpha)):4],
-                 lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+                 lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
         } else
         {
           if (any(Pvals < 0))
           {
             legend(1 + mar[4] + 0.25 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
             
             legend(1 + mar[4] + 0.75 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c(rgb(1,0.8,0.4) ,"orange","darkorange","darkorange2")[(5-length(alpha)):4],
-                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
             
           } else
           {
             legend(1 + mar[4] + 0.5 * 2.4/GLratio,(length(groups) > 1) * -0.5,paste("p <",alpha[length(alpha):1]),
                    col = c("cadetblue1","#6495ED","blue","darkblue")[(5-length(alpha)):4],
-                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+                   lty=1, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
           }
         }
       } else
@@ -1275,7 +1278,7 @@ legend.mode <- x$plotOptions$legend.mode
             LEGENDstr <- as.expression(LEGENDstr)
           }
 
-          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
           
           
         } else if (legend.mode == "style1"){
@@ -1316,8 +1319,8 @@ legend.mode <- x$plotOptions$legend.mode
             LEGENDstr <- as.expression(LEGENDstr)
           }
 
-          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = LEGENDpch-15, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDcol ,pch = LEGENDpch, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
+          legend (1.2 + 0.5 * 2.4/GLratio,0,LEGENDstr, col= LEGENDbord ,pch = LEGENDpch-15, text.font = LEGENDtextfont, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col="transparent")
           
           
         } else if (legend.mode == "names")
@@ -1326,8 +1329,8 @@ legend.mode <- x$plotOptions$legend.mode
           drawNamesLegend(1 + mar[4], labels, nodeNames, legend.cex)
         } else 
         {
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n')
-          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= "black" ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n')   
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= color ,pch = 19, xjust=0.5, yjust=0.5, cex=legend.cex, bty='n', text.col=legendTextCol)
+          legend (1.2 + 0.5 * 2.4/GLratio,0, names(groups), col= legendTextCol ,pch = 1, xjust=0.5, ,yjust=0.5, cex=legend.cex, bty='n', text.col="transparent")   
         }
       }
     }
@@ -1352,10 +1355,10 @@ legend.mode <- x$plotOptions$legend.mode
           polygon(c(j,j,j+1,j+1),c(i+0.05,i+0.95,i+0.95,i+0.05),col=groupcols[j+1],border=bcolor[i],lwd=2)
           
         } 
-        text(j+1.5,i+0.5,names(groups)[i],pos=4)
+        text(j+1.5,i+0.5,names(groups)[i],pos=4,col=legendTextCol)
       }
       
-      for (i in scores.range[1]:scores.range[2]-scores.range[1]) text(i+0.5,length(groups)+1.5,i+scores.range[1])
+      for (i in scores.range[1]:scores.range[2]-scores.range[1]) text(i+0.5,length(groups)+1.5,i+scores.range[1],col=legendTextCol)
       
       
     }

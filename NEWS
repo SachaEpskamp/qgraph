@@ -1,4 +1,17 @@
 Changes in Version 1.10.0
+  - Legend text, legend outline rings and titles now automatically switch to
+    white on a dark background (as set by themes such as 'neon' and
+    'vaporwave', or a user-supplied 'bg'); previously they were always black
+    and invisible on dark backgrounds.
+  - The 'dracula' theme is redesigned as a vampire theme: a parchment
+    background with blood-red negative edges, ink-charcoal positive edges and
+    a gothic node palette (crimson, midnight ink, old gold, gothic plum,
+    graveyard yew and velvet burgundy). The previous editor-style colours
+    were nearly indistinguishable from the classic green/red edge colours.
+  - The 'kawaii' theme now uses thick white node borders for a sticker look.
+  - The 'vaporwave' theme now uses a deeper twilight background, cyan
+    positive edges (hot pink negative edges remain) and pale lemon node
+    borders.
   - Documentation examples now compute Spearman correlations with base R
     cor() instead of cor_auto(), reflecting current practice in network
     psychometrics. cor_auto() itself remains available and documented.

@@ -1043,32 +1043,38 @@ qgraph <- function( input, ...,
       unCol <- "#613915"
       palette <- "pride"
     } else if (theme == "kawaii"){
-      # Soft candy palette on a pale pink background. The edge colours stay
-      # deep enough to read against it: mint for positive, strawberry for
-      # negative.
+      # Soft candy palette on a pale pink background, with thick white node
+      # borders for a sticker look. The edge colours stay deep enough to read
+      # against it: mint for positive, strawberry for negative.
       bg <- "#FFF4F8"
       posCol <- c("#31C8A5","#12866D")
       negCol <- c("#FF7BAC","#E23E77")
       unCol <- "#B9A6C9"
-      bcolor <- "#F0C4DA"
+      bcolor <- "#FFFFFF"
+      border.width <- 3
       palette <- "kawaii"
     } else if (theme == "vaporwave"){
       # 'lcolorTheme' is deliberately left at NA so that each node label is
       # given black or white by contrast with its own node colour; a single
       # fixed label colour disappears on the palette's paler nodes.
-      bg <- "#1A0B2E"
-      posCol <- c("#05FFA1","#00C97C")
+      # Deep twilight background, cyan positive / hot pink negative edges,
+      # pale lemon borders.
+      bg <- "#0D0221"
+      posCol <- c("#01CDFE","#0090CB")
       negCol <- c("#FF71CE","#E12EA0")
       unCol <- "#B967FF"
-      bcolor <- "#01CDFE"
+      bcolor <- "#FFFB96"
       border.width <- 2
       palette <- "vaporwave"
     } else if (theme == "dracula"){
-      bg <- "#282A36"
-      posCol <- c("#50FA7B","#26C94F")
-      negCol <- c("#FF5555","#D63232")
-      unCol <- "#6272A4"
-      bcolor <- "#BD93F9"
+      # Vampire theme: parchment background, blood-red negative edges,
+      # charcoal-ink positive edges, and a gothic node palette (see
+      # dracula() in palettes.R).
+      bg <- "#F4EAD5"
+      posCol <- c("#4A4458","#191622")
+      negCol <- c("#C1121F","#780000")
+      unCol <- "#8D7B68"
+      bcolor <- "#241F31"
       border.width <- 2
       palette <- "dracula"
     }
