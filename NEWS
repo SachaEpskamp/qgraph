@@ -1,4 +1,15 @@
 Changes in Version 2.0
+  - 'smallworldness' now samples the random reference networks through
+    degree-preserving rewiring (igraph's keeping_degseq), which samples
+    (asymptotically) uniformly from the graphs with the given degree
+    sequence. The previously used degree.sequence.game(method =
+    "simple.no.multiple") did not sample uniformly, biasing the reference
+    distribution (github issue #69).
+  - 'smallworldness' works again for disconnected graphs: the path length
+    between unconnected nodes is counted as the number of nodes (1 plus
+    the maximum possible path length), as originally intended. Since
+    igraph 1.3 the previously used average.path.length returned infinity
+    for disconnected graphs (github issue #70).
   - 'nodeNames' can now contain plotmath expressions (e.g.
     expression(lambda)), which are rendered in the legend instead of being
     printed as literal text (github issue #94).

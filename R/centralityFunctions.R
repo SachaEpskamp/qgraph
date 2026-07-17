@@ -341,27 +341,42 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
   
   # consider only the adjacency matrix
   A<-x!=0
-  
+
   # transitivity of A
   A<-graph.adjacency(A, mode="undirected", diag=F, weighted=NULL)
   N<-vcount(A)
   m<-ecount(A)
+
+  # Average shortest path length, in which the shortest path length among
+  # unconnected nodes is computed as N, i.e., 1 plus the max possible path
+  # length. This was the behaviour of igraph (< 1.3) with unconnected = FALSE,
+  # which now returns infinity instead, so that disconnected graphs no longer
+  # worked (github issue #70):
+  avgpathlength <- function(g){
+    D <- distances(g, weights = NA)
+    D <- D[upper.tri(D)]
+    D[is.infinite(D)] <- vcount(g)
+    mean(D)
+  }
+
   clusttrg<-transitivity(A, type="global", isolates="zero")
-  lengthtrg<-average.path.length(graph=A, directed=F, unconnected=F)
-  
-  #generate B rnd networks with the same degree distribution of A
-  deg.dist<-igraph::degree(A, mode="all", loops=F)
-  rndA<-lapply(1:B, function(x)degree.sequence.game(deg.dist, method="simple.no.multiple"))
+  lengthtrg<-avgpathlength(A)
+
+  # generate B random networks with the same degree sequence as A, through
+  # degree-preserving rewiring of A. Unlike sampling with
+  # degree.sequence.game(method = "simple.no.multiple"), this samples
+  # (asymptotically) uniformly from the simple graphs with this degree
+  # sequence (github issue #69):
+  rndA<-lapply(1:B, function(x)rewire(A, with=keeping_degseq(loops=FALSE, niter=max(100*m,1))))
   # compute the average (global) clustering coefficient over the B random networks
   clustrnd<-sapply(rndA, transitivity, type="global", isolates="zero")
   clustrnd_m<-mean(clustrnd)
   # compute the upper and lower quantiles
   clustrnd_lo<-quantile(clustrnd, lo)
   clustrnd_up<-quantile(clustrnd, up)
-  
-  # compute the average shortest path length in random networks, the shortest path
-  # length among unconnected nodes is computed as N, i.e., 1 plus the max possible path length
-  lengthrnd<-sapply(rndA, average.path.length, directed=F, unconnected=F)
+
+  # compute the average shortest path length in random networks:
+  lengthrnd<-sapply(rndA, avgpathlength)
   lengthrnd_m<-mean(lengthrnd)
   # compute the upper and lower quantiles
   lengthrnd_lo<-quantile(lengthrnd, lo)
