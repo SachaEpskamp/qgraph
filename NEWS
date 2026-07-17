@@ -47,6 +47,9 @@ Changes in Version 1.10.0
     sized single-panel devices). The intended node-size scaling silently
     never applied because it referenced a field that does not exist in
     qgraph objects, and nodes came out roughly 25% too large.
+  - The journal-style names are also accepted as themes (e.g.
+    theme = "npg"), combining the matching node palette with the
+    'colorblind' edge colours.
   - New journal-style node palettes 'npg' (Nature Publishing Group),
     'lancet', 'jama', 'nejm' and 'aaas' (Science), using the colours
     documented in the ggsci package (github issue #82).

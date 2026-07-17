@@ -982,7 +982,7 @@ qgraph <- function( input, ...,
     if (length(theme) > 1) stop("'theme' must be of lenght 1")
     if (!theme %in% c("classic","Hollywood","Leuven","Reddit","TeamFortress","Fried",
                       "Borkulo","colorblind","gray","grey","gimme","GIMME","neon","pride",
-                      "kawaii","vaporwave","dracula")){
+                      "kawaii","vaporwave","dracula","npg","lancet","jama","nejm","aaas")){
       stop(paste0("Theme '",theme,"' is not supported."))
     }
  
@@ -1077,6 +1077,13 @@ qgraph <- function( input, ...,
       bcolor <- "#241F31"
       border.width <- 2
       palette <- "dracula"
+    } else if (theme %in% c("npg","lancet","jama","nejm","aaas")){
+      # Journal-style themes: the matching node palette with the
+      # 'colorblind' edge colours, the de facto standard for published
+      # network figures.
+      posCol <- c("#0000D5","darkblue")
+      negCol <- c("#BF0000","red")
+      palette <- theme
     }
   }
   
