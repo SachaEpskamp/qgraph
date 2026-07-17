@@ -347,16 +347,25 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
   N<-vcount(A)
   m<-ecount(A)
 
-  # Average shortest path length, in which the shortest path length among
-  # unconnected nodes is computed as N, i.e., 1 plus the max possible path
-  # length. This was the behaviour of igraph (< 1.3) with unconnected = FALSE,
-  # which now returns infinity instead, so that disconnected graphs no longer
-  # worked (github issue #70):
+  # Average shortest path length. The distance between unconnected nodes is
+  # infinite; such pairs are excluded from the average, which is therefore
+  # taken over connected pairs only (the behaviour of igraph's mean_distance
+  # with unconnected = TRUE). This keeps disconnected graphs -- and random
+  # references that happen to be disconnected -- from producing infinite
+  # average path lengths (github issue #70):
   avgpathlength <- function(g){
     D <- distances(g, weights = NA)
     D <- D[upper.tri(D)]
-    D[is.infinite(D)] <- vcount(g)
-    mean(D)
+    mean(D[is.finite(D)])
+  }
+
+  # A network without edges has no connected pairs and no triples, so all
+  # indices are undefined:
+  if (m == 0){
+    warning("The network has no edges; small-worldness is undefined.")
+    return(c("smallworldness"=NaN, "trans_target"=NaN, "averagelength_target"=NaN,
+             "trans_rnd_M"=NaN, "trans_rnd_lo"=NaN, "trans_rnd_up"=NaN,
+             "averagelength_rnd_M"=NaN, "averagelength_rnd_lo"=NaN, "averagelength_rnd_up"=NaN))
   }
 
   clusttrg<-transitivity(A, type="global", isolates="zero")
