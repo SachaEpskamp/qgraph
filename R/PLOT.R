@@ -230,6 +230,7 @@ legend.mode <- x$plotOptions$legend.mode
   postExpression <- x$plotOptions$postExpression
   usePCH <- x$plotOptions$usePCH
   node.resolution <- x$plotOptions$node.resolution
+  font.family <- x$plotOptions$font.family
 
   noPar <- x$plotOptions$noPar
   meanRange <- x$plotOptions$meanRange
@@ -322,6 +323,15 @@ legend.mode <- x$plotOptions$legend.mode
   
 
   ### START PLOT:
+  # Font family for all text in the plot (node labels, edge labels, legend,
+  # title). Setting a CJK-capable family (e.g. font.family = "PingFang SC")
+  # allows Chinese/Japanese/Korean labels (github issue #81). Set after any
+  # output device has been opened above, and restored on exit:
+  if (!is.null(font.family)){
+    familyDev <- dev.cur()
+    oldFamilyPar <- par(family = font.family)
+    on.exit(if (dev.cur() == familyDev) par(oldFamilyPar), add = TRUE)
+  }
   marOrig <- par("mar")
   bgOrig <- par("bg")
   if (plot)

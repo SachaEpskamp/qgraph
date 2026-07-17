@@ -258,6 +258,7 @@ These arguments control the background of the plot
 	%\item{overlay}{Logical, should a Venn-diagram like overlay be plotted? If TRUE then for each group a x\% confidence region is plotted for the X and Y position, using \code{\link[ellipse]{ellipse}}}
 	%\item{overlaySize}{Specifies the size of the overlay ellipses. Corresponds to the confidence level (default is 0.5)}
 \item{font}{Integer specifying the default font for node and edge labels}
+\item{font.family}{Character string with the font family used for all text in the plot (node labels, edge labels, legend and title), as in \code{par(family = ...)}. Set this to a font family that supports the required glyphs to use, e.g., Chinese/Japanese/Korean node labels (for example \code{font.family = "PingFang SC"} on macOS or \code{font.family = "SimSun"} on Windows). Defaults to the font family of the graphics device.}
 }
 }
 }

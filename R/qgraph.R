@@ -329,7 +329,7 @@ qgraph <- function( input, ...,
                "repulsion", "layout.par", "layout.control", "aspect", "rotation", 
                "legend", "legend.cex", "legend.mode", "GLratio", "layoutScale", 
                "layoutOffset", "nodeNames", "bg", "bgcontrol", "bgres", "pty", 
-               "gray",  "font", "directed", 
+               "gray",  "font", "font.family", "directed",
                "arrows", "arrowAngle", "asize", "open", "bidirectional", "mode", 
                "alpha", "sigScale", "bonf", "scores", "scores.range", "mode", 
                "edge.color", "knots", "knot.size", "knot.color", "knot.borders", 
@@ -1085,6 +1085,7 @@ qgraph <- function( input, ...,
   if(!is.null(qgraphObject$Arguments[['border.width']])) border.width <- qgraphObject$Arguments[['border.width']]
     
   if(!is.null(qgraphObject$Arguments[['font']])) font <- qgraphObject$Arguments[['font']]
+  if(is.null(qgraphObject$Arguments[['font.family']])) font.family <- NULL else font.family <- qgraphObject$Arguments[['font.family']]
   if(is.null(qgraphObject$Arguments[['edge.label.font']])) edge.label.font=font else edge.label.font=qgraphObject$Arguments[['edge.label.font']]
   if(is.null(qgraphObject$Arguments[['label.font']])) label.font <- font else label.font <- qgraphObject$Arguments[['label.font']]
    if(!is.null(qgraphObject$Arguments[['unCol']])) unCol <- qgraphObject$Arguments[['unCol']] 
@@ -3250,6 +3251,7 @@ qgraph <- function( input, ...,
   qgraphObject$plotOptions$subpars <- subpars
   qgraphObject$plotOptions$subplotbg <- subplotbg
   qgraphObject$plotOptions$usePCH <- usePCH
+  qgraphObject$plotOptions$font.family <- font.family
   qgraphObject$plotOptions$node.resolution <- node.resolution
   qgraphObject$plotOptions$noPar <- noPar
   qgraphObject$plotOptions$meanRange <- meanRange
