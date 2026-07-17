@@ -86,12 +86,24 @@ cor_auto <- function(
     rownames(dataMat) <- NULL
     CorMat <- huge::huge.npn(dataMat, "skeptic")
   } else {
-    
+
+    # Re-throw estimation failures inside lavaan (e.g. "NA/NaN Hessian
+    # evaluation" from nlminb) with context and possible workarounds
+    # (github issue #78):
+    lavCorWithContext <- function(expr){
+      tryCatch(expr, error = function(e){
+        stop("lavaan::lavCor() failed to estimate the correlation matrix: ",
+             conditionMessage(e),
+             "\nThis is an estimation failure in the lavaan package, not in qgraph itself. It typically occurs with many (ordinal) variables, few observations, or ordinal variables with rarely endorsed categories. Possible workarounds: remove variables with (nearly) constant values or very sparse categories, treat ordinal variables as continuous with 'detectOrdinal = FALSE', or compute the correlations without lavaan (e.g. cor(data, use = \"pairwise.complete.obs\")).",
+             call. = FALSE)
+      })
+    }
+
     #provide needed arguments for lavcor
     if(missing == "fiml"){
-      
+
       #fiml needs ml, TRUE and fit to have estimation in object
-      lavobject <- lavaan::lavCor(data, missing = missing, se = "none", meanstructure = TRUE, estimator = "ML", output = "fit")
+      lavobject <- lavCorWithContext(lavaan::lavCor(data, missing = missing, se = "none", meanstructure = TRUE, estimator = "ML", output = "fit"))
       if (!lavaan::lavInspect(lavobject, "converged"))
       {
         warning("The lavaan model used to estimate FIML correlations did not converge; the returned correlation matrix may not be reliable.")
@@ -104,7 +116,7 @@ cor_auto <- function(
       #use defaults for other options
       meanstructure <- FALSE
       estimator <- "two.step"
-      CorMat <- suppressWarnings(lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator))
+      CorMat <- lavCorWithContext(suppressWarnings(lavaan::lavCor(data, missing = missing, meanstructure = meanstructure, estimator = estimator)))
       class(CorMat) <- "matrix"
     }
     
