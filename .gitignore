@@ -3,3 +3,5 @@ src/*.o
 src/*.so
 .claude/
 .Rproj.user/
+CLAUDE.md
+.claude
