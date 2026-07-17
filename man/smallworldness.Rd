@@ -9,7 +9,8 @@ Compute the small-worldness index.
 Compute the small-worldness index (Humphries & Gurney, 2008) relying on the global transitivity of the network (Newman, 2003) and on its average shortest path length.
 }
 \usage{
-smallworldness(x, B = 1000, up = 0.995, lo = 0.005)
+smallworldness(x, B = 1000, up = 0.995, lo = 0.005,
+               unconnected = c("infinite", "N", "exclude"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,13 +26,16 @@ The upper quantile.
   \item{lo}{
 The lower quantile.
 }
+  \item{unconnected}{
+How the infinite distance between unconnected pairs of nodes enters the average shortest path length. \code{"infinite"} (the default): infinite distances propagate, so any disconnected network (including disconnected random reference networks) has an infinite average path length and the small-worldness index is \code{NaN}, \code{Inf} or \code{0} (with a warning). \code{"N"}: unconnected pairs are counted as path length N, the number of nodes, i.e., one more than the maximum possible (unweighted) path length. \code{"exclude"}: unconnected pairs are excluded, so the average is computed over connected pairs only. The latter two options should be a conscious choice.
+}
 }
 \details{
 The function computes the transitivity of the target network and the average shortest path length. Then it computes the average of the same indices on \code{B} random networks. The small-worldness index is then computed as the transitivity (normalized by the random transitivity) over the average shortest path length (normalized by the random average shortest path length). The  \code{lo} and \code{up} quantiles of the distribution of the random networks are also returned for both the transitivity and the average shortest path length.
 
 The random networks share the degree sequence of the target network and are sampled through degree-preserving rewiring (\code{\link[igraph]{keeping_degseq}}), which samples (asymptotically) uniformly from the graphs with this degree sequence.
 
-Disconnected networks are supported: the distance between unconnected nodes is infinite, and such pairs are excluded from the average shortest path length, which is therefore computed over connected pairs of nodes only.
+The distance between unconnected pairs of nodes is infinite; the \code{unconnected} argument controls how such pairs enter the average shortest path length (see above). By default, infinite distances propagate, so that disconnected networks yield an undefined small-worldness index unless a different treatment is chosen explicitly.
 
 A network can be said "smallworld" if its \code{smallworldness} is higher than one (a stricter rule is \code{smallworldness}>=3; Humphries & Gurney, 2008). To consider a network as "smallworld", it is also suggested to inspect that the network has a transitivity substantially higher than comparable random networks and that its average shortest path length is similar to, or higher than (but not many times higher than), that computed on random networks.
 Edge weights, signs and directions are ignored in the computation of the indices.

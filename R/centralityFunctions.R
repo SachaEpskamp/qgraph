@@ -325,18 +325,20 @@ clustOnnela<-function(x, thresholdON=0)
 # evaluation of smallworldness #
 ################################
 # Exported:
-smallworldness<-function(x, B=1000, up=.995, lo=.005)
+smallworldness<-function(x, B=1000, up=.995, lo=.005, unconnected = c("infinite","N","exclude"))
 {
   #compute the small worldness of Humphries & Gurney (2008)
 #   require(igraph)
 #   require(sna)
+  unconnected <- match.arg(unconnected)
+
   # Compute weights matrix:
   x <- getWmat(x)
-  
+
   # If list of matrices, return list of output:
   if (is.list(x))
   {
-    return(lapply(x, smallworldness, B=B, up=up, lo=lo))
+    return(lapply(x, smallworldness, B=B, up=up, lo=lo, unconnected=unconnected))
   }
   
   # consider only the adjacency matrix
@@ -348,15 +350,23 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
   m<-ecount(A)
 
   # Average shortest path length. The distance between unconnected nodes is
-  # infinite; such pairs are excluded from the average, which is therefore
-  # taken over connected pairs only (the behaviour of igraph's mean_distance
-  # with unconnected = TRUE). This keeps disconnected graphs -- and random
-  # references that happen to be disconnected -- from producing infinite
-  # average path lengths (github issue #70):
+  # infinite; the 'unconnected' argument controls how such pairs enter the
+  # average (github issue #70). "infinite" (default): infinite distances
+  # propagate, so a disconnected network has an infinite average path length.
+  # "N": unconnected pairs are counted as path length N, i.e. one more than
+  # the maximum possible path length (the behaviour of igraph < 1.3 with
+  # unconnected = FALSE; unweighted, as all indices here ignore weights).
+  # "exclude": unconnected pairs are excluded, averaging over connected pairs
+  # only (the behaviour of igraph's mean_distance with unconnected = TRUE):
   avgpathlength <- function(g){
     D <- distances(g, weights = NA)
     D <- D[upper.tri(D)]
-    mean(D[is.finite(D)])
+    if (unconnected == "N"){
+      D[is.infinite(D)] <- vcount(g)
+    } else if (unconnected == "exclude"){
+      D <- D[is.finite(D)]
+    }
+    mean(D)
   }
 
   # A network without edges has no connected pairs and no triples, so all
@@ -386,6 +396,11 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005)
 
   # compute the average shortest path length in random networks:
   lengthrnd<-sapply(rndA, avgpathlength)
+
+  if (unconnected == "infinite" && (!is.finite(lengthtrg) || any(!is.finite(lengthrnd))))
+  {
+    warning("Infinite average shortest path lengths occurred because the network (or some of the random reference networks) is disconnected, so the small-worldness index is NaN, Inf or 0. Use the 'unconnected' argument to explicitly choose a different treatment of unconnected pairs of nodes.")
+  }
   lengthrnd_m<-mean(lengthrnd)
   # compute the upper and lower quantiles
   lengthrnd_lo<-quantile(lengthrnd, lo)
