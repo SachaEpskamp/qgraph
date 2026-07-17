@@ -1,4 +1,4 @@
-Changes in Version 2.0
+Changes in Version 1.10.0
   - 'cor_auto' now re-throws estimation failures inside lavaan (such as
     "NA/NaN Hessian evaluation") with context and possible workarounds
     (github issue #78).
