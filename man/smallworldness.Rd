@@ -33,7 +33,7 @@ How the infinite distance between unconnected pairs of nodes enters the average 
 \details{
 The function computes the transitivity of the target network and the average shortest path length. Then it computes the average of the same indices on \code{B} random networks. The small-worldness index is then computed as the transitivity (normalized by the random transitivity) over the average shortest path length (normalized by the random average shortest path length). The  \code{lo} and \code{up} quantiles of the distribution of the random networks are also returned for both the transitivity and the average shortest path length.
 
-The random networks share the degree sequence of the target network and are sampled through degree-preserving rewiring (\code{\link[igraph]{keeping_degseq}}), which samples (asymptotically) uniformly from the graphs with this degree sequence.
+The random networks share the degree sequence of the target network and are sampled with \code{\link[igraph]{sample_degseq}} (method \code{"fast.heur.simple"}, the renamed equivalent of the method used in earlier versions, so that results are backward compatible). Note that this method does not sample exactly uniformly from the graphs with the given degree sequence.
 
 The distance between unconnected pairs of nodes is infinite; the \code{unconnected} argument controls how such pairs enter the average shortest path length (see above). By default, infinite distances propagate, so that disconnected networks yield an undefined small-worldness index unless a different treatment is chosen explicitly.
 

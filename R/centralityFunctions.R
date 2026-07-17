@@ -381,12 +381,14 @@ smallworldness<-function(x, B=1000, up=.995, lo=.005, unconnected = c("infinite"
   clusttrg<-transitivity(A, type="global", isolates="zero")
   lengthtrg<-avgpathlength(A)
 
-  # generate B random networks with the same degree sequence as A, through
-  # degree-preserving rewiring of A. Unlike sampling with
-  # degree.sequence.game(method = "simple.no.multiple"), this samples
-  # (asymptotically) uniformly from the simple graphs with this degree
-  # sequence (github issue #69):
-  rndA<-lapply(1:B, function(x)rewire(A, with=keeping_degseq(loops=FALSE, niter=max(100*m,1))))
+  # generate B rnd networks with the same degree distribution of A.
+  # "fast.heur.simple" is the renamed equivalent of the defunct
+  # degree.sequence.game(method = "simple.no.multiple") (github pull request
+  # #98), so results are identical to qgraph <= 1.9.8. Note that this method
+  # does not sample uniformly from the graphs with this degree sequence
+  # (github issue #69); it is kept for backward compatibility of results.
+  deg.dist<-igraph::degree(A, mode="all", loops=F)
+  rndA<-lapply(1:B, function(x)sample_degseq(deg.dist, method="fast.heur.simple"))
   # compute the average (global) clustering coefficient over the B random networks
   clustrnd<-sapply(rndA, transitivity, type="global", isolates="zero")
   clustrnd_m<-mean(clustrnd)

@@ -6,12 +6,12 @@ Changes in Version 1.10.0
     plot (node labels, edge labels, legend and title). Setting a suitable
     font family allows, e.g., Chinese/Japanese/Korean node labels (github
     issue #81).
-  - 'smallworldness' now samples the random reference networks through
-    degree-preserving rewiring (igraph's keeping_degseq), which samples
-    (asymptotically) uniformly from the graphs with the given degree
-    sequence. The previously used degree.sequence.game(method =
-    "simple.no.multiple") did not sample uniformly, biasing the reference
-    distribution (github issue #69).
+  - 'smallworldness' no longer errors on igraph >= 2.1.0, in which the
+    degree.sequence.game(method = "simple.no.multiple") call it used is
+    defunct. The random reference networks are now sampled with the renamed
+    equivalent sample_degseq(method = "fast.heur.simple"), which uses the
+    same algorithm, so results are unchanged (github pull request #98;
+    thanks to David Schoch).
   - 'smallworldness' gained an 'unconnected' argument controlling how the
     infinite distance between unconnected nodes enters the average
     shortest path length: "infinite" (default; infinite lengths propagate,
