@@ -127,7 +127,8 @@ qgraphHTML <- function(x, filename = "qgraph.html", htmltype = c("rich", "plain"
       lfont = recycle(Nodes$label.font, nNodes, 1)[i],
       name = recycle(nodeNames, nNodes, NA)[i],
       tooltip = recycle(nodeTooltips, nNodes, NA)[i],
-      loopRot = recycle(Nodes$loopRotation, nNodes, 0)[i]
+      loopRot = recycle(Nodes$loopRotation, nNodes, 0)[i],
+      lprop = recycle(opts$label.prop, nNodes, 0.765)[i]
     )
     if (drawPies && length(pie) >= i && !all(is.na(pie[[i]]))){
       # always serialized as a JSON array, also for a single value:
@@ -194,7 +195,9 @@ qgraphHTML <- function(x, filename = "qgraph.html", htmltype = c("rich", "plain"
     arrows = !identical(opts$arrows, FALSE),
     arrowAngle = if (is.null(opts$arrowAngle)) pi/6 else opts$arrowAngle,
     open = isTRUE(opts$open),
-    labelProp = if (is.null(opts$label.prop)) 0.765 else opts$label.prop,
+    # label.prop is per-node in qgraph (it depends on the per-node pieBorder);
+    # nodes carry their own 'lprop', this is only the scalar fallback:
+    labelProp = if (is.null(opts$label.prop)) 0.765 else unname(opts$label.prop[[1]]),
     labelCex = 1,
     polygons = polysOut,
     filename = sub("\\.html?$", "", basename(filename))

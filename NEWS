@@ -1,4 +1,10 @@
 Changes in Version 1.10.0
+  - Fixed node labels in the interactive HTML output (filetype = "html")
+    not scaling with node size: the per-node label.prop vector serialized
+    as a JSON array, which made the label-fitting computation produce NaN
+    so that all node labels rendered at a fixed font size. Each node now
+    carries its own label proportion and labels scale to fit their node,
+    as in the regular plot.
   - Legend text, legend outline rings and titles now automatically switch to
     white on a dark background (as set by themes such as 'neon' and
     'vaporwave', or a user-supplied 'bg'); previously they were always black

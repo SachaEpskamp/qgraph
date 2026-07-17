@@ -298,7 +298,8 @@ function drawNode(n, i){
     label.textContent = n.label;
     // scale to fit node like qgraph label.scale:
     var bb = label.getBBox();
-    var maxW = 2*n.prx*(DATA.meta.labelProp||0.765), maxH = 2*n.pry*(DATA.meta.labelProp||0.765);
+    var lprop = (n.lprop != null ? n.lprop : DATA.meta.labelProp) || 0.765;
+    var maxW = 2*n.prx*lprop, maxH = 2*n.pry*lprop;
     var f = Math.min(maxW/Math.max(bb.width,1), maxH/Math.max(bb.height,1), 1.6) * (n.lcex||1) * (DATA.meta.labelCex||1);
     label.setAttribute("font-size", 16*f);
   }
