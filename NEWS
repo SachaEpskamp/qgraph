@@ -1,3 +1,9 @@
+Changes in Version 1.10.1
+  - First published version of the 1.10 series; version 1.10.0 was submitted
+    to CRAN but not released. Relative to that submission, the 'directed'
+    argument is not (yet) named explicitly in the function definition (see
+    below), and duplicated arguments give a warning.
+
 Changes in Version 1.10.0
   - Fixed node labels in the interactive HTML output (filetype = "html")
     not scaling with node size: the per-node label.prop vector serialized
@@ -102,7 +108,13 @@ Changes in Version 1.10.0
     RStudio and other editors. They are placed after '...' and are therefore
     matched by exact name only, exactly as when they were part of '...'.
     All other arguments continue to work through '...' unchanged, and
-    existing code is not affected.
+    existing code is not affected. The 'directed' argument is for now still
+    passed via '...', as some downstream code passes it twice in a single
+    call, which R would reject for an explicitly named argument; it will be
+    named in the function definition in a later version.
+  - Supplying the same argument more than once in a call to 'qgraph' now
+    gives a warning (the first value is used, as before). This will become
+    an error in a future version.
   - Consistently styled alternative names are now accepted for a number of
     arguments with historically mixed naming styles, e.g. 'node.size'
     (vsize), 'node.size2' (vsize2), 'arrow.size' (asize), 'curve.all'

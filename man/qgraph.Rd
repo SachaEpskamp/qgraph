@@ -12,7 +12,7 @@ qgraph( input, ...,
   label.color, label.scale, label.prop, color, vsize, vsize2, shape, borders,
   border.color, border.width, pie, pieColor, esize, edge.width, edge.color,
   edge.labels, edge.label.cex, posCol, negCol, fade, curve, curveAll, lty,
-  diag, directed, weighted, edgelist, nNodes, arrows, asize, parallelEdge,
+  diag, weighted, edgelist, nNodes, arrows, asize, parallelEdge,
   repulsion, layout.par, aspect, rescale, normalize, legend, legend.cex,
   legend.mode, GLratio, title, title.cex, mar, filetype, filename, width,
   height, res, DoNotPlot, plot, bg )
@@ -74,7 +74,6 @@ qgraph( input, ...,
 \item{curveAll}{Logical, indicating if all edges should be curved with the value of the 'curve' or only edges between nodes that share multiple edges.}
 \item{lty}{Line type, see 'par'}
 \item{diag}{Should the diagonal also be plotted as edges? defaults to FALSE. Can also be "col" to plot diagonal values as vertex colors.}
-\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 \item{weighted}{Logical that can be used to force either a weighted graph (TRUE) or an unweighted graph(FALSE).}
 \item{edgelist}{Logical, if TRUE 'input' is assumed to be an edgelist, else if FALSE input is assumed to be a weights matrix. By default this is chosen automatically based on the dimensions of 'input' and this argument is only needed if the dimensions are ambiguous (square matrix with 2 or 3 rows/columns)}
 \item{nNodes}{The number of nodes, only needs to be specified if the first argument is an edge-list and some nodes have no edges}
@@ -267,6 +266,7 @@ These arguments control the background of the plot
 
 \section{Arguments for directed graphs}{
 \describe{
+	\item{directed}{Logical indicating if edges are directed or not. Can be TRUE or FALSE to indicate if all edges are directed, a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}
 		  \item{arrowAngle}{Angle of the arrowhead, in radians. Defaults to pi/8 for unweighted graphs and pi/6 for weighted graphs.}
 		\item{open}{Logical indicating if open (TRUE) or closed (FALSE) arrowheads should be drawn.}
 	\item{bidirectional}{If this is TRUE, Then directional edges between nodes that have two edges between them are not curved. Defaults to FALSE. Can also be a logical vector (when using edgelists) or a logical matrix (when using weights matrix)}

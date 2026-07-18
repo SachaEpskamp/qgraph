@@ -16,7 +16,13 @@ qgraph <- function( input, ...,
   # Edges:
   esize, edge.width, edge.color, edge.labels, edge.label.cex,
   posCol, negCol, fade, curve, curveAll, lty, diag,
-  directed, weighted, edgelist, nNodes, arrows, asize, parallelEdge,
+  # TODO: 'directed' should also be named here, but naming it makes R error on
+  # calls that pass it twice ("formal argument matched by multiple actual
+  # arguments"), which CRAN package GIMMEgVAR does (checked 2026-07-18). Move
+  # it back to the arguments below in a later version, once the duplicated-
+  # argument warning below has been out long enough for downstream packages
+  # to have fixed such calls.
+  weighted, edgelist, nNodes, arrows, asize, parallelEdge,
   # Layout and legend:
   repulsion, layout.par, aspect, rescale, normalize,
   legend, legend.cex, legend.mode, GLratio,
@@ -27,6 +33,24 @@ qgraph <- function( input, ...,
   # Collect all arguments in a single list, exactly as list(...) did before
   # the arguments above were named in the function definition:
   arguments <- list(...)
+
+  # Arguments passed twice via '...' (e.g., 'directed') were silently accepted
+  # (first value used) when all arguments were part of '...'; warn so that
+  # downstream code gets fixed before such arguments are named in the function
+  # definition above, which would turn duplicates into an error:
+  if (anyDuplicated(names(arguments))){
+    dupArgs <- unique(names(arguments)[duplicated(names(arguments))])
+    dupArgs <- dupArgs[dupArgs != ""]
+    if (length(dupArgs) > 0){
+      warning(paste0("The following argument(s) were supplied more than once: ",
+                     paste0("'", dupArgs, "'", collapse = ", "),
+                     ". Only the first value is used. This will become an error ",
+                     "in a future version of qgraph; please remove the ",
+                     "duplicated argument(s)."))
+      arguments <- arguments[!duplicated(names(arguments)) | names(arguments) == ""]
+    }
+  }
+
   for (argName in setdiff(names(formals(sys.function())), c("input","..."))){
     if (!eval(call("missing", as.name(argName)))){
       # Single-bracket assignment so that explicitly passed NULL values are
