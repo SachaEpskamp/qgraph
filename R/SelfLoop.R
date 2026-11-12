@@ -5,7 +5,8 @@ SelfLoop <- function(x,y,rotation=0,cex,cex2,shape,residual=FALSE,resScale=1, po
     polygonList = list(
       ellipse = ELLIPSEPOLY,
       heart  = HEARTPOLY,
-      star = STARPOLY
+      star = STARPOLY,
+      hexagon = HEXAGONPOLY
     )
   }
   

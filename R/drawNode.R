@@ -186,7 +186,7 @@ drawNode <- function(x, y, shape, cex1, cex2, border, vcolor, bcolor, border.wid
     # Draw the pie diagram:
     if (!is.null(pie)){
       if (pieStart != 0){
-        stop("'pieStart' argument not supported when using shape = 'heart', shape = 'star' or shape = 'ellipse'")
+        stop("'pieStart' argument not supported for polygon shapes (such as 'ellipse', 'heart', 'star', 'crown' and 'hexagon')")
       }
       # If any element not in (0,1),stop:
       if(any(pie < 0 | pie > 1)) stop("All elements in 'pie' must be between 0 and 1.")

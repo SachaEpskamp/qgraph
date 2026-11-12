@@ -1376,7 +1376,8 @@ qgraph <- function( input, ...,
     ellipse = ELLIPSEPOLY,
     heart  = HEARTPOLY,
     star = STARPOLY,
-    crown = CROWNPOLY
+    crown = CROWNPOLY,
+    hexagon = HEXAGONPOLY
   )
   
   if(!is.null(qgraphObject$Arguments[['polygonList']])) polygonList  <- c( polygonList, qgraphObject$Arguments[['polygonList']])

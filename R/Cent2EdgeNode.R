@@ -9,7 +9,8 @@ Cent2Edge <- function(x,y,r,cex,cex2,shape,offset=0, polygonList, noPar = FALSE)
     polygonList = list(
       ellipse = ELLIPSEPOLY,
       heart  = HEARTPOLY,
-      star = STARPOLY
+      star = STARPOLY,
+      hexagon = HEXAGONPOLY
     )
   }
   

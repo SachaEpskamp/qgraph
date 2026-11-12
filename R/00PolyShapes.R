@@ -212,3 +212,40 @@ STARPOLY = structure(list(x = c(0, 0.0123744263640521, 0.0247488527281041,
                                                                0.679603219986832, 0.715202862210517, 0.750802504434203, 0.786402146657888, 
                                                                0.822001788881573, 0.857601431105259, 0.893201073328944, 0.928800715552629, 
                                                                0.964400357776315, 1)), names = c("x", "y"))
+
+# Hexagon with a flat top and bottom and points at the left and right, as
+# commonly used for composites in path diagrams (e.g., Grace & Bollen, 2008).
+# The outline is sampled by angle (one point per degree plus the six corners),
+# starting at the top and running clockwise as the other polygons, so that edges
+# attach to the outline at the correct angle and pie charts are proportional.
+HEXAGONPOLY <- local({
+  # Corners in the (-1, 1) box, clockwise from the top left:
+  vx <- c(-0.5, 0.5, 1, 0.5, -0.5, -1)
+  vy <- c(1, 1, 0, -1, -1, 0)
+  # Angles measured clockwise from the top (as atan2(x, y)):
+  angle <- function(x, y) atan2(x, y) %% (2*pi)
+  theta <- sort(unique(c(seq(0, 2*pi, length.out = 361)[-361], angle(vx, vy))))
+  # Distance from the center to the outline in direction theta: the smallest
+  # positive distance to the line through any of the six sides:
+  radius <- function(t){
+    ux <- sin(t)
+    uy <- cos(t)
+    r <- Inf
+    for (i in seq_along(vx)){
+      j <- i %% length(vx) + 1
+      # Outward normal of the side from corner i to corner j (the corners
+      # run clockwise):
+      nx <- vy[i] - vy[j]
+      ny <- vx[j] - vx[i]
+      d <- nx * vx[i] + ny * vy[i]
+      denom <- nx * ux + ny * uy
+      if (denom > 1e-12) r <- min(r, d / denom)
+    }
+    r
+  }
+  r <- vapply(theta, radius, numeric(1))
+  x <- r * sin(theta)
+  y <- r * cos(theta)
+  # Close the outline:
+  list(x = c(x, x[1]), y = c(y, y[1]))
+})

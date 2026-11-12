@@ -1,3 +1,11 @@
+Changes in Version 1.10.2
+  - New built-in node shape "hexagon" (shape = "hexagon"): a hexagon with a
+    flat top and bottom, as commonly used to represent composites (weighted
+    sums of their indicators) in path diagrams. Like the other polygon shapes
+    it is scaled with 'vsize' and 'vsize2', supports pie charts, and is also
+    drawn in the interactive HTML output (filetype = "html"). It is used by
+    semPlot to draw composites.
+
 Changes in Version 1.10.1
   - First published version of the 1.10 series; version 1.10.0 was submitted
     to CRAN but not released. Relative to that submission, the 'directed'
